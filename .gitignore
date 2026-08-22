@@ -1,0 +1,13 @@
+# Secrets & local state
+.env
+secrets/
+data/
+out/
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+.pytest_cache/

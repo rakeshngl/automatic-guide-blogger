@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <style>
+{{ css_text | safe }}
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">{{ meta.navbar_badge }}</div>
+    </nav>
+
+    <header>
+        <h1>{{ meta.title }}</h1>
+        <p>{{ meta.tagline }}</p>
+    </header>
+
+    <div class="container">
+{% for paragraph in intro %}
+        <p>{{ paragraph | rich }}</p>
+{% endfor %}
+
+{% if warning_box %}
+        <div class="fix-box">
+            <h4>{{ warning_box.heading }}</h4>
+            <ul>
+{% for bullet in warning_box.bullets %}
+                <li>{{ bullet | rich }}</li>
+{% endfor %}
+            </ul>
+        </div>
+{% endif %}
+
+{% if diagram_svg %}
+        <div class="diagram-container">
+            <div class="diagram-title">{{ diagram_title }}</div>
+            {{ diagram_svg | safe }}
+        </div>
+{% endif %}
+
+{% for phase in phases %}
+        <div class="step-box">
+            <div class="step-number">{{ phase.number }}</div>
+            <div>
+                <h2>{{ phase.title }}</h2>
+{% for para in phase.prose %}
+                <p>{{ para | rich }}</p>
+{% endfor %}
+{% for block in phase.code_blocks %}
+{% if block.filename %}
+                <p><strong>{{ block.filename }}</strong></p>
+{% endif %}
+<div class="code-block"><pre><code>{{ block.code_html | safe }}</code></pre></div>
+{% endfor %}
+            </div>
+        </div>
+{% endfor %}
+
+{% if checklist %}
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+{% for row in checklist %}
+            <tr><td>{{ row.check | rich }}</td><td>{{ row.command_why | rich }}</td></tr>
+{% endfor %}
+        </table>
+{% endif %}
+
+{% if closing_alert %}
+        <div class="alert-box">
+            <h4>{{ closing_alert.heading }}</h4>
+            <p>{{ closing_alert.body | rich }}</p>
+        </div>
+{% endif %}
+
+    </div>
+
+    <footer>&copy; {{ year }} UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
