@@ -14,6 +14,7 @@ from guides_writer.llm.client import LLMError
 from guides_writer.pipeline import run_pipeline
 from guides_writer.render.sample_data import SAMPLE_GUIDE
 from guides_writer.sources.base import CandidateItem
+from guides_writer.storage.history import HistoryStore
 
 
 def _part1():
@@ -139,7 +140,7 @@ class TestPipelineE2E:
         fake = FakeLLM()
         summary = run_pipeline(SettingsLite(), adapters=[StubAdapter(3)],
                                llm_client=fake, out_dir=tmp_path,
-                               runs_dir=tmp_path / "runs")
+                               runs_dir=tmp_path / "runs", history_path=tmp_path / "history.json")
         assert summary["status"] == "ok"
         assert not summary["degraded_selection"]
         files = sorted(tmp_path.glob("*.html"))
@@ -155,7 +156,7 @@ class TestPipelineE2E:
     def test_dry_run_touches_no_history(self, tmp_path):
         history_file = tmp_path / "history.json"
         run_pipeline(SettingsLite(), adapters=[StubAdapter(2)], llm_client=FakeLLM(),
-                     out_dir=tmp_path, runs_dir=tmp_path / "runs")
+                     out_dir=tmp_path, runs_dir=tmp_path / "runs", history_path=tmp_path / "history.json")
         assert not history_file.exists()
 
     def test_partial_failure_isolated(self, tmp_path):
@@ -163,7 +164,7 @@ class TestPipelineE2E:
         fake = FakeLLM({"GuidePart2": [_part2(), boom, _part2()]})
         summary = run_pipeline(SettingsLite(), adapters=[StubAdapter(3)],
                                llm_client=fake, out_dir=tmp_path,
-                               runs_dir=tmp_path / "runs")
+                               runs_dir=tmp_path / "runs", history_path=tmp_path / "history.json")
         statuses = [g["status"] == "ok" for g in summary["guides"]]
         assert statuses == [True, False, True]
         assert summary["status"] == "partial"
@@ -176,7 +177,7 @@ class TestPipelineE2E:
                 return []
 
         summary = run_pipeline(SettingsLite(), adapters=[Empty()], llm_client=FakeLLM(),
-                               out_dir=tmp_path, runs_dir=tmp_path / "runs")
+                               out_dir=tmp_path, runs_dir=tmp_path / "runs", history_path=tmp_path / "history.json")
         assert summary["status"] == "no_candidates"
 
 

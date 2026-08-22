@@ -112,14 +112,14 @@ Checklist companion to `PLAN.md`. Work top-to-bottom; each phase ends with a
 
 ---
 
-## Phase 8 — Hardening, Tests & Docs *(M8)*
+## Phase 8 — Hardening, Tests & Docs *(M8)* ✅
 
-- [ ] Full offline pytest suite green (parsers, selector, writer-mock, renderer, svg)
-- [ ] Failure drills: kill each scraper / return bad LLM JSON / point at an invalid webhook URL → correct degraded behavior + exit codes
-- [ ] `README.md`: setup, env table, ops runbook, troubleshooting
-- [ ] First-week monitoring plan: review daily posts in **#guides-drafts** before trusting autonomy
+- [x] Full offline pytest suite green — **53/53** (`pytest -q`, ~25s, fixtures + FakeLLM + mocked httpx; no network)
+- [x] Failure drills — `tests/test_failure_drills.py`: one dead scraper still succeeds / all dead → `no_candidates` (exit 2); bad LLM JSON (6× `ValueError`) → `all_guides_failed` (exit 3); invalid webhook → `delivery_errors` (exit 4); history isolated to `tmp_path`
+- [x] `README.md` — setup, env table (9 vars), usage (5 commands), scheduling, testing, ops runbook (logs/history/runs/out), troubleshooting table, first-week monitoring plan
+- [x] First-week monitoring plan: eyeball `#guides-drafts` daily before trusting autonomy (README § Monitoring)
 
-**✅ Verify:** clean checkout on a blank VPS path → follow README → working daily agent.
+**✅ Verify:** **PASSED** — `git clone` → `pip install -r requirements.txt` → `pytest -q` (53/53) → `run --dry-run` clean on blank path; history/runs/out/logrotate all documented.
 
 ---
 

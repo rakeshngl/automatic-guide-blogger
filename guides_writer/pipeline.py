@@ -34,7 +34,8 @@ def fetch_pool(adapters) -> tuple[list, list[str]]:
 
 
 def run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
-                 out_dir: Path | None = None, deliver=None, runs_dir: Path | None = None) -> dict:
+                 out_dir: Path | None = None, deliver=None, runs_dir: Path | None = None,
+                 history_path: Path | None = None) -> dict:
     out_dir = out_dir or BASE_DIR / "out"
     out_dir.mkdir(parents=True, exist_ok=True)
     date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -58,7 +59,7 @@ def run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
         base_url=settings.llm_base_url,
         model=settings.llm_model,
     )
-    history = HistoryStore()
+    history = HistoryStore(path=history_path)
     selection = TopicSelector(llm_client).select(
         candidates=candidates,
         count=settings.guides_per_run,
