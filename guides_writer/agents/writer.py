@@ -152,27 +152,29 @@ class GuideOutline(BaseModel):
     closing_alert: ClosingAlert | None = None
 
 
-OUTLINE_SYSTEM_PROMPT = """Stage 1 of 2: outline (no full prose) one beginner "UVF IT" deployment guide.
+OUTLINE_SYSTEM_PROMPT = """Stage 1 of 2: outline (no full prose) one beginner "UVF IT" BUILD guide — a minimal working clone inspired by the selected product.
 
 Rules:
-- Finishable in ~45 min, free-tier/self-host tools, beginner reader.
-- 4-6 phases: prepare -> install -> core setup -> run -> verify/backups.
-- EVERY phase has >=1 code_block; Ubuntu-runnable commands; no bare placeholders unless prose explains them.
-- diagram: >=4 nodes; group style "local" for self-hosted parts, "cloud" for external services; edges reference node ids via "from"/"to".
-- warning_bullets: 2-3 honest bullets. checklist_rows: 3-5 checks with exact proving command.
-- intro_points: 2 short paragraphs, UVF IT voice ("Welcome to another official **UVF IT** ...").
+- Reader is a beginner dev; build a minimal but working clone in ~45 min using a free-tier open-source stack (Python or Node.js + SQLite/Postgres, no paid APIs).
+- 4-6 phases, ordered like: scaffold project -> core feature 1 (data/model) -> core feature 2 (API/UI) -> run locally -> verify and extend.
+- EVERY phase has >=1 code_block with COMPLETE runnable code that builds incrementally (not just install commands); no bare placeholders unless prose explains how to obtain the value.
+- diagram: >=4 nodes; group style "local" for your codebase/runtime/DB, "cloud" for any external API the clone calls; edges reference node ids via "from"/"to".
+- warning_bullets: 2-3 honest bullets (prerequisites like Node/Python version, what is simplified vs the real product, common gotchas).
+- checklist_rows: 3-5 checks with the exact command or browser observation that proves the build works.
+- intro_points: 2 short paragraphs, UVF IT voice ("Welcome to another official **UVF IT** ... build your own X inspired by Y ...").
 - Use **bold**/`code` sparingly; no markdown headings.
 
+Rule: title must NOT include "UVF IT" prefix (render adds it).
 Output STRICT JSON only:
 {"title": "...", "tagline": "...", "navbar_badge": "...", "intro_points": ["..",".."], "warning_heading": "...", "warning_bullets": [".."], "diagram": {"title": "..", "groups": [{"id": "local", "label": "..", "style": "local"}], "nodes": [{"id": "app", "label": "..", "sublabel": null, "group": "local", "style": "tech"}], "edges": [{"from": "a", "to": "b", "label": null, "bidirectional": false}]}, "phases": [{"title": "Phase 1: ..", "prose_points": [".."], "code_blocks": [{"lang": "bash", "filename": null, "purpose": ".."}]}], "checklist_rows": [{"check": "..", "command_why": ".."}], "closing_alert": {"heading": "..", "body": ".."}}"""
 
-WRITE_COMMON_RULES = """You are expanding an OUTLINE into part of the FULL JSON guide for a "UVF IT" blueprint.
+WRITE_COMMON_RULES = """You are expanding an OUTLINE into part of the FULL JSON guide for a "UVF IT" BUILD blueprint — the reader is building a minimal clone from scratch.
 
 Rules:
 - Keep titles/order/filenames/langs from the outline; drop nothing assigned to you.
-- prose entries: paragraphs of 2-4 sentences, beginner tone, practical UVF IT voice.
-- code fields: COMPLETE commands/config files; no placeholders unless adjacent prose explains; never markdown fences.
-- checklist command_why: concrete backticked command or precise observation.
+- prose entries: paragraphs of 2-4 sentences, beginner dev tone, practical UVF IT voice — explain *what* you're coding and *why*.
+- code fields: COMPLETE runnable code that builds on previous phases (scaffold, then feature code, then run); no placeholders unless adjacent prose explains how to obtain the value; never markdown fences.
+- checklist command_why: concrete backticked command or precise browser observation that proves the clone works.
 
 """
 
@@ -222,7 +224,7 @@ class GuideWriter:
                 ),
             },
         ]
-        outline = self._client.chat_json(base_messages, schema=GuideOutline, temperature=0.4, max_tokens=3200)
+        outline = self._client.chat_json(base_messages, schema=GuideOutline, temperature=0.4, max_tokens=4200)
         if isinstance(self._client, LLMClient):
             time.sleep(22)
         problems = _rubric_violations(outline)
@@ -241,7 +243,7 @@ class GuideWriter:
                 ),
             },
         ]
-        outline = self._client.chat_json(repair_messages, schema=GuideOutline, temperature=0.4, max_tokens=3200)
+        outline = self._client.chat_json(repair_messages, schema=GuideOutline, temperature=0.4, max_tokens=4200)
         if isinstance(self._client, LLMClient):
             time.sleep(22)
         remaining = _rubric_violations(outline)
