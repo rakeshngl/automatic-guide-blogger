@@ -58,6 +58,8 @@ def run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
         api_key=settings.llm_api_key,
         base_url=settings.llm_base_url,
         model=settings.llm_model,
+        fallback_model=getattr(settings, "llm_fallback_model", None),
+        fallback_base_url=getattr(settings, "llm_fallback_base_url", None),
     )
     history = HistoryStore(path=history_path)
     selection = TopicSelector(llm_client).select(

@@ -34,10 +34,16 @@ class LLMClient:
         api_key: str,
         base_url: str,
         model: str,
+        fallback_model: str | None = None,
+        fallback_base_url: str | None = None,
+        fallback_api_key: str | None = None,
         timeout: float = 180.0,
     ):
         self.model = model
         self.base_url = base_url.rstrip("/")
+        self.fallback_model = fallback_model
+        self.fallback_base_url = (fallback_base_url or base_url).rstrip("/") if fallback_model else None
+        self.fallback_api_key = fallback_api_key or api_key
         self._client = httpx.Client(
             headers={
                 "Authorization": f"Bearer {api_key}",
@@ -45,6 +51,15 @@ class LLMClient:
             },
             timeout=timeout,
         )
+        self._fallback_client = None
+        if fallback_model:
+            self._fallback_client = httpx.Client(
+                headers={
+                    "Authorization": f"Bearer {self.fallback_api_key}",
+                    "Content-Type": "application/json",
+                },
+                timeout=timeout,
+            )
 
     @retry(
         retry=retry_if_exception_type((httpx.HTTPError, LLMError)),
@@ -62,6 +77,46 @@ class LLMClient:
             raise RuntimeError(f"LLM API HTTP {resp.status_code}: {resp.text[:800]}")
         return resp.json()
 
+    def _build_payload(self, model: str, messages: list[dict], temperature: float,
+                       max_tokens: int | None, json_response: bool,
+                       reasoning_effort: str | None) -> dict:
+        payload: dict = {"model": model, "messages": messages, "temperature": temperature}
+        if max_tokens:
+            payload["max_tokens"] = max_tokens
+        if json_response:
+            payload["response_format"] = {"type": "json_object"}
+        if reasoning_effort:
+            model_lower = model.lower()
+            if "compound" in model_lower:
+                pass
+            elif "qwen" in model_lower:
+                payload["reasoning_effort"] = "none" if reasoning_effort == "low" else reasoning_effort
+            elif "gpt-oss" in model_lower:
+                payload["reasoning_effort"] = reasoning_effort
+            else:
+                payload["reasoning_effort"] = reasoning_effort
+        return payload
+
+    def _call_once(self, model: str, base_url: str, client: httpx.Client,
+                   messages: list[dict], temperature: float, max_tokens: int | None,
+                   json_response: bool, reasoning_effort: str | None) -> str:
+        payload = self._build_payload(model, messages, temperature, max_tokens, json_response, reasoning_effort)
+        orig_model, orig_base, orig_client = self.model, self.base_url, self._client
+        self.model, self.base_url, self._client = model, base_url, client
+        try:
+            data = self._post(payload)
+        finally:
+            self.model, self.base_url, self._client = orig_model, orig_base, orig_client
+        try:
+            message = data["choices"][0]["message"]
+            content = message.get("content")
+        except (KeyError, IndexError) as exc:
+            raise LLMError(f"unexpected response shape: {json.dumps(data)[:300]}") from exc
+        if not content:
+            raise RuntimeError(f"LLM returned empty content: {json.dumps(data)[:300]}")
+        logger.info("llm_call_ok model=%s chars=%d", model, len(content))
+        return content
+
     def chat(
         self,
         messages: list[dict],
@@ -70,24 +125,16 @@ class LLMClient:
         json_response: bool = False,
         reasoning_effort: str | None = "low",
     ) -> str:
-        payload: dict = {
-            "model": self.model,
-            "messages": messages,
-            "temperature": temperature,
-        }
-        if max_tokens:
-            payload["max_tokens"] = max_tokens
-        if json_response:
-            payload["response_format"] = {"type": "json_object"}
-        if reasoning_effort:
-            model_lower = self.model.lower()
-            if "qwen" in model_lower:
-                payload["reasoning_effort"] = "none" if reasoning_effort == "low" else reasoning_effort
-            elif "gpt-oss" in model_lower or "groq/compound" in model_lower:
-                payload["reasoning_effort"] = reasoning_effort
-            else:
-                payload["reasoning_effort"] = reasoning_effort
-        data = self._post(payload)
+        try:
+            return self._call_once(self.model, self.base_url, self._client,
+                                   messages, temperature, max_tokens, json_response, reasoning_effort)
+        except (LLMError, RuntimeError, ValueError, httpx.HTTPError) as exc:
+            if not self.fallback_model or not self._fallback_client:
+                raise
+            logger.warning("llm_primary_failed model=%s err=%s — falling back to %s",
+                           self.model, str(exc)[:150], self.fallback_model)
+            return self._call_once(self.fallback_model, self.fallback_base_url, self._fallback_client,
+                                   messages, temperature, max_tokens, json_response, reasoning_effort)
         try:
             message = data["choices"][0]["message"]
             content = message.get("content")

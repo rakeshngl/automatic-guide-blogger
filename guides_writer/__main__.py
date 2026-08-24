@@ -27,6 +27,8 @@ def cmd_hello() -> int:
         api_key=settings.llm_api_key,
         base_url=settings.llm_base_url,
         model=settings.llm_model,
+        fallback_model=getattr(settings, "llm_fallback_model", None),
+        fallback_base_url=getattr(settings, "llm_fallback_base_url", None),
     )
     reply = client.chat(
         messages=[
@@ -84,6 +86,8 @@ def cmd_select(count: int | None = None, record: bool = False) -> int:
         api_key=settings.llm_api_key,
         base_url=settings.llm_base_url,
         model=settings.llm_model,
+        fallback_model=getattr(settings, "llm_fallback_model", None),
+        fallback_base_url=getattr(settings, "llm_fallback_base_url", None),
     )
     history = HistoryStore()
     selector = TopicSelector(client)
