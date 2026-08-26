@@ -1,4 +1,4 @@
 ﻿# Automatic Guides Writer — daily at 06:00 IST
 # Install on Ubuntu VPS: crontab -e, then paste the two lines below
 CRON_TZ=Asia/Kolkata
-0 6 * * * flock -n /tmp/guides-writer.lock /opt/guides-writer/run.sh run >> /opt/guides-writer/logs/cron.log 2>&1
+0 6 * * * flock -n /tmp/guides-writer.lock bash -c 'cd /opt/guides-writer && ./run.sh run >> logs/cron.log 2>&1 && ./scripts/publish.sh >> logs/cron.log 2>&1'

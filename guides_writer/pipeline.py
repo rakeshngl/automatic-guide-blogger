@@ -36,7 +36,9 @@ def fetch_pool(adapters) -> tuple[list, list[str]]:
 def run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
                  out_dir: Path | None = None, deliver=None, runs_dir: Path | None = None,
                  history_path: Path | None = None) -> dict:
-    out_dir = out_dir or BASE_DIR / "out"
+    html_dir = BASE_DIR / "out" / "html"
+    html_dir.mkdir(parents=True, exist_ok=True)
+    out_dir = out_dir or html_dir
     out_dir.mkdir(parents=True, exist_ok=True)
     date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
@@ -99,7 +101,13 @@ def run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
             used_filenames.add(filename)
             path = out_dir / filename
             path.write_text(html_out, encoding="utf-8")
-            entry.update({"status": "ok", "file": str(path), "tagline": guide.meta.tagline})
+            entry.update({
+                "status": "ok", "file": str(path),
+                "tagline": guide.meta.tagline,
+                "navbar_badge": guide.meta.navbar_badge,
+                "est_minutes": getattr(pick, "est_minutes", 40),
+                "tags": getattr(pick, "tags", []),
+            })
             delivered_files.append(path)
             if not settings.dry_run:
                 history.append(title=guide.meta.title, source_url=pick.source_url,
@@ -120,6 +128,17 @@ def run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
             logger.exception("delivery_failed")
             delivery_errors.append(str(exc))
 
+    catalog_patched = 0
+    if not settings.dry_run and any(r.get("status") == "ok" for r in results):
+        try:
+            from guides_writer.render.catalog import patch_catalog
+            catalog_path = (out_dir.parent / "index.html") if out_dir.name == "html" else (out_dir / "index.html")
+            if not catalog_path.exists():
+                catalog_path = BASE_DIR / "out" / "index.html"
+            catalog_patched = patch_catalog(catalog_path, results)
+        except Exception as exc:
+            logger.warning("catalog_patch_failed err=%s", exc)
+
     ok_count = sum(1 for r in results if r["status"] == "ok")
     summary = {
         "date": date_str,
@@ -133,6 +152,7 @@ def run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
         "guides": results,
         "delivery_ids": delivery_ids,
         "delivery_errors": delivery_errors,
+        "catalog_patched": catalog_patched,
     }
     _write_run_summary(summary, runs_dir)
     logger.info("run_complete status=%s ok=%d/%d", summary["status"], ok_count, len(results))
