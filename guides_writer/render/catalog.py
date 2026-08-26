@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 logger = logging.getLogger(__name__)
 
 
-CARD_TEMPLATE = """        <article class="post-card">
+CARD_TEMPLATE = """        <article class="post-card" data-href="html/{href}" tabindex="0" role="link" aria-label="{title}">
             <div class="card-eyebrow">{eyebrow}</div>
             <h2><a href="html/{href}">{title}</a></h2>
             <p class="post-card-desc">{desc}</p>
