@@ -74,6 +74,8 @@ cp .env.example .env   # then fill in keys (see table below)
 .venv/bin/python -m guides_writer render-sample
 .venv/bin/python -m guides_writer run --dry-run
 .venv/bin/python -m guides_writer run                 # delivers to Discord + records history
+# Windows:
+.venv\Scripts\python.exe -m guides_writer run
 ```
 
 Exit codes: `0` ok/partial, `2` no candidates, `3` selection/all-guides failed, `4` Discord delivery failed.
