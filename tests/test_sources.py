@@ -5,6 +5,7 @@ import pytest
 
 from guides_writer.sources.base import SourceError, dedupe
 from guides_writer.sources.github_trending import parse_trending
+from guides_writer.sources.hf_spaces import parse_hf_spaces
 from guides_writer.sources.hn_show import parse_hn
 from guides_writer.sources.producthunt import parse_posts
 from guides_writer.sources.taaft import parse_home
@@ -92,6 +93,31 @@ class TestHNShow:
     def test_empty_hits_raises(self):
         with pytest.raises(SourceError):
             parse_hn({"hits": []})
+
+
+class TestHFSpace:
+    def test_parses_rows(self):
+        data = json.loads(_read("hf_spaces.json"))
+        items = parse_hf_spaces(data)
+        assert len(items) == 20
+        assert all(item.source == "hf_spaces" for item in items)
+
+    def test_fields(self):
+        data = json.loads(_read("hf_spaces.json"))
+        items = parse_hf_spaces(data)
+        first = items[0]
+        assert "/" in first.title
+        assert first.url.startswith("https://huggingface.co/spaces/")
+        assert first.rank == 1
+        assert isinstance(first.metrics["likes"], int)
+
+    def test_bad_payload_raises(self):
+        with pytest.raises(SourceError):
+            parse_hf_spaces({})
+
+    def test_empty_list_raises(self):
+        with pytest.raises(SourceError):
+            parse_hf_spaces([])
 
 
 class TestDedupe:

@@ -5,6 +5,7 @@ from guides_writer.config import get_settings
 from guides_writer.llm.client import LLMClient
 from guides_writer.sources.base import dedupe
 from guides_writer.sources.github_trending import GitHubTrendingAdapter
+from guides_writer.sources.hf_spaces import HFSpaceAdapter
 from guides_writer.sources.hn_show import HNShowAdapter
 from guides_writer.sources.producthunt import ProductHuntAdapter
 from guides_writer.sources.taaft import TaaftAdapter
@@ -20,6 +21,7 @@ def build_adapters(settings) -> list:
     adapters.append(GitHubTrendingAdapter())
     adapters.append(TaaftAdapter())
     adapters.append(HNShowAdapter())
+    adapters.append(HFSpaceAdapter())
     return adapters
 
 
