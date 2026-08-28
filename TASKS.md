@@ -127,4 +127,5 @@ Checklist companion to `PLAN.md`. Work top-to-bottom; each phase ends with a
 
 - [ ] Enable crontab; monitor 3–5 consecutive runs in **#guides-drafts**
 - [ ] On confidence: repoint delivery to a `#guides-published` webhook (one env var)
+- [x] 7-source expansion (2026-08-28): HN Show (M1), HF Spaces (M2), Dev.to (M3), Reddit r/selfhosted via Atom feed (M4) — 4 fixtures + 16 tests, merged to 7
 - [ ] Backlog (opt-in): auto-generated `index.html` catalog page · Telegram/email failure alerts · healthchecks.io ping · Playwright fallback for TAAFT markup changes

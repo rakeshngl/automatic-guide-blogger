@@ -1,10 +1,10 @@
 # Automatic Guides Writer
 
-Daily autonomous agent that discovers trending tech from Product Hunt / GitHub Trending / TheresAnAIForThat, picks 3 beginner-guide-worthy topics with an LLM, generates complete HTML blueprints styled exactly like [guides.uvfarms.in/local_rag_guide](https://guides.uvfarms.in/local_rag_guide), and delivers them to a private Discord channel (`#guides-drafts`) via webhook. Runs at **06:00 IST** on an Ubuntu VPS via `cron` + `flock`.
+Daily autonomous agent that discovers trending tech from 7 sources (Product Hunt / GitHub Trending / TAAFT / Hacker News Show HN / Hugging Face Spaces / Dev.to / Reddit r/selfhosted), picks 3 beginner-guide-worthy topics with an LLM, generates complete HTML blueprints styled exactly like [guides.uvfarms.in/local_rag_guide](https://guides.uvfarms.in/local_rag_guide), and delivers them to a private Discord channel (`#guides-drafts`) via webhook. Runs at **06:00 IST** on an Ubuntu VPS via `cron` + `flock`.
 
 ## Features
 
-- **3-source discovery** — Product Hunt GraphQL (via `curl_cffi` TLS impersonation to bypass Cloudflare), GitHub Trending scrape, TAAFT scrape; merged into one pool, non-fatal per source
+- **7-source discovery** — Product Hunt GraphQL (via `curl_cffi` TLS impersonation to bypass Cloudflare), GitHub Trending scrape, TAAFT scrape, Hacker News Show HN (Algolia API), Hugging Face Spaces (likes API), Dev.to top-week (API), Reddit r/selfhosted (Atom feed; JSON is 403-blocked); merged into one pool, non-fatal per source
 - **LLM topic selection** — provider-agnostic OpenAI-compatible client (Groq `qwen/qwen3.6-27b` default, `grok-4-fast` swappable via `LLM_BASE_URL`), fuzzy dedupe vs 14-day `history.json` (rapidfuzz)
 - **Two-stage writer** — outline (rubric: ≥4 phases, ≥1 code/phase, ≥3 checks) → split write into 2 part-calls (fits 8k TPM free-tier window), deterministic SVG diagrams (Python builds, LLM only supplies labels)
 - **Pixel-faithful rendering** — verbatim CSS from the reference guide, Jinja2, autoescape always-on, `**bold**`/`code` rich text, `.code-comment` highlighting
@@ -18,7 +18,7 @@ guides_writer/
   __main__.py            # CLI: hello | test-sources | select | render-sample | run
   config.py              # pydantic-settings (.env)
   pipeline.py            # discover → enrich → select → write×3 → render×3 → deliver
-  sources/               # base.py, producthunt.py, github_trending.py, taaft.py
+  sources/               # base.py, producthunt, github_trending, taaft, hn_show, hf_spaces, devto, reddit
   agents/                # selector.py, writer.py (enrich + outline + split-write)
   llm/client.py          # OpenAI-compatible, tenacity 8-70s ×6, JSON repair, per-model reasoning_effort
   render/                # schema.py, svg_builder.py, renderer.py, templates/guide.{css,html.j2}
@@ -42,7 +42,7 @@ run.sh  crontab.txt  requirements.txt  .env.example
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 cp .env.example .env   # then fill in keys (see table below)
 .venv/bin/python -m guides_writer hello          # LLM round-trip → pong
-.venv/bin/python -m guides_writer test-sources   # 30-60 candidates from ≥2 sources
+.venv/bin/python -m guides_writer test-sources   # ~120 candidates from 7 sources
 .venv/bin/python -m guides_writer render-sample  # -> out/sample.html (eyeball vs reference)
 .venv/bin/python -m guides_writer run --dry-run  # full pipeline, no delivery/history
 ```
