@@ -5,6 +5,7 @@ import pytest
 
 from guides_writer.sources.base import SourceError, dedupe
 from guides_writer.sources.github_trending import parse_trending
+from guides_writer.sources.hn_show import parse_hn
 from guides_writer.sources.producthunt import parse_posts
 from guides_writer.sources.taaft import parse_home
 
@@ -67,6 +68,30 @@ class TestProductHunt:
     def test_bad_payload_raises(self):
         with pytest.raises(SourceError):
             parse_posts({"data": {}})
+
+
+class TestHNShow:
+    def test_parses_rows(self):
+        data = json.loads(_read("hn_show.json"))
+        items = parse_hn(data)
+        assert len(items) == 20
+        assert all(item.source == "hn_show" for item in items)
+
+    def test_fields(self):
+        data = json.loads(_read("hn_show.json"))
+        items = parse_hn(data)
+        first = items[0]
+        assert first.title
+        assert first.url.startswith("http")
+        assert first.rank == 1
+
+    def test_bad_payload_raises(self):
+        with pytest.raises(SourceError):
+            parse_hn({})
+
+    def test_empty_hits_raises(self):
+        with pytest.raises(SourceError):
+            parse_hn({"hits": []})
 
 
 class TestDedupe:
