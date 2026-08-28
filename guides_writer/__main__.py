@@ -4,6 +4,7 @@ import sys
 from guides_writer.config import get_settings
 from guides_writer.llm.client import LLMClient
 from guides_writer.sources.base import dedupe
+from guides_writer.sources.devto import DevToAdapter
 from guides_writer.sources.github_trending import GitHubTrendingAdapter
 from guides_writer.sources.hf_spaces import HFSpaceAdapter
 from guides_writer.sources.hn_show import HNShowAdapter
@@ -22,6 +23,7 @@ def build_adapters(settings) -> list:
     adapters.append(TaaftAdapter())
     adapters.append(HNShowAdapter())
     adapters.append(HFSpaceAdapter())
+    adapters.append(DevToAdapter())
     return adapters
 
 

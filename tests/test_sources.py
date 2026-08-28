@@ -4,6 +4,7 @@ import pathlib
 import pytest
 
 from guides_writer.sources.base import SourceError, dedupe
+from guides_writer.sources.devto import parse_devto
 from guides_writer.sources.github_trending import parse_trending
 from guides_writer.sources.hf_spaces import parse_hf_spaces
 from guides_writer.sources.hn_show import parse_hn
@@ -118,6 +119,31 @@ class TestHFSpace:
     def test_empty_list_raises(self):
         with pytest.raises(SourceError):
             parse_hf_spaces([])
+
+
+class TestDevTo:
+    def test_parses_rows(self):
+        data = json.loads(_read("devto.json"))
+        items = parse_devto(data)
+        assert len(items) == 20
+        assert all(item.source == "devto" for item in items)
+
+    def test_fields(self):
+        data = json.loads(_read("devto.json"))
+        items = parse_devto(data)
+        first = items[0]
+        assert first.title
+        assert first.url.startswith("https://dev.to/")
+        assert first.rank == 1
+        assert isinstance(first.metrics["reactions"], int)
+
+    def test_bad_payload_raises(self):
+        with pytest.raises(SourceError):
+            parse_devto({})
+
+    def test_empty_list_raises(self):
+        with pytest.raises(SourceError):
+            parse_devto([])
 
 
 class TestDedupe:
