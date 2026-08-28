@@ -9,6 +9,7 @@ from guides_writer.sources.github_trending import GitHubTrendingAdapter
 from guides_writer.sources.hf_spaces import HFSpaceAdapter
 from guides_writer.sources.hn_show import HNShowAdapter
 from guides_writer.sources.producthunt import ProductHuntAdapter
+from guides_writer.sources.reddit import RedditSelfHostedAdapter
 from guides_writer.sources.taaft import TaaftAdapter
 from guides_writer.utils.logging import setup_logging
 
@@ -24,6 +25,7 @@ def build_adapters(settings) -> list:
     adapters.append(HNShowAdapter())
     adapters.append(HFSpaceAdapter())
     adapters.append(DevToAdapter())
+    adapters.append(RedditSelfHostedAdapter())
     return adapters
 
 

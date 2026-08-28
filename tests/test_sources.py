@@ -9,6 +9,7 @@ from guides_writer.sources.github_trending import parse_trending
 from guides_writer.sources.hf_spaces import parse_hf_spaces
 from guides_writer.sources.hn_show import parse_hn
 from guides_writer.sources.producthunt import parse_posts
+from guides_writer.sources.reddit import parse_reddit
 from guides_writer.sources.taaft import parse_home
 
 FIXTURES = pathlib.Path(__file__).resolve().parent.parent / "fixtures"
@@ -144,6 +145,29 @@ class TestDevTo:
     def test_empty_list_raises(self):
         with pytest.raises(SourceError):
             parse_devto([])
+
+
+class TestReddit:
+    def test_parses_rows(self):
+        items = parse_reddit(_read("reddit_selfhosted.xml"))
+        assert len(items) >= 20
+        assert all(item.source == "reddit_selfhosted" for item in items)
+
+    def test_fields(self):
+        items = parse_reddit(_read("reddit_selfhosted.xml"))
+        first = items[0]
+        assert first.title
+        assert first.url.startswith("https://www.reddit.com/")
+        assert first.rank == 1
+        assert "selfhosted" in first.topics
+
+    def test_broken_markup_raises(self):
+        with pytest.raises(SourceError):
+            parse_reddit("<html><body>blocked</body></html>")
+
+    def test_empty_feed_raises(self):
+        with pytest.raises(SourceError):
+            parse_reddit("<?xml version='1.0'?><feed xmlns='http://www.w3.org/2005/Atom'><entry></entry></feed>")
 
 
 class TestDedupe:
