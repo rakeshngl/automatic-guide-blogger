@@ -149,8 +149,14 @@ def cmd_run(dry_run: bool) -> int:
         return 4
     if status == "no_candidates":
         return 2
-    if status in ("selection_failed", "all_guides_failed"):
+    if status == "selection_failed":
         return 3
+    if not summary.get("guides"):
+        return 3
+    ok_count = sum(1 for g in summary.get("guides", []) if g["status"] == "ok")
+    if ok_count == 0:
+        return 3  # all guides failed -> nothing to publish
+    # exit 0 whenever >=1 guide was produced, even if partial (other guides failed)
     return 0
 
 
