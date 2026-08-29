@@ -2,7 +2,7 @@ import pytest
 from pydantic import BaseModel
 
 from guides_writer.agents.selector import TopicSelector, _is_duplicate_title
-from guides_writer.llm.client import LLMClient, LLMError
+from guides_writer.llm.client import JSONValidateError, LLMClient, LLMError
 from guides_writer.sources.base import CandidateItem
 
 
@@ -138,6 +138,76 @@ class TestLLMClientRepair:
         client._post = lambda payload: {"choices": [{"message": {"content": ""}}]}
         with pytest.raises(RuntimeError):
             client.chat(messages=[])
+
+
+class TestJSONValidateHardening:
+    def test_validate_error_then_success_on_retry(self):
+        """Provider-side json_validate_failed recovers when a fresh generation validates."""
+        client = LLMClient(api_key="k", base_url="https://fake", model="m")
+        raw_garbled = '{"value": trun'
+        attempts = {"n": 0}
+
+        def fake_post(payload):
+            if attempts["n"] == 0:
+                attempts["n"] += 1
+                raise JSONValidateError(
+                    "LLM JSON generation failed (400 json_validate_failed)",
+                    failed_generation=raw_garbled,
+                )
+            return {"choices": [{"message": {"content": '{"value": 7}'}}]}
+
+        client._post = fake_post
+        answer = client.chat_json(messages=[], schema=Answer, retries=3)
+        assert answer.value == 7
+        assert attempts["n"] == 1
+
+    def test_exhausts_retries_then_raises(self):
+        """Persistent json_validate_failed surfaces the error after all retries."""
+        client = LLMClient(api_key="k", base_url="https://fake", model="m")
+
+        def always_fail(payload):
+            raise JSONValidateError(
+                "LLM JSON generation failed (400 json_validate_failed)",
+                failed_generation='{"value": trun',
+            )
+
+        client._post = always_fail
+        with pytest.raises(JSONValidateError):
+            client.chat_json(messages=[], schema=Answer, retries=2)
+
+    def test_failed_gen_repair_then_valid(self):
+        """When failed_generation is fed back, the model completes a valid object."""
+        client = LLMClient(api_key="k", base_url="https://fake", model="m")
+        attempts = {"n": 0}
+
+        def fake_post(payload):
+            if attempts["n"] == 0:
+                attempts["n"] += 1
+                raise JSONValidateError(
+                    "LLM JSON generation failed (400 json_validate_failed)",
+                    failed_generation='{"value": 9',
+                )
+            return {"choices": [{"message": {"content": '{"value": 9}'}}]}
+
+        client._post = fake_post
+        answer = client.chat_json(messages=[], schema=Answer, retries=3)
+        assert answer.value == 9
+
+    def test_non_json_transient_retry(self):
+        """A transient non-JSON 5xx retries, while a hard 400 json_validate_failed differs."""
+        client = LLMClient(api_key="k", base_url="https://fake", model="m")
+        attempts = {"n": 0}
+
+        def fake_post(payload):
+            attempts["n"] += 1
+            if attempts["n"] < 2:
+                raise LLMError("LLM API HTTP 503")
+            return {"choices": [{"message": {"content": '{"value": 3}'}}]}
+
+        client._post = fake_post
+        answer = client.chat_json(messages=[], schema=Answer, retries=3)
+        assert answer.value == 3
+        assert attempts["n"] == 2
 
 
 class TestLLMErrorRetryable:
