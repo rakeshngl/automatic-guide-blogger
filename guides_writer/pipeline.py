@@ -67,7 +67,7 @@ def run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
     selection = TopicSelector(llm_client).select(
         candidates=candidates,
         count=settings.guides_per_run,
-        exclude_titles=history.recent_titles(),
+        exclude_titles=history.recent_titles(days=settings.history_days),
     )
     logger.info(
         "selection_done picks=%d degraded=%s dropped=%s",

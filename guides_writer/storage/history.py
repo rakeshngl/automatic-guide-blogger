@@ -31,7 +31,7 @@ class HistoryStore:
             encoding="utf-8",
         )
 
-    def recent_titles(self, days: int = 14) -> list[str]:
+    def recent_titles(self, days: int = 40) -> list[str]:
         cutoff = datetime.now(timezone.utc) - timedelta(days=days)
         titles = []
         for guide in self._load():

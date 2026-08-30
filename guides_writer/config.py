@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     tz_label: str = "Asia/Kolkata"
     guides_per_run: int = 3
     source_mode: str = "merge"
+    history_days: int = 40
     dry_run: bool = False
 
 

@@ -40,6 +40,7 @@ def _part2():
 class SettingsLite:
     dry_run = True
     guides_per_run = 3
+    history_days = 14
 
 
 def _cand(i: int):

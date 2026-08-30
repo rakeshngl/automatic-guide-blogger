@@ -35,7 +35,7 @@ Built by **UVF IT**. Internal project.
 | Capability | Detail |
 |---|---|
 | **Discovery** | Merges candidates from 7 sources into one deduplicated pool |
-| **Selection** | LLM scores candidates against a rubric and picks the top 3 guide topics, avoiding anything built in the last 14 days |
+| **Selection** | LLM scores candidates against a rubric and picks the top 3 guide topics, avoiding anything built in the last 40 days |
 | **Writing** | Two-stage LLM generation: an outline (validated against a rubric) → a full multi-phase, code-heavy guide |
 | **Rendering** | Deterministic HTML via Jinja2 + a hand-crafted SVG architecture diagram, pixel-matched to the reference guide |
 | **Delivery** | Rich Discord embeds with the HTML file attached to a private channel |
@@ -59,7 +59,7 @@ discover → enrich → select → write ×3 → render ×3 → catalog → deli
 
 2. **Enrich (`agents/writer.py:enrich`)** — for GitHub candidates, fetches the README; otherwise fetches page `<meta>` description. This gives the LLM real context about what the topic builds, then truncates to a budget (keeps the prompt under the Groq token window).
 
-3. **Select (`agents/selector.py:TopicSelector`)** — the merged pool (usually 100–130 candidates) + the last 14 days of `history.json` are formatted into a prompt. The LLM returns a `RawSelection` (JSON) of up to `GUIDES_PER_RUN` picks, each with `title`, `angle`, `why_guide_worthy`, `difficulty`, `est_minutes`, `tags`. A **fuzzy-dedupe** pass (`rapidfuzz` `WRatio` ≥ 82) drops picks too close to recent history → if fewer than requested survive, the run is flagged `degraded`.
+3. **Select (`agents/selector.py:TopicSelector`)** — the merged pool (usually 100–130 candidates) + the last `HISTORY_DAYS` (default 40) of `history.json` are formatted into a prompt. The LLM returns a `RawSelection` (JSON) of up to `GUIDES_PER_RUN` picks, each with `title`, `angle`, `why_guide_worthy`, `difficulty`, `est_minutes`, `tags`. A **fuzzy-dedupe** pass (`rapidfuzz` `token_set_ratio` ≥ 82) drops picks too close to recent history → if fewer than requested survive, the run is flagged `degraded`.
 
 4. **Write (`agents/writer.py:GuideWriter`)** — **two-stage** per guide, to stay inside Groq's free-tier 8k token/min window:
    - *Outline*: `chat_json(..., schema=GuideOutline)` → title, tagline, intro, warning, `DiagramSpec`, and 4–6 phases each with ≤3 code blocks and ≥1 "check" step. Validated against a **rubric** (`_rubric_violations`): ≥4 phases, ≥1 code/phase, ≥3 checks, no duplicate ids.
@@ -90,7 +90,7 @@ discover → enrich → select → write ×3 → render ×3 → catalog → deli
 | Typed models | **Pydantic v2** (`BaseSettings`, `BaseModel`) | Validation, JSON-schema for LLM, `.env` config |
 | Config | **pydantic-settings** + **python-dotenv** | Type-safe `.env` loading |
 | Rich text | `Markup` via renderer | Safe `**bold**`/inline-code conversion (autoescape) |
-| State | `data/history.json` (utf-8-sig tolerant) | 14-day rolling dedupe |
+| State | `data/history.json` (utf-8-sig tolerant) | 40-day rolling dedupe |
 | Run logs | `data/runs/YYYY-MM-DD.json` | Every run's audit summary |
 
 ### Networking & Scraping
@@ -110,7 +110,7 @@ discover → enrich → select → write ×3 → render ×3 → catalog → deli
 | Retries | **tenacity** (8s→70s ×6 backoff) | Absorbs transient 429/5xx |
 | Structured output | `chat_json` with Pydantic schema | Validates LLM output; auto-repair + multi-attempt recovery |
 | JSON hardening | `JSONValidateError` + `failed_generation` | Provider `json_validate_failed` → retry + targeted completion |
-| Dedupe | **rapidfuzz** (`WRatio`, token_set @ 82) | Fuzzy-match against 14-day history |
+| Dedupe | **rapidfuzz** (`token_set_ratio` @ 82) | Fuzzy-match against `HISTORY_DAYS` (40) history |
 
 ### Rendering / Frontend
 | Component | Choice | Why |
@@ -174,7 +174,7 @@ Automatic Guides Writer/
 │   ├── deliver/
 │   │   └── discord.py         # webhook embeds + Retry-After handling
 │   ├── storage/
-│   │   └── history.py         # 14-day rolling dedupe (utf-8-sig tolerant)
+│   │   └── history.py         # 40-day rolling dedupe (utf-8-sig tolerant)
 │   └── utils/
 │       └── logging.py         # JSON-lines rotating file logger
 ├── scripts/
@@ -183,7 +183,7 @@ Automatic Guides Writer/
 ├── tests/                     # 73 offline tests (fixtures + fakes, no network)
 ├── fixtures/                  # per-source snapshots: html / json / xml
 ├── data/
-│   ├── history.json           # 14-day dedupe state
+│   ├── history.json           # 40-day dedupe state
 │   └── runs/YYYY-MM-DD.json   # daily run audit summaries
 ├── out/                       # deployed static site (index.html + html/ + images/)
 ├── ops/logrotate.conf         # daily rotation, 14 keep
@@ -214,7 +214,7 @@ flowchart TD
     PH & GH & TA & HN & HF & DV & RD --> POOL["Merged pool<br/>~110-130 candidates<br/>URL-deduped"]
 
     POOL --> ENRICH["Enrich<br/>(README / page meta)"]
-    ENRICH --> SEL["TopicSelector (LLM)<br/>rubric + 14-day fuzzy dedupe<br/>→ top 3"]
+    ENRICH --> SEL["TopicSelector (LLM)<br/>rubric + 40-day fuzzy dedupe<br/>→ top 3"]
 
     SEL --> WRITE["GuideWriter (LLM)<br/>outline[validated] → split 2-part write"]
     WRITE --> RENDER["Renderer<br/>Jinja2 + deterministic SVG"]
@@ -271,6 +271,7 @@ cp .env.example .env        # fill in the keys (table below)
 | `DISCORD_WEBHOOK_URL` | no | — | `https://discord.com/api/webhooks/...` → `#guides-drafts`; unset → render locally only |
 | `GUIDES_PER_RUN` | no | `3` | Guides generated per run |
 | `SOURCE_MODE` | no | `merge` | `merge` pools all sources; `ph` / `gh` / `taaft` / … isolate one |
+| `HISTORY_DAYS` | no | `40` | Rolling dedupe window in days (was 14) |
 | `TZ_LABEL` | no | `Asia/Kolkata` | Reference only; cron uses `CRON_TZ` |
 | `DRY_RUN` | no | `false` | `true` → `out/` only, no Discord, no history |
 
@@ -363,7 +364,7 @@ The offline suite is **CI-safe** — zero network calls: every source parses a c
 |---|---|---|
 | App log | `logs/app.log` (JSON-lines, rotated) | Structured, greppable — `tail -f logs/app.log` |
 | Cron log | `logs/cron.log` | stdout/stderr of scheduled runs |
-| History | `data/history.json` | 14-day dedupe list; delete to reset |
+| History | `data/history.json` | 40-day dedupe list; delete to reset |
 | Run summary | `data/runs/YYYY-MM-DD.json` | `status`, `degraded_selection`, `failed_sources`, `delivery_ids`, `delivery_errors` |
 | Output | `out/html/YYYY-MM-DD_<slug>.html` | Always kept, even on delivery failure |
 

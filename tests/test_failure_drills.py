@@ -14,6 +14,7 @@ from guides_writer.sources.base import CandidateItem, SourceError
 class SettingsLite:
     dry_run = True
     guides_per_run = 3
+    history_days = 14
 
 
 def _cand(i: int):
@@ -156,6 +157,7 @@ class TestInvalidWebhook:
         class DryRunOff:
             dry_run = False
             guides_per_run = 1
+            history_days = 14
 
         def boom_deliver(files, results):
             raise httpx.HTTPError("webhook unreachable")
