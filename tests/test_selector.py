@@ -100,6 +100,25 @@ class TestIsDuplicateTitle:
             "PostHog Analytics Self-Host", ["MoneyPrinterTurbo Video Tool"]
         )
 
+    def test_shared_common_word_is_not_a_duplicate(self):
+        # Regression: WRatio over-scored these at 85.5 purely on the shared
+        # word "AI" + build-guide boilerplate, wrongly dropping a valid pick.
+        assert not _is_duplicate_title(
+            "Build a Screenshot-to-Code Converter with Python and AI",
+            ["Local-First AI Job Search Agent", "Minimal AI Job Search Agent"],
+        )
+
+    def test_real_thematic_repeat_still_detected(self):
+        assert _is_duplicate_title(
+            "Minimal AI Job Search Agent", ["Local-First AI Job Search Agent"]
+        )
+        assert _is_duplicate_title(
+            "HTML Cleaner", ["Build an HTML Cleaner Tool with Python"]
+        )
+        assert _is_duplicate_title(
+            "Minimal Satellite Map Viewer", ["Build a Satellite Map Viewer in JS"]
+        )
+
 
 class Answer(BaseModel):
     value: int

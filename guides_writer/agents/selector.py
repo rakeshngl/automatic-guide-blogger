@@ -75,13 +75,18 @@ def _is_duplicate_title(title: str, seen_titles: list[str]) -> bool:
     lowered = title.lower()
     for existing in seen_titles:
         existing_lower = existing.lower()
-        if existing_lower in lowered or lowered in existing_lower:
+        # Exact substring both ways is a strong signal (guard against tiny
+        # accidental matches on 1-2 char words).
+        if (existing_lower in lowered or lowered in existing_lower) and (
+            len(existing_lower) >= 8 and len(lowered) >= 8
+        ):
             return True
-        score = max(
-            fuzz.WRatio(lowered, existing_lower),
-            fuzz.token_set_ratio(lowered, existing_lower),
-        )
-        if score >= FUZZY_DUPE_THRESHOLD:
+        # Token-set overlap measures real shared vocabulary. NOTE: we
+        # deliberately avoid fuzz.WRatio here — its partial-ratio component
+        # over-scores short titles that merely share one common word (e.g.
+        # "AI"), producing false-positive "duplicates" and dropping valid
+        # picks (which is why some runs degrade to 2/3 for no good reason).
+        if fuzz.token_set_ratio(lowered, existing_lower) >= FUZZY_DUPE_THRESHOLD:
             return True
     return False
 
