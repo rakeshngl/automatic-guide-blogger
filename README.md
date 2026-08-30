@@ -108,7 +108,8 @@ discover → enrich → select → write ×3 → render ×3 → catalog → deli
 | Model | **`qwen/qwen3.6-27b`** (default) | Free-tier, separate 200k TPD quota; `gpt-oss-120b` / `grok-4-fast` swappable |
 | Client | OpenAI-compatible `httpx` wrapper | Provider-agnostic (`LLM_BASE_URL` swap) |
 | Retries | **tenacity** (8s→70s ×6 backoff) | Absorbs transient 429/5xx |
-| Structured output | `chat_json` with Pydantic schema | Validates LLM output; auto-repair + JSON repair path |
+| Structured output | `chat_json` with Pydantic schema | Validates LLM output; auto-repair + multi-attempt recovery |
+| JSON hardening | `JSONValidateError` + `failed_generation` | Provider `json_validate_failed` → retry + targeted completion |
 | Dedupe | **rapidfuzz** (`WRatio`, token_set @ 82) | Fuzzy-match against 14-day history |
 
 ### Rendering / Frontend
@@ -133,7 +134,7 @@ discover → enrich → select → write ×3 → render ×3 → catalog → deli
 ### Tooling / Dev
 | Component | Choice | Why |
 |---|---|---|
-| Testing | **pytest** | 69 offline tests, fixtures + fakes |
+| Testing | **pytest** | 73 offline tests, fixtures + fakes |
 | Fixtures | `fixtures/` (HTML, JSON, XML snapshots) | Deterministic offline tests for every source |
 | Deployment | `wrangler` via `scripts/publish.{ps1,sh}` | One command to deploy the site |
 | CI-safety | No network in default `pytest` | Runs anywhere, deterministically |
@@ -179,7 +180,7 @@ Automatic Guides Writer/
 ├── scripts/
 │   ├── publish.sh             # Linux: wrangler deploy --assets out
 │   └── publish.ps1            # Windows: same, robust exit-code propagation
-├── tests/                     # 69 offline tests (fixtures + fakes, no network)
+├── tests/                     # 73 offline tests (fixtures + fakes, no network)
 ├── fixtures/                  # per-source snapshots: html / json / xml
 ├── data/
 │   ├── history.json           # 14-day dedupe state
@@ -344,7 +345,7 @@ The `.bat` / `run.sh` invoke the publish step as soon as the run ends with **≥
 ## 🔬 Testing
 
 ```bash
-.venv/bin/pytest -q                     # 69 tests, fully offline (fixtures + FakeLLM + mocked httpx)
+.venv/bin/pytest -q                     # 73 tests, fully offline (fixtures + FakeLLM + mocked httpx)
 .venv/bin/pytest tests/test_sources.py -q
 .venv/bin/pytest tests/test_failure_drills.py -q   # scraper isolation, bad LLM JSON, invalid webhook, exit codes
 ```
@@ -410,7 +411,7 @@ Before trusting full autonomy, eyeball `#guides-drafts` daily:
 - ✅ Deterministic SVG diagrams + pixel-faithful rendering
 - ✅ Discord delivery, catalog patching, Cloudflare publish
 - ✅ Publish-on-partial exit-code contract + robust `publish.ps1`
-- ✅ 69 offline failure-drill tests
+- ✅ 73 offline failure-drill tests
 
 **Backlog (opt-in)**
 - [ ] Telegram/email failure alerts

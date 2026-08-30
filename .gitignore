@@ -4,6 +4,7 @@ secrets/
 data/
 out/
 logs/
+.wrangler/
 
 # Python
 __pycache__/
