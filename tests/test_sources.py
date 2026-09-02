@@ -265,16 +265,17 @@ class TestGmailDigest:
     def test_parses_mime_digest(self):
         raw = (FIXTURES / "gmail_reddit_digest.eml").read_bytes()
         entries = parse_digest_email(raw)
-        assert len(entries) == 2
+        assert len(entries) == 1
         first = entries[0]
-        assert first.title.startswith("We built a local-first")
-        assert first.url == "https://www.reddit.com/r/selfhosted/comments/abc/local_first_ai_job_agent"
-        assert first.subreddit == "selfhosted"
-        assert "ranks them by your skills" in first.snippet
+        assert first.title == "App idea #2 : AI Insurance Claim Agent"
+        assert first.url == "https://www.reddit.com/r/AppIdeas/comments/1vzuhuv"
+        assert first.subreddit == "AppIdeas"
 
-    def test_empty_or_text_only_email_raises(self):
+    def test_missing_thread_links_raises(self):
         bad = (
-            b"From: x@y.z\nTo: a@b.c\nSubject: no html\n\nJust some words, no links."
+            b"From: x@y.z\nTo: a@b.c\nSubject: no html\n"
+            b"Content-Type: text/html; charset=UTF-8\n\n"
+            b"<html><body>just some words, no links.</body></html>"
         )
         with pytest.raises(SourceError):
             parse_digest_email(bad)

@@ -5,6 +5,7 @@ import logging
 import re
 from datetime import datetime, timedelta, timezone
 from email import policy
+from urllib.parse import unquote
 
 from guides_writer.sources.base import CandidateItem, SourceError
 from guides_writer.sources.reddit_digest import (
@@ -20,14 +21,12 @@ logger = logging.getLogger(__name__)
 DEFAULT_HOST = "imap.gmail.com"
 DEFAULT_SENDER = "noreply@redditmail.com"
 
-_THREAD_HREF = re.compile(
-    r'href\s*=\s*["\'](https://(?:www\.)?reddit\.com/r/[^"\']+/comments/[^"\']+)["\']',
-    re.IGNORECASE,
-)
-_THREAD_LINK_TITLE = re.compile(
-    r'<a[^>]+href\s*=\s*["\'](https://(?:www\.)?reddit\.com/r/[^"\']+/comments/[^"\']+)["\'][^>]*>(.*?)</a>',
+# Reddit digest emails wrap every link in a click.redditmail.com/CL0/<enc> tracker.
+_TRACKER_ANCHOR = re.compile(
+    r'<a[^>]+href\s*=\s*["\']([^"\']*click\.redditmail\.com/CL0/[^"\']*)["\'][^>]*>(.*?)</a>',
     re.IGNORECASE | re.DOTALL,
 )
+_COMMENTS_RE = re.compile(r"reddit\.com/(?:%2F)?r/([^/%]+)/comments/([^/%]+)")
 
 
 def _strip_tags(text: str) -> str:
@@ -36,6 +35,11 @@ def _strip_tags(text: str) -> str:
 
 def _decode(text: str) -> str:
     return html.unescape(text).strip()
+
+
+def _decode_tracker(tracker_url: str) -> str:
+    after = tracker_url.split("/CL0/", 1)[1] if "/CL0/" in tracker_url else tracker_url
+    return unquote(after)
 
 
 def find_html_body(msg: email.message.Message) -> str:
@@ -69,53 +73,49 @@ def _wrap_charset_decode(payload: bytes, charset: str | None) -> str:
         return payload.decode("utf-8", errors="replace")
 
 
-def _entry_from_match(m: re.Match, snippet: str) -> DigestEntry:
-    url = _decode(m.group(1)).rstrip("/")
-    sub = re.search(r"/r/([^/]+)/", url)
-    return DigestEntry(
-        title=_decode(_strip_tags(m.group(2)))[:200],
-        url=url,
-        subreddit=sub.group(1) if sub else "",
-        snippet=snippet[:200],
-    )
-
-
 def parse_digest_email(raw: bytes, limit: int = 60) -> list[DigestEntry]:
     try:
         msg = email.message_from_bytes(raw, policy=policy.default)
     except Exception as exc:
         raise SourceError(f"unparseable email: {exc}") from exc
     body = find_html_body(msg)
+    if not body:
+        raise SourceError("Gmail digest email has no usable body")
+    # Group tracker anchors by decoded thread id, keeping title + body anchors.
+    posts: dict[str, dict] = {}
+    for m in _TRACKER_ANCHOR.finditer(body):
+        tracker = m.group(1)
+        try:
+            real = _decode_tracker(tracker)
+        except Exception:  # noqa: BLE001
+            continue
+        cm = _COMMENTS_RE.search(real)
+        if not cm:
+            continue
+        subreddit, thread_id = cm.group(1), cm.group(2)
+        inner = m.group(2)
+        text = _decode(_strip_tags(inner))
+        text = re.sub(r"\s+", " ", text).strip()
+        post = posts.setdefault(thread_id, {"subreddit": subreddit, "title": "", "snippet": ""})
+        if "<strong>" in inner:
+            strong = re.search(r"<strong>(.*?)</strong>", inner, re.DOTALL)
+            post["title"] = _decode(_strip_tags(strong.group(1))) if strong else text
+        elif len(text) > len(post["snippet"]) and not text.lower().startswith(("u/", "posted", "ago", "comment")):
+            post["snippet"] = text[:200]
     entries: list[DigestEntry] = []
-    seen: set[str] = set()
-    if body:
-        # Take a chunk after each thread link as the snippet (up to next link).
-        matches = list(_THREAD_LINK_TITLE.finditer(body))
-        for idx, m in enumerate(matches):
-            url = _decode(m.group(1)).rstrip("/")
-            if url in seen:
-                continue
-            seen.add(url)
-            seg_end = matches[idx + 1].start() if idx + 1 < len(matches) else len(body)
-            snippet = _decode(_strip_tags(body[m.end() : seg_end]))
-            snippet = re.sub(r"\s+", " ", snippet).strip()
-            entries.append(_entry_from_match(m, snippet))
-            if len(entries) >= limit:
-                break
-        # Fallback: plain links without readable anchor text.
-        if not entries:
-            for m in _THREAD_HREF.finditer(body):
-                url = _decode(m.group(1)).rstrip("/")
-                if url in seen:
-                    continue
-                seen.add(url)
-                sub = re.search(r"/r/([^/]+)/", url)
-                entries.append(
-                    DigestEntry(title=url.rsplit("/comments/", 1)[-1][:200], url=url,
-                                subreddit=sub.group(1) if sub else "")
-                )
-                if len(entries) >= limit:
-                    break
+    for thread_id, post in posts.items():
+        if not post["title"]:
+            continue
+        entries.append(
+            DigestEntry(
+                title=post["title"][:200],
+                url=f"https://www.reddit.com/r/{post['subreddit']}/comments/{thread_id}",
+                subreddit=post["subreddit"],
+                snippet=post["snippet"][:200],
+            )
+        )
+        if len(entries) >= limit:
+            break
     if not entries:
         raise SourceError("Gmail digest email contains no Reddit thread links")
     logger.info("gmail_digest_parsed entries=%d", len(entries))
