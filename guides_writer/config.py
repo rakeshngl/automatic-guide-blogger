@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     gmail_app_password: str | None = None
     gmail_sender: str = "noreply@redditmail.com"
     gmail_lookback_days: int = 7
+    gmail_allowed_subreddits: str = (
+        "selfhosted,appideas,indiehackers,startups,startup_ideas,sideproject"
+    )
     dry_run: bool = False
 
 

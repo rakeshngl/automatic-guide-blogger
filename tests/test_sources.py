@@ -6,7 +6,10 @@ import pytest
 from guides_writer.sources.base import SourceError, dedupe
 from guides_writer.sources.devto import parse_devto
 from guides_writer.sources.github_trending import parse_trending
-from guides_writer.sources.gmail_digest import parse_digest_email
+from guides_writer.sources.gmail_digest import (
+    GmailDigestAdapter,
+    parse_digest_email,
+)
 from guides_writer.sources.hf_spaces import parse_hf_spaces
 from guides_writer.sources.hn_show import parse_hn
 from guides_writer.sources.producthunt import parse_posts
@@ -279,3 +282,34 @@ class TestGmailDigest:
         )
         with pytest.raises(SourceError):
             parse_digest_email(bad)
+
+
+class TestGmailDigestSubredditFilter:
+    def test_filter_allowed_entries_drops_irrelevant_subs(self):
+        from guides_writer.sources.gmail_digest import (
+            DEFAULT_ALLOWED_SUBREDDITS,
+            filter_allowed_entries,
+        )
+        from guides_writer.sources.reddit_digest import DigestEntry
+
+        make = lambda sub: DigestEntry(
+            title="t", url=f"https://reddit.com/r/{sub}/x",
+            subreddit=sub, snippet="s",
+        )
+        entries = [
+            make("selfhosted"), make("AppIdeas"), make("startups"),
+            make("Indian_flex"), make("scamindia"), make("TeenIndia"),
+        ]
+        kept = filter_allowed_entries(entries, DEFAULT_ALLOWED_SUBREDDITS)
+        got = {e.subreddit for e in kept}
+        assert got == {"selfhosted", "AppIdeas", "startups"}
+        assert all(e.subreddit not in got for e in entries[3:])
+
+    def test_filter_allowed_entries_case_insensitive(self):
+        from guides_writer.sources.gmail_digest import filter_allowed_entries
+        from guides_writer.sources.reddit_digest import DigestEntry
+
+        entries = [DigestEntry(title="t", url="u", subreddit="SELFHOSTED")]
+        assert filter_allowed_entries(entries, {"selfhosted"}) == entries
+        assert filter_allowed_entries(entries, {"selfhosted", "appideas"}) == entries
+        assert filter_allowed_entries(entries, {"appideas"}) == []

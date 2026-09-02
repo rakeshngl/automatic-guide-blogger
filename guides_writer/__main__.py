@@ -40,6 +40,9 @@ def build_adapters(settings) -> list:
                 user=settings.gmail_user,
                 app_password=settings.gmail_app_password,
                 sender=settings.gmail_sender,
+                allowed_subreddits={
+                    s.strip() for s in settings.gmail_allowed_subreddits.split(",") if s.strip()
+                },
                 llm_client=email_llm,
                 lookback_days=settings.gmail_lookback_days,
             )

@@ -3,6 +3,7 @@ import html
 import imaplib
 import logging
 import re
+from collections.abc import Iterable
 from datetime import datetime, timedelta, timezone
 from email import policy
 from urllib.parse import unquote
@@ -20,6 +21,12 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_HOST = "imap.gmail.com"
 DEFAULT_SENDER = "noreply@redditmail.com"
+# Only these subreddits feed guide ideas (case-insensitive). Everything else
+# (r/Indian_flex, r/scamindia, r/TeenIndia, salary flexes, etc.) is dropped.
+DEFAULT_ALLOWED_SUBREDDITS = {
+    "selfhosted", "appideas", "indiehackers", "startups", "startup_ideas",
+    "sideproject",
+}
 
 # Reddit digest emails wrap every link in a click.redditmail.com/CL0/<enc> tracker.
 _TRACKER_ANCHOR = re.compile(
@@ -122,6 +129,18 @@ def parse_digest_email(raw: bytes, limit: int = 60) -> list[DigestEntry]:
     return entries
 
 
+def filter_allowed_entries(
+    entries: Iterable[DigestEntry],
+    allowed: set[str],
+) -> list[DigestEntry]:
+    """Keep only threads whose subreddit is in the allowlist (case-insensitive)."""
+    result: list[DigestEntry] = []
+    for entry in entries:
+        if entry.subreddit.lower() in allowed:
+            result.append(entry)
+    return result
+
+
 class GmailDigestAdapter:
     name = "gmail_digest"
 
@@ -131,6 +150,7 @@ class GmailDigestAdapter:
         app_password: str,
         host: str = DEFAULT_HOST,
         sender: str = DEFAULT_SENDER,
+        allowed_subreddits: set[str] | None = None,
         llm_client=None,
         lookback_days: int = 7,
         max_emails: int = 10,
@@ -142,6 +162,11 @@ class GmailDigestAdapter:
         self._app_password = app_password
         self._host = host
         self._sender = sender
+        self._allowed_subreddits = (
+            {s.strip().lower() for s in allowed_subreddits}
+            if allowed_subreddits is not None
+            else DEFAULT_ALLOWED_SUBREDDITS
+        )
         self._llm_client = llm_client
         self._lookback_days = lookback_days
         self._max_emails = max_emails
@@ -191,6 +216,7 @@ class GmailDigestAdapter:
                     entries.append(entry)
             except SourceError as exc:
                 logger.warning("gmail_digest_email_skip err=%s", exc)
+        entries = filter_allowed_entries(entries, self._allowed_subreddits)
         if not entries:
             raise SourceError("Gmail digests parsed zero usable thread entries")
         ideas: list[DigestIdea] = []
