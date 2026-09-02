@@ -27,7 +27,10 @@ class Settings(BaseSettings):
     email_llm_api_key: str | None = None
     email_llm_base_url: str | None = None
     email_llm_model: str | None = None
-    reddit_digest_endpoint: str = "https://digest.uvfarms.in/latest"
+    gmail_user: str | None = None
+    gmail_app_password: str | None = None
+    gmail_sender: str = "noreply@redditmail.com"
+    gmail_lookback_days: int = 7
     dry_run: bool = False
 
 

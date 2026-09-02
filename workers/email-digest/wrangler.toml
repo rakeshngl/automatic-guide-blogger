@@ -1,0 +1,9 @@
+name = "email-digest"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[[kv_namespaces]]
+binding = "REDDIT_DIGEST"
+id = "3e6311a9388a4edaa8446e63d957e5a1"
+
+# Routes are managed via Email Routing dashboard (send incoming@uvfarms.in here).

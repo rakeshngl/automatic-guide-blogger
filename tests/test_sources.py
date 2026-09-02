@@ -6,6 +6,7 @@ import pytest
 from guides_writer.sources.base import SourceError, dedupe
 from guides_writer.sources.devto import parse_devto
 from guides_writer.sources.github_trending import parse_trending
+from guides_writer.sources.gmail_digest import parse_digest_email
 from guides_writer.sources.hf_spaces import parse_hf_spaces
 from guides_writer.sources.hn_show import parse_hn
 from guides_writer.sources.producthunt import parse_posts
@@ -258,3 +259,22 @@ class TestRedditDigest:
         entries = parse_digest_payload(data)
         ideas = extract_ideas(entries, FakeLLM())
         assert ideas == []
+
+
+class TestGmailDigest:
+    def test_parses_mime_digest(self):
+        raw = (FIXTURES / "gmail_reddit_digest.eml").read_bytes()
+        entries = parse_digest_email(raw)
+        assert len(entries) == 2
+        first = entries[0]
+        assert first.title.startswith("We built a local-first")
+        assert first.url == "https://www.reddit.com/r/selfhosted/comments/abc/local_first_ai_job_agent"
+        assert first.subreddit == "selfhosted"
+        assert "ranks them by your skills" in first.snippet
+
+    def test_empty_or_text_only_email_raises(self):
+        bad = (
+            b"From: x@y.z\nTo: a@b.c\nSubject: no html\n\nJust some words, no links."
+        )
+        with pytest.raises(SourceError):
+            parse_digest_email(bad)

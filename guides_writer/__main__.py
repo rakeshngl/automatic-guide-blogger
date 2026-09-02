@@ -10,7 +10,7 @@ from guides_writer.sources.hf_spaces import HFSpaceAdapter
 from guides_writer.sources.hn_show import HNShowAdapter
 from guides_writer.sources.producthunt import ProductHuntAdapter
 from guides_writer.sources.reddit import RedditSelfHostedAdapter
-from guides_writer.sources.reddit_digest import RedditDigestAdapter
+from guides_writer.sources.gmail_digest import GmailDigestAdapter
 from guides_writer.sources.taaft import TaaftAdapter
 from guides_writer.utils.logging import setup_logging
 
@@ -27,19 +27,25 @@ def build_adapters(settings) -> list:
     adapters.append(HFSpaceAdapter())
     adapters.append(DevToAdapter())
     adapters.append(RedditSelfHostedAdapter())
-    email_llm = None
-    if settings.email_llm_api_key:
-        email_llm = LLMClient(
-            api_key=settings.email_llm_api_key,
-            base_url=settings.email_llm_base_url or "https://api.xkiro.com/v1",
-            model=settings.email_llm_model or "qwen/qwen3.8-max:free",
+    if settings.gmail_user and settings.gmail_app_password:
+        email_llm = None
+        if settings.email_llm_api_key:
+            email_llm = LLMClient(
+                api_key=settings.email_llm_api_key,
+                base_url=settings.email_llm_base_url or "https://api.xkiro.com/v1",
+                model=settings.email_llm_model or "qwen/qwen3.8-max:free",
+            )
+        adapters.append(
+            GmailDigestAdapter(
+                user=settings.gmail_user,
+                app_password=settings.gmail_app_password,
+                sender=settings.gmail_sender,
+                llm_client=email_llm,
+                lookback_days=settings.gmail_lookback_days,
+            )
         )
-    adapters.append(
-        RedditDigestAdapter(
-            endpoint=settings.reddit_digest_endpoint,
-            llm_client=email_llm,
-        )
-    )
+    else:
+        print("  (skipping gmail_digest: GMAIL_USER / GMAIL_APP_PASSWORD not set)")
     return adapters
 
 

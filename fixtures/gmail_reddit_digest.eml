@@ -1,0 +1,34 @@
+From: Reddit Digest <noreply@redditmail.com>
+To: user@gmail.com
+Subject: Your daily Reddit digest
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="DIGESTBOUNDARY"
+
+--DIGESTBOUNDARY
+Content-Type: text/plain; charset="UTF-8"
+
+Top posts in r/selfhosted
+
+We built a local-first AI job search agent
+https://www.reddit.com/r/selfhosted/comments/abc/local_first_ai_job_agent/
+
+Any recommendations for a screenshot-to-code converter?
+https://www.reddit.com/r/selfhosted/comments/def/screenshot_to_code_converter/
+
+--DIGESTBOUNDARY
+Content-Type: text/html; charset="UTF-8"
+
+<html><body>
+<p>Your daily digest</p>
+<table>
+<tr>
+<td><a href="https://www.reddit.com/r/selfhosted/comments/abc/local_first_ai_job_agent/">We built a local-first AI job search agent</a></td>
+<td><span class="sub">r/selfhosted</span> Aggregates job listings for tech jobs and ranks them by your skills. Always self-hosted.</td>
+</tr>
+<tr>
+<td><a href="https://www.reddit.com/r/selfhosted/comments/def/screenshot_to_code_converter/">Any recommendations for a screenshot-to-code converter?</a></td>
+<td><span class="sub">r/selfhosted</span> I want a tool that turns a design mockup into HTML/CSS.</td>
+</tr>
+</table>
+</body></html>
+--DIGESTBOUNDARY--
