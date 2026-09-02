@@ -1,7 +1,7 @@
 import pytest
 from pydantic import BaseModel
 
-from guides_writer.agents.selector import TopicSelector, _is_duplicate_title
+from guides_writer.agents.selector import TopicSelector, _balanced_pool, _is_duplicate_title
 from guides_writer.llm.client import JSONValidateError, LLMClient, LLMError
 from guides_writer.sources.base import CandidateItem
 
@@ -83,6 +83,24 @@ class TestTopicSelector:
         assert result.picks == []
         assert result.degraded
         assert client.calls == 0
+
+
+class TestBalancedPool:
+    def test_under_cap_returns_all(self):
+        cands = [_cand(i) for i in range(10)]
+        out = _balanced_pool(cands, max_n=20)
+        assert out == cands
+
+    def test_caps_and_spreads_across_sources(self):
+        cands = [_cand(i, source="github_trending") for i in range(60)]
+        cands.extend(_cand(i, source="reddit_digest", url=f"https://r/{i}") for i in range(3))
+        out = _balanced_pool(cands, max_n=40)
+        assert len(out) == 40
+        sources = {c.source for c in out}
+        assert sources == {"github_trending", "reddit_digest"}
+        # round-robin keeps smallest source represented, not swallowed by biggest
+        digest_count = sum(1 for c in out if c.source == "reddit_digest")
+        assert digest_count == 3
 
 
 class TestIsDuplicateTitle:

@@ -135,6 +135,7 @@ class GmailDigestAdapter:
         lookback_days: int = 7,
         max_emails: int = 10,
         limit: int = 60,
+        max_fetch_entries: int = 20,
         audit: bool = True,
     ):
         self._user = user
@@ -145,6 +146,7 @@ class GmailDigestAdapter:
         self._lookback_days = lookback_days
         self._max_emails = max_emails
         self._limit = limit
+        self._max_fetch_entries = max_fetch_entries
         self._audit = audit
 
     def _fetch_raw_emails(self) -> list[bytes]:
@@ -191,16 +193,19 @@ class GmailDigestAdapter:
                 logger.warning("gmail_digest_email_skip err=%s", exc)
         if not entries:
             raise SourceError("Gmail digests parsed zero usable thread entries")
-        if self._llm_client:
+        ideas: list[DigestIdea] = []
+        if self._llm_client and self._max_fetch_entries:
             ideas = extract_ideas(entries, self._llm_client)
-        else:
+        if not ideas:
+            if self._llm_client:
+                logger.warning("gmail_digest_extract_empty falling_back_to_raw_entries")
             ideas = [
                 DigestIdea(
                     title=e.title, angle=e.snippet,
                     why_guide_worthy="Extracted from Reddit Gmail digest",
                     thread_url=e.url,
                 )
-                for e in entries
+                for e in entries[:self._max_fetch_entries]
             ]
         if self._audit:
             _write_audit({"digests": [{"entries": [e.model_dump() for e in entries]}]},

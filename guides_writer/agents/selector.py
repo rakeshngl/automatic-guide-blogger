@@ -10,6 +10,10 @@ from guides_writer.sources.base import CandidateItem
 logger = logging.getLogger(__name__)
 
 FUZZY_DUPE_THRESHOLD = 82
+# Single request must stay under Groq's 8k TPM budget for qwen3.6-27b.
+# 72 candidates ~ 3k tokens of pool + history + system stays well inside.
+MAX_POOL_CANDIDATES = 72
+MAX_EXCLUDE_TITLES = 30
 
 SYSTEM_PROMPT_TEMPLATE = """You are the topic editor for "UVF IT", a catalog of beginner-level "build your own X" development guides (see style: step-by-step blueprints like "Build a RAG Chat Bot from Scratch" or "Build an AI Recruitment Agent in 4 Steps").
 
@@ -91,6 +95,34 @@ def _is_duplicate_title(title: str, seen_titles: list[str]) -> bool:
     return False
 
 
+def _balanced_pool(candidates: list[CandidateItem], max_n: int = MAX_POOL_CANDIDATES) -> list[CandidateItem]:
+    """Cap the pool sent to the LLM without starving any source.
+
+    Round-robins across sources in rank order so small/fresh sources
+    (e.g. reddit_digest) keep representation instead of being drowned by
+    the biggest feeds.
+    """
+    if len(candidates) <= max_n:
+        return candidates
+    by_source: dict[str, list[CandidateItem]] = {}
+    for c in candidates:
+        by_source.setdefault(c.source, []).append(c)
+    out: list[CandidateItem] = []
+    round_idx = 0
+    while len(out) < max_n:
+        progressed = False
+        for items in by_source.values():
+            if len(out) >= max_n:
+                break
+            if round_idx < len(items):
+                out.append(items[round_idx])
+                progressed = True
+        if not progressed:
+            break
+        round_idx += 1
+    return out
+
+
 def _format_pool(candidates: list[CandidateItem]) -> str:
     lines = []
     for i, c in enumerate(candidates, start=1):
@@ -122,18 +154,23 @@ class TopicSelector:
         count: int = 3,
         exclude_titles: list[str] | None = None,
     ) -> SelectionResult:
-        exclude_titles = exclude_titles or []
+        exclude_titles = (exclude_titles or [])[-MAX_EXCLUDE_TITLES:]
         if not candidates:
             logger.warning("selection_skipped no_candidates")
             return SelectionResult(picks=[], requested_count=count)
 
         system_prompt = SYSTEM_PROMPT_TEMPLATE.format(count=count)
+        pool = _balanced_pool(candidates)
         user_prompt = (
             "Recently covered topics (do NOT repeat these themes):\n"
             + ("\n".join(f"- {t}" for t in exclude_titles) if exclude_titles else "(none yet)")
             + "\n\nCandidate pool:\n"
-            + _format_pool(candidates)
+            + _format_pool(pool)
             + f"\n\nSelect exactly {count} guide-worthy topics."
+        )
+        logger.info(
+            "selection_prompt_sizes candidates=%d pool_shown=%d excludes=%d",
+            len(candidates), len(pool), len(exclude_titles),
         )
         raw = self._client.chat_json(
             messages=[
