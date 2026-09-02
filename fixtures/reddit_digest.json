@@ -1,0 +1,46 @@
+{
+  "digests": [
+    {
+      "date": "2026-09-02T08:00:00Z",
+      "subreddit": "selfhosted",
+      "entries": [
+        {
+          "title": "We built a local-first AI job search agent",
+          "url": "https://www.reddit.com/r/selfhosted/comments/abc/local_first_ai_job_agent/",
+          "snippet": "Aggregates job listings for tech jobs and ranks them by your skills. Always self-hosted."
+        },
+        {
+          "title": "Any recommendations for a screenshot-to-code converter?",
+          "url": "https://www.reddit.com/r/selfhosted/comments/def/screenshot_to_code_converter/",
+          "snippet": "I want a tool that turns a design mockup into HTML/CSS. Something I can self-host."
+        },
+        {
+          "title": "MoneyPrinterTurbo alternative for faceless YouTube channels",
+          "url": "https://www.reddit.com/r/selfhosted/comments/ghi/money_printer_turbo_alternative/",
+          "snippet": "Looking for something that auto-generates videos from trending topics with AI voiceover."
+        },
+        {
+          "title": "What's your backup strategy for a single drive NAS?",
+          "url": "https://www.reddit.com/r/selfhosted/comments/jkl/backup_strategy_nas/",
+          "snippet": "Just wondering what everyone does for offsite backups without paying for cloud."
+        },
+        {
+          "title": "PostHog vs Plausible for a small SaaS dashboard",
+          "url": "https://www.reddit.com/r/selfhosted/comments/mno/posthog_vs_plausible/",
+          "snippet": "Trying to decide on product analytics. Want to keep it self-hosted and simple."
+        }
+      ]
+    },
+    {
+      "date": "2026-09-02T08:05:00Z",
+      "subreddit": "webdev",
+      "entries": [
+        {
+          "title": "Show HN: An HTML table cleaner bookmarklet",
+          "url": "https://www.reddit.com/r/webdev/comments/pqr/html_table_cleaner/",
+          "snippet": "Paste messy copied tables from websites, get clean Markdown/HTML back."
+        }
+      ]
+    }
+  ]
+}

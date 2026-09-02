@@ -10,6 +10,7 @@ from guides_writer.sources.hf_spaces import HFSpaceAdapter
 from guides_writer.sources.hn_show import HNShowAdapter
 from guides_writer.sources.producthunt import ProductHuntAdapter
 from guides_writer.sources.reddit import RedditSelfHostedAdapter
+from guides_writer.sources.reddit_digest import RedditDigestAdapter
 from guides_writer.sources.taaft import TaaftAdapter
 from guides_writer.utils.logging import setup_logging
 
@@ -26,6 +27,19 @@ def build_adapters(settings) -> list:
     adapters.append(HFSpaceAdapter())
     adapters.append(DevToAdapter())
     adapters.append(RedditSelfHostedAdapter())
+    email_llm = None
+    if settings.email_llm_api_key:
+        email_llm = LLMClient(
+            api_key=settings.email_llm_api_key,
+            base_url=settings.email_llm_base_url or "https://api.xkiro.com/v1",
+            model=settings.email_llm_model or "qwen/qwen3.8-max:free",
+        )
+    adapters.append(
+        RedditDigestAdapter(
+            endpoint=settings.reddit_digest_endpoint,
+            llm_client=email_llm,
+        )
+    )
     return adapters
 
 

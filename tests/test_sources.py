@@ -10,6 +10,11 @@ from guides_writer.sources.hf_spaces import parse_hf_spaces
 from guides_writer.sources.hn_show import parse_hn
 from guides_writer.sources.producthunt import parse_posts
 from guides_writer.sources.reddit import parse_reddit
+from guides_writer.sources.reddit_digest import (
+    RedditDigestAdapter,
+    extract_ideas,
+    parse_digest_payload,
+)
 from guides_writer.sources.taaft import parse_home
 
 FIXTURES = pathlib.Path(__file__).resolve().parent.parent / "fixtures"
@@ -178,3 +183,78 @@ class TestDedupe:
         b = CandidateItem(source="y", title="b", url="https://e/1/")
         out = dedupe([a, b])
         assert len(out) == 1
+
+
+class TestRedditDigest:
+    def test_parses_rows(self):
+        data = json.loads(_read("reddit_digest.json"))
+        entries = parse_digest_payload(data)
+        assert len(entries) == 6
+        assert all(entry.title for entry in entries)
+        assert entries[0].subreddit == "selfhosted"
+        assert entries[5].subreddit == "webdev"
+        assert entries[0].url.startswith("https://www.reddit.com/")
+
+    def test_missing_digests_raises(self):
+        with pytest.raises(SourceError):
+            parse_digest_payload({})
+
+    def test_empty_entries_raises(self):
+        with pytest.raises(SourceError):
+            parse_digest_payload({"digests": [{"entries": []}]})
+
+    def test_adapter_local_file_without_llm(self, tmp_path):
+        adapter = RedditDigestAdapter(
+            local_file=str(FIXTURES / "reddit_digest.json"), audit=False
+        )
+        items = adapter.fetch()
+        assert len(items) == 6
+        assert all(item.source == "reddit_digest" for item in items)
+        assert all(item.url and item.tagline for item in items)
+
+    def test_extract_ideas_maps_thread_urls_through_llm(self):
+        class FakeLLM:
+            def __init__(self):
+                self.calls = 0
+
+            def chat_json(self, messages, schema, **kwargs):
+                self.calls += 1
+                return schema.model_validate(
+                    {
+                        "ideas": [
+                            {
+                                "title": "Local-First AI Job Search Agent",
+                                "angle": "Agentic job aggregation",
+                                "why_guide_worthy": "Build your own",
+                                "thread_url": "https://www.reddit.com/r/selfhosted/comments/abc/local_first_ai_job_agent/",
+                            }
+                        ]
+                    }
+                )
+
+        data = json.loads(_read("reddit_digest.json"))
+        entries = parse_digest_payload(data)
+        ideas = extract_ideas(entries, FakeLLM())
+        assert len(ideas) == 1
+        assert ideas[0].thread_url == entries[0].url  # survived the round-trip
+
+    def test_extract_ideas_drops_unknown_urls(self):
+        class FakeLLM:
+            def chat_json(self, messages, schema, **kwargs):
+                return schema.model_validate(
+                    {
+                        "ideas": [
+                            {
+                                "title": "Totally Made Up Thing",
+                                "angle": "a",
+                                "why_guide_worthy": "b",
+                                "thread_url": "https://example.com/nope",
+                            }
+                        ]
+                    }
+                )
+
+        data = json.loads(_read("reddit_digest.json"))
+        entries = parse_digest_payload(data)
+        ideas = extract_ideas(entries, FakeLLM())
+        assert ideas == []

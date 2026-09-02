@@ -24,6 +24,10 @@ class Settings(BaseSettings):
     guides_per_run: int = 3
     source_mode: str = "merge"
     history_days: int = 40
+    email_llm_api_key: str | None = None
+    email_llm_base_url: str | None = None
+    email_llm_model: str | None = None
+    reddit_digest_endpoint: str = "https://digest.uvfarms.in/latest"
     dry_run: bool = False
 
 
