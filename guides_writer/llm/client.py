@@ -1,5 +1,7 @@
 import json
 import logging
+import random
+import time
 
 import httpx
 from pydantic import BaseModel, ValidationError
@@ -11,6 +13,27 @@ from tenacity import (
 )
 
 logger = logging.getLogger(__name__)
+
+# Longer pause on rate-limit responses (429/413 reset the per-minute token
+# window), shorter on plain server hiccups (500/502/503/504, timeouts).
+_RATE_LIMIT_BACKOFF = 35.0
+_TRANSIENT_BACKOFF = 8.0
+_BACKOFF_JITTER = 5.0
+
+
+def _is_rate_limit(exc: Exception) -> bool:
+    text = str(exc)
+    return "HTTP 429" in text or "HTTP 413" in text
+
+
+def _backoff_sleep(attempt: int, exc: Exception) -> None:
+    base = _RATE_LIMIT_BACKOFF if _is_rate_limit(exc) else _TRANSIENT_BACKOFF
+    delay = base * attempt + random.uniform(0, _BACKOFF_JITTER)
+    logger.warning(
+        "llm_json_retry_backoff attempt=%d sleep=%.1fs err=%s",
+        attempt, delay, str(exc)[:120],
+    )
+    time.sleep(delay)
 
 
 class LLMError(RuntimeError):
@@ -213,16 +236,22 @@ class LLMClient:
                         last_exc = exc2
                         continue
                 if attempt < retries:
+                    _backoff_sleep(attempt, exc)
                     continue
             except (ValueError, LLMError, httpx.HTTPError, RuntimeError) as exc:
-                # non-JSON transient provider errors -> plain retry
+                # non-JSON transient provider errors -> plain retry with backoff
                 last_exc = exc
                 if attempt < retries:
                     logger.warning(
                         "llm_json_transient_retry attempt=%d err=%s",
                         attempt, str(exc)[:150],
                     )
+                    _backoff_sleep(attempt, exc)
                     continue
+                logger.error(
+                    "llm_json_give_up model=%s err=%s",
+                    self.model, str(exc)[:300],
+                )
                 raise
         raise last_exc if last_exc else LLMError("chat_json failed without error detail")
 
