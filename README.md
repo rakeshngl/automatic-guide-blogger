@@ -2,7 +2,7 @@
 
 > **A daily autonomous agent that writes, renders, and publishes "build-your-own-clone" programming guides.**
 
-Every day at **06:00 IST**, this agent scans **7 trending-tech sources**, uses an **LLM** to pick the 3 most guide-worthy topics, **writes complete step-by-step HTML blueprints** in the style of [guides.uvfarms.in/local_rag_guide](https://guides.uvfarms.in/local_rag_guide), posts them to a private **Discord** channel for review, and **deploys** them to Cloudflare — all without human intervention.
+Every day at **06:00 IST**, this agent scans **6 trending-tech sources**, uses an **LLM** to pick the 3 most guide-worthy topics, **writes complete step-by-step HTML blueprints** in the style of [guides.uvfarms.in/local_rag_guide](https://guides.uvfarms.in/local_rag_guide), posts them to a private **Discord** channel for review, and **deploys** them to Cloudflare — all without human intervention.
 
 Built by **UVF IT**. Internal project.
 
@@ -34,7 +34,7 @@ Built by **UVF IT**. Internal project.
 
 | Capability | Detail |
 |---|---|
-| **Discovery** | Merges candidates from 7 sources into one deduplicated pool |
+| **Discovery** | Merges candidates from 6 sources into one deduplicated pool |
 | **Selection** | LLM scores candidates against a rubric and picks the top 3 guide topics, avoiding anything built in the last 40 days |
 | **Writing** | Two-stage LLM generation: an outline (validated against a rubric) → a full multi-phase, code-heavy guide |
 | **Rendering** | Deterministic HTML via Jinja2 + a hand-crafted SVG architecture diagram, pixel-matched to the reference guide |
@@ -153,11 +153,10 @@ Automatic Guides Writer/
 │   │   ├── base.py            # CandidateItem (pydantic), SourceError, SourceAdapter protocol, dedupe
 │   │   ├── producthunt.py     # GraphQL via curl_cffi (Cloudflare bypass)
 │   │   ├── github_trending.py # HTML scrape (BS4 + lxml)
-│   │   ├── taaft.py           # HTML scrape (BS4)
 │   │   ├── hn_show.py         # Algolia Show HN JSON API
-│   │   ├── hf_spaces.py       # Hugging Face likes API (JSON)
 │   │   ├── devto.py           # Dev.to top-week API (JSON)
-│   │   └── reddit.py          # r/selfhosted Atom feed (XML; JSON is 403-blocked)
+│   │   ├── reddit.py          # r/selfhosted Atom feed (XML; JSON is 403-blocked)
+│   │   └── gmail_digest.py    # Reddit Gmail digests via IMAP + subreddit allowlist
 │   ├── agents/
 │   │   ├── selector.py        # TopicSelector: rubric prompt + fuzzy dedupe vs history
 │   │   └── writer.py          # GuideWriter: enrich + outline(validated) + 2-part split write
@@ -248,7 +247,7 @@ cp .env.example .env        # fill in the keys (table below)
 
 # 3. smoke tests
 .venv/bin/python -m guides_writer hello           # LLM round-trip → pong
-.venv/bin/python -m guides_writer test-sources    # ~120 candidates from 7 sources
+.venv/bin/python -m guides_writer test-sources    # ~85 candidates from 6 sources
 .venv/bin/python -m guides_writer render-sample   # -> out/sample.html (compare with reference)
 
 # 4. full pipeline (no delivery)
@@ -352,7 +351,7 @@ The `.bat` / `run.sh` invoke the publish step as soon as the run ends with **≥
 ```
 
 The offline suite is **CI-safe** — zero network calls: every source parses a checked-in fixture, the LLM is a `FakeLLM`, and `httpx` posts are mocked. Live-only checks (intentionally not in CI):
-- `test-sources` — real crawl of all 7 sources
+- `test-sources` — real crawl of all 6 sources
 - `hello` — live LLM round-trip
 - `run --dry-run` — end-to-end with real LLM, no delivery
 
