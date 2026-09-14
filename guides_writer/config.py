@@ -27,6 +27,8 @@ class Settings(BaseSettings):
     email_llm_api_key: str | None = None
     email_llm_base_url: str | None = None
     email_llm_model: str | None = None
+    email_llm_auto_select: bool = True
+    email_llm_prefer_order: str = ""
     gmail_user: str | None = None
     gmail_app_password: str | None = None
     gmail_sender: str = "noreply@redditmail.com"

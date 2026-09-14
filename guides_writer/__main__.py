@@ -1,8 +1,9 @@
 import argparse
 import sys
 
-from guides_writer.config import get_settings
+from guides_writer.config import BASE_DIR, get_settings
 from guides_writer.llm.client import LLMClient
+from guides_writer.llm.free_models import FreeModelCatalog
 from guides_writer.sources.base import dedupe
 from guides_writer.sources.devto import DevToAdapter
 from guides_writer.sources.github_trending import GitHubTrendingAdapter
@@ -11,6 +12,38 @@ from guides_writer.sources.producthunt import ProductHuntAdapter
 from guides_writer.sources.reddit import RedditSelfHostedAdapter
 from guides_writer.sources.gmail_digest import GmailDigestAdapter
 from guides_writer.utils.logging import setup_logging
+
+
+DEFAULT_EMAIL_MODEL = "sensenova/sensenova-6.8-flash-lite"
+
+
+def resolve_email_model(settings):
+    """Pick an xkiro free model automatically, falling back to configured.
+
+    Returns ``(model, detail)`` where ``detail`` explains the decision so the
+    run log shows whether the model came from the cache, live discovery, or
+    the configured default.
+    """
+    if settings.email_llm_auto_select and settings.email_llm_api_key:
+        preferred = [
+            m.strip()
+            for m in settings.email_llm_prefer_order.split(",")
+            if m.strip()
+        ] or None
+        catalog = FreeModelCatalog(
+            api_key=settings.email_llm_api_key,
+            base_url=settings.email_llm_base_url or "https://api.xkiro.com/v1",
+            cache_path=BASE_DIR / "data" / "cache" / "email_free_models.json",
+            preferred=preferred,
+        )
+        result = catalog.select()
+        if result.get("model"):
+            return result["model"], result
+        print(
+            f"  (auto-select found no usable free model: {result.get('error', 'all probes failed')}"
+            " - using configured model)"
+        )
+    return settings.email_llm_model or DEFAULT_EMAIL_MODEL, {"source": "config"}
 
 
 def build_adapters(settings) -> list:
@@ -26,11 +59,13 @@ def build_adapters(settings) -> list:
     if settings.gmail_user and settings.gmail_app_password:
         email_llm = None
         if settings.email_llm_api_key:
+            model, _detail = resolve_email_model(settings)
             email_llm = LLMClient(
                 api_key=settings.email_llm_api_key,
                 base_url=settings.email_llm_base_url or "https://api.xkiro.com/v1",
-                model=settings.email_llm_model or "sensenova/sensenova-6.8-flash-lite",
+                model=model,
             )
+            print(f"  (email digest llm model: {model})")
         adapters.append(
             GmailDigestAdapter(
                 user=settings.gmail_user,
