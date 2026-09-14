@@ -29,7 +29,7 @@ def build_adapters(settings) -> list:
             email_llm = LLMClient(
                 api_key=settings.email_llm_api_key,
                 base_url=settings.email_llm_base_url or "https://api.xkiro.com/v1",
-                model=settings.email_llm_model or "qwen/qwen3.8-max",
+                model=settings.email_llm_model or "sensenova/sensenova-6.8-flash-lite",
             )
         adapters.append(
             GmailDigestAdapter(
