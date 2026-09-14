@@ -110,7 +110,7 @@ def run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
             })
             delivered_files.append(path)
             if not settings.dry_run:
-                history.append(title=guide.meta.title, source_url=pick.source_url,
+                history.append(title=pick.title, source_url=pick.source_url,
                                extra={"slug": filename})
         except Exception as exc:
             logger.exception("guide_pipeline_failed title=%s", pick.title)

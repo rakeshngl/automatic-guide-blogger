@@ -43,12 +43,29 @@ switch ($code) {
 if ($shouldPublish) {
     Write-Host ""
     Write-Host "Publishing to Cloudflare (uvf-guides)..."
+    if (Test-Path ".env") {
+        Get-Content ".env" | ForEach-Object {
+            $line = $_.Trim()
+            if ($line -and -not $line.StartsWith("#") -and $line -match "^[A-Za-z_][A-Za-z0-9_]*\s*=") {
+                $name = ($line -split "=", 2)[0].Trim()
+                $value = ($line -split "=", 2)[1].Trim().Trim('"', "'")
+                if (-not $value) { return }
+                Set-Item -Path "Env:$name" -Value $value
+            }
+        }
+    }
+    $env:PUBLISH_SETUP = "loaded .env for token"
     powershell -NoProfile -ExecutionPolicy Bypass -File "scripts\publish.ps1"
     if ($LASTEXITCODE -eq 0) {
         Write-Host "[OK] Published to https://guides.uvfarms.in"
         $publishDone = $true
     } else {
-        Write-Host "[WARN] Publish step failed - run: npx wrangler login"
+        Write-Host ""
+        Write-Host "[WARN] ============================================"
+        Write-Host "[WARN] Publish FAILED. Fix and retry manually:"
+        Write-Host "[WARN]   powershell -File scripts\publish.ps1"
+        Write-Host "[WARN] If the error is auth, add CLOUDFLARE_API_TOKEN=... to .env then rerun."
+        Write-Host "[WARN] ============================================"
     }
 }
 
