@@ -2,7 +2,7 @@ import pytest
 from pydantic import BaseModel
 
 from guides_writer.agents.selector import TopicSelector, _balanced_pool, _is_duplicate_title
-from guides_writer.llm.client import JSONValidateError, LLMClient, LLMError
+from guides_writer.llm.client import JSONValidateError, LLMClient, LLMError, ModelNotFoundError
 from guides_writer.sources.base import CandidateItem
 
 
@@ -175,6 +175,23 @@ class TestLLMClientRepair:
         client._post = lambda payload: {"choices": [{"message": {"content": ""}}]}
         with pytest.raises(RuntimeError):
             client.chat(messages=[])
+
+    def test_model_not_found_raises_without_retry(self):
+        """A dead model id is terminal - no retry/backoff, fail fast."""
+        client = LLMClient(api_key="k", base_url="https://fake", model="gone/model")
+        calls = {"n": 0}
+
+        def fake_post(payload):
+            calls["n"] += 1
+            raise ModelNotFoundError(
+                'LLM API HTTP 404: {"error":{"message":"model does not exist",'
+                '"code":"model_not_found"}}'
+            )
+
+        client._post = fake_post
+        with pytest.raises(ModelNotFoundError):
+            client.chat_json(messages=[{"role": "user", "content": "x"}], schema=Answer)
+        assert calls["n"] == 1
 
 
 class TestJSONValidateHardening:

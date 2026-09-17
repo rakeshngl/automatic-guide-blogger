@@ -40,6 +40,14 @@ class LLMError(RuntimeError):
     pass
 
 
+class ModelNotFoundError(LLMError):
+    """The configured provider/model id does not exist (404 model_not_found).
+
+    Terminal - retrying cannot help. Providers rename/remove models, so this
+    surfaces fast instead of burning the transient-retry backoffs.
+    """
+
+
 class JSONValidateError(LLMError):
     """Provider-side json_object validation failure.
 
@@ -112,6 +120,8 @@ class LLMClient:
                 f"LLM JSON generation failed (400 json_validate_failed): {resp.text[:2000]}",
                 failed_generation=failed_gen,
             )
+        if resp.status_code == 404 and "model_not_found" in resp.text:
+            raise ModelNotFoundError(f"LLM API HTTP 404: {resp.text[:300]}")
         if resp.status_code != 200:
             raise RuntimeError(f"LLM API HTTP {resp.status_code}: {resp.text[:800]}")
         return resp.json()
@@ -238,6 +248,13 @@ class LLMClient:
                 if attempt < retries:
                     _backoff_sleep(attempt, exc)
                     continue
+            except ModelNotFoundError as exc:
+                # model id is gone - terminal, do not waste retries/backoffs
+                logger.error(
+                    "llm_model_not_found model=%s err=%s",
+                    self.model, str(exc)[:200],
+                )
+                raise
             except (ValueError, LLMError, httpx.HTTPError, RuntimeError) as exc:
                 # non-JSON transient provider errors -> plain retry with backoff
                 last_exc = exc
