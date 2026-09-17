@@ -3,7 +3,7 @@ import sys
 
 from guides_writer.config import BASE_DIR, get_settings
 from guides_writer.llm.client import LLMClient
-from guides_writer.llm.free_models import FreeModelCatalog
+from guides_writer.llm.free_models import GROQ_PREFERRED, FreeModelCatalog
 from guides_writer.sources.base import dedupe
 from guides_writer.sources.devto import DevToAdapter
 from guides_writer.sources.github_trending import GitHubTrendingAdapter
@@ -44,6 +44,38 @@ def resolve_email_model(settings):
             " - using configured model)"
         )
     return settings.email_llm_model or DEFAULT_EMAIL_MODEL, {"source": "config"}
+
+
+def resolve_llm_model(settings):
+    """Resolve the selector model, with auto-fallback when it disappears.
+
+    Honors the configured ``LLM_MODEL`` while it stays on the provider's
+    model list (no probing - it is already a known-good pin). If the provider
+    renames/removes it (like Groq's qwen3.6 -> qwen3.8), picks the best
+    still-available model from the live list so the run keeps going.
+    """
+    if getattr(settings, "llm_auto_select", False) and getattr(settings, "llm_api_key", None):
+        preferred = [
+            m.strip()
+            for m in (getattr(settings, "llm_prefer_order", "") or "").split(",")
+            if m.strip()
+        ] or list(GROQ_PREFERRED)
+        catalog = FreeModelCatalog(
+            api_key=settings.llm_api_key,
+            base_url=settings.llm_base_url,
+            cache_path=BASE_DIR / "data" / "cache" / "llm_models.json",
+            preferred=preferred,
+            tier=None,
+            json_mode=True,
+        )
+        result = catalog.select(keep=settings.llm_model)
+        if result.get("model"):
+            return result["model"], result
+        print(
+            f"  (llm auto-select found no usable model: "
+            f"{result.get('error', 'all probes failed')} - using configured model)"
+        )
+    return settings.llm_model, {"source": "config"}
 
 
 def build_adapters(settings) -> list:

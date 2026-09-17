@@ -31,6 +31,18 @@ DEFAULT_PREFERRED = [
     "mistralai/devstral-medium",
 ]
 
+# Groq does not tag free tiers in /v1/models - the whole list is usable on a
+# free account. Rank chat-capable models with useful context first (best for
+# the selector's big candidate pools); anything listed but unknown is still
+# tried last so future Groq model drops get picked up without a code change.
+GROQ_PREFERRED = [
+    "qwen/qwen3.8-27b",
+    "openai/gpt-oss-120b",
+    "openai/gpt-oss-20b",
+    "groq/compound",
+    "groq/compound-mini",
+]
+
 
 @dataclass
 class ModelInfo:
@@ -49,6 +61,11 @@ class FreeModelCatalog:
       2. ranks them by preference (known-good first, unknowns last)
       3. optionally probes each until one returns a valid completion
       4. caches the pick locally so regular runs skip the probe entirely
+
+    Groq has no access-tier field - pass ``tier=None`` to keep every listed
+    model and let ranking + json-mode probing pick a chat-capable one.
+    ``select(keep=...)`` prefers the configured model while it is still
+    listed, and only probes for a replacement when it disappears.
     """
 
     def __init__(
@@ -61,6 +78,8 @@ class FreeModelCatalog:
         verify: bool = True,
         max_probe: int = 5,
         timeout: float = 25.0,
+        tier: str | None = "free",
+        json_mode: bool = False,
     ):
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
@@ -70,6 +89,8 @@ class FreeModelCatalog:
         self.verify = verify
         self.max_probe = max_probe
         self.timeout = timeout
+        self.tier = tier
+        self.json_mode = json_mode
         self._client = httpx.Client(
             headers={"Authorization": f"Bearer {api_key}"},
             timeout=timeout,
@@ -82,16 +103,21 @@ class FreeModelCatalog:
                 f"GET {MODELS_ENDPOINT} HTTP {resp.status_code}: {resp.text[:300]}"
             )
         items = resp.json().get("data", [])
-        return [
-            ModelInfo(
-                id=str(m["id"]),
-                display_name=str(m.get("display_name", "")),
-                context_length=int(m.get("context_length") or 0),
-                pricing=m.get("pricing"),
+        out = []
+        for m in items:
+            if not isinstance(m.get("id"), str):
+                continue
+            if self.tier is not None and m.get("access_tier") != self.tier:
+                continue
+            out.append(
+                ModelInfo(
+                    id=m["id"],
+                    display_name=str(m.get("display_name", "")),
+                    context_length=int(m.get("context_length") or 0),
+                    pricing=m.get("pricing"),
+                )
             )
-            for m in items
-            if m.get("access_tier") == "free" and isinstance(m.get("id"), str)
-        ]
+        return out
 
     def rank(self, free: list[ModelInfo]) -> list[ModelInfo]:
         by_id = {m.id: m for m in free}
@@ -108,6 +134,8 @@ class FreeModelCatalog:
             "max_tokens": 20,
             "temperature": 0,
         }
+        if self.json_mode:
+            probe["response_format"] = {"type": "json_object"}
         try:
             resp = self._client.post(
                 f"{self.base_url}/chat/completions",
@@ -139,9 +167,21 @@ class FreeModelCatalog:
         self.cache_path.parent.mkdir(parents=True, exist_ok=True)
         self.cache_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
-    def select(self) -> dict:
+    def select(self, keep: str | None = None) -> dict:
+        """Pick a usable model.
+
+        ``keep`` is a pinned model id (e.g. the one in config). It is used
+        without probing while it stays on the provider's model list; when it
+        disappears (provider rename/removal) the best discovered replacement
+        is picked instead.
+        """
         cached = self._load_cache()
-        if cached and cached.get("chosen"):
+        if keep:
+            cached_ids = set(cached.get("free_ids", [])) if cached else set()
+            if keep in cached_ids:
+                logger.info("free_model_kept model=%s source=cache", keep)
+                return {"model": keep, "source": "cache", "free_count": len(cached_ids)}
+        elif cached and cached.get("chosen"):
             logger.info(
                 "free_model_from_cache model=%s source=cache",
                 cached["chosen"],
@@ -157,6 +197,18 @@ class FreeModelCatalog:
             logger.warning("free_model_discovery_failed err=%s", str(exc)[:150])
             return {"model": None, "error": str(exc)[:150]}
         ordered = self.rank(free)
+        if keep and keep in {m.id for m in ordered}:
+            self._write_cache(
+                {
+                    "discovered_at": datetime.now(timezone.utc).isoformat(),
+                    "chosen": keep,
+                    "free_ids": [m.id for m in ordered],
+                    "checked": [],
+                    "verified": self.verify,
+                }
+            )
+            logger.info("free_model_kept model=%s source=listed", keep)
+            return {"model": keep, "source": "listed", "free_count": len(free)}
         chosen = None
         checked: list[str] = []
         if self.verify and ordered:

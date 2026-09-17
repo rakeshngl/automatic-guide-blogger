@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 import httpx
 import pytest
 
-from guides_writer.llm.free_models import FreeModelCatalog, ModelInfo
+from guides_writer.llm.free_models import FreeModelCatalog, GROQ_PREFERRED, ModelInfo
 
 FREE_IDS = [
     "sensenova/sensenova-6.8-flash-lite",
@@ -12,6 +12,22 @@ FREE_IDS = [
     "brand/new-free-model",
 ]
 PAID_IDS = ["openai/gpt-5.6-terra", "qwen/qwen3.8-max"]
+
+GROQ_IDS = [
+    "qwen/qwen3.8-27b",
+    "openai/gpt-oss-120b",
+    "openai/gpt-oss-20b",
+    "whisper-large-v3",
+    "brand/groq-new",
+]
+
+
+def _groq_entry(model_id: str) -> dict:
+    return {"id": model_id, "object": "model", "owned_by": "groq"}
+
+
+def _groq_payload() -> dict:
+    return {"object": "list", "data": [_groq_entry(m) for m in GROQ_IDS]}
 
 
 def _model_entry(model_id: str, access_tier: str) -> dict:
@@ -199,3 +215,80 @@ class TestSelection:
         res = catalog.select()
         assert res["model"] is None
         assert "error" in res
+
+
+class TestGroqProfile:
+    def test_tier_none_keeps_every_listed_model(self):
+        catalog = FreeModelCatalog(api_key="k", base_url="https://x", verify=False, tier=None)
+
+        def handler(request):
+            return httpx.Response(200, json=_groq_payload())
+
+        catalog._client = _client_for(handler)
+        ids = {m.id for m in catalog.list_free()}
+        assert ids == set(GROQ_IDS)
+
+    def test_probe_sends_json_object_mode(self):
+        catalog = FreeModelCatalog(api_key="k", base_url="https://x", verify=False, tier=None, json_mode=True)
+        sent = {}
+
+        def handler(request):
+            sent["body"] = json.loads(request.content)
+            return httpx.Response(200, json=_ok_completion())
+
+        catalog._client = _client_for(handler)
+        assert catalog.probe("openai/gpt-oss-20b")
+        assert sent["body"]["response_format"] == {"type": "json_object"}
+
+    def test_keep_configured_model_while_listed(self, tmp_path):
+        """Pinned model still on the list is used with zero probes."""
+        catalog = FreeModelCatalog(
+            api_key="k",
+            base_url="https://x",
+            cache_path=tmp_path / "c.json",
+            verify=True,
+            tier=None,
+            json_mode=True,
+        )
+
+        def handler(request):
+            if request.url.path == "/chat/completions":
+                raise AssertionError("must not probe a kept model")
+            return httpx.Response(200, json=_groq_payload())
+
+        catalog._client = _client_for(handler)
+        res = catalog.select(keep="qwen/qwen3.8-27b")
+        assert res["model"] == "qwen/qwen3.8-27b"
+        assert res["source"] == "listed"
+        assert tmp_path.joinpath("c.json").exists()
+
+    def test_keep_drops_to_next_model_after_rename(self, tmp_path):
+        """When the pinned model vanishes, the best replacement is probed+picked."""
+        picked = []
+
+        def payload():
+            return {"object": "list", "data": [_groq_entry(m) for m in GROQ_IDS if m != "qwen/qwen3.8-27b"]}
+
+        def handler(request):
+            if request.url.path == "/models":
+                return httpx.Response(200, json=payload())
+            body = json.loads(request.content)
+            picked.append(body["model"])
+            if body["model"] == "whisper-large-v3":
+                return httpx.Response(400, json={"error": {"message": "not a chat model"}})
+            return httpx.Response(200, json=_ok_completion())
+
+        catalog = FreeModelCatalog(
+            api_key="k",
+            base_url="https://x",
+            cache_path=tmp_path / "c.json",
+            verify=True,
+            tier=None,
+            json_mode=True,
+            preferred=GROQ_PREFERRED,
+        )
+        catalog._client = _client_for(handler)
+        res = catalog.select(keep="qwen/qwen3.8-27b")
+        assert res["model"] == GROQ_PREFERRED[1]
+        assert res["source"] == "discovered"
+        assert "qwen/qwen3.8-27b" not in picked

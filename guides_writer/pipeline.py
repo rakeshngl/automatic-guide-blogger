@@ -137,9 +137,9 @@ def _run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
     date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     adapters = adapters if adapters is not None else None
-    if adapters is None:
-        from guides_writer.__main__ import build_adapters
+    from guides_writer.__main__ import build_adapters, resolve_llm_model
 
+    if adapters is None:
         adapters = build_adapters(settings)
 
     candidates, source_failures = fetch_pool(adapters)
@@ -150,13 +150,20 @@ def _run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
         _write_run_summary(summary, runs_dir)
         return summary
 
-    llm_client = llm_client or LLMClient(
-        api_key=settings.llm_api_key,
-        base_url=settings.llm_base_url,
-        model=settings.llm_model,
-        fallback_model=getattr(settings, "llm_fallback_model", None),
-        fallback_base_url=getattr(settings, "llm_fallback_base_url", None),
-    )
+    if llm_client is None:
+        model, model_detail = resolve_llm_model(settings)
+        logger.info(
+            "llm_model_picked model=%s source=%s prefer=%s",
+            model, model_detail.get("source", "?"),
+            ",".join((getattr(settings, "llm_prefer_order", "") or "").split(",")[:3]) or "default",
+        )
+        llm_client = LLMClient(
+            api_key=settings.llm_api_key,
+            base_url=settings.llm_base_url,
+            model=model,
+            fallback_model=getattr(settings, "llm_fallback_model", None),
+            fallback_base_url=getattr(settings, "llm_fallback_base_url", None),
+        )
     history = HistoryStore(path=history_path)
     selection = TopicSelector(llm_client).select(
         candidates=candidates,

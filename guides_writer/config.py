@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     llm_api_key: str
     llm_base_url: str = "https://api.x.ai/v1"
     llm_model: str = "grok-4-fast"
+    llm_auto_select: bool = True
+    llm_prefer_order: str = ""
     llm_fallback_model: str | None = None
     llm_fallback_base_url: str | None = None
     ph_api_token: str | None = None
