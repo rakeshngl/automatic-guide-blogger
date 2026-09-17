@@ -52,6 +52,19 @@ def patch_catalog(index_path: Path, results: list[dict]) -> int:
         logger.warning("catalog_no_grid path=%s", index_path)
         return 0
 
+    html_dir = index_path.resolve().parent / "html"
+
+    purged = 0
+    for card in list(soup.select("div.blog-grid [data-href]")):
+        href = card.get("data-href", "")
+        if not href:
+            continue
+        target = html_dir / href.replace("html/", "")
+        if not target.exists():
+            logger.warning("catalog_purged_dangling href=%s", href)
+            card.decompose()
+            purged += 1
+
     existing_hrefs = {a.get("href", "") for a in soup.select("div.blog-grid a[href]")}
     today = datetime.now(timezone.utc).strftime("%b %d, %Y")
 
@@ -62,6 +75,9 @@ def patch_catalog(index_path: Path, results: list[dict]) -> int:
         file_path = result.get("file", "")
         href = Path(file_path).name if file_path else ""
         if not href or f"html/{href}" in existing_hrefs or href in existing_hrefs:
+            continue
+        if not (html_dir / href).exists():
+            logger.warning("catalog_skip_missing_file href=%s", href)
             continue
 
         eyebrow = (result.get("navbar_badge") or result.get("source", "Guide")).strip() or "Guide"
@@ -89,5 +105,8 @@ def patch_catalog(index_path: Path, results: list[dict]) -> int:
     if inserted:
         index_path.write_text(str(soup), encoding="utf-8")
         logger.info("catalog_patched inserted=%d path=%s", inserted, index_path)
+    elif purged:
+        index_path.write_text(str(soup), encoding="utf-8")
+        logger.info("catalog_patched purged_only purged=%d path=%s", purged, index_path)
 
     return inserted

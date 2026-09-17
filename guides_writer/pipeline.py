@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import re
 import time
 from datetime import datetime, timezone
@@ -14,6 +15,68 @@ from guides_writer.storage.history import HistoryStore
 logger = logging.getLogger(__name__)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+_LOCK_STALE_SECONDS = 6 * 3600
+
+
+def _run_lock_path() -> Path:
+    lock_dir = BASE_DIR / "data"
+    lock_dir.mkdir(parents=True, exist_ok=True)
+    return lock_dir / "run.lock"
+
+
+def _pid_alive(pid: int) -> bool:
+    if os.name == "nt":
+        import ctypes
+
+        PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+        handle = ctypes.windll.kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
+        if not handle:
+            return False
+        ctypes.windll.kernel32.CloseHandle(handle)
+        return True
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    return True
+
+
+def _write_run_lock() -> None:
+    _run_lock_path().write_text(
+        json.dumps({"pid": os.getpid(), "started": int(time.time())}),
+        encoding="utf-8",
+    )
+
+
+def _release_run_lock() -> None:
+    path = _run_lock_path()
+    try:
+        if path.exists():
+            try:
+                if json.loads(path.read_text(encoding="utf-8")).get("pid") == os.getpid():
+                    path.unlink()
+            except (json.JSONDecodeError, OSError):
+                pass
+    except OSError:
+        pass
+
+
+def _locked_by_other() -> dict | None:
+    path = _run_lock_path()
+    if not path.exists():
+        return None
+    try:
+        lock = json.loads(path.read_text(encoding="utf-8"))
+        pid = int(lock.get("pid", 0))
+        started = int(lock.get("started", 0))
+    except (json.JSONDecodeError, ValueError, OSError):
+        return None
+    if time.time() - started > _LOCK_STALE_SECONDS:
+        return None
+    if _pid_alive(pid):
+        return lock
+    return None
 
 
 def slugify(text: str) -> str:
@@ -36,6 +99,37 @@ def fetch_pool(adapters) -> tuple[list, list[str]]:
 def run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
                  out_dir: Path | None = None, deliver=None, runs_dir: Path | None = None,
                  history_path: Path | None = None) -> dict:
+    blocked_by = _locked_by_other()
+    if blocked_by is not None:
+        logger.error(
+            "run_blocked_other_pid pid=%s started=%s lock=%s",
+            blocked_by.get("pid"), blocked_by.get("started"), _run_lock_path(),
+        )
+        return {
+            "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "status": "blocked",
+            "degraded_selection": False,
+            "duplicates_dropped": 0,
+            "failed_sources": [],
+            "dry_run": getattr(settings, "dry_run", False),
+            "guides": [],
+            "delivery_ids": [],
+            "delivery_errors": [],
+            "catalog_patched": 0,
+            "reason": "another run already active (pid {})".format(blocked_by.get("pid")),
+        }
+    _write_run_lock()
+    try:
+        return _run_pipeline(settings, adapters=adapters, llm_client=llm_client,
+                             out_dir=out_dir, deliver=deliver, runs_dir=runs_dir,
+                             history_path=history_path)
+    finally:
+        _release_run_lock()
+
+
+def _run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
+                  out_dir: Path | None = None, deliver=None, runs_dir: Path | None = None,
+                  history_path: Path | None = None) -> dict:
     html_dir = BASE_DIR / "out" / "html"
     html_dir.mkdir(parents=True, exist_ok=True)
     out_dir = out_dir or html_dir
