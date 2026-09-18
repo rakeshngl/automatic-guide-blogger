@@ -4,9 +4,9 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-from markupsafe import Markup
 from bs4 import BeautifulSoup
+from jinja2 import Environment, FileSystemLoader
+from markupsafe import Markup
 
 from guides_writer.render.schema import Guide
 from guides_writer.render.svg_builder import build_svg

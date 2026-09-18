@@ -1,4 +1,3 @@
-import json
 import logging
 
 from pydantic import BaseModel, Field, field_validator

@@ -26,7 +26,6 @@ def build_svg(spec: DiagramSpec) -> str:
             return 1 + group_ids.index(node.group)
         return 0
 
-    ungrouped = [n for n in spec.nodes if column_of(n) == 0]
     columns: list[list] = [[] for _ in range(1 + len(group_ids))]
     for node in spec.nodes:
         columns[column_of(node)].append(node)

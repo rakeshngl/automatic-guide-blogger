@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 import httpx
 import pytest
 
-from guides_writer.llm.free_models import FreeModelCatalog, GROQ_PREFERRED, ModelInfo
+from guides_writer.llm.free_models import GROQ_PREFERRED, FreeModelCatalog, ModelInfo
 
 FREE_IDS = [
     "sensenova/sensenova-6.8-flash-lite",
@@ -185,7 +185,9 @@ class TestSelection:
 
     def test_no_free_models_returns_none(self, tmp_path):
         payload = {"object": "list", "data": [_model_entry(m, "paid") for m in PAID_IDS]}
-        handler = lambda request: httpx.Response(200, json=payload)
+
+        def handler(request):
+            return httpx.Response(200, json=payload)
         catalog = FreeModelCatalog(
             api_key="k", cache_path=tmp_path / "c.json", verify=True
         )

@@ -1,4 +1,3 @@
-import pathlib
 
 import pytest
 
@@ -14,7 +13,6 @@ from guides_writer.llm.client import LLMError
 from guides_writer.pipeline import run_pipeline
 from guides_writer.render.sample_data import SAMPLE_GUIDE
 from guides_writer.sources.base import CandidateItem
-from guides_writer.storage.history import HistoryStore
 
 
 def _part1():

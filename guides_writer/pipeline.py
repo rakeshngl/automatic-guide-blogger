@@ -5,11 +5,14 @@ import re
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from guides_writer.agents.selector import TopicSelector
 from guides_writer.agents.writer import GuideWriter
 from guides_writer.llm.client import LLMClient
+from guides_writer.render.content_guard import ContentGuardError, check
 from guides_writer.render.renderer import render_guide
+from guides_writer.runtime import build_adapters, resolve_llm_model
 from guides_writer.storage.history import HistoryStore
 
 logger = logging.getLogger(__name__)
@@ -84,6 +87,20 @@ def slugify(text: str) -> str:
     return slug[:60] or "guide"
 
 
+def _local_date(tz_label: str) -> str:
+    try:
+        return datetime.now(ZoneInfo(tz_label)).strftime("%Y-%m-%d")
+    except Exception:
+        return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+
+def _local_date_label(tz_label: str) -> str:
+    try:
+        return datetime.now(ZoneInfo(tz_label)).strftime("%b %d, %Y")
+    except Exception:
+        return datetime.now(timezone.utc).strftime("%b %d, %Y")
+
+
 def fetch_pool(adapters) -> tuple[list, list[str]]:
     pool = []
     failures = []
@@ -106,7 +123,7 @@ def run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
             blocked_by.get("pid"), blocked_by.get("started"), _run_lock_path(),
         )
         return {
-            "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "date": _local_date(getattr(settings, "tz_label", "Asia/Kolkata")),
             "status": "blocked",
             "degraded_selection": False,
             "duplicates_dropped": 0,
@@ -134,10 +151,7 @@ def _run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
     html_dir.mkdir(parents=True, exist_ok=True)
     out_dir = out_dir or html_dir
     out_dir.mkdir(parents=True, exist_ok=True)
-    date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-
-    adapters = adapters if adapters is not None else None
-    from guides_writer.__main__ import build_adapters, resolve_llm_model
+    date_str = _local_date(getattr(settings, "tz_label", "Asia/Kolkata"))
 
     if adapters is None:
         adapters = build_adapters(settings)
@@ -194,6 +208,17 @@ def _run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
             context = _safe_enrich(candidate_by_url.get(pick.source_url.rstrip("/")) or pick)
             guide = writer.write_guide(pick, context)
             html_out = render_guide(guide)
+            if getattr(settings, "content_guard_enabled", True):
+                violations = check(
+                    guide,
+                    html_out,
+                    pick.source_url,
+                    max_external_links=int(
+                        getattr(settings, "content_guard_max_external_links", 6)
+                    ),
+                )
+                if violations:
+                    raise ContentGuardError("; ".join(violations))
             filename = f"{date_str}_{slugify(guide.meta.title)}.html"
             counter = 2
             while filename in used_filenames:
@@ -236,7 +261,11 @@ def _run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
             catalog_path = (out_dir.parent / "index.html") if out_dir.name == "html" else (out_dir / "index.html")
             if not catalog_path.exists():
                 catalog_path = BASE_DIR / "out" / "index.html"
-            catalog_patched = patch_catalog(catalog_path, results)
+            catalog_patched = patch_catalog(
+                catalog_path,
+                results,
+                today=_local_date_label(getattr(settings, "tz_label", "Asia/Kolkata")),
+            )
         except Exception as exc:
             logger.warning("catalog_patch_failed err=%s", exc)
 

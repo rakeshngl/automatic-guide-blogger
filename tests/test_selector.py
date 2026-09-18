@@ -266,7 +266,6 @@ class TestJSONValidateHardening:
 
 class TestLLMErrorRetryable:
     def test_llm_error_is_retry_type(self):
-        from tenacity import retry_if_exception_type
 
         assert LLMError is not None
 

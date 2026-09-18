@@ -13,19 +13,19 @@ class Settings(BaseSettings):
     )
 
     llm_api_key: str
-    llm_base_url: str = "https://api.x.ai/v1"
-    llm_model: str = "grok-4-fast"
+    llm_base_url: str = "https://api.groq.com/openai/v1"
+    llm_model: str = "openai/gpt-oss-120b"
     llm_auto_select: bool = True
     llm_prefer_order: str = ""
     llm_fallback_model: str | None = None
     llm_fallback_base_url: str | None = None
     ph_api_token: str | None = None
     discord_webhook_url: str | None = None
-    discord_webhook_url_published: str | None = None
     tz_label: str = "Asia/Kolkata"
     guides_per_run: int = 3
-    source_mode: str = "merge"
     history_days: int = 40
+    content_guard_enabled: bool = True
+    content_guard_max_external_links: int = 6
     email_llm_api_key: str | None = None
     email_llm_base_url: str | None = None
     email_llm_model: str | None = None

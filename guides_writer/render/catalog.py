@@ -12,7 +12,7 @@ CARD_TEMPLATE = """        <article class="post-card" data-href="html/{href}" ta
             <h2><a href="html/{href}">{title}</a></h2>
             <p class="post-card-desc">{desc}</p>
             <div class="read-more">
-                Read Blueprint 
+                Read Blueprint
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </div>
             <div class="post-card-meta">
@@ -40,7 +40,7 @@ def _stack_from_result(result: dict) -> str:
     return source.replace("_", " ").title() or "Guide"
 
 
-def patch_catalog(index_path: Path, results: list[dict]) -> int:
+def patch_catalog(index_path: Path, results: list[dict], today: str | None = None) -> int:
     if not index_path.exists():
         logger.warning("catalog_missing path=%s", index_path)
         return 0
@@ -66,7 +66,8 @@ def patch_catalog(index_path: Path, results: list[dict]) -> int:
             purged += 1
 
     existing_hrefs = {a.get("href", "") for a in soup.select("div.blog-grid a[href]")}
-    today = datetime.now(timezone.utc).strftime("%b %d, %Y")
+    if today is None:
+        today = datetime.now(timezone.utc).strftime("%b %d, %Y")
 
     inserted = 0
     for result in results:

@@ -1,10 +1,9 @@
-import pathlib
 
 import httpx
 import pytest
 
 from guides_writer.agents.selector import RawSelection
-from guides_writer.agents.writer import GuideOutline, GuideWriter, WriterError
+from guides_writer.agents.writer import GuideOutline
 from guides_writer.llm.client import LLMError
 from guides_writer.pipeline import run_pipeline
 from guides_writer.render.sample_data import SAMPLE_GUIDE

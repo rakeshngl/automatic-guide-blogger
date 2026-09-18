@@ -1,5 +1,6 @@
-import pytest
 from pathlib import Path
+
+import pytest
 
 from guides_writer.render.catalog import patch_catalog
 

@@ -4,11 +4,13 @@ param(
 
 $ErrorActionPreference = "Continue"
 $publishDone = $false
+$interactive = [Environment]::UserInteractive
 
 if (Test-Path $ProjectDir) {
     Set-Location $ProjectDir
 } else {
     Write-Host "[ERROR] Project dir not found: $ProjectDir"
+    if (-not $interactive) { exit 1 }
     Read-Host "Press Enter to close"
     exit 1
 }
@@ -21,6 +23,7 @@ Write-Host ""
 
 if (-not (Test-Path ".venv\Scripts\python.exe")) {
     Write-Host "[ERROR] Virtual env not found. Run: python -m venv .venv"
+    if (-not $interactive) { exit 1 }
     Read-Host "Press Enter to close"
     exit 1
 }
@@ -44,15 +47,16 @@ if ($shouldPublish) {
     Write-Host ""
     Write-Host "Publishing to Cloudflare (uvf-guides)..."
     if (Test-Path ".env") {
-        Get-Content ".env" | ForEach-Object {
-            $line = $_.Trim()
-            if ($line -and -not $line.StartsWith("#") -and $line -match "^[A-Za-z_][A-Za-z0-9_]*\s*=") {
-                $name = ($line -split "=", 2)[0].Trim()
-                $value = ($line -split "=", 2)[1].Trim().Trim('"', "'")
-                if (-not $value) { return }
-                Set-Item -Path "Env:$name" -Value $value
+        $line = Get-Content ".env" | Where-Object { $_ -match "^\s*CLOUDFLARE_API_TOKEN\s*=" } | Select-Object -First 1
+        if ($line) {
+            $value = (($line -split "=", 2)[1]).Trim().Trim('"', "'")
+            if ($value) {
+                Set-Item -Path "Env:CLOUDFLARE_API_TOKEN" -Value $value
             }
         }
+    }
+    if (-not $env:CLOUDFLARE_API_TOKEN) {
+        Write-Host "[WARN] CLOUDFLARE_API_TOKEN not found in .env - publish will likely fail auth."
     }
     $env:PUBLISH_SETUP = "loaded .env for token"
     powershell -NoProfile -ExecutionPolicy Bypass -File "scripts\publish.ps1"
@@ -76,4 +80,5 @@ Write-Host "Catalog: out\index.html"
 Write-Host ""
 Write-Host "Published: $publishDone"
 Write-Host ""
+if (-not $interactive) { exit $code }
 Read-Host "Press Enter to close"

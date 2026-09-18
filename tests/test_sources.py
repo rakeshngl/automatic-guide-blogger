@@ -7,7 +7,6 @@ from guides_writer.sources.base import SourceError, dedupe
 from guides_writer.sources.devto import parse_devto
 from guides_writer.sources.github_trending import parse_trending
 from guides_writer.sources.gmail_digest import (
-    GmailDigestAdapter,
     parse_digest_email,
 )
 from guides_writer.sources.hf_spaces import parse_hf_spaces
@@ -292,10 +291,11 @@ class TestGmailDigestSubredditFilter:
         )
         from guides_writer.sources.reddit_digest import DigestEntry
 
-        make = lambda sub: DigestEntry(
-            title="t", url=f"https://reddit.com/r/{sub}/x",
-            subreddit=sub, snippet="s",
-        )
+        def make(sub):
+            return DigestEntry(
+                title="t", url=f"https://reddit.com/r/{sub}/x",
+                subreddit=sub, snippet="s",
+            )
         entries = [
             make("selfhosted"), make("AppIdeas"), make("startups"),
             make("Indian_flex"), make("scamindia"), make("TeenIndia"),
