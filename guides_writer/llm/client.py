@@ -2,6 +2,7 @@ import json
 import logging
 import random
 import time
+from collections import deque
 
 import httpx
 from pydantic import BaseModel, ValidationError
@@ -13,6 +14,15 @@ from tenacity import (
 )
 
 logger = logging.getLogger(__name__)
+
+# Groq free/on-demand tier caps each model at a small tokens-per-minute
+# (TPM) window; qwen3.8-27b reports x-ratelimit-limit-tokens=8000. Requests
+# that would push the rolling minute past this fail with HTTP 429
+# "Request too large ... service tier on_demand", so we self-throttle
+# instead of relying on fixed sleeps.
+_TPM_LIMITS_BY_HOST = {"groq.com": 8000}
+_TPM_SAFETY = 0.9
+_TPM_WINDOW_SECONDS = 60.0
 
 # Longer pause on rate-limit responses (429/413 reset the per-minute token
 # window), shorter on plain server hiccups (500/502/503/504, timeouts).
@@ -81,12 +91,22 @@ class LLMClient:
         fallback_base_url: str | None = None,
         fallback_api_key: str | None = None,
         timeout: float = 180.0,
+        tokens_per_minute: int | None = None,
+        tpm_safety: float = _TPM_SAFETY,
     ):
         self.model = model
         self.base_url = base_url.rstrip("/")
         self.fallback_model = fallback_model
         self.fallback_base_url = (fallback_base_url or base_url).rstrip("/") if fallback_model else None
         self.fallback_api_key = fallback_api_key or api_key
+        if tokens_per_minute is None:
+            tokens_per_minute = 0
+            for host, limit in _TPM_LIMITS_BY_HOST.items():
+                if host in self.base_url:
+                    tokens_per_minute = limit
+                    break
+        self._tpm_budget = max(0, int(tokens_per_minute * tpm_safety))
+        self._token_events: deque[tuple[float, int]] = deque()
         self._client = httpx.Client(
             headers={
                 "Authorization": f"Bearer {api_key}",
@@ -103,6 +123,44 @@ class LLMClient:
                 },
                 timeout=timeout,
             )
+
+    @property
+    def pace_enabled(self) -> bool:
+        return self._tpm_budget > 0
+
+    @staticmethod
+    def _estimate_prompt_tokens(messages: list[dict]) -> int:
+        chars = sum(len(str(m.get("content") or "")) for m in messages)
+        return chars // 4 + 8 * len(messages)
+
+    def _throttle(self, cost: int) -> None:
+        """Block until the rolling TPM window can absorb ``cost`` tokens.
+
+        Cost is an upper bound (prompt estimate + reserved ``max_tokens``),
+        so the provider should never answer a self-paced request with 429
+        "Request too large". Recording happens in :meth:`_record` once the
+        response returns, because providers meter the window from completion.
+        """
+        if not self._tpm_budget:
+            return
+        while True:
+            now = time.monotonic()
+            while self._token_events and now - self._token_events[0][0] >= _TPM_WINDOW_SECONDS:
+                self._token_events.popleft()
+            used = sum(tokens for _, tokens in self._token_events)
+            if used + cost <= self._tpm_budget or not self._token_events:
+                return
+            wait = _TPM_WINDOW_SECONDS - (now - self._token_events[0][0]) + 0.25
+            wait = max(0.5, min(wait, _TPM_WINDOW_SECONDS))
+            logger.info(
+                "llm_tpm_throttle wait=%.1fs used=%d cost=%d budget=%d",
+                wait, used, cost, self._tpm_budget,
+            )
+            time.sleep(wait)
+
+    def _record(self, cost: int) -> None:
+        if self._tpm_budget:
+            self._token_events.append((time.monotonic(), cost))
 
     @retry(
         retry=retry_if_exception_type((httpx.HTTPError, LLMError)),
@@ -162,10 +220,17 @@ class LLMClient:
                    messages: list[dict], temperature: float, max_tokens: int | None,
                    json_response: bool, reasoning_effort: str | None) -> str:
         payload = self._build_payload(model, messages, temperature, max_tokens, json_response, reasoning_effort)
+        cost = self._estimate_prompt_tokens(messages) + (max_tokens or 512)
+        self._throttle(cost)
         orig_model, orig_base, orig_client = self.model, self.base_url, self._client
         self.model, self.base_url, self._client = model, base_url, client
         try:
             data = self._post(payload)
+            self._record(cost)
+        except JSONValidateError:
+            # The provider generated (and metered) output before rejecting it.
+            self._record(cost)
+            raise
         finally:
             self.model, self.base_url, self._client = orig_model, orig_base, orig_client
         try:

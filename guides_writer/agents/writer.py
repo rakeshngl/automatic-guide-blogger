@@ -42,6 +42,12 @@ class WriterError(RuntimeError):
 
 MAX_ENRICH_CHARS = 2400
 
+# qwen3.8-27b on Groq's on-demand tier allows ~8000 tokens/minute. Keeping
+# each call's prompt + reserved completion well under that (and pacing via
+# LLMClient._throttle) avoids the 429 "Request too large ... on_demand".
+OUTLINE_MAX_TOKENS = 2400
+WRITE_MAX_TOKENS = 3400
+
 
 def _truncate(text: str, limit: int = MAX_ENRICH_CHARS) -> str:
     cleaned = re.sub(r"\n{3,}", "\n\n", text or "").strip()
@@ -156,9 +162,9 @@ OUTLINE_SYSTEM_PROMPT = """Stage 1 of 2: outline (no full prose) one beginner "U
 
 Rules:
 - Reader is a beginner dev; build a minimal but working clone in ~45 min using a free-tier open-source stack (Python or Node.js + SQLite/Postgres, no paid APIs).
-- 4-6 phases, ordered like: scaffold project -> core feature 1 (data/model) -> core feature 2 (API/UI) -> run locally -> verify and extend.
-- EVERY phase has >=1 code_block with COMPLETE runnable code that builds incrementally (not just install commands); no bare placeholders unless prose explains how to obtain the value.
-- diagram: >=4 nodes; group style "local" for your codebase/runtime/DB, "cloud" for any external API the clone calls; edges reference node ids via "from"/"to".
+- 4-5 phases, ordered like: scaffold project -> core feature 1 (data/model) -> core feature 2 (API/UI) -> run locally -> verify and extend.
+- Keep it lean: every phase has EXACTLY ONE code_block with COMPLETE runnable code (max ~25 lines each); 1-2 short prose_points per phase. No bare placeholders unless prose explains how to obtain the value.
+- diagram: 4-6 nodes; group style "local" for your codebase/runtime/DB, "cloud" for any external API the clone calls; edges reference node ids via "from"/"to".
 - warning_bullets: 2-3 honest bullets (prerequisites like Node/Python version, what is simplified vs the real product, common gotchas).
 - checklist_rows: 3-5 checks with the exact command or browser observation that proves the build works.
 - intro_points: 2 short paragraphs, UVF IT voice ("Welcome to another official **UVF IT** ... build your own X inspired by Y ...").
@@ -173,7 +179,7 @@ WRITE_COMMON_RULES = """You are expanding an OUTLINE into part of the FULL JSON 
 Rules:
 - Keep titles/order/filenames/langs from the outline; drop nothing assigned to you.
 - prose entries: paragraphs of 2-4 sentences, beginner dev tone, practical UVF IT voice — explain *what* you're coding and *why*.
-- code fields: COMPLETE runnable code that builds on previous phases (scaffold, then feature code, then run); no placeholders unless adjacent prose explains how to obtain the value; never markdown fences.
+- code fields: COMPLETE runnable code that builds on previous phases (scaffold, then feature code, then run); keep each block under ~25 lines, one block per phase; no placeholders unless adjacent prose explains how to obtain the value; never markdown fences.
 - checklist command_why: concrete backticked command or precise browser observation that proves the clone works.
 
 """
@@ -205,11 +211,50 @@ def _rubric_violations(outline: GuideOutline) -> list[str]:
     return problems
 
 
+def _compact_outline(outline: GuideOutline, start: int, stop: int, front: bool = False,
+                     tail: bool = False) -> str:
+    """Serialize only the outline fields a given part actually needs.
+
+    Re-sending the full outline (including phases written by the other part)
+    to both write calls wastes input tokens and pushes the request toward
+    Groq's per-minute token ceiling.
+    """
+    data: dict = {
+        "title": outline.title,
+        "tagline": outline.tagline,
+        "phases": [outline.phases[i].model_dump(exclude_none=True) for i in range(start, stop)],
+    }
+    if front:
+        data.update({
+            "navbar_badge": outline.navbar_badge,
+            "intro_points": outline.intro_points,
+            "warning_heading": outline.warning_heading,
+            "warning_bullets": outline.warning_bullets,
+            "diagram": outline.diagram.model_dump(exclude_none=True) if outline.diagram else None,
+        })
+    if tail:
+        data["checklist_rows"] = [row.model_dump(exclude_none=True) for row in outline.checklist_rows]
+        data["closing_alert"] = (
+            outline.closing_alert.model_dump(exclude_none=True) if outline.closing_alert else None
+        )
+    return json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+
+
 class GuideWriter:
     name = "writer"
 
     def __init__(self, client: LLMClient):
         self._client = client
+
+    def _pause(self, seconds: float) -> None:
+        """Legacy fixed pause for providers without a TPM pacer.
+
+        When the client self-throttles (Groq), the rolling token window
+        already spaces calls, so an extra sleep only wastes wall-clock.
+        """
+        if not isinstance(self._client, LLMClient) or getattr(self._client, "pace_enabled", False):
+            return
+        time.sleep(seconds)
 
     def _outline(self, pick: CandidateItem, context: str) -> GuideOutline:
         base_messages = [
@@ -224,9 +269,8 @@ class GuideWriter:
                 ),
             },
         ]
-        outline = self._client.chat_json(base_messages, schema=GuideOutline, temperature=0.4, max_tokens=4200)
-        if isinstance(self._client, LLMClient):
-            time.sleep(22)
+        outline = self._client.chat_json(base_messages, schema=GuideOutline, temperature=0.4, max_tokens=OUTLINE_MAX_TOKENS)
+        self._pause(22)
         problems = _rubric_violations(outline)
         if not problems:
             return outline
@@ -243,9 +287,8 @@ class GuideWriter:
                 ),
             },
         ]
-        outline = self._client.chat_json(repair_messages, schema=GuideOutline, temperature=0.4, max_tokens=4200)
-        if isinstance(self._client, LLMClient):
-            time.sleep(22)
+        outline = self._client.chat_json(repair_messages, schema=GuideOutline, temperature=0.4, max_tokens=OUTLINE_MAX_TOKENS)
+        self._pause(22)
         remaining = _rubric_violations(outline)
         if remaining:
             raise WriterError(f"outline failed rubric after retry: {remaining}")
@@ -254,25 +297,23 @@ class GuideWriter:
     def write_guide(self, pick: CandidateItem, context: str) -> Guide:
         outline = self._outline(pick, context)
         total = len(outline.phases)
-        split = (total + 1) // 2
-        outline_json = json.dumps(
-            outline.model_dump(exclude_none=True), ensure_ascii=False, separators=(",", ":")
-        )
+        split = max(1, total // 2)
         source_url = _topic_url(pick)
+        part1_outline = _compact_outline(outline, 0, split, front=True)
+        part2_outline = _compact_outline(outline, split, total, tail=True)
 
         part1_messages = [
             {"role": "system", "content": WRITE_PART1_PROMPT.replace("{split}", str(split)).replace("{total}", str(total))},
             {
                 "role": "user",
                 "content": (
-                    f"Topic source URL: {source_url}\n\nOUTLINE:\n{outline_json}\n\n"
+                    f"Topic source URL: {source_url}\n\nOUTLINE:\n{part1_outline}\n\n"
                     f"Produce part 1 JSON now (phases 1..{split} only)."
                 ),
             },
         ]
-        part1 = self._client.chat_json(part1_messages, schema=GuidePart1, temperature=0.5, max_tokens=3800)
-        if isinstance(self._client, LLMClient):
-            time.sleep(28)
+        part1 = self._client.chat_json(part1_messages, schema=GuidePart1, temperature=0.5, max_tokens=WRITE_MAX_TOKENS)
+        self._pause(28)
 
         remaining_titles = ", ".join(p.title for p in outline.phases[split:])
         part2_messages = [
@@ -280,14 +321,13 @@ class GuideWriter:
             {
                 "role": "user",
                 "content": (
-                    f"Topic source URL: {source_url}\n\nOUTLINE:\n{outline_json}\n\n"
+                    f"Topic source URL: {source_url}\n\nOUTLINE:\n{part2_outline}\n\n"
                     f"Produce part 2 JSON now (phases {split + 1}..{total}, checklist, closing_alert)."
                 ),
             },
         ]
-        part2 = self._client.chat_json(part2_messages, schema=GuidePart2, temperature=0.5, max_tokens=3800)
-        if isinstance(self._client, LLMClient):
-            time.sleep(28)
+        part2 = self._client.chat_json(part2_messages, schema=GuidePart2, temperature=0.5, max_tokens=WRITE_MAX_TOKENS)
+        self._pause(28)
 
         guide = Guide(
             meta=part1.meta,

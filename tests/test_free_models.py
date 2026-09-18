@@ -289,6 +289,6 @@ class TestGroqProfile:
         )
         catalog._client = _client_for(handler)
         res = catalog.select(keep="qwen/qwen3.8-27b")
-        assert res["model"] == GROQ_PREFERRED[1]
+        assert res["model"] == GROQ_PREFERRED[0]
         assert res["source"] == "discovered"
         assert "qwen/qwen3.8-27b" not in picked

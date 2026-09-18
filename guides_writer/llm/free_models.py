@@ -35,10 +35,12 @@ DEFAULT_PREFERRED = [
 # free account. Rank chat-capable models with useful context first (best for
 # the selector's big candidate pools); anything listed but unknown is still
 # tried last so future Groq model drops get picked up without a code change.
+# gpt-oss leads because qwen3.8-27b caps output at 1000 tokens/min (OTPM),
+# too small to finish a guide without many throttled chunks.
 GROQ_PREFERRED = [
-    "qwen/qwen3.8-27b",
     "openai/gpt-oss-120b",
     "openai/gpt-oss-20b",
+    "qwen/qwen3.8-27b",
     "groq/compound",
     "groq/compound-mini",
 ]

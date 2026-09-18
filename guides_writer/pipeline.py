@@ -187,7 +187,7 @@ def _run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
     used_filenames: set[str] = set()
 
     for idx, pick in enumerate(selection.picks):
-        if idx > 0 and isinstance(llm_client, LLMClient):
+        if idx > 0 and isinstance(llm_client, LLMClient) and not getattr(llm_client, "pace_enabled", False):
             time.sleep(38)
         entry = {"title": pick.title, "source": pick.source, "url": pick.source_url}
         try:

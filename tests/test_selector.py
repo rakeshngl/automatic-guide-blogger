@@ -269,3 +269,43 @@ class TestLLMErrorRetryable:
         from tenacity import retry_if_exception_type
 
         assert LLMError is not None
+
+
+class TestTokenPacer:
+    def test_groq_enables_pacer_other_hosts_do_not(self):
+        groq = LLMClient(api_key="k", base_url="https://api.groq.com/openai/v1", model="m")
+        other = LLMClient(api_key="k", base_url="https://fake", model="m")
+        assert groq.pace_enabled is True
+        assert other.pace_enabled is False
+
+    def test_throttle_waits_until_window_frees(self, monkeypatch):
+        from guides_writer.llm import client as c
+
+        clock = {"t": 1000.0}
+        sleeps: list[float] = []
+        monkeypatch.setattr(c.time, "monotonic", lambda: clock["t"])
+
+        def fake_sleep(seconds):
+            sleeps.append(seconds)
+            clock["t"] += seconds
+
+        monkeypatch.setattr(c.time, "sleep", fake_sleep)
+        client = LLMClient(
+            api_key="k", base_url="https://api.groq.com/openai/v1", model="m",
+            tokens_per_minute=1000, tpm_safety=1.0,
+        )
+        client._throttle(600)
+        client._record(600)
+        assert sleeps == []
+        client._throttle(600)
+        assert sleeps and sleeps[0] > 0
+        assert clock["t"] >= 1060.0
+
+    def test_throttle_disabled_on_plain_host(self, monkeypatch):
+        from guides_writer.llm import client as c
+
+        calls = []
+        monkeypatch.setattr(c.time, "sleep", lambda s: calls.append(s))
+        client = LLMClient(api_key="k", base_url="https://fake", model="m")
+        client._throttle(999999)
+        assert calls == []
