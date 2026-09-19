@@ -56,7 +56,7 @@ if ($shouldPublish) {
         }
     }
     if (-not $env:CLOUDFLARE_API_TOKEN) {
-        Write-Host "[WARN] CLOUDFLARE_API_TOKEN not found in .env - publish will likely fail auth."
+        Write-Host "[INFO] CLOUDFLARE_API_TOKEN not in .env - publish.ps1 will use the existing wrangler login (OAuth) if present."
     }
     $env:PUBLISH_SETUP = "loaded .env for token"
     powershell -NoProfile -ExecutionPolicy Bypass -File "scripts\publish.ps1"
