@@ -1,0 +1,34 @@
+{
+  "date": "2026-08-23",
+  "status": "partial",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": true,
+  "guides": [
+    {
+      "title": "Build a PostHog-like Analytics Tracker in Python",
+      "source": "github_trending",
+      "url": "https://github.com/PostHog/posthog",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\2026-08-23_minihog-a-minimal-posthog-clone.html",
+      "tagline": "Build a self-hosted event analytics tracker in 45 minutes using Python and SQLite."
+    },
+    {
+      "title": "Build a Google Timeline Visualizer with Kotlin",
+      "source": "github_trending",
+      "url": "https://github.com/mahlernim/google-timeline-visualizer",
+      "status": "failed: LLM JSON generation failed (400 json_validate_failed): {\"error\":{\"message\":\"Failed to generate JSON. Please adjust your prompt. See 'failed_generation' for more details.\",\"type\":\"invalid_request_error\",\"code\":\"json_validate_failed\",\"failed_generation\":\"{\\n  \\\"title\\\": \\\"UVF IT: Build a Web Timeline Visualizer\\\",\\n  \\\"tagline\\\": \\\"Turn static JSON location data into an animated journey map in 45 minutes.\\\",\\n  \\\"navbar_badge\\\": \\\"Beginner Clone\\\",\\n  \\\"intro_points\\\": [\\n    \\\"Welcome to another official **UVF IT** build guide. Today, we are constructing a minimal web-based clone of the Google Timeline Visualizer. Instead of building a native Android app or a complex iOS web app, we will create a lightweight Python web service that renders your location history on an interactive map.\\\",\\n    \\\"This project strips away the mobile-specific video encoding and complex UI, focusing on the core logic: parsing the `Timeline.json` export and visualizing movement over time. You will use Python and Flask to serve a simple interface where you can upload your data and watch a marker trace your path.\\\"\\n  ],\\n  \\\"warning_heading\\\": \\\"Prerequisites \\u0026 Simplifications\\\",\\n  \\\"warning_bullets\\\": [\\n    \\\"You must have Python 3.8+ and pip installed. This guide uses a local SQLite database to store session data, avoiding the need for external cloud accounts.\\\",\\n    \\\"The real product generates MP4 videos; this clone only renders an interactive HTML map. We skip video encoding to keep the build time under 45 minutes and avoid heavy dependencies like FFmpeg.\\\",\\n    \\\"Google's `Timeline.json` format is complex. This guide assumes a simplified structure or provides a parser for the standard `locations` array. Ensure your export is not corrupted.\\\"\\n  ],\\n  \\\"diagram\\\": {\\n    \\\"title\\\": \\\"System Architecture\\\",\\n    \\\"groups\\\": [\\n      {\\n        \\\"id\\\": \\\"local\\\",\\n        \\\"label\\\": \\\"Local Development Environment\\\",\\n        \\\"style\\\": \\\"local\\\"\\n      },\\n      {\\n        \\\"id\\\": \\\"cloud\\\",\\n        \\\"label\\\": \\\"External Services\\\""
+    },
+    {
+      "title": "Build an OpenLogi-like HID++ Device Manager in Rust",
+      "source": "github_trending",
+      "url": "https://github.com/AprilNEA/OpenLogi",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\2026-08-23_uvf-it-build-a-minimal-hid-device-manager.html",
+      "tagline": "Clone the core logic of OpenLogi to manage Logitech devices via Rust."
+    }
+  ],
+  "delivery_ids": [],
+  "delivery_errors": []
+}

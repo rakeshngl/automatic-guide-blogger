@@ -1,0 +1,48 @@
+{
+  "date": "2026-09-20",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Tiny Go‑Based Search Engine Clone with Hister"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Real‑Time Stock Tracker Clone with TypeScript and OpenStock",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/4A3VQBDVIUMA2D?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-20_real-time-stock-tracker-clone.html",
+      "tagline": "A minimal TypeScript/Node.js app that streams live prices using a free stock API",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "TypeScript",
+        "SQLite",
+        "REST"
+      ]
+    },
+    {
+      "title": "Build a Document‑Prep Tool for Gen‑AI with Python and Docling",
+      "source": "github_trending",
+      "url": "https://github.com/docling-project/docling",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-20_document-prep-tool-for-gen-ai-python.html",
+      "tagline": "A minimal clone of Docling using free‑tier Python stack",
+      "navbar_badge": "🛠️",
+      "est_minutes": 40,
+      "tags": [
+        "Python",
+        "PDF",
+        "CLI"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1551030180376616991",
+    "1551030185120505950"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

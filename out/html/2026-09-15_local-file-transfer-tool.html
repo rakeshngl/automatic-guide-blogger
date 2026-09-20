@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Local File Transfer Tool</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Python + WebSockets</div>
+    </nav>
+
+    <header>
+        <h1>Local File Transfer Tool</h1>
+        <p>Build a LocalSend-inspired LAN file sharing app with Python and WebSockets</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide. Today we are creating a minimal, working clone of <strong>LocalSend</strong>, the popular open-source tool for sharing files securely over your local network without an internet connection.</p>
+        <p>We will use Python with the <code>websockets</code> library to handle real-time communication and a simple HTTP server for file delivery. This project is designed to be completed in about 45 minutes and requires no paid APIs or external services.</p>
+
+        <div class="fix-box">
+            <h4>Before You Start</h4>
+            <ul>
+                <li>You need Python 3.8+ and a basic understanding of how local networks (LAN) work. Both devices must be on the same Wi-Fi or Ethernet network.</li>
+                <li>This is a simplified clone. It lacks the full security features (like mDNS discovery and complex encryption) of the real LocalSend, relying instead on direct IP connection and basic WebSocket protocols.</li>
+                <li>Firewalls can block WebSocket connections. Ensure your firewall allows inbound/outbound traffic on the port you choose (default 8765).</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Local File Transfer Architecture</div>
+            <svg width="100%" height="334" viewBox="0 0 420 334" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="286" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL NETWORK DEVICES</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Send Metadata</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Receive Metadata</text>
+<line x1="315" y1="170" x2="315" y2="266" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="212" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Download File</text>
+<line x1="315" y1="98" x2="315" y2="266" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Serve File</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Sender App</text>
+<text x="315.0" y="87" class="node-subtext">Python + WebSockets</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Receiver App</text>
+<text x="315.0" y="159" class="node-subtext">Python + WebSockets</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">WebSocket Server</text>
+<text x="315.0" y="231" class="node-subtext">Port 8765</text>
+<rect x="230" y="266" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="287" class="node-text">HTTP File Server</text>
+<text x="315.0" y="303" class="node-subtext">Port 8080</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold Project &amp; Install Dependencies</h2>
+                <p>First, we need to set up a clean environment for our application. Create a new directory for the project and navigate into it. This keeps our code organized and separate from other system files.</p>
+<div class="code-block"><pre><code>mkdir localsend-clone
+cd localsend-clone
+pip install websockets aiohttp</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Build the WebSocket Server (Metadata Exchange)</h2>
+                <p>Now we create the core of the receiver application. This script will listen for incoming WebSocket connections on port 8765. When a sender connects, it expects a JSON payload containing the file's name and size, which we will log to the console to verify the connection is working.</p>
+                <p><strong>server.py</strong></p>
+<div class="code-block"><pre><code>import asyncio
+import json
+import websockets
+
+async def handler(websocket, path):
+    print(f"New connection from {websocket.remote_address}")
+    try:
+        <span class="code-comment"># Wait for the metadata message from the sender</span>
+        message = await websocket.recv()
+        data = json.loads(message)
+        print(f"Received metadata: {data}")
+        
+        <span class="code-comment"># Send an acceptance signal back to the sender</span>
+        await websocket.send(json.dumps({"status": "accepted"}))
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        print("Connection closed")
+
+async def main():
+    async with websockets.serve(handler, "0.0.0.0", 8765):
+        print("WebSocket server listening on ws://0.0.0.0:8765")
+        await asyncio.Future()  # run forever
+
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the HTTP File Server</h2>
+                <p>To actually transfer the file data, we need an HTTP server. We will extend our <code>server.py</code> to run an <code>aiohttp</code> server on port 8080 alongside the WebSocket server. This server will serve files from a <code>shared</code> directory, allowing the sender to place files there and the receiver to download them via standard HTTP requests.</p>
+                <p><strong>server.py</strong></p>
+<div class="code-block"><pre><code>import asyncio
+import json
+import os
+import websockets
+from aiohttp import web
+
+<span class="code-comment"># Ensure the shared directory exists</span>
+SHARED_DIR = "shared"
+if not os.path.exists(SHARED_DIR):
+    os.makedirs(SHARED_DIR)
+
+async def ws_handler(websocket, path):
+    print(f"New WebSocket connection from {websocket.remote_address}")
+    try:
+        message = await websocket.recv()
+        data = json.loads(message)
+        print(f"Received metadata: {data}")
+        await websocket.send(json.dumps({"status": "accepted"}))
+    except Exception as e:
+        print(f"WS Error: {e}")
+    finally:
+        print("WebSocket connection closed")
+
+async def serve_file(request):
+    """Serve files from the shared directory."""
+    filename = request.match_info.get('filename')
+    if not filename:
+        return web.Response(status=400, text="Missing filename")
+    
+    <span class="code-comment"># Prevent directory traversal</span>
+    safe_path = os.path.join(SHARED_DIR, os.path.basename(filename))
+    if not os.path.exists(safe_path):
+        return web.Response(status=404, text="File not found")
+    
+    return web.FileResponse(safe_path)
+
+async def create_app():
+    app = web.Application()
+    app.router.add_get('/files/{filename}', serve_file)
+    return app
+
+async def main():
+    <span class="code-comment"># Start HTTP Server</span>
+    app = await create_app()
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, '0.0.0.0', 8080)
+    await site.start()
+    print("HTTP file server listening on http://0.0.0.0:8080")
+
+    <span class="code-comment"># Start WebSocket Server</span>
+    async with websockets.serve(ws_handler, "0.0.0.0", 8765):
+        print("WebSocket server listening on ws://0.0.0.0:8765")
+        await asyncio.Future()  # run forever
+
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Build the Sender Client</h2>
+                <p>Now we create the sender side of the application in a new file called <code>client.py</code>. This script will handle the logic for connecting to the receiver's WebSocket server and transmitting the file metadata.</p>
+                <p>The client takes the receiver's IP address and the file name as command-line arguments. It constructs the WebSocket URL, connects to the server, and sends a JSON object containing the file name and its size. This metadata exchange is crucial because it allows the receiver to prepare for the incoming file before the actual data transfer begins.</p>
+                <p><strong>client.py</strong></p>
+<div class="code-block"><pre><code>import asyncio
+import json
+import os
+import sys
+import websockets
+
+async def send_metadata(uri, filename):
+    """
+    Connects to the receiver's WebSocket server and sends file metadata.
+    """
+    if not os.path.exists(filename):
+        print(f"Error: File '{filename}' not found in current directory.")
+        return
+
+    file_size = os.path.getsize(filename)
+    metadata = {
+        "action": "send_metadata",
+        "filename": filename,
+        "size": file_size
+    }
+
+    try:
+        async with websockets.connect(uri) as websocket:
+            print(f"Connected to {uri}")
+            print(f"Sending metadata for '{filename}' ({file_size} bytes)...")
+            await websocket.send(json.dumps(metadata))
+            
+            <span class="code-comment"># Wait for the server's acceptance</span>
+            response = await websocket.recv()
+            response_data = json.loads(response)
+            
+            if response_data.get("status") == "accepted":
+                print("Server accepted the file. You can now copy the file to the shared folder or use the extended client.")
+            else:
+                print(f"Server response: {response_data}")
+
+    except ConnectionRefusedError:
+        print(f"Error: Could not connect to {uri}. Is the server running?")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python client.py &lt;RECEIVER_IP&gt; &lt;FILENAME&gt;")
+        print("Example: python client.py 192.168.1.100 test.txt")
+        sys.exit(1)
+
+    receiver_ip = sys.argv[1]
+    filename = sys.argv[2]
+    uri = f"ws://{receiver_ip}:8765"
+    
+    asyncio.run(send_metadata(uri, filename))</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run Locally &amp; Verify Transfer</h2>
+                <p>To test our application, we need to simulate two devices on a local network. If you only have one computer, you can run both the server and client on the same machine by using <code>localhost</code> or <code>127.0.0.1</code> as the IP address.</p>
+                <p>First, ensure the <code>shared</code> directory exists on the receiver machine. Then, start the server. In a separate terminal, run the client with the receiver's IP and a test file name. You should see the server print the received metadata, confirming that the WebSocket connection and data exchange are working correctly.</p>
+<div class="code-block"><pre><code><span class="code-comment"># 1. Create the shared directory on the receiver (if not exists)</span>
+mkdir -p shared
+
+<span class="code-comment"># 2. Create a dummy test file for the sender to reference</span>
+echo "Hello UVF IT! This is a test file." &gt; test.txt
+
+<span class="code-comment"># 3. Start the Receiver (Server) in Terminal 1</span>
+<span class="code-comment"># Note: On Windows, use 'python' instead of 'python3'</span>
+python3 server.py
+
+<span class="code-comment"># 4. In Terminal 2 (Sender), connect to the receiver</span>
+<span class="code-comment"># If on the same machine, use 127.0.0.1. Otherwise, use the Receiver's LAN IP.</span>
+python3 client.py 127.0.0.1 test.txt</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">6</div>
+            <div>
+                <h2>Phase 6: Extend with Automatic File Copy</h2>
+                <p>In the previous step, we only sent metadata. To make this a true file transfer tool, we need to actually move the file content. For small files (under 1MB), we can transmit the file content directly over the WebSocket connection using base64 encoding.</p>
+                <p>We will update <code>client.py</code> to read the file, encode it to base64, and send it in a second message. We will also update <code>server.py</code> to handle this new message type, decode the content, and save it to the <code>shared</code> folder.</p>
+                <p><strong>client.py</strong></p>
+<div class="code-block"><pre><code>import asyncio
+import json
+import os
+import sys
+import base64
+import websockets
+
+async def send_file(uri, filename):
+    """
+    Connects to the receiver's WebSocket server, sends metadata, and then sends the file content.
+    """
+    if not os.path.exists(filename):
+        print(f"Error: File '{filename}' not found in current directory.")
+        return
+
+    file_size = os.path.getsize(filename)
+    
+    <span class="code-comment"># Check if file is too large for direct WebSocket transfer (limit to 1MB for this demo)</span>
+    if file_size &gt; 1024 * 1024:
+        print("Error: File is too large for this minimal implementation. Please use a file under 1MB.")
+        return
+
+    metadata = {
+        "action": "send_metadata",
+        "filename": filename,
+        "size": file_size
+    }
+
+    try:
+        async with websockets.connect(uri) as websocket:
+            print(f"Connected to {uri}")
+            
+            <span class="code-comment"># Step 1: Send Metadata</span>
+            print(f"Sending metadata for '{filename}' ({file_size} bytes)...")
+            await websocket.send(json.dumps(metadata))
+            
+            <span class="code-comment"># Wait for acceptance</span>
+            response = await websocket.recv()
+            response_data = json.loads(response)
+            
+            if response_data.get("status") != "accepted":
+                print(f"Server did not accept file: {response_data}")
+                return
+
+            print("Metadata accepted. Preparing file content...")
+
+            <span class="code-comment"># Step 2: Send File Content</span>
+            with open(filename, 'rb') as f:
+                file_content = f.read()
+                
+            <span class="code-comment"># Encode to base64 for safe transmission over JSON/WebSocket</span>
+            encoded_content = base64.b64encode(file_content).decode('utf-8')
+            
+            file_message = {
+                "action": "send_content",
+                "filename": filename,
+                "content": encoded_content
+            }
+            
+            print("Transferring file content...")
+            await websocket.send(json.dumps(file_message))
+            
+            <span class="code-comment"># Wait for final confirmation</span>
+            final_response = await websocket.recv()
+            final_data = json.loads(final_response)
+            
+            if final_data.get("status") == "success":
+                print("File transferred successfully!")
+            else:
+                print(f"Transfer failed: {final_data}")
+
+    except ConnectionRefusedError:
+        print(f"Error: Could not connect to {uri}. Is the server running?")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: python client.py &lt;RECEIVER_IP&gt; &lt;FILENAME&gt;")
+        print("Example: python client.py 192.168.1.100 test.txt")
+        sys.exit(1)
+
+    receiver_ip = sys.argv[1]
+    filename = sys.argv[2]
+    uri = f"ws://{receiver_ip}:8765"
+    
+    asyncio.run(send_file(uri, filename))</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>WebSocket server starts successfully</td><td>Run <code>python3 server.py</code> and verify the output shows 'WebSocket server listening on ws://0.0.0.0:8765'.</td></tr>
+            <tr><td>Client connects and sends metadata</td><td>Run <code>python3 client.py 127.0.0.1 test.txt</code> and verify the server terminal prints 'Received metadata: {...}'.</td></tr>
+            <tr><td>File is saved on receiver</td><td>Check the <code>shared</code> folder on the receiver machine for the <code>test.txt</code> file after the client prints 'File transferred successfully!'</td></tr>
+            <tr><td>HTTP file download works</td><td>Open a browser on the receiver machine and navigate to <code>http://localhost:8080/files/test.txt</code> to verify the file is served correctly.</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>You've built a minimal but functional local file transfer tool. To extend it, consider adding mDNS for device discovery, implementing proper encryption, and handling larger files with chunked transfers. Explore the LocalSend GitHub repository for advanced features and best practices.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

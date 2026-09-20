@@ -1,0 +1,40 @@
+{
+  "date": "2026-08-24",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Vaultwarden-like Password Manager Backend with Rust",
+      "source": "github_trending",
+      "url": "https://github.com/dani-garcia/vaultwarden",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\2026-08-24_minimal-password-manager-backend-clone.html",
+      "tagline": "A lightweight, self-hosted password vault API inspired by Vaultwarden."
+    },
+    {
+      "title": "Build a ComfyUI-like Node-Based Image Generator in Python",
+      "source": "github_trending",
+      "url": "https://github.com/Comfy-Org/ComfyUI",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\2026-08-24_minimal-node-based-image-pipeline.html",
+      "tagline": "Build a ComfyUI-inspired workflow engine in 45 minutes"
+    },
+    {
+      "title": "Build a HiTranscript-like Video Transcriber with Python",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/WIK6XYTUHOAGBV?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\2026-08-24_video-to-text-transcriber.html",
+      "tagline": "Turn short videos into searchable text in minutes"
+    }
+  ],
+  "delivery_ids": [
+    "1541350994414407761",
+    "1541351000852660276",
+    "1541351008221798502"
+  ],
+  "delivery_errors": []
+}

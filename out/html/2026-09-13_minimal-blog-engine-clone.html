@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Minimal Blog Engine Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner</div>
+    </nav>
+
+    <header>
+        <h1>Minimal Blog Engine Clone</h1>
+        <p>Build a lightweight, server-side rendered blog in 45 minutes using Node.js and SQLite.</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide. Today, we are constructing a minimal, functional blog engine inspired by the simplicity and performance of Ghost, but stripped down to its absolute essentials for educational purposes.</p>
+        <p>We will use a free-tier, open-source stack consisting of Node.js for the server runtime and SQLite for persistent storage. This approach requires no external database hosting or paid API keys, allowing you to run the entire application locally with zero infrastructure costs.</p>
+
+        <div class="fix-box">
+            <h4>Prerequisites &amp; Scope</h4>
+            <ul>
+                <li>Requires Node.js v18+ and npm installed on your local machine; ensure you have basic familiarity with JavaScript syntax and command line operations.</li>
+                <li>This is a simplified clone: it lacks user authentication, role-based access control, and theme customization features found in the full Ghost platform.</li>
+                <li>SQLite is file-based; do not use this specific setup for high-concurrency production environments without implementing connection pooling or migrating to a client-server database like PostgreSQL.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Local Blog Architecture</div>
+            <svg width="100%" height="334" viewBox="0 0 420 334" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="286" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL DEVELOPMENT ENVIRONMENT</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP Requests</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL Queries</text>
+<line x1="315" y1="170" x2="315" y2="266" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="212" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Serve Static Files</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Web Browser</text>
+<text x="315.0" y="87" class="node-subtext">Client</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Node.js Server</text>
+<text x="315.0" y="159" class="node-subtext">Express App</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node" />
+<text x="315.0" y="215" class="node-text">SQLite Database</text>
+<text x="315.0" y="231" class="node-subtext">blog.db</text>
+<rect x="230" y="266" width="170" height="48" rx="10" class="node" />
+<text x="315.0" y="287" class="node-text">File System</text>
+<text x="315.0" y="303" class="node-subtext">Static Assets</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold Project &amp; Install Dependencies</h2>
+                <p>Initialize a new Node.js project and install the necessary libraries for web serving (Express), database interaction (better-sqlite3), and HTML templating (EJS).</p>
+                <p>Create the directory structure for your application, including folders for views, public assets, and the database file.</p>
+<div class="code-block"><pre><code>mkdir uvf-blog-clone &amp;&amp; cd uvf-blog-clone
+npm init -y
+npm install express better-sqlite3 ejs
+mkdir -p views public</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Core Data Model &amp; Database Setup</h2>
+                <p>Set up the SQLite database connection and create the <code>posts</code> table to store blog content. This table includes fields for ID, title, body, and creation timestamp.</p>
+                <p>Implement helper functions to initialize the database schema if it does not already exist, ensuring the application is idempotent.</p>
+                <p><strong>db.js</strong></p>
+<div class="code-block"><pre><code>const Database = require('better-sqlite3');
+const path = require('path');
+
+const db = new Database(path.join(__dirname, 'blog.db'));
+
+db.pragma('journal_mode = WAL');
+
+const initDb = () =&gt; {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS posts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      body TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+};
+
+const getPosts = () =&gt; {
+  return db.prepare('SELECT * FROM posts ORDER BY created_at DESC').all();
+};
+
+const getPostById = (id) =&gt; {
+  return db.prepare('SELECT * FROM posts WHERE id = ?').get(id);
+};
+
+const createPost = (title, body) =&gt; {
+  const stmt = db.prepare('INSERT INTO posts (title, body) VALUES (?, ?)');
+  const info = stmt.run(title, body);
+  return info.lastInsertRowid;
+};
+
+module.exports = { db, initDb, getPosts, getPostById, createPost };</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: API Endpoints &amp; Server Logic</h2>
+                <p>Create the main server file using Express. Configure it to serve static files from the <code>public</code> directory and use EJS for rendering HTML templates.</p>
+                <p>Implement routes for listing all posts (<code>GET /</code>), viewing a single post (<code>GET /post/:id</code>), and creating a new post (<code>POST /post</code>). Use <code>express.urlencoded</code> middleware to parse form data.</p>
+                <p><strong>index.js</strong></p>
+<div class="code-block"><pre><code>const express = require('express');
+const { initDb, getPosts, getPostById, createPost } = require('./db');
+
+const app = express();
+const PORT = 3000;
+
+<span class="code-comment">// Middleware</span>
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+
+<span class="code-comment">// Initialize Database</span>
+initDb();
+
+<span class="code-comment">// Routes</span>
+app.get('/', (req, res) =&gt; {
+  const posts = getPosts();
+  res.render('index', { posts });
+});
+
+app.get('/post/:id', (req, res) =&gt; {
+  const post = getPostById(req.params.id);
+  if (!post) {
+    return res.status(404).send('Post not found');
+  }
+  res.render('post', { post });
+});
+
+app.post('/post', (req, res) =&gt; {
+  const { title, body } = req.body;
+  if (!title || !body) {
+    return res.status(400).send('Title and body are required');
+  }
+  createPost(title, body);
+  res.redirect('/');
+});
+
+app.listen(PORT, () =&gt; {
+  console.log(`Server running at http://localhost:${PORT}`);
+});</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Frontend Templates &amp; UI</h2>
+                <p>We will now create the visual layer of our blog using EJS templates. This allows us to inject dynamic data from our SQLite database directly into the HTML structure, bridging the gap between our backend logic and the user interface.</p>
+                <p>Start by defining the homepage template, which will serve as both the post listing view and the entry point for creating new content. We will include a simple HTML form that submits to our <code>/post</code> endpoint, enabling users to add new blog entries without needing a separate admin dashboard.</p>
+                <p>Next, we create the single post view template. This file will render the full content of a specific post when a user clicks on a title from the homepage. Finally, we add a basic CSS stylesheet to ensure the text is readable and the layout is structured, giving our minimal clone a polished appearance.</p>
+                <p><strong>views/index.ejs</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;UVF Blog&lt;/title&gt;
+    &lt;link rel="stylesheet" href="/style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;UVF Blog&lt;/h1&gt;
+        &lt;p&gt;A minimal blog engine built with Node.js and SQLite.&lt;/p&gt;
+    &lt;/header&gt;
+
+    &lt;main&gt;
+        &lt;section class="create-post"&gt;
+            &lt;h2&gt;Create New Post&lt;/h2&gt;
+            &lt;form action="/post" method="POST"&gt;
+                &lt;input type="text" name="title" placeholder="Post Title" required&gt;
+                &lt;textarea name="body" placeholder="Post Content" required&gt;&lt;/textarea&gt;
+                &lt;button type="submit"&gt;Publish&lt;/button&gt;
+            &lt;/form&gt;
+        &lt;/section&gt;
+
+        &lt;section class="post-list"&gt;
+            &lt;h2&gt;Recent Posts&lt;/h2&gt;
+            &lt;% if (posts.length === 0) { %&gt;
+                &lt;p&gt;No posts yet. Create one above!&lt;/p&gt;
+            &lt;% } else { %&gt;
+                &lt;ul&gt;
+                    &lt;% posts.forEach(post =&gt; { %&gt;
+                        &lt;li&gt;
+                            &lt;a href="/post/&lt;%= post.id %&gt;"&gt;
+                                &lt;h3&gt;&lt;%= post.title %&gt;&lt;/h3&gt;
+                                &lt;small&gt;&lt;%= new Date(post.created_at).toLocaleDateString() %&gt;&lt;/small&gt;
+                            &lt;/a&gt;
+                        &lt;/li&gt;
+                    &lt;% }); %&gt;
+                &lt;/ul&gt;
+            &lt;% } %&gt;
+        &lt;/section&gt;
+    &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+                <p><strong>views/post.ejs</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;&lt;%= post.title %&gt; - UVF Blog&lt;/title&gt;
+    &lt;link rel="stylesheet" href="/style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;&lt;a href="/"&gt;UVF Blog&lt;/a&gt;&lt;/h1&gt;
+    &lt;/header&gt;
+
+    &lt;main&gt;
+        &lt;article&gt;
+            &lt;h1&gt;&lt;%= post.title %&gt;&lt;/h1&gt;
+            &lt;time&gt;&lt;%= new Date(post.created_at).toLocaleDateString() %&gt;&lt;/time&gt;
+            &lt;div class="content"&gt;
+                &lt;%= post.body %&gt;
+            &lt;/div&gt;
+        &lt;/article&gt;
+        &lt;a href="/"&gt;&amp;larr; Back to Home&lt;/a&gt;
+    &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+                <p><strong>public/style.css</strong></p>
+<div class="code-block"><pre><code>body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+header {
+    margin-bottom: 40px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 20px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+header a {
+    color: #333;
+    text-decoration: none;
+}
+
+.create-post {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+button {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+.post-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.post-list li {
+    background: #fff;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.post-list a {
+    text-decoration: none;
+    color: #333;
+}
+
+.post-list h3 {
+    margin: 0 0 5px 0;
+}
+
+.post-list small {
+    color: #777;
+}
+
+article {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+article h1 {
+    font-size: 2rem;
+    margin-top: 0;
+}
+
+article time {
+    color: #777;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.content {
+    white-space: pre-wrap;
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run Locally &amp; Verify</h2>
+                <p>With the templates and styles in place, your application is ready to run. We will start the Node.js server using the <code>node</code> command, which will initialize the SQLite database and begin listening for HTTP requests on port 3000.</p>
+                <p>Once the server is running, open your web browser and navigate to <code>http://localhost:3000</code>. You should see the UVF Blog homepage with an empty post list and the creation form.</p>
+                <p>Test the full workflow by filling out the form with a title and body, then clicking 'Publish'. The page should redirect back to the homepage, displaying your new post. Click on the post title to verify that the single post view renders the content correctly.</p>
+<div class="code-block"><pre><code>node index.js</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>Run <code>node index.js</code> and check for 'Server running at http://localhost:3000' in the terminal.</td></tr>
+            <tr><td>Homepage loads correctly</td><td>Open <code>http://localhost:3000</code> in a browser and verify the 'UVF Blog' header and empty post list are visible.</td></tr>
+            <tr><td>Post creation works</td><td>Fill out the form on the homepage and click 'Publish'; verify the page redirects to the homepage with the new post listed.</td></tr>
+            <tr><td>Single post view works</td><td>Click on the newly created post title and verify the full title and body are displayed on the detail page.</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>Congratulations! You have built a minimal, functional blog engine. To extend this project, consider adding Markdown support for post bodies, implementing user authentication, or migrating the database to PostgreSQL for production readiness.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Local RAG Knowledge Base</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Python</div>
+    </nav>
+
+    <header>
+        <h1>Local RAG Knowledge Base</h1>
+        <p>Build a minimal WeKnora-inspired document Q&amp;A engine in Python</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build. Today we are creating a local, private Retrieval-Augmented Generation (RAG) assistant inspired by Tencent's <strong>WeKnora</strong>. We will ingest text documents, chunk them, and answer questions using local embeddings and a simple vector search, all without sending data to external paid APIs.</p>
+        <p>This guide focuses on the core 'document to answer' pipeline. We will use Python, SQLite for metadata, and <code>sentence-transformers</code> for local vector embeddings. By the end, you will have a working CLI tool that can search your local knowledge base and generate context-aware responses.</p>
+
+        <div class="fix-box">
+            <h4>Before You Start</h4>
+            <ul>
+                <li>Requires Python 3.9+ and ~2GB RAM for the local embedding model. The first run will download model weights (~500MB).</li>
+                <li>This is a simplified clone: WeKnora uses complex agent orchestration and multi-modal support. Our version focuses strictly on text ingestion and vector search.</li>
+                <li>Do not use this for production security-critical data. It is a local learning environment with no authentication or encryption.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Local RAG Architecture</div>
+            <svg width="100%" height="334" viewBox="0 0 420 334" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="286" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Upload Doc</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Store Vectors</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Query Search</text>
+<line x1="315" y1="242" x2="315" y2="266" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="248" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Context</text>
+<line x1="315" y1="266" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Answer</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">CLI Interface</text>
+<text x="315.0" y="87" class="node-subtext">Python Script</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Ingestion Engine</text>
+<text x="315.0" y="159" class="node-subtext">Chunking &amp; Embedding</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node" />
+<text x="315.0" y="215" class="node-text">SQLite Database</text>
+<text x="315.0" y="231" class="node-subtext">Vectors &amp; Metadata</text>
+<rect x="230" y="266" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="287" class="node-text">Local LLM (Mock)</text>
+<text x="315.0" y="303" class="node-subtext">Response Generator</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold &amp; Dependencies</h2>
+                <p>First, we need a clean environment to ensure our local model and dependencies don't conflict with your system's Python packages. We will create a dedicated directory and a virtual environment to keep our project isolated.</p>
+                <p>Inside this environment, we install <code>sentence-transformers</code> which handles the heavy lifting of converting text into vector embeddings. We also install <code>numpy</code> for the mathematical operations required for cosine similarity search later on.</p>
+<div class="code-block"><pre><code>mkdir weknora-clone
+cd weknora-clone
+python -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+
+pip install sentence-transformers numpy</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Database Schema &amp; Ingestion</h2>
+                <p>Now we create the core engine in <code>rag.py</code>. We start by defining our SQLite database structure. We need a table to store our document chunks, the original text, and the binary representation of the vector embeddings.</p>
+                <p>The <code>ingest</code> function takes a file path, reads the content, and splits it into manageable 500-character chunks. Each chunk is then passed through the <code>all-MiniLM-L6-v2</code> model to generate a vector, which is stored in the database alongside the text.</p>
+                <p><strong>rag.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+import numpy as np
+from sentence_transformers import SentenceTransformer
+import os
+
+<span class="code-comment"># Initialize the embedding model (downloads on first run)</span>
+model = SentenceTransformer('all-MiniLM-L6-v2')
+DB_NAME = 'knowledge.db'
+
+
+def init_db():
+    """Initialize the SQLite database schema."""
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS documents (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            filename TEXT NOT NULL,
+            chunk_index INTEGER NOT NULL,
+            content TEXT NOT NULL,
+            embedding BLOB NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+
+def chunk_text(text, chunk_size=500):
+    """Split text into fixed-size chunks."""
+    chunks = []
+    for i in range(0, len(text), chunk_size):
+        chunks.append(text[i:i + chunk_size])
+    return chunks
+
+
+def ingest(file_path):
+    """Read a file, chunk it, embed it, and store in DB."""
+    if not os.path.exists(file_path):
+        print(f"Error: File {file_path} not found.")
+        return
+
+    with open(file_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    chunks = chunk_text(content)
+    print(f"Ingesting {len(chunks)} chunks from {file_path}...")
+
+    <span class="code-comment"># Generate embeddings for all chunks</span>
+    embeddings = model.encode(chunks, convert_to_numpy=True)
+
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    
+    for i, (chunk, emb) in enumerate(zip(chunks, embeddings)):
+        <span class="code-comment"># Store vector as a BLOB</span>
+        emb_blob = emb.tobytes()
+        cursor.execute(
+            "INSERT INTO documents (filename, chunk_index, content, embedding) VALUES (?, ?, ?, ?)",
+            (file_path, i, chunk, emb_blob)
+        )
+    
+    conn.commit()
+    conn.close()
+    print(f"Successfully ingested {file_path}")
+
+
+if __name__ == "__main__":
+    init_db()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Vector Search Logic</h2>
+                <p>With data stored, we need a way to find the most relevant parts of our documents. We add a <code>search</code> function that takes a user's question, converts it into a vector using the same model, and compares it against all stored vectors.</p>
+                <p>Since SQLite doesn't have native vector search capabilities, we load the embeddings into memory as NumPy arrays. We calculate the cosine similarity between the query vector and every document vector, then return the top 3 most similar chunks.</p>
+                <p><strong>rag.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+import numpy as np
+from sentence_transformers import SentenceTransformer
+import os
+
+<span class="code-comment"># Initialize the embedding model (downloads on first run)</span>
+model = SentenceTransformer('all-MiniLM-L6-v2')
+DB_NAME = 'knowledge.db'
+
+
+def init_db():
+    """Initialize the SQLite database schema."""
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS documents (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            filename TEXT NOT NULL,
+            chunk_index INTEGER NOT NULL,
+            content TEXT NOT NULL,
+            embedding BLOB NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+
+def chunk_text(text, chunk_size=500):
+    """Split text into fixed-size chunks."""
+    chunks = []
+    for i in range(0, len(text), chunk_size):
+        chunks.append(text[i:i + chunk_size])
+    return chunks
+
+
+def ingest(file_path):
+    """Read a file, chunk it, embed it, and store in DB."""
+    if not os.path.exists(file_path):
+        print(f"Error: File {file_path} not found.")
+        return
+
+    with open(file_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    chunks = chunk_text(content)
+    print(f"Ingesting {len(chunks)} chunks from {file_path}...")
+
+    <span class="code-comment"># Generate embeddings for all chunks</span>
+    embeddings = model.encode(chunks, convert_to_numpy=True)
+
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    
+    for i, (chunk, emb) in enumerate(zip(chunks, embeddings)):
+        <span class="code-comment"># Store vector as a BLOB</span>
+        emb_blob = emb.tobytes()
+        cursor.execute(
+            "INSERT INTO documents (filename, chunk_index, content, embedding) VALUES (?, ?, ?, ?)",
+            (file_path, i, chunk, emb_blob)
+        )
+    
+    conn.commit()
+    conn.close()
+    print(f"Successfully ingested {file_path}")
+
+
+def search(query, top_k=3):
+    """Search for the most similar chunks to the query."""
+    <span class="code-comment"># Embed the query</span>
+    query_embedding = model.encode(query, convert_to_numpy=True)
+    
+    <span class="code-comment"># Load all embeddings from DB</span>
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, content, embedding FROM documents")
+    rows = cursor.fetchall()
+    conn.close()
+    
+    if not rows:
+        return []
+
+    <span class="code-comment"># Prepare data for NumPy calculation</span>
+    ids = []
+    contents = []
+    embeddings = []
+    
+    for row in rows:
+        ids.append(row[0])
+        contents.append(row[1])
+        <span class="code-comment"># Convert BLOB back to numpy array</span>
+        emb = np.frombuffer(row[2], dtype=np.float32)
+        embeddings.append(emb)
+    
+    embeddings_array = np.array(embeddings)
+    
+    <span class="code-comment"># Calculate cosine similarity</span>
+    <span class="code-comment"># Normalize vectors for cosine similarity</span>
+    query_norm = query_embedding / (np.linalg.norm(query_embedding) + 1e-9)
+    embeddings_norm = embeddings_array / (np.linalg.norm(embeddings_array, axis=1, keepdims=True) + 1e-9)
+    
+    similarities = np.dot(embeddings_norm, query_norm)
+    
+    <span class="code-comment"># Get top k indices</span>
+    top_indices = np.argsort(similarities)[::-1][:top_k]
+    
+    results = []
+    for idx in top_indices:
+        results.append({
+            'id': ids[idx],
+            'content': contents[idx],
+            'score': float(similarities[idx])
+        })
+    
+    return results
+
+
+if __name__ == "__main__":
+    init_db()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Mock LLM Response</h2>
+                <p>WeKnora uses an LLM to generate answers. For this local clone, we will create a <code>generate_answer</code> function that acts as a 'mock LLM'.</p>
+                <p>It will take the retrieved context and the original question, and return a structured response. In a real scenario, you would swap this with a local LLM like <code>llama-cpp-python</code> or <code>transformers</code>.</p>
+                <p><strong>rag.py</strong></p>
+<div class="code-block"><pre><code>def generate_answer(question, context_chunks):
+    """
+    Mock LLM that formats retrieved context into a structured answer.
+    
+    In production, replace this with a call to a local LLM.
+    """
+    print("\n--- Generating Answer ---")
+    print(f"Question: {question}")
+    print("\nContext Retrieved:")
+    
+    if not context_chunks:
+        return "I could not find any relevant information in the knowledge base to answer your question."
+    
+    answer_parts = []
+    for i, chunk in enumerate(context_chunks, 1):
+        <span class="code-comment"># Truncate long chunks for readability</span>
+        display_text = chunk[:200] + "..." if len(chunk) &gt; 200 else chunk
+        answer_parts.append(f"{i}. {display_text}")
+    
+    final_answer = "\n".join(answer_parts)
+    return f"Based on the retrieved context, here is the relevant information:\n{final_answer}"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: CLI Interface &amp; Run</h2>
+                <p>Create a simple command-line interface using <code>argparse</code> to allow users to <code>ingest</code> files or <code>ask</code> questions.</p>
+                <p>Run the script to test the full pipeline: ingest a sample text file, then ask a question related to its content.</p>
+                <p><strong>rag.py</strong></p>
+<div class="code-block"><pre><code>import argparse
+import sys
+
+<span class="code-comment"># Load model once at startup to avoid reloading for every command</span>
+print("Loading embedding model...")
+model = SentenceTransformer('all-MiniLM-L6-v2')
+print("Model loaded.")
+
+def main():
+    parser = argparse.ArgumentParser(description="Local RAG Knowledge Base")
+    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+    
+    <span class="code-comment"># Ingest command</span>
+    ingest_parser = subparsers.add_parser('ingest', help='Ingest a text file into the knowledge base')
+    ingest_parser.add_argument('file', type=str, help='Path to the text file to ingest')
+    
+    <span class="code-comment"># Ask command</span>
+    ask_parser = subparsers.add_parser('ask', help='Ask a question to the knowledge base')
+    ask_parser.add_argument('question', type=str, help='The question to ask')
+    
+    args = parser.parse_args()
+    
+    if args.command == 'ingest':
+        ingest_document(args.file)
+    elif args.command == 'ask':
+        <span class="code-comment"># 1. Search for relevant chunks</span>
+        results = search(args.question, top_k=3)
+        <span class="code-comment"># 2. Generate answer using mock LLM</span>
+        answer = generate_answer(args.question, results)
+        print(answer)
+    else:
+        parser.print_help()
+
+if __name__ == '__main__':
+    main()</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Environment is active and dependencies installed</td><td>Run <code>python -c "import sentence_transformers"</code> to ensure no import errors.</td></tr>
+            <tr><td>Database is created and populated</td><td>Run <code>python rag.py ingest sample.txt</code> and verify <code>knowledge.db</code> file size increases.</td></tr>
+            <tr><td>Search returns relevant chunks</td><td>Run <code>python rag.py ask "What is the main topic?"</code> and ensure the output contains text from <code>sample.txt</code>.</td></tr>
+            <tr><td>Mock LLM generates structured response</td><td>Verify the output is formatted as a numbered list of context chunks.</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>You now have a working local RAG pipeline! To extend this, you can replace the mock LLM with a local model like <code>llama-3-8b</code> via <code>ollama</code>, or add support for PDF ingestion using <code>pypdf</code>. Remember to keep your dataset small for the in-memory vector search to remain fast.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "date": "2026-08-27",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Ghost-like Blog Engine with Node.js + Markdown",
+    "Build a Local-First AI Job Search Agent with Python"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a PostHog-like Analytics Tracker with Python + SQLite",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/2RW3QOUU4OK7XB?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-08-27_posthog-desktop.html",
+      "tagline": "The product editor for product builders",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "Python",
+        "SQLite",
+        "Analytics",
+        "Backend"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1542398657188335698"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 1
+}

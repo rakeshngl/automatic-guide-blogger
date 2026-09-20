@@ -1,0 +1,62 @@
+{
+  "date": "2026-09-18",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a PostHog-like A/B Testing Tracker in Python + SQLite",
+      "source": "reddit_digest",
+      "url": "https://www.reddit.com/r/Startup_Ideas/comments/1wf6z90",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-18_build-a-posthog-like-a-b-testing-tracker.html",
+      "tagline": "Create a lightweight A/B testing tool that lets you split traffic, track conversion metrics, and visualize results — the kind of tool that a startup needs to make data-driven decisions.",
+      "navbar_badge": "Python + SQLite",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "sqlite",
+        "analytics"
+      ]
+    },
+    {
+      "title": "Build a WeKnora-like Local RAG Knowledge Base in Python",
+      "source": "github_trending",
+      "url": "https://github.com/Tencent/WeKnora",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-18_local-rag-knowledge-base.html",
+      "tagline": "Build a minimal WeKnora-inspired document Q&A engine in Python",
+      "navbar_badge": "Python",
+      "est_minutes": 50,
+      "tags": [
+        "python",
+        "rag",
+        "llm"
+      ]
+    },
+    {
+      "title": "Build a VoiceBox-like AI Voice Studio in TypeScript",
+      "source": "github_trending",
+      "url": "https://github.com/jamiepine/voicebox",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-18_voicebox-clone-ai-voice-studio.html",
+      "tagline": "Build a local voice cloning & TTS studio with Node.js and Whisper",
+      "navbar_badge": "TypeScript",
+      "est_minutes": 40,
+      "tags": [
+        "typescript",
+        "ai",
+        "web"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1550307936058740786",
+    "1550307939921821819",
+    "1550307951728791552"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

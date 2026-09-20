@@ -1,0 +1,32 @@
+{
+  "date": "2026-08-22",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": true,
+  "guides": [
+    {
+      "title": "Self-Host PostHog Analytics on Docker",
+      "source": "github_trending",
+      "url": "https://github.com/PostHog/posthog",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\2026-08-22_self-host-posthog-analytics-on-docker.html"
+    },
+    {
+      "title": "Build an AI Job Search Agent with career-ops",
+      "source": "github_trending",
+      "url": "https://github.com/santifer/career-ops",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\2026-08-22_deploy-career-ops-your-ai-job-search-agent.html"
+    },
+    {
+      "title": "Visualize Your Travel History with Google Timeline Data",
+      "source": "github_trending",
+      "url": "https://github.com/mahlernim/google-timeline-visualizer",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\2026-08-22_visualize-your-travel-history-with-google-timeline-data.html"
+    }
+  ],
+  "delivery_errors": []
+}

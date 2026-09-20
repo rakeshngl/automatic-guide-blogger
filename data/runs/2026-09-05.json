@@ -1,0 +1,62 @@
+{
+  "date": "2026-09-05",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Grid Maker for Drawing with Python + Pillow",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/U3AUDIQXE4YGTQ?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-05_grid-maker-for-drawing.html",
+      "tagline": "Turn reference photos into printable drawing grids",
+      "navbar_badge": "Python",
+      "est_minutes": 30,
+      "tags": [
+        "python",
+        "pillow",
+        "image-processing"
+      ]
+    },
+    {
+      "title": "Build a Local-First Routine Scheduler with SQLite + React",
+      "source": "hn_show",
+      "url": "https://timervana.net/browse",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-05_local-first-routine-scheduler.html",
+      "tagline": "Build a minimal timer sequence app with React and SQLite",
+      "navbar_badge": "Beginner",
+      "est_minutes": 45,
+      "tags": [
+        "react",
+        "sqlite",
+        "local-first"
+      ]
+    },
+    {
+      "title": "Build a File-to-Prompt Converter with Python + LangChain",
+      "source": "hn_show",
+      "url": "https://github.com/sebastiancarlos/mongotar",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-05_build-a-file-to-prompt-converter.html",
+      "tagline": "Turn local files into LLM-ready prompts in 45 minutes",
+      "navbar_badge": "Python • LangChain • SQLite",
+      "est_minutes": 40,
+      "tags": [
+        "python",
+        "langchain",
+        "ai-tools"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1545624233600753665",
+    "1545624239489552486",
+    "1545624247471317012"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

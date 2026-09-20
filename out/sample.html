@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UVF IT: Umami Analytics</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+<script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194"></script></head>
+<body>
+<nav class="navbar">
+<div class="navbar-brand">UVF <span>IT</span></div>
+<div class="navbar-badge">web analytics</div>
+</nav>
+<header>
+<h1>Umami Analytics</h1>
+<p>Self-host a privacy-first, cookieless web analytics dashboard for your sites using Docker, PostgreSQL, and a free open-source stack — no data leaves your VPS.</p>
+</header><div style="max-width:960px;margin:20px auto;padding:0 20px;">
+<ins class="adsbygoogle" data-ad-client="ca-pub-7707820592878194" data-ad-format="auto" data-ad-slot="5778428487" data-full-width-responsive="true" style="display:block"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<div class="container">
+<p>Welcome to another official <strong>UVF IT</strong> enterprise deployment blueprint. Third-party analytics scripts slow your site down and leak visitor data to ad networks — this guide replaces all of that with one small container.</p>
+<p>Today we deploy <strong>Umami</strong>, an open-source alternative to Google Analytics. It stores every pageview in your own PostgreSQL database, respects GDPR by default, and gives you a clean dashboard at <code>https://analytics.yoursite.com</code>.</p>
+<div class="fix-box">
+<h4>⚠ Read this before you pick this architecture</h4>
+<ul>
+<li><strong>Stays on your machine:</strong> all pageview records, the PostgreSQL database, and the Umami UI.</li>
+<li><strong>Leaves your machine:</strong> nothing during normal operation — visitors only talk to your server.</li>
+<li><strong>Want zero-maintenance backups?</strong> Add the scheduled <code>pg_dump</code> cron from Phase 4 before going live.</li>
+</ul>
+</div>
+<div class="diagram-container">
+<div class="diagram-title">System Architecture Blueprint: Self-Hosted Analytics Pipeline</div>
+<svg height="262" role="img" viewbox="0 0 630 262" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="gw-arrow" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path class="link-arrow" d="M 0 0 L 10 5 L 0 10 z"></path></marker></defs>
+<rect fill="none" height="214" rx="10" stroke="var(--accent)" stroke-dasharray="6,6" stroke-width="2.5" width="198" x="216" y="24"></rect>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)" text-anchor="middle" x="315.0" y="42">LOCAL DOCKER — PRIVATE NETWORK</text>
+<rect fill="none" height="70" rx="10" stroke="#b91c1c" stroke-dasharray="6,6" stroke-width="2.5" width="198" x="426" y="96"></rect>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:#b91c1c" text-anchor="middle" x="525.0" y="114">CLOUD DNS (PUBLIC ENTRY POINT)</text>
+<line class="link" marker-end="url(#gw-arrow)" x1="190" x2="440" y1="146" y2="146"></line>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280" text-anchor="middle" x="315" y="140">1. page request</text>
+<line class="link" marker-end="url(#gw-arrow)" marker-start="url(#gw-arrow)" x1="440" x2="400" y1="146" y2="74"></line>
+<line class="link" marker-end="url(#gw-arrow)" x1="315" x2="315" y1="98" y2="122"></line>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280" text-anchor="middle" x="315" y="104">2. proxy_pass</text>
+<line class="link" marker-end="url(#gw-arrow)" marker-start="url(#gw-arrow)" x1="315" x2="315" y1="170" y2="194"></line>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280" text-anchor="middle" x="315" y="176">3. SQL</text>
+<rect class="node" height="48" rx="10" width="170" x="20" y="122"></rect>
+<text class="node-text" x="105.0" y="143">Visitor Browser</text>
+<text class="node-subtext" x="105.0" y="159">no cookies stored</text>
+<rect class="node-tech" height="48" rx="10" width="170" x="230" y="50"></rect>
+<text class="node-text" x="315.0" y="71">Caddy Reverse Proxy</text>
+<text class="node-subtext" x="315.0" y="87">auto HTTPS</text>
+<rect class="node" height="48" rx="10" width="170" x="230" y="122"></rect>
+<text class="node-text" x="315.0" y="143">Umami :3000</text>
+<text class="node-subtext" x="315.0" y="159">Next.js app</text>
+<rect class="node" height="48" rx="10" width="170" x="230" y="194"></rect>
+<text class="node-text" x="315.0" y="215">PostgreSQL :5432</text>
+<text class="node-subtext" x="315.0" y="231">persistent volume</text>
+<rect class="node-tech" height="48" rx="10" style="stroke:#b91c1c" width="170" x="440" y="122"></rect>
+<text class="node-text" x="525.0" y="143">analytics.site.com</text>
+<text class="node-subtext" x="525.0" y="159">A record → VPS IP</text>
+</svg>
+</div>
+<div class="step-box">
+<div class="step-number">1</div>
+<div>
+<h2>Phase 1: Prepare the VPS</h2>
+<p>Any 1 vCPU / 1 GB Ubuntu 22.04 box works. Install Docker and create a workspace:</p>
+<div class="code-block"><pre><code>sudo apt update &amp;&amp; sudo apt install -y docker.io docker-compose-plugin
+<span class="code-comment"># workspace for the stack</span>
+mkdir -p /opt/umami &amp;&amp; cd /opt/umami</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">2</div>
+<div>
+<h2>Phase 2: The Docker Compose Stack</h2>
+<p>Create <code>docker-compose.yml</code> with three services wired on a private network:</p>
+<p><strong>docker-compose.yml</strong></p>
+<div class="code-block"><pre><code>services:
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    environment:
+      <span class="code-comment"># the DB URL uses the service name 'db' as hostname</span>
+      DATABASE_URL: postgresql://umami:strongpass@db:5432/umami
+      HASH_SALT: change-me-to-random-string
+    depends_on: [db]
+    restart: unless-stopped
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: strongpass
+      POSTGRES_DB: umami
+    volumes:
+      <span class="code-comment"># named volume survives restarts and redeploys</span>
+      - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
+volumes:
+  pg_data:</code></pre></div>
+<div class="code-block"><pre><code>docker compose up -d</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">3</div>
+<div>
+<h2>Phase 3: First Login and Site Registration</h2>
+<p>Browse to port 3000, sign in with the default account, and add your first website.</p>
+<p>The tracker snippet looks like this — paste it before <code>&lt;/head&gt;</code> on your site:</p>
+<div class="code-block"><pre><code>&lt;script defer src="https://analytics.yoursite.com/script.js" data-website-id="YOUR-ID"&gt;&lt;/script&gt;</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">4</div>
+<div>
+<h2>Phase 4: Nightly Backups</h2>
+<p>Schedule a compressed dump so a lost volume never means lost history:</p>
+<p><strong>/etc/cron.d/umami-backup</strong></p>
+<div class="code-block"><pre><code>0 2 * * * root docker exec umami-db-1 pg_dump -U umami umami | gzip &gt; /opt/backups/umami-$(date +\%F).sql.gz</code></pre></div>
+</div>
+</div>
+<h2>Verifying the Stack</h2>
+<table class="checklist">
+<tr><th>Check</th><th>Command / Why it matters</th></tr>
+<tr><td>Stack is actually running</td><td><code>docker compose ps</code> — both services must show <code>Up</code>, not <code>Restarting</code>.</td></tr>
+<tr><td>Database is persisting</td><td>Restart containers, then confirm yesterday's pageviews still appear — proves the named volume works.</td></tr>
+<tr><td>Port isn't public</td><td>From another machine, <code>curl http://&lt;vps-ip&gt;:5432</code> should fail — PostgreSQL stays internal to the compose network.</td></tr>
+<tr><td>Backups exist</td><td><code>ls /opt/backups</code> after 02:00 — a <code>.sql.gz</code> file must be present and non-empty.</td></tr>
+</table>
+<div class="alert-box">
+<h4>What's Actually Private Here</h4>
+<p>Every analytics event lives inside your own PostgreSQL volume; Umami sets no tracking cookies and never phones home. Your only external dependency is the public DNS record pointing visitors at your VPS — everything else is yours.</p>
+</div>
+</div>
+<footer>© 2026 UVF IT. <a href="https://www.uvfarms.in" rel="noopener" style="color: inherit;" target="_blank">www.uvfarms.in</a>. All rights reserved.</footer>
+</body>
+</html>

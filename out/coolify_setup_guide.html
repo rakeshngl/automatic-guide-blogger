@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UVF IT — Self-Host with Coolify on Contabo</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@300..700&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root, [data-theme="light"] {
+            --color-bg:             #f5f7f5;
+            --color-surface:        #ffffff;
+            --color-surface-2:      #f9fbf9;
+            --color-surface-offset: #eef2ee;
+            --color-divider:        #dde5dd;
+            --color-border:         #d0dbd0;
+            --color-text:           #1a2a1a;
+            --color-text-muted:     #4a6a4a;
+            --color-text-faint:     #8aaa8a;
+            --color-primary:        #1e6b22;
+            --color-primary-hover:  #165019;
+            --color-primary-light:  #e8f5e9;
+            --color-accent:         #2e7d32;
+            --color-code-bg:        #0d1a0e;
+            --color-code-text:      #e8f5e9;
+            --color-code-border:    #4caf50;
+            --color-warning-bg:     #fff8e1;
+            --color-warning-border: #f9a825;
+            --color-warning-text:   #5d4037;
+            --color-tip-bg:         #e8f5e9;
+            --color-tip-border:     rgba(46,125,50,0.25);
+            --color-success-bg:     #e8f5e9;
+            --color-success-border: #2e7d32;
+            --shadow-sm: 0 1px 3px rgba(0,40,0,0.07);
+            --shadow-md: 0 4px 16px rgba(0,40,0,0.09);
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'Geist', 'Inter', system-ui, sans-serif;
+            --font-mono: 'Geist Mono', 'Fira Code', monospace;
+            --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.625rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+        }
+        [data-theme="dark"] {
+            --color-bg:             #0e160e;
+            --color-surface:        #131f13;
+            --color-surface-2:      #172017;
+            --color-surface-offset: #1c271c;
+            --color-divider:        #243024;
+            --color-border:         #2d3d2d;
+            --color-text:           #c8dcc8;
+            --color-text-muted:     #7a9c7a;
+            --color-text-faint:     #4a6a4a;
+            --color-primary:        #66bb6a;
+            --color-primary-hover:  #81c784;
+            --color-primary-light:  #1a2e1a;
+            --color-accent:         #4caf50;
+            --color-code-bg:        #0a120a;
+            --color-code-text:      #c8e6c9;
+            --color-code-border:    #388e3c;
+            --color-warning-bg:     #1a1400;
+            --color-warning-border: #f59f00;
+            --color-warning-text:   #e9c46a;
+            --color-tip-bg:         #1a2e1a;
+            --color-tip-border:     rgba(76,175,80,0.3);
+            --color-success-bg:     #1a2e1a;
+            --color-success-border: #4caf50;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+        body { font-family: var(--font-body); font-size: clamp(1rem, 0.95rem + 0.25vw, 1.0625rem); line-height: 1.75; color: var(--color-text); background: var(--color-bg); min-height: 100dvh; transition: background var(--transition), color var(--transition); }
+        a { color: var(--color-primary); text-decoration: none; }
+        a:hover { color: var(--color-primary-hover); }
+        p { text-wrap: pretty; }
+        ::selection { background: rgba(46,125,50,0.18); }
+        :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+        /* Navbar */
+        .navbar { position: sticky; top: 0; z-index: 100; background: var(--color-surface); border-bottom: 1px solid var(--color-divider); padding: 0 clamp(1rem, 4vw, 2.5rem); height: 64px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); transition: background var(--transition), border-color var(--transition); }
+        .navbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.125rem; color: var(--color-text); letter-spacing: -0.3px; }
+        .navbar-brand .it-tag { font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; color: var(--color-primary); background: var(--color-primary-light); padding: 2px 7px; border-radius: 4px; text-transform: uppercase; }
+        .navbar-actions { display: flex; align-items: center; gap: 12px; }
+        .theme-toggle { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-border); background: transparent; cursor: pointer; color: var(--color-text-muted); transition: background var(--transition); }
+        .theme-toggle:hover { background: var(--color-surface-offset); color: var(--color-text); }
+        .nav-badge { font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); background: var(--color-surface-offset); border: 1px solid var(--color-border); padding: 4px 10px; border-radius: 20px; }
+
+        /* Hero */
+        .hero { background: var(--color-surface); border-bottom: 1px solid var(--color-divider); padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 4vw, 2.5rem) clamp(2.5rem, 6vw, 4.5rem); position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(46,125,50,0.08) 0%, transparent 70%); pointer-events: none; }
+        .hero-inner { max-width: 860px; margin: 0 auto; position: relative; }
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--color-primary); background: var(--color-primary-light); border: 1px solid rgba(46,125,50,0.2); padding: 5px 12px; border-radius: 20px; margin-bottom: 1.25rem; }
+        .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-primary); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
+        .hero h1 { font-family: var(--font-display); font-size: clamp(2.25rem, 1.5rem + 3.5vw, 3.75rem); font-weight: 400; color: var(--color-text); margin-bottom: 1.25rem; line-height: 1.15; letter-spacing: -0.5px; }
+        .hero h1 em { font-style: italic; color: var(--color-primary); }
+        .hero-desc { font-size: clamp(1rem, 0.95rem + 0.3vw, 1.15rem); color: var(--color-text-muted); max-width: 62ch; margin-bottom: 2rem; line-height: 1.7; }
+        .hero-meta { display: flex; flex-wrap: wrap; gap: 1.5rem; font-size: 0.85rem; color: var(--color-text-muted); border-top: 1px solid var(--color-divider); padding-top: 1.25rem; }
+        .hero-meta-item { display: flex; align-items: center; gap: 6px; }
+        .hero-meta-item svg { color: var(--color-primary); }
+
+        /* Layout */
+        .page-layout { max-width: 1100px; margin: 0 auto; padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 3vw, 2rem); display: grid; grid-template-columns: 220px 1fr; gap: clamp(1.5rem, 3vw, 3rem); align-items: start; }
+        @media (max-width: 820px) { .page-layout { grid-template-columns: 1fr; } .toc-sidebar { display: none; } }
+
+        /* TOC */
+        .toc-sidebar { position: sticky; top: 80px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.25rem; box-shadow: var(--shadow-sm); }
+        .toc-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-text-faint); margin-bottom: 0.875rem; }
+        .toc-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+        .toc-list a { display: block; font-size: 0.8rem; font-weight: 500; color: var(--color-text-muted); padding: 5px 8px; border-radius: 6px; line-height: 1.4; transition: background var(--transition), color var(--transition); }
+        .toc-list a:hover { background: var(--color-surface-offset); color: var(--color-text); }
+        .toc-list .toc-phase { font-weight: 600; color: var(--color-text); font-size: 0.825rem; }
+
+        /* Article */
+        .article { min-width: 0; }
+        .article > * + * { margin-top: 1.25rem; }
+        .article p { color: var(--color-text-muted); margin-bottom: 0.875rem; }
+        .article ul, .article ol { color: var(--color-text-muted); padding-left: 1.375rem; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+        .article li::marker { color: var(--color-primary); }
+        .article li strong { color: var(--color-text); }
+
+        /* Phase Sections */
+        .phase-section { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: clamp(1.75rem, 3vw, 2.5rem); box-shadow: var(--shadow-sm); margin-top: 2rem; }
+        .phase-section + .phase-section { margin-top: 1.5rem; }
+        .phase-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--color-divider); }
+        .phase-number { width: 44px; height: 44px; flex-shrink: 0; background: var(--color-primary); color: white; border-radius: 12px; font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(46,125,50,0.3); }
+        .phase-title-group { flex: 1; }
+        .phase-tag { font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--color-primary); background: var(--color-primary-light); padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 3px; }
+        .phase-title { font-size: clamp(1.1rem, 1rem + 0.5vw, 1.3rem); font-weight: 700; color: var(--color-text); margin: 0; }
+
+        /* Inline code */
+        code:not(pre code) { font-family: var(--font-mono); font-size: 0.875em; background: var(--color-surface-offset); border: 1px solid var(--color-border); color: var(--color-primary); padding: 1px 6px; border-radius: 4px; }
+
+        /* Code blocks */
+        .code-wrap { margin: 1.25rem 0; }
+        .code-header { background: #1a2b1a; border-radius: var(--radius-md) var(--radius-md) 0 0; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #2d4a2d; border-bottom: none; }
+        .code-lang { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: #6fa86f; }
+        .code-dots { display: flex; gap: 6px; }
+        .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .code-dot:nth-child(1) { background: #ff5f57; }
+        .code-dot:nth-child(2) { background: #febc2e; }
+        .code-dot:nth-child(3) { background: #28c840; }
+        .code-block { background: var(--color-code-bg); color: var(--color-code-text); border: 1px solid #2d4a2d; border-top: none; border-radius: 0 0 var(--radius-md) var(--radius-md); padding: 1.25rem 1.375rem; font-family: var(--font-mono); font-size: clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem); line-height: 1.7; overflow-x: auto; }
+        .code-block pre { margin: 0; white-space: pre; }
+        .cm { color: #546e54; font-style: italic; }
+
+        /* Sub-steps */
+        .sub-step { display: flex; gap: 1rem; align-items: flex-start; margin: 1.25rem 0; }
+        .sub-step-num { width: 28px; height: 28px; flex-shrink: 0; border: 2px solid var(--color-primary); color: var(--color-primary); border-radius: 8px; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+        .sub-step-body h3 { font-size: 0.95rem; font-weight: 700; color: var(--color-text); margin-bottom: 0.375rem; }
+        .sub-step-body p { margin-bottom: 0.5rem; font-size: 0.95rem; }
+
+        /* Architecture Diagram */
+        .diagram-container { background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 2rem; margin: 1.5rem 0; overflow-x: auto; }
+        .diagram-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-text-faint); text-align: center; margin-bottom: 1.5rem; }
+
+        /* Callouts */
+        .callout { border-radius: var(--radius-md); padding: 1.125rem 1.375rem; margin: 1.25rem 0; display: flex; gap: 0.875rem; align-items: flex-start; }
+        .callout-icon { flex-shrink: 0; margin-top: 2px; }
+        .callout-body h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .callout-body p { font-size: 0.9rem; margin: 0; line-height: 1.6; }
+        .callout-body code { font-size: 0.82em; }
+        .callout.warning { background: var(--color-warning-bg); border: 1px solid var(--color-warning-border); color: var(--color-warning-text); }
+        .callout.warning .callout-body h4 { color: var(--color-warning-text); }
+        .callout.tip { background: var(--color-tip-bg); border: 1px solid var(--color-tip-border); color: var(--color-text-muted); }
+        .callout.tip .callout-body h4 { color: var(--color-primary); }
+        .callout.success { background: var(--color-success-bg); border: 1px solid var(--color-success-border); }
+        .callout.success .callout-body h4 { color: var(--color-primary); }
+        .callout.success .callout-body p { color: var(--color-text-muted); }
+
+        /* Intro card */
+        .intro-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: clamp(1.5rem, 3vw, 2rem); box-shadow: var(--shadow-sm); }
+        .intro-card p { color: var(--color-text-muted); font-size: 1rem; }
+
+        /* Specs grid */
+        .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1.25rem 0; }
+        .spec-card { background: var(--color-surface-offset); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1rem 1.125rem; }
+        .spec-card-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--color-text-faint); margin-bottom: 0.25rem; }
+        .spec-card-value { font-size: 0.95rem; font-weight: 600; color: var(--color-text); }
+
+        /* Footer */
+        footer { border-top: 1px solid var(--color-divider); padding: 2rem clamp(1rem, 4vw, 2.5rem); text-align: center; font-size: 0.85rem; color: var(--color-text-faint); background: var(--color-surface); }
+        @media (max-width: 600px) { .phase-section { padding: 1.25rem; } }
+    </style>
+<script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194"></script></head>
+<body>
+<!-- Navbar -->
+<nav aria-label="Main navigation" class="navbar" role="navigation">
+<div class="navbar-brand">
+<img alt="UVF Farms Logo" height="36" loading="eager" src="https://www.uvfarms.in/_next/image?url=%2Flogo-new.png&amp;w=96&amp;q=75" style="height:36px;width:auto;object-fit:contain;"/>
+<span>UVF</span>
+<span class="it-tag">IT</span>
+</div>
+<div class="navbar-actions">
+<span class="nav-badge">Infrastructure Guide</span>
+<button aria-label="Switch to dark mode" class="theme-toggle" data-theme-toggle="">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+</button>
+</div>
+</nav>
+<!-- Hero -->
+<header class="hero" role="banner">
+<div class="hero-inner">
+<div class="hero-eyebrow">
+<span class="hero-eyebrow-dot"></span>
+            Self-Hosting Blueprint
+        </div>
+<h1>Turn Your Contabo VPS into a <em>Cloud Platform</em> with Coolify</h1>
+<p class="hero-desc">
+            Install Coolify on Ubuntu 22.04 to get a self-hosted PaaS — deploy apps, manage Docker containers, handle SSL certificates, and run production workloads without the vendor lock-in of AWS or Heroku.
+        </p>
+<div class="hero-meta">
+<span class="hero-meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                ~20 min setup
+            </span>
+<span class="hero-meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                Ubuntu · Docker · Coolify v4
+            </span>
+<span class="hero-meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                Free &amp; Open Source
+            </span>
+</div>
+</div>
+</header><div style="max-width:960px;margin:20px auto;padding:0 20px;">
+<ins class="adsbygoogle" data-ad-client="ca-pub-7707820592878194" data-ad-format="auto" data-ad-slot="5778428487" data-full-width-responsive="true" style="display:block"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<!-- Layout -->
+<div class="page-layout" role="main">
+<!-- TOC -->
+<aside aria-label="Table of contents" class="toc-sidebar">
+<div class="toc-title">On This Page</div>
+<ul class="toc-list" role="list">
+<li><a href="#intro">Overview</a></li>
+<li><a href="#architecture">Architecture</a></li>
+<li><a class="toc-phase" href="#phase1">1 — Prerequisites</a></li>
+<li><a class="toc-phase" href="#phase2">2 — Connect &amp; Update</a></li>
+<li><a class="toc-phase" href="#phase3">3 — Install Coolify</a></li>
+<li><a class="toc-phase" href="#phase4">4 — Firewall &amp; Access</a></li>
+<li><a class="toc-phase" href="#phase5">5 — First Login</a></li>
+<li><a href="#done">What's Next</a></li>
+</ul>
+</aside>
+<!-- Article -->
+<article class="article">
+<!-- Intro -->
+<div class="intro-card" id="intro">
+<p>Welcome to the <strong>UVF IT</strong> infrastructure blueprint. Coolify transforms your bare Contabo server into a self-hosted Platform-as-a-Service (PaaS) — giving you the deployment power of platforms like Heroku or Railway, completely on your own hardware. It manages Docker networking, SSL certificates, environment variables, and service orchestration from a single clean dashboard, with zero monthly platform fees.</p>
+</div>
+<!-- Architecture -->
+<div class="diagram-container" id="architecture">
+<div class="diagram-label">Platform Architecture</div>
+<svg aria-label="Coolify architecture on Contabo VPS" height="230" role="img" viewbox="0 0 720 230" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrowFwd" markerheight="6" markerwidth="6" orient="auto" refx="9" refy="5" viewbox="0 0 10 10">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#4caf50"></path>
+</marker>
+</defs>
+<!-- You / Browser -->
+<rect fill="#f9fbf9" height="60" rx="10" stroke="#2e7d32" stroke-width="2" width="110" x="10" y="85"></rect>
+<text fill="#1a2a1a" font-family="Geist,system-ui,sans-serif" font-size="12" font-weight="700" text-anchor="middle" x="65" y="109">🖥️ Browser</text>
+<text fill="#4a6a4a" font-family="Geist,system-ui,sans-serif" font-size="10" text-anchor="middle" x="65" y="126">Your Machine</text>
+<!-- Arrow: Browser → VPS -->
+<line marker-end="url(#arrowFwd)" stroke="#4caf50" stroke-width="2" x1="122" x2="175" y1="115" y2="115"></line>
+<text fill="#1e6b22" font-family="Geist,system-ui,sans-serif" font-size="9" text-anchor="middle" x="149" y="108">SSH / HTTPS</text>
+<!-- Contabo VPS outer box -->
+<rect fill="#f0fdf4" height="190" rx="12" stroke="#2e7d32" stroke-dasharray="7,4" stroke-width="1.5" width="380" x="177" y="20"></rect>
+<text fill="#1e6b22" font-family="Geist,system-ui,sans-serif" font-size="10" font-weight="700" letter-spacing="0.8" text-anchor="middle" x="367" y="44">CONTABO VPS — UBUNTU 22.04</text>
+<!-- Coolify Dashboard -->
+<rect fill="#fff" height="50" rx="8" stroke="#2e7d32" stroke-width="2" width="150" x="200" y="58"></rect>
+<text fill="#1a2a1a" font-family="Geist,system-ui,sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="275" y="78">🚀 Coolify</text>
+<text fill="#4a6a4a" font-family="Geist,system-ui,sans-serif" font-size="9.5" text-anchor="middle" x="275" y="96">Dashboard · Port 443/80</text>
+<!-- Docker Engine -->
+<rect fill="#fff" height="50" rx="8" stroke="#2e7d32" stroke-width="2" width="150" x="200" y="130"></rect>
+<text fill="#1a2a1a" font-family="Geist,system-ui,sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="275" y="150">🐳 Docker Engine</text>
+<text fill="#4a6a4a" font-family="Geist,system-ui,sans-serif" font-size="9.5" text-anchor="middle" x="275" y="168">Containers · Networks</text>
+<!-- Arrow Coolify <-> Docker -->
+<line marker-end="url(#arrowFwd)" stroke="#4caf50" stroke-width="1.5" x1="275" x2="275" y1="108" y2="128"></line>
+<!-- Your Apps -->
+<rect fill="#fff" height="50" rx="8" stroke="#2e7d32" stroke-width="2" width="148" x="388" y="58"></rect>
+<text fill="#1a2a1a" font-family="Geist,system-ui,sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="462" y="78">📦 Your Apps</text>
+<text fill="#4a6a4a" font-family="Geist,system-ui,sans-serif" font-size="9.5" text-anchor="middle" x="462" y="96">Python · Node · Postgres</text>
+<!-- Arrow Coolify -> Apps -->
+<line marker-end="url(#arrowFwd)" stroke="#4caf50" stroke-width="1.5" x1="352" x2="386" y1="83" y2="83"></line>
+<!-- SSL / Traefik -->
+<rect fill="#fff" height="50" rx="8" stroke="#2e7d32" stroke-width="2" width="148" x="388" y="130"></rect>
+<text fill="#1a2a1a" font-family="Geist,system-ui,sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="462" y="150">🔒 Traefik Proxy</text>
+<text fill="#4a6a4a" font-family="Geist,system-ui,sans-serif" font-size="9.5" text-anchor="middle" x="462" y="168">SSL · Routing · Domains</text>
+<!-- Arrow Docker -> Traefik -->
+<line marker-end="url(#arrowFwd)" stroke="#4caf50" stroke-width="1.5" x1="352" x2="386" y1="155" y2="155"></line>
+<!-- Arrow: VPS → Internet -->
+<line marker-end="url(#arrowFwd)" stroke="#4caf50" stroke-width="2" x1="559" x2="618" y1="115" y2="115"></line>
+<text fill="#1e6b22" font-family="Geist,system-ui,sans-serif" font-size="9" text-anchor="middle" x="589" y="108">HTTPS</text>
+<!-- Internet -->
+<rect fill="#f9fbf9" height="60" rx="10" stroke="#2e7d32" stroke-width="2" width="90" x="620" y="85"></rect>
+<text fill="#1a2a1a" font-family="Geist,system-ui,sans-serif" font-size="12" font-weight="700" text-anchor="middle" x="665" y="109">🌐 Internet</text>
+<text fill="#4a6a4a" font-family="Geist,system-ui,sans-serif" font-size="10" text-anchor="middle" x="665" y="126">Users / APIs</text>
+</svg>
+</div>
+<!-- Phase 1 — Prerequisites -->
+<section class="phase-section" id="phase1">
+<div class="phase-header">
+<div class="phase-number">1</div>
+<div class="phase-title-group">
+<span class="phase-tag">Prerequisites</span>
+<h2 class="phase-title">What You Need Before Starting</h2>
+</div>
+</div>
+<p>Make sure the following are in place before running a single command. Skipping any of these is the most common reason Coolify installs fail or the dashboard is unreachable.</p>
+<div class="specs-grid">
+<div class="spec-card">
+<div class="spec-card-label">Min. CPU</div>
+<div class="spec-card-value">2 vCPU cores</div>
+</div>
+<div class="spec-card">
+<div class="spec-card-label">Min. RAM</div>
+<div class="spec-card-value">2 GB RAM</div>
+</div>
+<div class="spec-card">
+<div class="spec-card-label">OS</div>
+<div class="spec-card-value">Ubuntu 22.04 LTS</div>
+</div>
+<div class="spec-card">
+<div class="spec-card-label">Disk</div>
+<div class="spec-card-value">20 GB+ SSD</div>
+</div>
+<div class="spec-card">
+<div class="spec-card-label">Access</div>
+<div class="spec-card-value">Root SSH login</div>
+</div>
+<div class="spec-card">
+<div class="spec-card-label">Ports needed</div>
+<div class="spec-card-value">22, 80, 443, 8000</div>
+</div>
+</div>
+<ul>
+<li><strong>Contabo VPS:</strong> Get a "Cloud VPS 1" at contabo.com. Choose <strong>Ubuntu 22.04</strong> as the OS during checkout. Contabo will email you the server's IP address and root password within minutes of activation.</li>
+<li><strong>SSH client:</strong> On Mac/Linux, your Terminal is ready. On Windows, use <strong>Windows Terminal</strong> or <strong>PuTTY</strong>.</li>
+<li><strong>A domain (optional but recommended):</strong> Coolify can auto-issue SSL certificates for a real domain (e.g., <code>coolify.uvfarms.in</code>). If you skip this, you'll access it via raw IP initially.</li>
+</ul>
+</section>
+<!-- Phase 2 — Connect & Update -->
+<section class="phase-section" id="phase2">
+<div class="phase-header">
+<div class="phase-number">2</div>
+<div class="phase-title-group">
+<span class="phase-tag">Connect</span>
+<h2 class="phase-title">SSH In &amp; Update the Server</h2>
+</div>
+</div>
+<p>Open your terminal and connect to your freshly provisioned Contabo server as the root user.</p>
+<div class="sub-step">
+<div class="sub-step-num">A</div>
+<div class="sub-step-body">
+<h3>Connect via SSH</h3>
+<div class="code-wrap">
+<div class="code-header"><div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div><span class="code-lang">Terminal (your machine)</span></div>
+<div class="code-block"><pre><code>ssh root@YOUR_SERVER_IP</code></pre></div>
+</div>
+<p>The first time you connect, SSH will display a fingerprint warning and ask you to confirm. Type <code>yes</code> and press Enter, then enter your root password.</p>
+</div>
+</div>
+<div class="sub-step">
+<div class="sub-step-num">B</div>
+<div class="sub-step-body">
+<h3>Update the Package List &amp; Apply Security Patches</h3>
+<p>Run these two commands separately. The first refreshes the list of available packages; the second upgrades only security-critical packages to avoid breaking anything.</p>
+<div class="code-wrap">
+<div class="code-header"><div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div><span class="code-lang">Bash (VPS)</span></div>
+<div class="code-block"><pre><code>apt update
+apt upgrade -y</code></pre></div>
+</div>
+</div>
+</div>
+<div class="callout warning">
+<span class="callout-icon"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" x2="12" y1="9" y2="13"></line><line x1="12" x2="12.01" y1="17" y2="17"></line></svg></span>
+<div class="callout-body">
+<h4>Fresh Server Only — Don't Run apt upgrade on Live Production</h4>
+<p>On a brand new VPS these commands are safe and recommended. On an existing server with running services, <code>apt upgrade -y</code> can silently restart daemons or change library versions. Always review upgrade notes on production machines.</p>
+</div>
+</div>
+</section>
+<!-- Phase 3 — Install Coolify -->
+<section class="phase-section" id="phase3">
+<div class="phase-header">
+<div class="phase-number">3</div>
+<div class="phase-title-group">
+<span class="phase-tag">Install</span>
+<h2 class="phase-title">Install Coolify with One Command</h2>
+</div>
+</div>
+<p>Coolify provides an official install script that handles everything — it installs Docker, sets up internal networks, pulls the Coolify container images, and starts the dashboard service automatically.</p>
+<div class="code-wrap">
+<div class="code-header"><div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div><span class="code-lang">Bash (VPS)</span></div>
+<div class="code-block"><pre><code>curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash</code></pre></div>
+</div>
+<p>This process takes <strong>2–5 minutes</strong> depending on your server's download speed. You will see a stream of progress output. Wait until it prints a completion message — do not interrupt it.</p>
+<div class="callout tip">
+<span class="callout-icon"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg></span>
+<div class="callout-body">
+<h4>What the Script Does Under the Hood</h4>
+<p>The installer: (1) installs Docker Engine if not present, (2) creates a dedicated <code>coolify</code> Docker network, (3) pulls the Coolify, Traefik, and PostgreSQL images, and (4) starts all services as Docker containers managed by a <code>docker-compose.yml</code> at <code>/data/coolify/source/</code>.</p>
+</div>
+</div>
+</section>
+<!-- Phase 4 — Firewall -->
+<section class="phase-section" id="phase4">
+<div class="phase-header">
+<div class="phase-number">4</div>
+<div class="phase-title-group">
+<span class="phase-tag">Firewall</span>
+<h2 class="phase-title">Open the Required Ports (UFW)</h2>
+</div>
+</div>
+<p>Ubuntu 22.04 ships with <strong>UFW (Uncomplicated Firewall)</strong> which may be blocking port <code>8000</code> — the port Coolify's dashboard listens on initially. Run the following to allow access:</p>
+<div class="code-wrap">
+<div class="code-header"><div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div><span class="code-lang">Bash (VPS)</span></div>
+<div class="code-block"><pre><code><span class="cm"># Allow SSH (critical — do this first or you'll lock yourself out)</span>
+ufw allow 22/tcp
+
+<span class="cm"># Allow Coolify initial dashboard port</span>
+ufw allow 8000/tcp
+
+<span class="cm"># Allow HTTP and HTTPS for your deployed apps and future SSL</span>
+ufw allow 80/tcp
+ufw allow 443/tcp
+
+<span class="cm"># Enable the firewall</span>
+ufw --force enable
+
+<span class="cm"># Verify all rules are in place</span>
+ufw status</code></pre></div>
+</div>
+<div class="callout warning">
+<span class="callout-icon"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" x2="12" y1="9" y2="13"></line><line x1="12" x2="12.01" y1="17" y2="17"></line></svg></span>
+<div class="callout-body">
+<h4>Always Allow Port 22 Before Enabling UFW</h4>
+<p>If you run <code>ufw enable</code> without allowing port <code>22</code> first, your SSH connection will be permanently blocked and you will need to use Contabo's VNC rescue console to recover access.</p>
+</div>
+</div>
+</section>
+<!-- Phase 5 — First Login -->
+<section class="phase-section" id="phase5">
+<div class="phase-header">
+<div class="phase-number">5</div>
+<div class="phase-title-group">
+<span class="phase-tag">Access</span>
+<h2 class="phase-title">Open the Dashboard &amp; Create Your Account</h2>
+</div>
+</div>
+<p>Once the installation is complete and your firewall ports are open, navigate to the Coolify dashboard in your browser using your server's IP address and port <code>8000</code>.</p>
+<div class="code-wrap">
+<div class="code-header"><div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div><span class="code-lang">Browser Address Bar</span></div>
+<div class="code-block"><pre><code>http://YOUR_SERVER_IP:8000</code></pre></div>
+</div>
+<p>You will see the Coolify onboarding screen. Fill in your admin email and create a strong password. This first account is the <strong>root admin</strong> — keep these credentials safe.</p>
+<div class="sub-step">
+<div class="sub-step-num">A</div>
+<div class="sub-step-body">
+<h3>Verify all services are running</h3>
+<p>Back in your SSH session, confirm all Coolify containers are up:</p>
+<div class="code-wrap">
+<div class="code-header"><div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div><span class="code-lang">Bash (VPS)</span></div>
+<div class="code-block"><pre><code>docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"</code></pre></div>
+</div>
+<p>You should see containers named <code>coolify</code>, <code>coolify-db</code>, <code>coolify-redis</code>, and <code>coolify-proxy</code> — all with status <strong>Up</strong>.</p>
+</div>
+</div>
+<div class="sub-step">
+<div class="sub-step-num">B</div>
+<div class="sub-step-body">
+<h3>Point a subdomain for permanent HTTPS access (recommended)</h3>
+<p>Using a raw IP + port <code>8000</code> is fine for setup but not for daily use. In your DNS provider (Cloudflare), create an <strong>A record</strong>:</p>
+<div class="code-wrap">
+<div class="code-header"><div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div><span class="code-lang">DNS Record (e.g. Cloudflare)</span></div>
+<div class="code-block"><pre><code>Type:    A
+Name:    coolify          <span class="cm"># becomes coolify.uvfarms.in</span>
+Value:   YOUR_SERVER_IP
+Proxy:   DNS only (grey cloud) — NOT proxied</code></pre></div>
+</div>
+<p>Then inside Coolify's dashboard: go to <strong>Settings → Instance → Domain</strong> and enter <code>https://coolify.uvfarms.in</code>. Coolify will auto-provision a Let's Encrypt SSL certificate via Traefik.</p>
+</div>
+</div>
+<div class="callout tip">
+<span class="callout-icon"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg></span>
+<div class="callout-body">
+<h4>Disable Port 8000 After Setting Up Your Domain</h4>
+<p>Once your domain + HTTPS is working, run <code>ufw delete allow 8000/tcp</code> to close the raw port. All traffic will then go through Traefik on port 443 — far more secure.</p>
+</div>
+</div>
+</section>
+<!-- What's Next -->
+<div class="callout success" id="done" style="margin-top:2rem;">
+<span class="callout-icon"><svg fill="none" height="22" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="22"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>
+<div class="callout-body">
+<h4>Your Self-Hosted PaaS is Live 🎉</h4>
+<p>You now have a fully operational Coolify instance on your Contabo VPS. From the dashboard you can deploy Python apps, Node.js APIs, Postgres databases, Redis instances, and more — all with one-click deployments, automatic SSL, and zero per-app monthly fees. Connect it to your GitHub repo for push-to-deploy CI/CD.</p>
+</div>
+</div>
+</article>
+</div>
+<footer>
+<p>© 2026 UVF IT — Core Industrial &amp; Enterprise Automation Frameworks. All rights reserved.</p>
+</footer>
+<script>
+(function(){
+    var t = document.querySelector('[data-theme-toggle]');
+    var r = document.documentElement;
+    var d = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    r.setAttribute('data-theme', d);
+    var sunIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+    var moonIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    function updateIcon(){ if(t) t.innerHTML = d==='dark' ? sunIcon : moonIcon; }
+    updateIcon();
+    if(t){ t.addEventListener('click', function(){ d = d==='dark' ? 'light' : 'dark'; r.setAttribute('data-theme', d); updateIcon(); }); }
+})();
+</script>
+</body>
+</html>

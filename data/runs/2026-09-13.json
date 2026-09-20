@@ -1,0 +1,48 @@
+{
+  "date": "2026-09-13",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Local-First AI Job Search Agent"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a PostHog-like Analytics Tracker in Python",
+      "source": "github_trending",
+      "url": "https://github.com/JustVugg/colibri",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-13_tiny-analytics-tracker.html",
+      "tagline": "Build a lightweight event tracking system in 45 minutes",
+      "navbar_badge": "Python",
+      "est_minutes": 45,
+      "tags": [
+        "Python",
+        "SQLite",
+        "Analytics"
+      ]
+    },
+    {
+      "title": "Build a Ghost-like Blog with Node.js + SQLite",
+      "source": "github_trending",
+      "url": "https://github.com/bilawalsidhu/gods-eye-view",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-13_minimal-blog-engine-clone.html",
+      "tagline": "Build a lightweight, server-side rendered blog in 45 minutes using Node.js and SQLite.",
+      "navbar_badge": "Beginner",
+      "est_minutes": 40,
+      "tags": [
+        "Node.js",
+        "SQLite",
+        "Web Dev"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1548716156494544906",
+    "1548716167794008185"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

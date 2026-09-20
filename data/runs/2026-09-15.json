@@ -1,0 +1,62 @@
+{
+  "date": "2026-09-15",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a LocalSend-like File Transfer Tool with Python + WebSockets",
+      "source": "github_trending",
+      "url": "https://github.com/localsend/localsend",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-15_local-file-transfer-tool.html",
+      "tagline": "Build a LocalSend-inspired LAN file sharing app with Python and WebSockets",
+      "navbar_badge": "Python + WebSockets",
+      "est_minutes": 45,
+      "tags": [
+        "Python",
+        "WebSockets",
+        "File Transfer"
+      ]
+    },
+    {
+      "title": "Build a Trackd-like Gmail Subscription Tracker in Python",
+      "source": "hn_show",
+      "url": "https://trackd.deanware.com",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-15_gmail-subscription-tracker.html",
+      "tagline": "Find forgotten subscriptions by scanning local email data",
+      "navbar_badge": "Python",
+      "est_minutes": 50,
+      "tags": [
+        "Python",
+        "Gmail API",
+        "SQLite"
+      ]
+    },
+    {
+      "title": "Build a VideoHighlighter-like Clip Extractor with FFmpeg",
+      "source": "hn_show",
+      "url": "https://github.com/Aseiel/VideoHighlighter",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-15_mini-clip-extractor-with-ffmpeg.html",
+      "tagline": "Build a local tool that slices videos into clips using Python and FFmpeg.",
+      "navbar_badge": "45 min",
+      "est_minutes": 40,
+      "tags": [
+        "FFmpeg",
+        "Python",
+        "Video Processing"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1549220010583523330",
+    "1549220017055338508",
+    "1549220023338532929"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

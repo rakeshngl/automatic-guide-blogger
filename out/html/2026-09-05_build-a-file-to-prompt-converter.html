@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Build a File-to-Prompt Converter</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Python • LangChain • SQLite</div>
+    </nav>
+
+    <header>
+        <h1>Build a File-to-Prompt Converter</h1>
+        <p>Turn local files into LLM-ready prompts in 45 minutes</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide. Today we are constructing a minimal, local-first clone inspired by <strong>Mongotar</strong>, a tool that converts files into structured prompts for Large Language Models.</p>
+        <p>This project demonstrates how to use <strong>LangChain</strong> to parse documents and format them into context-aware prompts, storing the results in a lightweight <strong>SQLite</strong> database without requiring any paid API keys or cloud infrastructure.</p>
+
+        <div class="fix-box">
+            <h4>Prerequisites &amp; Simplifications</h4>
+            <ul>
+                <li>Requires Python 3.9+ and <code>pip</code>; ensure you have a local LLM (like Ollama) or an API key (OpenAI/Anthropic) configured in environment variables for the generation step.</li>
+                <li>This clone simplifies the original by using a flat file structure and SQLite instead of MongoDB, focusing on the core 'file-to-prompt' transformation logic rather than complex schema management.</li>
+                <li>Large files may cause timeouts or memory issues in this minimal implementation; the guide assumes small text/code files for demonstration purposes.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">System Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 630 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<rect x="426" y="96" width="198" height="70" fill="none" stroke="#b91c1c" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="525.0" y="114" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:#b91c1c">LLM PROVIDER</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Read Content</text>
+<line x1="400" y1="74" x2="440" y2="146" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="420" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Generate Prompt</text>
+<line x1="440" y1="146" x2="400" y2="74" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="420" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Return Structured Prompt</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Save Result</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Python App</text>
+<text x="315.0" y="87" class="node-subtext">LangChain Logic</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite</text>
+<text x="315.0" y="159" class="node-subtext">Prompt Storage</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">Input Files</text>
+<text x="315.0" y="231" class="node-subtext">txt/md/py</text>
+<rect x="440" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="525.0" y="143" class="node-text">LLM API</text>
+<text x="525.0" y="159" class="node-subtext">OpenAI/Ollama</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold Project &amp; Install Dependencies</h2>
+                <p>Create a dedicated directory and virtual environment to isolate dependencies. This ensures your system Python remains clean and your project dependencies are reproducible.</p>
+                <p>Install LangChain, a document loader, and SQLite support. LangChain provides the abstraction layer for loading documents, while SQLite will serve as our lightweight database for storing the generated prompts.</p>
+<div class="code-block"><pre><code>mkdir mongotar-clone
+cd mongotar-clone
+python3 -m venv venv
+source venv/bin/activate
+pip install langchain langchain-community sqlite3</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Core Feature 1 - File Loading &amp; Text Extraction</h2>
+                <p>Create a Python script that uses LangChain's <code>TextLoader</code> to read a local file. This step isolates the 'file' part of the conversion, ensuring we can extract raw text content reliably before attempting any AI processing.</p>
+                <p>We will also create a simple test input file to verify that the loader works correctly. By separating file loading from prompt generation, we can debug each component independently.</p>
+<div class="code-block"><pre><code>echo "This is a test document for the Mongotar clone. It contains some sample text to be converted into a prompt." &gt; test_input.txt</code></pre></div>
+                <p><strong>loader.py</strong></p>
+<div class="code-block"><pre><code>from langchain_community.document_loaders import TextLoader
+
+def load_document(file_path: str) -&gt; str:
+    """
+    Loads a text file using LangChain's TextLoader and returns the content.
+    """
+    try:
+        loader = TextLoader(file_path)
+        documents = loader.load()
+        <span class="code-comment"># Combine all document pages into a single string</span>
+        content = "\n".join([doc.page_content for doc in documents])
+        return content
+    except Exception as e:
+        print(f"Error loading file: {e}")
+        return None
+
+if __name__ == "__main__":
+    file_path = "test_input.txt"
+    content = load_document(file_path)
+    if content:
+        print("--- Loaded Content ---")
+        print(content)
+        print("-------------------")
+    else:
+        print("Failed to load content.")</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core Feature 2 - Prompt Generation &amp; Storage</h2>
+                <p>In this phase, we bridge the gap between raw text and usable LLM context by creating <code>converter.py</code>. This script imports our loader logic, applies a simple transformation to structure the text into a prompt, and persists the result.</p>
+                <p>We use SQLite for storage because it requires no server setup and keeps the project entirely local. The code defines a function to format the text and another to handle the database insertion, ensuring each file path is tracked with its generated prompt.</p>
+                <p>For this minimal clone, we simulate the 'generation' with a deterministic string format. This allows you to verify the data flow without needing an API key immediately. You can easily swap this logic for a real LangChain LLM call later.</p>
+                <p><strong>converter.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+import os
+from loader import load_text
+
+def generate_simple_prompt(raw_text: str) -&gt; str:
+    """
+    Simulates LLM prompt generation by wrapping text in a structured format.
+    Replace this with a real LLM call (e.g., ChatOpenAI) for production.
+    """
+    return f"""&lt;system&gt;
+You are a helpful assistant. Use the following context to answer questions.
+&lt;/system&gt;
+
+&lt;user_context&gt;
+{raw_text}
+&lt;/user_context&gt;"""
+
+def init_db(db_path: str = "prompts.db"):
+    """Initialize SQLite database and create table if not exists."""
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS prompts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            raw_content TEXT,
+            generated_prompt TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.commit()
+    return conn
+
+def save_prompt(conn, file_path: str, raw_content: str, prompt: str):
+    """Save the generated prompt to the database."""
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO prompts (file_path, raw_content, generated_prompt)
+        VALUES (?, ?, ?)
+    """, (file_path, raw_content, prompt))
+    conn.commit()
+    print(f"Saved prompt for: {file_path}")
+
+def main():
+    <span class="code-comment"># 1. Load the test file</span>
+    file_path = "test_input.txt"
+    if not os.path.exists(file_path):
+        print(f"Error: {file_path} not found. Please create it first.")
+        return
+    
+    raw_text = load_text(file_path)
+    
+    <span class="code-comment"># 2. Generate the prompt</span>
+    prompt = generate_simple_prompt(raw_text)
+    
+    <span class="code-comment"># 3. Save to SQLite</span>
+    conn = init_db()
+    save_prompt(conn, file_path, raw_text, prompt)
+    conn.close()
+
+if __name__ == "__main__":
+    main()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run Locally &amp; Verify</h2>
+                <p>Now that the code is ready, we execute the pipeline. First, ensure your <code>test_input.txt</code> exists with some sample content, then run the converter script.</p>
+                <p>The script will read the file, generate the structured prompt, and save it to <code>prompts.db</code>. You should see a confirmation message in the terminal.</p>
+                <p>Finally, we verify the data integrity by querying the SQLite database directly. This confirms that the end-to-end flow from file to database is working as expected.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Create a simple test file if it doesn't exist</span>
+if [ ! -f test_input.txt ]; then
+    echo "This is a test document for the Mongotar clone." &gt; test_input.txt
+    echo "It contains some sample text to be converted into a prompt." &gt;&gt; test_input.txt
+fi
+
+<span class="code-comment"># Run the converter</span>
+python converter.py
+
+<span class="code-comment"># Verify the database contents</span>
+sqlite3 prompts.db "SELECT id, file_path, substr(generated_prompt, 1, 50) as prompt_preview FROM prompts;"</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Virtual environment is active and dependencies are installed.</td><td>pip list | grep langchain</td></tr>
+            <tr><td>Test input file is created and readable.</td><td>cat test_input.txt</td></tr>
+            <tr><td>Converter script runs without errors.</td><td>python converter.py</td></tr>
+            <tr><td>SQLite database contains the generated prompt.</td><td>sqlite3 prompts.db "SELECT count(*) FROM prompts;"</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>To extend this clone, integrate a real LLM provider like Ollama or OpenAI by replacing the <code>generate_simple_prompt</code> function with a LangChain <code>ChatModel</code> call. You can also add a simple Streamlit UI to browse and copy prompts directly from the browser.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

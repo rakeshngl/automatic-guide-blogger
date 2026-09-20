@@ -1,0 +1,410 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UVF IT: Video-to-Text Transcriber</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+<script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194"></script></head>
+<body>
+<nav class="navbar">
+<div class="navbar-brand">UVF <span>IT</span></div>
+<div class="navbar-badge">Python</div>
+</nav>
+<header>
+<h1>Video-to-Text Transcriber</h1>
+<p>Turn short videos into searchable text in minutes</p>
+</header><div style="max-width:960px;margin:20px auto;padding:0 20px;">
+<ins class="adsbygoogle" data-ad-client="ca-pub-7707820592878194" data-ad-format="auto" data-ad-slot="5778428487" data-full-width-responsive="true" style="display:block"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<div class="container">
+<p>Welcome to another official <strong>UVF IT</strong> build guide. Today, we are constructing a minimal clone of HiTranscript, a tool that converts video content into searchable transcripts.</p>
+<p>We will use Python with the <code>whisper</code> library for speech recognition and <code>ffmpeg</code> for audio extraction. This stack is free, open-source, and runs entirely on your local machine without paid APIs.</p>
+<div class="fix-box">
+<h4>Prerequisites &amp; Gotchas</h4>
+<ul>
+<li>You must have <code>ffmpeg</code> installed and available in your system PATH; this is required for extracting audio from video files.</li>
+<li>The <code>whisper</code> library (OpenAI) requires PyTorch. Installation may take a few minutes and requires ~2-4GB of disk space for the model weights.</li>
+<li>This guide uses the <code>tiny</code> model for speed; it is less accurate than larger models but sufficient for a beginner demo.</li>
+</ul>
+</div>
+<div class="diagram-container">
+<div class="diagram-title">Local Transcription Pipeline</div>
+<svg height="334" role="img" viewbox="0 0 420 334" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="gw-arrow" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path class="link-arrow" d="M 0 0 L 10 5 L 0 10 z"></path></marker></defs>
+<rect fill="none" height="286" rx="10" stroke="var(--accent)" stroke-dasharray="6,6" stroke-width="2.5" width="198" x="216" y="24"></rect>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)" text-anchor="middle" x="315.0" y="42">LOCAL ENVIRONMENT</text>
+<line class="link" marker-end="url(#gw-arrow)" x1="315" x2="315" y1="98" y2="122"></line>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280" text-anchor="middle" x="315" y="104">Extract Audio</text>
+<line class="link" marker-end="url(#gw-arrow)" x1="315" x2="315" y1="170" y2="194"></line>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280" text-anchor="middle" x="315" y="176">Audio Stream</text>
+<line class="link" marker-end="url(#gw-arrow)" x1="315" x2="315" y1="242" y2="266"></line>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280" text-anchor="middle" x="315" y="248">Generate Text</text>
+<rect class="node-tech" height="48" rx="10" width="170" x="230" y="50"></rect>
+<text class="node-text" x="315.0" y="71">Input Video</text>
+<text class="node-subtext" x="315.0" y="87">.mp4</text>
+<rect class="node-tech" height="48" rx="10" width="170" x="230" y="122"></rect>
+<text class="node-text" x="315.0" y="143">FFmpeg</text>
+<text class="node-subtext" x="315.0" y="159">Audio Extractor</text>
+<rect class="node-tech" height="48" rx="10" width="170" x="230" y="194"></rect>
+<text class="node-text" x="315.0" y="215">Whisper Model</text>
+<text class="node-subtext" x="315.0" y="231">Speech-to-Text</text>
+<rect class="node-tech" height="48" rx="10" width="170" x="230" y="266"></rect>
+<text class="node-text" x="315.0" y="287">Transcript</text>
+<text class="node-subtext" x="315.0" y="303">.txt</text>
+</svg>
+</div>
+<div class="step-box">
+<div class="step-number">1</div>
+<div>
+<h2>Phase 1: Scaffold &amp; Install</h2>
+<p>Create a project directory and a virtual environment to isolate dependencies.</p>
+<p>Install <code>openai-whisper</code> (which includes PyTorch) and <code>ffmpeg-python</code> for easy media handling.</p>
+<div class="code-block"><pre><code>mkdir uvf-transcriber
+cd uvf-transcriber
+python3 -m venv venv
+source venv/bin/activate
+pip install openai-whisper ffmpeg-python</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">2</div>
+<div>
+<h2>Phase 2: Core Logic (Audio Extraction)</h2>
+<p>Whisper requires audio input. We will write a helper function to extract audio from a video file using ffmpeg.</p>
+<p>This step converts the video to a .wav file, which is the standard format for speech recognition.</p>
+<p><strong>transcriber.py</strong></p>
+<div class="code-block"><pre><code>import ffmpeg
+import os
+
+def extract_audio(video_path, audio_path):
+    """
+    Extracts audio from a video file and saves it as a .wav file.
+    """
+    try:
+        (ffmpeg
+            .input(video_path)
+            .output(audio_path, acodec='pcm_s16le', ac=1, ar='16k')
+            .overwrite_output()
+            .run(capture_stdout=True, capture_stderr=True))
+        print(f"Audio extracted to: {audio_path}")
+    except ffmpeg.Error as e:
+        print(f"FFmpeg error: {e.stderr.decode()}")
+        raise</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">3</div>
+<div>
+<h2>Phase 3: Core Logic (Transcription)</h2>
+<p>Load the Whisper model. We use 'tiny' for speed, but you can change this to 'base' or 'small' for better accuracy.</p>
+<p>The <code>transcribe</code> method returns a dictionary containing the full text and segmented timestamps.</p>
+<p><strong>transcriber.py</strong></p>
+<div class="code-block"><pre><code>import whisper
+
+def transcribe_audio(audio_path, model_name='tiny'):
+    """
+    Loads the Whisper model and transcribes the audio file.
+    """
+    print(f"Loading model '{model_name}'...")
+    model = whisper.load_model(model_name)
+    
+    print("Transcribing...")
+    result = model.transcribe(audio_path)
+    
+    return result['text']</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">4</div>
+<div>
+<h2>Phase 4: Main Execution &amp; CLI</h2>
+<p>We now combine our helper functions into a single, executable script. By using Python's <code>argparse</code>, we create a simple command-line interface that accepts a video file path as an argument.</p>
+<p>This main block orchestrates the workflow: it extracts audio, runs the Whisper model, and saves the resulting text to a file named after the input video. This makes the tool reusable for any video file you throw at it.</p>
+<p><strong>transcriber.py</strong></p>
+<div class="code-block"><pre><code>import argparse
+import os
+import whisper
+from moviepy.editor import VideoFileClip
+
+def extract_audio(video_path, audio_path):
+    """Extract audio from video and save as .wav"""
+    video = VideoFileClip(video_path)
+    video.audio.write_audiofile(audio_path, codec='pcm_s16le')
+    video.close()
+    print(f"Audio extracted to: {audio_path}")
+
+def transcribe_audio(audio_path):
+    """Transcribe audio file using Whisper"""
+    print("Loading Whisper model (tiny)...")
+    model = whisper.load_model("tiny")
+    print("Transcribing...")
+    result = model.transcribe(audio_path)
+    return result["text"]
+
+def main():
+    parser = argparse.ArgumentParser(description="Video to Text Transcriber")
+    parser.add_argument("video_path", help="Path to the input video file")
+    args = parser.parse_args()
+
+    if not os.path.exists(args.video_path):
+        print(f"Error: File '{args.video_path}' not found.")
+        return
+
+    base_name = os.path.splitext(os.path.basename(args.video_path))[0]
+    audio_path = f"{base_name}_audio.wav"
+    output_txt = f"{base_name}_transcript.txt"
+
+    try:
+        <span class="code-comment"># Step 1: Extract Audio</span>
+        extract_audio(args.video_path, audio_path)
+
+        <span class="code-comment"># Step 2: Transcribe</span>
+        text = transcribe_audio(audio_path)
+
+        <span class="code-comment"># Step 3: Save Output</span>
+        with open(output_txt, "w", encoding="utf-8") as f:
+            f.write(text)
+        
+        print(f"Success! Transcript saved to: {output_txt}")
+        
+        <span class="code-comment"># Cleanup optional: remove audio file if desired</span>
+        <span class="code-comment"># os.remove(audio_path)</span>
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    main()</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">5</div>
+<div>
+<h2>Phase 5: Run &amp; Verify</h2>
+<p>To test your new tool, you need a sample video file. You can use any short .mp4 file from your computer or download a free stock video from sites like Pexels.</p>
+<p>Run the script from your terminal, ensuring your virtual environment is active. The first run will download the Whisper model weights, which may take a moment, but subsequent runs will be much faster.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Activate your virtual environment first (if not already active)</span>
+<span class="code-comment"># On Mac/Linux:</span>
+source venv/bin/activate
+<span class="code-comment"># On Windows:</span>
+<span class="code-comment"># venv\Scripts\activate</span>
+
+<span class="code-comment"># Run the transcriber with your video file</span>
+python transcriber.py sample_video.mp4
+
+<span class="code-comment"># Check the output</span>
+ls -l sample_video_transcript.txt
+cat sample_video_transcript.txt</code></pre></div>
+</div>
+</div>
+<h2>Verifying the Stack</h2>
+<table class="checklist">
+<tr><th>Check</th><th>Command / Why it matters</th></tr>
+<tr><td>Virtual environment activated</td><td>Run <code>which python</code> (Mac/Linux) or <code>where python</code> (Windows) to ensure it points to ./venv/bin/python.</td></tr>
+<tr><td>FFmpeg installed</td><td>Run <code>ffmpeg -version</code> in terminal. If command not found, install FFmpeg via Homebrew (<code>brew install ffmpeg</code>) or package manager.</td></tr>
+<tr><td>Transcript generated</td><td>Check for a <code>.txt</code> file in your directory containing readable text that matches the video audio.</td></tr>
+<tr><td>No errors during model load</td><td>The first run downloads the model. Subsequent runs should be faster. Ensure no PyTorch CUDA errors if running on CPU.</td></tr>
+</table>
+<div class="alert-box">
+<h4>Next Steps</h4>
+<p>To extend this, try adding a simple Flask API to accept file uploads via a web form, or switch the model to 'base' for higher accuracy on noisy audio.</p>
+</div>
+</div>
+<footer>Â© 2026 UVF IT. <a href="https://www.uvfarms.in" rel="noopener" style="color: inherit;" target="_blank">www.uvfarms.in</a>. All rights reserved.</footer>
+</body>
+</html>

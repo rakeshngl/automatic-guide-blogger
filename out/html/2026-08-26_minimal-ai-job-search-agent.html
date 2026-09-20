@@ -1,0 +1,504 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UVF IT: Minimal AI Job Search Agent</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+<script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194"></script></head>
+<body>
+<nav class="navbar">
+<div class="navbar-brand">UVF <span>IT</span></div>
+<div class="navbar-badge">Python</div>
+</nav>
+<header>
+<h1>Minimal AI Job Search Agent</h1>
+<p>Automate job filtering and cover letter drafting locally with Python and SQLite.</p>
+</header><div style="max-width:960px;margin:20px auto;padding:0 20px;">
+<ins class="adsbygoogle" data-ad-client="ca-pub-7707820592878194" data-ad-format="auto" data-ad-slot="5778428487" data-full-width-responsive="true" style="display:block"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<div class="container">
+<p>Welcome to another official <strong>UVF IT</strong> beginner build. Today we are constructing a lightweight, local-first clone of an AI Job Search Agent, inspired by the workflow of MadsLorentzen's popular open-source framework.</p>
+<p>Instead of relying on complex cloud pipelines or paid APIs, we will build a minimal working prototype using Python and SQLite. This guide focuses on the core logic: ingesting job data, filtering it based on criteria, and generating tailored application materials.</p>
+<div class="fix-box">
+<h4>Prerequisites &amp; Simplifications</h4>
+<ul>
+<li>Requires Python 3.9+ and a free OpenAI API key (or similar LLM provider) for the AI generation step; the original project uses Claude Code, but we will use a standard API for simplicity.</li>
+<li>This is a simplified clone; it does not include browser automation for scraping live sites or complex resume parsing, focusing instead on the data processing and AI generation logic.</li>
+<li>Ensure you have <code>sqlite3</code> available in your Python environment (standard library) and <code>requests</code> installed via pip.</li>
+</ul>
+</div>
+<div class="diagram-container">
+<div class="diagram-title">Local AI Job Search Architecture</div>
+<svg height="190" role="img" viewbox="0 0 630 190" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="gw-arrow" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path class="link-arrow" d="M 0 0 L 10 5 L 0 10 z"></path></marker></defs>
+<rect fill="none" height="142" rx="10" stroke="var(--accent)" stroke-dasharray="6,6" stroke-width="2.5" width="198" x="216" y="24"></rect>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)" text-anchor="middle" x="315.0" y="42">LOCAL RUNTIME</text>
+<rect fill="none" height="70" rx="10" stroke="#b91c1c" stroke-dasharray="6,6" stroke-width="2.5" width="198" x="426" y="60"></rect>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:#b91c1c" text-anchor="middle" x="525.0" y="78">EXTERNAL SERVICES</text>
+<line class="link" marker-end="url(#gw-arrow)" marker-start="url(#gw-arrow)" x1="315" x2="315" y1="98" y2="122"></line>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280" text-anchor="middle" x="315" y="104">Read/Write Job Data</text>
+<line class="link" marker-end="url(#gw-arrow)" x1="400" x2="440" y1="74" y2="110"></line>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280" text-anchor="middle" x="420" y="86">Generate Cover Letter</text>
+<rect class="node-tech" height="48" rx="10" width="170" x="230" y="50"></rect>
+<text class="node-text" x="315.0" y="71">Python Script</text>
+<text class="node-subtext" x="315.0" y="87">main.py</text>
+<rect class="node-tech" height="48" rx="10" width="170" x="230" y="122"></rect>
+<text class="node-text" x="315.0" y="143">SQLite DB</text>
+<text class="node-subtext" x="315.0" y="159">jobs.db</text>
+<rect class="node-tech" height="48" rx="10" width="170" x="440" y="86"></rect>
+<text class="node-text" x="525.0" y="107">LLM API</text>
+<text class="node-subtext" x="525.0" y="123">OpenAI/Anthropic</text>
+</svg>
+</div>
+<div class="step-box">
+<div class="step-number">1</div>
+<div>
+<h2>Phase 1: Scaffold and Database Setup</h2>
+<p>Create the project directory and initialize the SQLite database with a schema for storing job postings. We will define a simple table with fields for title, company, and description.</p>
+<p>Write the initialization script that creates the database file and inserts sample data so we have something to work with immediately.</p>
+<p><strong>setup.sh</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/bin/bash</span>
+mkdir -p uvf_ai_job_search
+cd uvf_ai_job_search
+pip install requests
+python -c "import sqlite3; print('SQLite3 ready')"</code></pre></div>
+<p><strong>db_init.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+
+DB_NAME = 'jobs.db'
+
+def init_db():
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    
+    <span class="code-comment"># Create table</span>
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS jobs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            company TEXT NOT NULL,
+            description TEXT NOT NULL,
+            keywords TEXT
+        )
+    ''')
+    
+    <span class="code-comment"># Insert sample data if empty</span>
+    cursor.execute('SELECT count(*) FROM jobs')
+    if cursor.fetchone()[0] == 0:
+        sample_jobs = [
+            ('Senior Python Developer', 'TechCorp', 'We are looking for an experienced Python developer to join our remote team. Must have 5+ years experience.', 'python,remote,senior'),
+            ('Junior Web Developer', 'StartupInc', 'Looking for a junior developer to help build our web platform. Knowledge of JavaScript and React required.', 'javascript,react,junior'),
+            ('Data Scientist', 'DataDriven', 'Seeking a data scientist with strong Python and SQL skills to analyze large datasets.', 'python,sql,data')
+        ]
+        cursor.executemany('INSERT INTO jobs (title, company, description, keywords) VALUES (?, ?, ?, ?)', sample_jobs)
+        conn.commit()
+        print(f'Inserted {len(sample_jobs)} sample jobs.')
+    else:
+        print('Database already populated.')
+    
+    conn.close()
+
+if __name__ == '__main__':
+    init_db()
+    print('Database initialized successfully.')</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">2</div>
+<div>
+<h2>Phase 2: Core Logic - Job Filtering</h2>
+<p>Implement the core filtering logic. We will create a function that queries the SQLite database for jobs matching specific keywords (e.g., 'Python', 'Remote').</p>
+<p>This step replaces the complex scraping engine with a simple data retrieval mechanism, allowing us to focus on the AI integration later.</p>
+<p><strong>job_filter.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+
+DB_NAME = 'jobs.db'
+
+def filter_jobs(keywords):
+    """
+    Query the database for jobs matching the provided keywords.
+    Keywords is a list of strings.
+    """
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    
+    <span class="code-comment"># Simple LIKE query for each keyword</span>
+    <span class="code-comment"># Note: This is a basic implementation. For production, consider full-text search.</span>
+    conditions = " OR ".join(["description LIKE ?" for _ in keywords])
+    params = [f'%{kw.lower()}%' for kw in keywords]
+    
+    query = f"SELECT id, title, company, description FROM jobs WHERE {conditions}"
+    
+    try:
+        cursor.execute(query, params)
+        results = cursor.fetchall()
+        return results
+    except Exception as e:
+        print(f"Error querying database: {e}")
+        return []
+    finally:
+        conn.close()
+
+if __name__ == '__main__':
+    <span class="code-comment"># Test the filter</span>
+    keywords = ['Python']
+    jobs = filter_jobs(keywords)
+    print(f"Found {len(jobs)} jobs matching '{keywords}':")
+    for job in jobs:
+        print(f"- {job[1]} at {job[2]}")</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">3</div>
+<div>
+<h2>Phase 3: AI Integration - Cover Letter Generator</h2>
+<p>Integrate an LLM API to generate tailored cover letters. We will use the <code>requests</code> library to send the job description and a static user profile to the API.</p>
+<p>Parse the JSON response from the AI and format it into a readable string. This mimics the 'tailor your CV' feature of the original project.</p>
+<p><strong>ai_agent.py</strong></p>
+<div class="code-block"><pre><code>import requests
+import os
+import json
+
+<span class="code-comment"># Use environment variable for API key, or set a default for testing</span>
+API_KEY = os.getenv('OPENAI_API_KEY', 'sk-your-api-key-here')
+API_URL = 'https://api.openai.com/v1/chat/completions'
+
+def generate_cover_letter(job_title, company, job_description, user_profile):
+    """
+    Generate a cover letter using the OpenAI API.
+    """
+    if API_KEY == 'sk-your-api-key-here':
+        return "[API Key not set. Set OPENAI_API_KEY environment variable.]"
+    
+    prompt = f"""
+    Write a professional cover letter for the following job application:
+    
+    Job Title: {job_title}
+    Company: {company}
+    Job Description: {job_description}
+    
+    User Profile: {user_profile}
+    
+    Please keep the tone professional and enthusiastic.
+    """
+    
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {API_KEY}'
+    }
+    
+    payload = {
+        'model': 'gpt-3.5-turbo',
+        'messages': [
+            {'role': 'system', 'content': 'You are a helpful career assistant.'},
+            {'role': 'user', 'content': prompt}
+        ],
+        'max_tokens': 500
+    }
+    
+    try:
+        response = requests.post(API_URL, headers=headers, json=payload)
+        response.raise_for_status()
+        data = response.json()
+        return data['choices'][0]['message']['content']
+    except requests.exceptions.RequestException as e:
+        print(f"API Error: {e}")
+        return None
+    except (KeyError, IndexError) as e:
+        print(f"Response parsing error: {e}")
+        return None
+
+if __name__ == '__main__':
+    <span class="code-comment"># Test the AI agent</span>
+    test_job = {
+        'title': 'Python Developer',
+        'company': 'TechCorp',
+        'description': 'Looking for a Python expert.'
+    }
+    user_profile = "I am a passionate Python developer with 3 years of experience."
+    
+    letter = generate_cover_letter(
+        test_job['title'],
+        test_job['company'],
+        test_job['description'],
+        user_profile
+    )
+    print("Generated Cover Letter:")
+    print(letter)</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">4</div>
+<div>
+<h2>Phase 4: Main Orchestration</h2>
+<p>Combine the database query and AI generation into a single main script. This script will find matching jobs and generate a cover letter for the first match.</p>
+<p>Add basic error handling for API failures and database connections to ensure the script runs smoothly locally.</p>
+<p><strong>main.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+import json
+import os
+from job_filter import get_matching_jobs
+from ai_agent import generate_cover_letter
+
+def main():
+    db_path = "jobs.db"
+    if not os.path.exists(db_path):
+        print("Error: Database not found. Run db_init.py first.")
+        return
+
+    try:
+        <span class="code-comment"># 1. Filter jobs</span>
+        keywords = ["Python", "Remote"]
+        jobs = get_matching_jobs(db_path, keywords)
+        
+        if not jobs:
+            print("No matching jobs found.")
+            return
+
+        print(f"Found {len(jobs)} matching job(s).")
+        
+        <span class="code-comment"># 2. Generate cover letter for the first match</span>
+        target_job = jobs[0]
+        print(f"\nGenerating cover letter for: {target_job['title']} at {target_job['company']}...")
+        
+        <span class="code-comment"># Mock user profile (static for this minimal clone)</span>
+        user_profile = {
+            "name": "Alex Dev",
+            "experience": "3 years in Python backend development",
+            "skills": ["Python", "SQL", "Docker"]
+        }
+        
+        cover_letter = generate_cover_letter(target_job, user_profile)
+        
+        <span class="code-comment"># 3. Output result</span>
+        print("\n--- Generated Cover Letter ---")
+        print(cover_letter)
+        print("--- End of Letter ---")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    main()</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">5</div>
+<div>
+<h2>Phase 5: Run and Verify</h2>
+<p>Execute the main script to verify the end-to-end flow. You should see a job title printed followed by a generated cover letter.</p>
+<p>Check the SQLite database to ensure the job data persists and can be queried again.</p>
+<div class="code-block"><pre><code>python main.py</code></pre></div>
+</div>
+</div>
+<h2>Verifying the Stack</h2>
+<table class="checklist">
+<tr><th>Check</th><th>Command / Why it matters</th></tr>
+<tr><td>Database created with sample data</td><td><code>sqlite3 jobs.db 'SELECT count(*) FROM jobs;'</code> should return &gt; 0</td></tr>
+<tr><td>Filtering works correctly</td><td>Running <code>python job_filter.py</code> should print job titles matching keywords</td></tr>
+<tr><td>AI generates text</td><td>Running <code>python main.py</code> should output a cover letter string</td></tr>
+<tr><td>Error handling is robust</td><td>Running <code>python main.py</code> with an invalid API key should print a clear error message instead of crashing</td></tr>
+</table>
+<div class="alert-box">
+<h4>Next Steps</h4>
+<p>To extend this clone, consider adding a simple CLI using <code>argparse</code> to allow users to input their own keywords, or integrate a real resume parser using <code>pdfplumber</code>.</p>
+</div>
+</div>
+<footer>Â© 2026 UVF IT. <a href="https://www.uvfarms.in" rel="noopener" style="color: inherit;" target="_blank">www.uvfarms.in</a>. All rights reserved.</footer>
+</body>
+</html>

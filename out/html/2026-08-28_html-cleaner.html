@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: HTML Cleaner</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner</div>
+    </nav>
+
+    <header>
+        <h1>HTML Cleaner</h1>
+        <p>Paste messy HTML, get clean text back.</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build session. Today we are creating a minimal, server-side clone of 'Jack the Snipper', a tool designed to strip HTML tags and formatting from pasted content, leaving you with clean, readable plain text.</p>
+        <p>This project uses Python and Flask to handle the heavy lifting of HTML sanitization. You will learn how to accept user input, process it using a robust library like <code>bleach</code>, and return a sanitized result, all within a simple, self-contained application.</p>
+
+        <div class="fix-box">
+            <h4>Prerequisites &amp; Simplifications</h4>
+            <ul>
+                <li>You must have Python 3.8+ installed. We are using <code>pip</code> to manage dependencies, so ensure your environment is set up correctly.</li>
+                <li>This clone runs entirely locally. Unlike the real product which may handle complex rich-text editors, this version focuses on raw HTML string cleaning for simplicity and speed.</li>
+                <li>We are using <code>bleach</code> for security. Do not skip this; raw HTML parsing without sanitization can lead to XSS vulnerabilities if you ever deploy this publicly.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Application Architecture</div>
+            <svg width="100%" height="334" viewBox="0 0 420 334" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="286" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">POST /clean</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Process HTML</text>
+<line x1="315" y1="242" x2="315" y2="266" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="248" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Sanitized String</text>
+<line x1="315" y1="266" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Return Result</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Browser</text>
+<text x="315.0" y="87" class="node-subtext">User Input</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Flask App</text>
+<text x="315.0" y="159" class="node-subtext">Python Server</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">Bleach Lib</text>
+<text x="315.0" y="231" class="node-subtext">HTML Sanitizer</text>
+<rect x="230" y="266" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="287" class="node-text">Clean Text</text>
+<text x="315.0" y="303" class="node-subtext">JSON Response</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the Project</h2>
+                <p>Create a new directory for your project and initialize a virtual environment to keep dependencies isolated. This is the standard practice for Python web apps, ensuring your system Python remains clean and your project dependencies are version-controlled.</p>
+<div class="code-block"><pre><code>mkdir html-cleaner-clone
+cd html-cleaner-clone
+python3 -m venv venv
+source venv/bin/activate</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Install Dependencies</h2>
+                <p>We need Flask for the web server and <code>bleach</code> for cleaning the HTML. <code>bleach</code> is a trusted library that removes unwanted tags and attributes while preserving safe text, making it perfect for this sanitization task.</p>
+<div class="code-block"><pre><code>pip install flask bleach</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the Core Logic</h2>
+                <p>Create the main application file. We will define a single endpoint <code>/clean</code> that accepts a POST request with JSON data containing the 'html' field. The <code>bleach.clean</code> function will strip all tags, leaving only plain text.</p>
+                <p>We configure <code>bleach</code> to allow no tags (<code>tags=[]</code>) and no attributes (<code>attributes={}</code>), ensuring that even inline styles or scripts are completely removed. This creates a strict plain-text output from any messy HTML input.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>from flask import Flask, request, jsonify
+import bleach
+
+app = Flask(__name__)
+
+@app.route('/clean', methods=['POST'])
+def clean_html():
+    data = request.get_json()
+    if not data or 'html' not in data:
+        return jsonify({'error': 'No HTML provided'}), 400
+    
+    raw_html = data['html']
+    <span class="code-comment"># Strip all tags and attributes to get plain text</span>
+    clean_text = bleach.clean(raw_html, tags=[], attributes={}, strip=True)
+    
+    return jsonify({'clean_text': clean_text})
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Create a Simple UI</h2>
+                <p>Create an <code>templates</code> folder and an <code>index.html</code> file. This simple HTML page will contain a textarea for input and a button to send the data to our API. We use vanilla JavaScript to handle the fetch request.</p>
+                <p>The frontend is kept minimal to focus on the core functionality. We use a standard POST request to send the HTML content to the <code>/clean</code> endpoint we defined earlier. The response is then displayed in a result div.</p>
+                <p>We include basic error handling in the JavaScript to ensure the user is notified if the server fails to respond. This makes the application more robust and user-friendly.</p>
+                <p><strong>templates/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;HTML Cleaner&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            white-space: pre-wrap;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;HTML Cleaner&lt;/h1&gt;
+    &lt;textarea id="htmlInput" placeholder="Paste your HTML here..."&gt;&lt;/textarea&gt;
+    &lt;button onclick="cleanHtml()"&gt;Clean Text&lt;/button&gt;
+    &lt;div id="result"&gt;&lt;/div&gt;
+
+    &lt;script&gt;
+        async function cleanHtml() {
+            const htmlContent = document.getElementById('htmlInput').value;
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                const response = await fetch('/clean', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ html: htmlContent })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const data = await response.json();
+                resultDiv.textContent = data.clean_text;
+            } catch (error) {
+                resultDiv.textContent = 'Error: ' + error.message;
+            }
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run and Verify</h2>
+                <p>Update <code>app.py</code> to serve the index page on the root route, then run the application. Open your browser to localhost:5000 to test the tool.</p>
+                <p>We add a simple route for the root URL that renders the <code>index.html</code> template. This allows users to access the UI directly by visiting the base URL of the application.</p>
+                <p>Finally, we run the Flask development server. This will start the application locally, and you can interact with it through your web browser to verify that the HTML cleaning functionality works as expected.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>from flask import Flask, request, jsonify, render_template
+import bleach
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/clean', methods=['POST'])
+def clean_html():
+    data = request.get_json()
+    if not data or 'html' not in data:
+        return jsonify({'error': 'No HTML content provided'}), 400
+    
+    html_content = data['html']
+    <span class="code-comment"># Strip all tags, leaving only plain text</span>
+    clean_text = bleach.clean(html_content, tags=[], attributes={}, strip=True)
+    
+    return jsonify({'clean_text': clean_text})
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>Run <code>python app.py</code> and see 'Running on http://127.0.0.1:5000' in the terminal.</td></tr>
+            <tr><td>UI loads correctly</td><td>Open http://localhost:5000 in your browser; you should see the textarea and button.</td></tr>
+            <tr><td>HTML is stripped</td><td>Paste <code>&lt;p&gt;Hello &lt;b&gt;World&lt;/b&gt;&lt;/p&gt;</code> into the textarea, click 'Clean Text', and verify the result is <code>Hello World</code>.</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>You now have a working HTML cleaner. Try extending it by adding options to preserve specific tags like &lt;a&gt; or &lt;img&gt;, or by adding a 'Copy to Clipboard' button for better UX.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

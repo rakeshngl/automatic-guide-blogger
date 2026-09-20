@@ -1,0 +1,52 @@
+{
+  "date": "2026-09-19",
+  "status": "partial",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Repository Diagram Generator with TypeScript (gitdiagram)",
+      "source": "github_trending",
+      "url": "https://github.com/ahmedkhaleel2004/gitdiagram",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-19_simple-repository-diagram-generator-typescript.html",
+      "tagline": "A minimal clone of GitDiagram using Node, Express, and SQLite",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 40,
+      "tags": [
+        "TypeScript",
+        "GitHub API",
+        "Visualization"
+      ]
+    },
+    {
+      "title": "Build a Tiny Go‑Based Search Engine Clone (hister)",
+      "source": "github_trending",
+      "url": "https://github.com/asciimoo/hister",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-19_tiny-go-search-engine-clone.html",
+      "tagline": "A minimal personal search engine in 45 minutes",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "Go",
+        "Search",
+        "CLI"
+      ]
+    },
+    {
+      "title": "Build a Local Memory Store API with Supermemory (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/supermemoryai/supermemory",
+      "status": "failed: outline failed rubric after retry: ['fewer than 3 checklist rows']"
+    }
+  ],
+  "delivery_ids": [
+    "1550668344850513940",
+    "1550668349870968943"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

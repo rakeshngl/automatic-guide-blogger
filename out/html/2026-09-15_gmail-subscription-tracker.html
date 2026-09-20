@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Gmail Subscription Tracker</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Python</div>
+    </nav>
+
+    <header>
+        <h1>Gmail Subscription Tracker</h1>
+        <p>Find forgotten subscriptions by scanning local email data</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build. Today, we are creating a minimal clone of <strong>Trackd</strong>, a tool that helps you identify active subscriptions by analyzing your email history.</p>
+        <p>Instead of connecting to your bank or using complex cloud APIs, this project uses a local Python script to parse a sample <code>mbox</code> file or a list of email subjects. This approach keeps everything on your machine, ensuring privacy and speed while teaching you core data processing concepts.</p>
+
+        <div class="fix-box">
+            <h4>Prerequisites &amp; Limitations</h4>
+            <ul>
+                <li>Requires Python 3.8+ installed. No paid APIs or bank logins are needed; we simulate the email data locally.</li>
+                <li>This is a simplified clone: it does not connect to live Gmail via OAuth. Instead, it processes a static list of email subjects to demonstrate the logic.</li>
+                <li>Common gotcha: Ensure your sample data includes realistic subscription keywords (e.g., 'Receipt', 'Invoice', 'Subscription') for the detection logic to work.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Local Subscription Tracker Architecture</div>
+            <svg width="100%" height="334" viewBox="0 0 420 334" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="286" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Reads</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Stores</text>
+<line x1="315" y1="242" x2="315" y2="266" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="248" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Queries</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Email Data</text>
+<text x="315.0" y="87" class="node-subtext">Sample Subjects</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Parser</text>
+<text x="315.0" y="159" class="node-subtext">Keyword Match</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">SQLite</text>
+<text x="315.0" y="231" class="node-subtext">Subscriptions</text>
+<rect x="230" y="266" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="287" class="node-text">CLI Output</text>
+<text x="315.0" y="303" class="node-subtext">Report</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold Project</h2>
+                <p>Initialize a Python project directory and create a virtual environment to keep our dependencies isolated.</p>
+                <p>We will use only the standard library (<code>sqlite3</code>, <code>re</code>) to keep dependencies minimal, so we don't need to install any external packages via pip.</p>
+<div class="code-block"><pre><code>mkdir subscription-tracker
+cd subscription-tracker
+python3 -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data Model &amp; Sample Data</h2>
+                <p>Create a SQLite database to store detected subscriptions. This file will act as our local 'memory' for the tracker.</p>
+                <p>Define a sample list of email subjects that mimic real subscription receipts, including common keywords like 'Receipt' and 'Invoice' to test our detection logic.</p>
+                <p><strong>setup_db.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+
+DB_NAME = 'subscriptions.db'
+
+SAMPLE_SUBJECTS = [
+    "Your Netflix receipt for March",
+    "Spotify Premium - Invoice #4921",
+    "Adobe Creative Cloud - Subscription Renewal",
+    "Order Confirmation - Amazon",
+    "Weekly Newsletter from TechDaily",
+    "Your Spotify Premium receipt"
+]
+
+def init_db():
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    
+    <span class="code-comment"># Create table for subscriptions</span>
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS subscriptions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            provider TEXT NOT NULL,
+            subject TEXT NOT NULL,
+            detected_date TEXT DEFAULT CURRENT_DATE
+        )
+    ''')
+    
+    <span class="code-comment"># Create table for raw processed subjects (to avoid re-processing)</span>
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS processed_subjects (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            subject TEXT UNIQUE NOT NULL
+        )
+    ''')
+    
+    conn.commit()
+    conn.close()
+    print(f"Database '{DB_NAME}' initialized.")
+
+if __name__ == '__main__':
+    init_db()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core Detection Logic</h2>
+                <p>Implement a function to scan email subjects for subscription keywords. We use regular expressions to find patterns like 'receipt', 'invoice', or 'subscription'.</p>
+                <p>Extract the provider name from the subject line using simple string manipulation. We look for the first capitalized word or known brand names to identify who the service is.</p>
+                <p><strong>tracker.py</strong></p>
+<div class="code-block"><pre><code>import re
+import sqlite3
+
+DB_NAME = 'subscriptions.db'
+
+<span class="code-comment"># Keywords that indicate a subscription or recurring payment</span>
+SUBSCRIPTION_KEYWORDS = ['receipt', 'invoice', 'subscription', 'renewal', 'payment']
+
+<span class="code-comment"># Common provider names to help with extraction if keyword match is ambiguous</span>
+KNOWN_PROVIDERS = ['Netflix', 'Spotify', 'Adobe', 'Amazon', 'Apple', 'Google', 'Microsoft']
+
+def is_subscription(subject):
+    """
+    Check if an email subject contains subscription-related keywords.
+    """
+    subject_lower = subject.lower()
+    return any(keyword in subject_lower for keyword in SUBSCRIPTION_KEYWORDS)
+
+def extract_provider(subject):
+    """
+    Attempt to extract the provider name from the subject line.
+    Strategy: Look for known providers first, then fallback to the first capitalized word.
+    """
+    <span class="code-comment"># 1. Check for known providers</span>
+    for provider in KNOWN_PROVIDERS:
+        if provider.lower() in subject.lower():
+            return provider
+    
+    <span class="code-comment"># 2. Fallback: Find the first word that is capitalized (and not a common stop word)</span>
+    words = subject.split()
+    stop_words = {'your', 'the', 'a', 'an', 'for', 'from', 'to', 'is', 'are', 'was', 'were'}
+    for word in words:
+        <span class="code-comment"># Remove punctuation for comparison</span>
+        clean_word = word.strip('.,!?:;"\'')
+        if clean_word and clean_word[0].isupper() and clean_word.lower() not in stop_words:
+            return clean_word
+            
+    return 'Unknown'
+
+def process_subjects(subjects):
+    """
+    Scan a list of subjects, detect subscriptions, and store them in the DB.
+    """
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    
+    detected_count = 0
+    
+    for subject in subjects:
+        <span class="code-comment"># Check if already processed</span>
+        cursor.execute('SELECT id FROM processed_subjects WHERE subject = ?', (subject,))
+        if cursor.fetchone():
+            continue
+            
+        <span class="code-comment"># Mark as processed</span>
+        cursor.execute('INSERT INTO processed_subjects (subject) VALUES (?)', (subject,))
+        
+        <span class="code-comment"># Check for subscription keywords</span>
+        if is_subscription(subject):
+            provider = extract_provider(subject)
+            cursor.execute(
+                'INSERT INTO subscriptions (provider, subject) VALUES (?, ?)',
+                (provider, subject)
+            )
+            detected_count += 1
+            print(f"Detected: {provider} - {subject}")
+        else:
+            print(f"Skipped: {subject}")
+            
+    conn.commit()
+    conn.close()
+    return detected_count</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: CLI Interface &amp; Execution</h2>
+                <p>Now that the detection logic is ready, we need a way to interact with it. We will create <code>main.py</code>, which acts as the entry point for our CLI tool.</p>
+                <p>This script will initialize the database if it doesn't exist, run the scanner from <code>tracker.py</code>, and fetch the results. It then formats the output into a clean, readable report that lists each detected subscription and its provider.</p>
+                <p><strong>main.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+from setup_db import init_db
+from tracker import scan_subscriptions
+
+def main():
+    <span class="code-comment"># 1. Ensure the database and sample data are ready</span>
+    init_db()
+    
+    <span class="code-comment"># 2. Run the detection logic</span>
+    scan_subscriptions()
+    
+    <span class="code-comment"># 3. Query and display the results</span>
+    conn = sqlite3.connect('subscriptions.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT provider, subject, date FROM subscriptions ORDER BY date DESC")
+    rows = cursor.fetchall()
+    conn.close()
+    
+    print("\n--- Subscription Report ---")
+    if not rows:
+        print("No subscriptions detected.")
+    else:
+        for row in rows:
+            provider, subject, date = row
+            print(f"[ {date} ] {provider}: {subject}")
+        print(f"\nTotal Detected: {len(rows)}")
+
+if __name__ == "__main__":
+    main()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; Extend</h2>
+                <p>Let's run the application to see if our local tracker works as expected. We will execute the main script to generate the report.</p>
+                <p>To extend this project, you could modify <code>setup_db.py</code> to read from a real <code>.mbox</code> file using Python's <code>mailbox</code> module, or add a function to export the results to a CSV file for spreadsheet analysis.</p>
+<div class="code-block"><pre><code>python main.py</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Database file created</td><td>Run <code>ls subscriptions.db</code> to confirm the SQLite file exists in your project directory.</td></tr>
+            <tr><td>Correct number of subscriptions detected</td><td>Run <code>python main.py</code> and verify the output ends with 'Total Detected: 3' (matching Netflix, Spotify, and Adobe).</td></tr>
+            <tr><td>Provider extraction works</td><td>Inspect the CLI output to ensure 'Netflix', 'Spotify', and 'Adobe' are correctly identified as providers.</td></tr>
+            <tr><td>No external network calls</td><td>Run the script with your internet connection disabled; the report should still generate successfully.</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>You now have a working local subscription tracker. To make it more robust, try parsing a real <code>.mbox</code> file using Python's <code>mailbox</code> module or adding a simple Flask API to serve the report as JSON.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

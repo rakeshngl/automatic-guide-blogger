@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Grid Maker for Drawing</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Python</div>
+    </nav>
+
+    <header>
+        <h1>Grid Maker for Drawing</h1>
+        <p>Turn reference photos into printable drawing grids</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> beginner build. Today, we will build your own <strong>Grid Maker for Drawing</strong> inspired by the popular tool found on Product Hunt. This utility helps artists transfer reference images onto canvas by overlaying a grid, making scaling and proportioning easier.</p>
+        <p>We will use Python and the Pillow library to create a minimal, script-based clone. This approach avoids complex web frameworks, focusing instead on core image processing logic. By the end of this 45-minute session, you will have a working tool that takes any image and outputs a version with a customizable grid overlay, ready for printing.</p>
+
+        <div class="fix-box">
+            <h4>Prerequisites &amp; Notes</h4>
+            <ul>
+                <li>Requires Python 3.8+ and pip installed. You will need to install the Pillow library (<code>pip install Pillow</code>).</li>
+                <li>This is a simplified CLI tool. It does not include a web UI or drag-and-drop interface like the commercial product; it processes files via command line arguments.</li>
+                <li>The grid lines are drawn with a fixed opacity and color. Advanced features like dynamic line thickness based on image resolution or interactive grid adjustment are not included in this minimal clone.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">System Architecture</div>
+            <svg width="100%" height="334" viewBox="0 0 420 334" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="286" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL ENVIRONMENT</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Read</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Process</text>
+<line x1="315" y1="242" x2="315" y2="266" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="248" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Write</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Input Image</text>
+<text x="315.0" y="87" class="node-subtext">PNG/JPG</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">grid_maker.py</text>
+<text x="315.0" y="159" class="node-subtext">Python Script</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">Pillow Library</text>
+<text x="315.0" y="231" class="node-subtext">Image Processing</text>
+<rect x="230" y="266" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="287" class="node-text">Output Image</text>
+<text x="315.0" y="303" class="node-subtext">Grid Overlay</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold Project</h2>
+                <p>Create a new directory for the project and initialize a Python virtual environment to isolate dependencies. This ensures that your system Python remains clean and that you can reproduce the environment easily.</p>
+                <p>Install the Pillow library, which provides image processing capabilities for Python. We will use this library to load, modify, and save images with the grid overlay.</p>
+<div class="code-block"><pre><code>mkdir grid-maker-clone
+cd grid-maker-clone
+python3 -m venv venv
+source venv/bin/activate
+pip install Pillow</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Core Feature 1 (Image Loading)</h2>
+                <p>Create the main Python script <code>grid_maker.py</code>. We will start by importing the necessary modules from Pillow and setting up the basic structure of our script.</p>
+                <p>Implement logic to load an image from a file path using Pillow. We will use <code>Image.open()</code> to load the image and <code>Image.new()</code> to create a transparent overlay for the grid lines.</p>
+                <p><strong>grid_maker.py</strong></p>
+<div class="code-block"><pre><code>from PIL import Image, ImageDraw
+import sys
+import os
+
+def load_image(path):
+    """Load an image from the given path."""
+    if not os.path.exists(path):
+        print(f"Error: File '{path}' not found.")
+        sys.exit(1)
+    try:
+        img = Image.open(path).convert("RGBA")
+        return img
+    except Exception as e:
+        print(f"Error loading image: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    if len(sys.argv) &lt; 2:
+        print("Usage: python grid_maker.py &lt;input_image&gt; [output_image] [cell_size]")
+        sys.exit(1)
+
+    input_path = sys.argv[1]
+    img = load_image(input_path)
+    print(f"Loaded image: {input_path} (Size: {img.size})")</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core Feature 2 (Grid Overlay)</h2>
+                <p>Add a function to draw a grid on the image. The grid should be evenly spaced, with configurable cell size. We will create a transparent overlay and draw lines on it.</p>
+                <p>Use Pillow's ImageDraw to draw lines. We will iterate over the image width and height, drawing vertical and horizontal lines at intervals defined by the cell size.</p>
+                <p><strong>grid_maker.py</strong></p>
+<div class="code-block"><pre><code>from PIL import Image, ImageDraw
+import sys
+import os
+
+def load_image(path):
+    """Load an image from the given path."""
+    if not os.path.exists(path):
+        print(f"Error: File '{path}' not found.")
+        sys.exit(1)
+    try:
+        img = Image.open(path).convert("RGBA")
+        return img
+    except Exception as e:
+        print(f"Error loading image: {e}")
+        sys.exit(1)
+
+def draw_grid(img, cell_size=50, color=(255, 255, 255, 128)):
+    """Draw a grid on the image."""
+    width, height = img.size
+    overlay = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(overlay)
+
+    <span class="code-comment"># Draw vertical lines</span>
+    for x in range(0, width, cell_size):
+        draw.line([(x, 0), (x, height)], fill=color, width=1)
+
+    <span class="code-comment"># Draw horizontal lines</span>
+    for y in range(0, height, cell_size):
+        draw.line([(0, y), (width, y)], fill=color, width=1)
+
+    <span class="code-comment"># Composite the overlay onto the original image</span>
+    img_with_grid = Image.alpha_composite(img, overlay)
+    return img_with_grid
+
+if __name__ == "__main__":
+    if len(sys.argv) &lt; 2:
+        print("Usage: python grid_maker.py &lt;input_image&gt; [output_image] [cell_size]")
+        sys.exit(1)
+
+    input_path = sys.argv[1]
+    output_path = sys.argv[2] if len(sys.argv) &gt; 2 else "output_grid.png"
+    cell_size = int(sys.argv[3]) if len(sys.argv) &gt; 3 else 50
+
+    img = load_image(input_path)
+    img_with_grid = draw_grid(img, cell_size)
+    img_with_grid.save(output_path)
+    print(f"Saved grid image to: {output_path}")</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run Locally</h2>
+                <p>To test our script, we first need a sample image. You can use any photo from your computer, or download a placeholder image for testing purposes.</p>
+                <p>Run the script by passing the input image path and the desired output file name. The script will process the image and save the gridded version to your directory.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Download a sample image for testing if you don't have one</span>
+curl -o test.png https://via.placeholder.com/800x600
+
+<span class="code-comment"># Run the grid maker script</span>
+<span class="code-comment"># Usage: python grid_maker.py &lt;input_image&gt; &lt;output_image&gt; [cell_size]</span>
+python grid_maker.py test.png output_grid.png 50</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and Extend</h2>
+                <p>Check your project directory for the new file <code>output_grid.png</code>. Open it with your default image viewer to ensure the grid lines are visible and evenly spaced.</p>
+                <p>Experiment with different cell sizes by changing the last argument in the command. Smaller numbers create denser grids, while larger numbers create fewer, bigger squares.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Verify the output file exists and check its size</span>
+ls -lh output_grid.png
+
+<span class="code-comment"># Try a different grid size (e.g., 100 pixels per cell)</span>
+python grid_maker.py test.png output_grid_large.png 100
+
+<span class="code-comment"># Try a very fine grid (e.g., 20 pixels per cell)</span>
+python grid_maker.py test.png output_grid_fine.png 20</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Virtual environment created and activated</td><td>source venv/bin/activate</td></tr>
+            <tr><td>Pillow library installed</td><td>pip show Pillow</td></tr>
+            <tr><td>Script runs without errors</td><td>python grid_maker.py test.png</td></tr>
+            <tr><td>Output image generated with grid</td><td>ls -lh output_grid.png</td></tr>
+            <tr><td>Grid size is configurable</td><td>python grid_maker.py test.png output_grid_8.png 8</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>You have built a minimal Grid Maker for Drawing. To extend this project, consider adding a web interface using Flask or Streamlit, supporting more image formats, or allowing users to adjust grid line opacity and color.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

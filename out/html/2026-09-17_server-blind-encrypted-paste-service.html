@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Server-Blind Encrypted Paste Service</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Python + SQLite</div>
+    </nav>
+
+    <header>
+        <h1>Server-Blind Encrypted Paste Service</h1>
+        <p>Build a minimal, client-side encrypted paste app where the server never sees plaintext</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide. Today, we are creating a minimal working clone of <strong>Nullsec</strong>, a server-blind encrypted paste service. The core security model here is simple but powerful: all encryption happens in the browser using Web Crypto, and the server only ever stores opaque ciphertext blobs.</p>
+        <p>We will use <strong>Python</strong> with <strong>Flask</strong> and <strong>SQLite</strong> for the backend, and a single <strong>HTML/JS</strong> file for the frontend. This stack is free, runs locally in under 45 minutes, and lets you verify the 'server-blind' property by inspecting the database directly.</p>
+
+        <div class="fix-box">
+            <h4>Before You Start</h4>
+            <ul>
+                <li>You need <strong>Python 3.10+</strong> and <strong>Node.js 18+</strong> (for <code>npx serve</code> or just opening the HTML file directly if CORS is handled).</li>
+                <li>This is a <strong>minimal clone</strong>: it lacks user accounts, expiration timers, and advanced key derivation (using raw AES-GCM for simplicity). Real Nullsec uses more robust crypto patterns.</li>
+                <li>The 'server-blind' property only holds if the server <strong>never</strong> receives the encryption key. Do not add any server-side decryption logic.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Architecture: Client-Side Encryption</div>
+            <svg width="100%" height="334" viewBox="0 0 420 334" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="286" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="266" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Enters text &amp; password</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">POST ciphertext (base64)</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">INSERT blob</text>
+<line x1="315" y1="122" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">GET ciphertext (base64)</text>
+<line x1="315" y1="98" x2="315" y2="266" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Decrypts &amp; displays</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Browser (JS)</text>
+<text x="315.0" y="87" class="node-subtext">Web Crypto API</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Flask API</text>
+<text x="315.0" y="159" class="node-subtext">Python</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node" />
+<text x="315.0" y="215" class="node-text">SQLite</text>
+<text x="315.0" y="231" class="node-subtext">paste.db</text>
+<rect x="230" y="266" width="170" height="48" rx="10" class="node" />
+<text x="315.0" y="287" class="node-text">User</text>
+<text x="315.0" y="303" class="node-subtext">Viewer/Creator</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold Project &amp; Install Dependencies</h2>
+                <p>Create a project directory and initialize a virtual environment to keep your dependencies isolated from your system Python. This ensures that installing Flask and its extensions doesn't interfere with other projects on your machine.</p>
+                <p>Install <strong>Flask</strong> for the API and <strong>Flask-Cors</strong> to allow the browser to make cross-origin requests when running the frontend separately. We will also install <code>cryptography</code> if needed, but for this specific clone, we are relying on the browser's native Web Crypto API, so the server-side crypto dependencies are minimal.</p>
+<div class="code-block"><pre><code>mkdir nullsec-clone
+cd nullsec-clone
+python3 -m venv venv
+source venv/bin/activate
+pip install flask flask-cors</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Build the Server-Blind Backend</h2>
+                <p>Create <code>app.py</code>. The server stores <strong>only</strong> the ciphertext and a random ID. It never touches the plaintext or the key. This is the core of the 'server-blind' architecture: the server is just a dumb storage bucket for encrypted blobs.</p>
+                <p>We use SQLite for persistence. The schema is minimal: <code>id</code> (text, primary key) and <code>data</code> (text, the base64-encoded ciphertext). We initialize the database table on startup if it doesn't exist.</p>
+                <p>The API has two endpoints: <code>POST /paste</code> to create a new paste and <code>GET /paste/&lt;id&gt;</code> to retrieve it. The POST endpoint accepts a JSON body with the ciphertext, generates a UUID for the paste, and inserts it into the database. The GET endpoint retrieves the ciphertext by ID. If the ID doesn't exist, it returns a 404.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+import uuid
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+DB_NAME = 'paste.db'
+
+def init_db():
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS pastes (
+            id TEXT PRIMARY KEY,
+            data TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+init_db()
+
+@app.route('/paste', methods=['POST'])
+def create_paste():
+    data = request.get_json()
+    if not data or 'ciphertext' not in data:
+        return jsonify({'error': 'Missing ciphertext'}), 400
+    
+    paste_id = str(uuid.uuid4())
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO pastes (id, data) VALUES (?, ?)', (paste_id, data['ciphertext']))
+    conn.commit()
+    conn.close()
+    
+    return jsonify({'id': paste_id}), 201
+
+@app.route('/paste/&lt;paste_id&gt;', methods=['GET'])
+def get_paste(paste_id):
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute('SELECT data FROM pastes WHERE id = ?', (paste_id,))
+    result = cursor.fetchone()
+    conn.close()
+    
+    if result is None:
+        return jsonify({'error': 'Paste not found'}), 404
+    
+    return jsonify({'ciphertext': result[0]}), 200
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Implement Client-Side Encryption</h2>
+                <p>Create <code>static/index.html</code>. This single file handles UI, encryption, and API calls. It contains the HTML structure, CSS for styling, and the JavaScript logic for Web Crypto operations.</p>
+                <p>We use the <strong>Web Crypto API</strong> to generate a random AES-GCM key from a user-provided password. The key is <strong>never</strong> sent to the server. We use a simple PBKDF2 derivation to turn the password into a cryptographic key, which is a standard practice for password-based encryption.</p>
+                <p>The plaintext is encrypted in the browser, then base64-encoded and sent to the Flask API. The server stores this opaque string. To decrypt, the user enters the same password, the browser regenerates the key, and decrypts the ciphertext locally.</p>
+                <p><strong>static/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Nullsec Clone&lt;/title&gt;
+    &lt;style&gt;
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+        .section { margin-bottom: 30px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #result { margin-top: 20px; padding: 10px; background-color: #f0f0f0; border-radius: 4px; word-break: break-all; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Server-Blind Encrypted Paste&lt;/h1&gt;
+    
+    &lt;div class="section"&gt;
+        &lt;h2&gt;Create Paste&lt;/h2&gt;
+        &lt;label for="plaintext"&gt;Plaintext:&lt;/label&gt;
+        &lt;textarea id="plaintext" rows="4" placeholder="Enter your secret text..."&gt;&lt;/textarea&gt;
+        &lt;label for="password"&gt;Password:&lt;/label&gt;
+        &lt;input type="password" id="password" placeholder="Enter a password"&gt;
+        &lt;button onclick="createPaste()"&gt;Create Paste&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div class="section"&gt;
+        &lt;h2&gt;Decrypt Paste&lt;/h2&gt;
+        &lt;label for="pasteId"&gt;Paste ID:&lt;/label&gt;
+        &lt;input type="text" id="pasteId" placeholder="Enter paste ID"&gt;
+        &lt;label for="decryptPassword"&gt;Password:&lt;/label&gt;
+        &lt;input type="password" id="decryptPassword" placeholder="Enter the same password"&gt;
+        &lt;button onclick="decryptPaste()"&gt;Decrypt &amp; View&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div id="result"&gt;&lt;/div&gt;
+
+    &lt;script&gt;
+        const API_BASE = 'http://localhost:5000';
+
+        // Helper to convert ArrayBuffer to Base64
+        function bufferToBase64(buffer) {
+            const bytes = new Uint8Array(buffer);
+            let binary = '';
+            for (let i = 0; i &lt; bytes.byteLength; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return window.btoa(binary);
+        }
+
+        // Helper to convert Base64 to ArrayBuffer
+        function base64ToBuffer(base64) {
+            const binaryString = window.atob(base64);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i &lt; binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        // Derive key from password using PBKDF2
+        async function deriveKey(password) {
+            const encoder = new TextEncoder();
+            const salt = encoder.encode('nullsec-clone-salt'); // Fixed salt for simplicity
+            const keyMaterial = await crypto.subtle.importKey(
+                'raw',
+                encoder.encode(password),
+                'PBKDF2',
+                false,
+                ['deriveKey']
+            );
+
+            return await crypto.subtle.deriveKey(
+                {
+                    name: 'PBKDF2',
+                    salt: salt,
+                    iterations: 100000,
+                    hash: 'SHA-256'
+                },
+                keyMaterial,
+                {
+                    name: 'AES-GCM',
+                    length: 256
+                },
+                false,
+                ['encrypt', 'decrypt']
+            );
+        }
+
+        // Encrypt plaintext
+        async function encrypt(plaintext, password) {
+            const key = await deriveKey(password);
+            const iv = crypto.getRandomValues(new Uint8Array(12)); // 12 bytes for AES-GCM
+            const encoder = new TextEncoder();
+            const plaintextBuffer = encoder.encode(plaintext);
+
+            const encryptedBuffer = await crypto.subtle.encrypt(
+                {
+                    name: 'AES-GCM',
+                    iv: iv
+                },
+                key,
+                plaintextBuffer
+            );
+
+            // Combine IV and ciphertext, then base64 encode
+            const combined = new Uint8Array(iv.length + encryptedBuffer.byteLength);
+            combined.set(iv, 0);
+            combined.set(new Uint8Array(encryptedBuffer), iv.length);
+            
+            return bufferToBase64(combined.buffer);
+        }
+
+        // Decrypt ciphertext
+        async function decrypt(ciphertextBase64, password) {
+            const key = await deriveKey(password);
+            const buffer = base64ToBuffer(ciphertextBase64);
+            const bytes = new Uint8Array(buffer);
+            
+            const iv = bytes.slice(0, 12);
+            const ciphertext = bytes.slice(12);
+
+            try {
+                const decryptedBuffer = await crypto.subtle.decrypt(
+                    {
+                        name: 'AES-GCM',
+                        iv: iv
+                    },
+                    key,
+                    ciphertext.buffer
+                );
+                
+                const decoder = new TextDecoder();
+                return decoder.decode(decryptedBuffer);
+            } catch (e) {
+                throw new Error('Decryption failed. Wrong password?');
+            }
+        }
+
+        async function createPaste() {
+            const plaintext = document.getElementById('plaintext').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+
+            if (!plaintext || !password) {
+                alert('Please enter both plaintext and password.');
+                return;
+            }
+
+            try {
+                const ciphertext = await encrypt(plaintext, password);
+                
+                const response = await fetch(`${API_BASE}/paste`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ciphertext: ciphertext })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create paste');
+                }
+
+                const data = await response.json();
+                resultDiv.textContent = `Paste created! ID: ${data.id}`;
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function decryptPaste() {
+            const pasteId = document.getElementById('pasteId').value;
+            const password = document.getElementById('decryptPassword').value;
+            const resultDiv = document.getElementById('result');
+
+            if (!pasteId || !password) {
+                alert('Please enter both paste ID and password.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/paste/${pasteId}`);
+                
+                if (!response.ok) {
+                    throw new Error('Paste not found');
+                }
+
+                const data = await response.json();
+                const plaintext = await decrypt(data.ciphertext, password);
+                resultDiv.textContent = `Decrypted Text: ${plaintext}`;
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run Locally</h2>
+                <p>Now that the backend and frontend are ready, it is time to bring them to life. You will need two separate processes running simultaneously: the Python Flask server to handle API requests and store data, and your web browser to execute the JavaScript encryption logic.</p>
+                <p>Start the Flask application in your terminal. This will listen on port 5000 by default. Keep this terminal window open, as it is the heart of your service. If you see 'Running on http://127.0.0.1:5000', you are good to go.</p>
+                <p>For the frontend, you have two options. The simplest is to open <code>static/index.html</code> directly in your browser. However, because we are making API calls to <code>http://localhost:5000</code>, you must ensure that CORS is handled. Since we installed <code>flask-cors</code> in Phase 1, the server will allow these cross-origin requests even if the HTML file is loaded from the <code>file://</code> protocol in most modern browsers. If your browser blocks <code>file://</code> requests, you can use a simple static server like <code>npx serve static</code> in a second terminal.</p>
+<div class="code-block"><pre><code>python app.py</code></pre></div>
+<div class="code-block"><pre><code>open static/index.html
+<span class="code-comment"># On Linux, use: xdg-open static/index.html</span>
+<span class="code-comment"># On Windows, use: start static/index.html</span></code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify Server-Blind Property</h2>
+                <p>The most critical part of this build is proving that the server is truly 'blind'. We need to demonstrate that the data stored in the database is indistinguishable from random noise to anyone who does not possess the encryption key.</p>
+                <p>First, create a paste in your browser. Enter a very distinct plaintext, such as 'Hello UVF IT', and set a password like 'secret'. Click 'Create Paste' and note the UUID that appears in the alert box.</p>
+                <p>Now, switch to your terminal. We will query the SQLite database directly. If the server were storing plaintext, you would see 'Hello UVF IT' in the output. Instead, you should see a long, base64-encoded string. This string is the ciphertext, which is useless without the key derived from the password.</p>
+                <p>This step is your proof of concept. It confirms that even if an attacker gains full read access to your <code>paste.db</code> file, they cannot read the contents of your pastes without the password.</p>
+<div class="code-block"><pre><code>sqlite3 paste.db "SELECT data FROM pastes LIMIT 1;"</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Backend is running</td><td>Run <code>curl http://localhost:5000/paste/test</code> and expect a 404 JSON response, not a connection error.</td></tr>
+            <tr><td>Paste creation works</td><td>In the browser, enter text and password, click 'Create Paste', and see an alert with a UUID.</td></tr>
+            <tr><td>Server-blindness verified</td><td>Run <code>sqlite3 paste.db "SELECT data FROM pastes LIMIT 1;"</code> and confirm the output is base64, not your plaintext.</td></tr>
+            <tr><td>Decryption works</td><td>In the browser, enter the paste ID and correct password, click 'Decrypt &amp; View', and see the original plaintext.</td></tr>
+            <tr><td>Wrong password fails</td><td>Enter the paste ID and an incorrect password, click 'Decrypt &amp; View', and see 'Decryption failed. Wrong password?'</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>You have built a minimal server-blind encrypted paste service. To extend it, consider adding: 1) Paste expiration (store a timestamp and delete old entries), 2) Burn-after-read (delete the paste after first successful decryption), 3) More robust key derivation (use a random salt stored with the ciphertext instead of deriving it from the password each time). Always verify that your server never logs or stores plaintext.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

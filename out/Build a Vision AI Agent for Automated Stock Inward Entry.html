@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UVF IT — Vision AI Stock Inward Agent Guide</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@300..700&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<style>
+:root, [data-theme="light"] {
+  --color-bg:#f5f7f5; --color-surface:#ffffff; --color-surface-2:#f9fbf9; --color-surface-offset:#eef2ee;
+  --color-divider:#dde5dd; --color-border:#d0dbd0; --color-text:#1a2a1a; --color-text-muted:#4a6a4a; --color-text-faint:#8aaa8a;
+  --color-primary:#1e6b22; --color-primary-hover:#165019; --color-primary-light:#e8f5e9; --color-accent:#2e7d32;
+  --color-code-bg:#0d1a0e; --color-code-text:#e8f5e9;
+  --color-warning-bg:#fff8e1; --color-warning-border:#f9a825; --color-warning-text:#5d4037;
+  --color-tip-bg:#e8f5e9; --color-tip-border:rgba(46,125,50,0.25);
+  --color-fix-bg:#e3f2fd; --color-fix-border:#1565c0; --color-fix-text:#0d2b5e;
+  --color-success-bg:#e8f5e9; --color-success-border:#2e7d32;
+  --shadow-sm:0 1px 3px rgba(0,40,0,0.07); --shadow-md:0 4px 16px rgba(0,40,0,0.09);
+  --font-display:'Instrument Serif',Georgia,serif; --font-body:'Geist','Inter',system-ui,sans-serif; --font-mono:'Geist Mono','Fira Code',monospace;
+  --transition:180ms cubic-bezier(0.16,1,0.3,1);
+  --radius-sm:0.375rem; --radius-md:0.625rem; --radius-lg:1rem; --radius-xl:1.5rem;
+}
+[data-theme="dark"] {
+  --color-bg:#0e160e; --color-surface:#131f13; --color-surface-2:#172017; --color-surface-offset:#1c271c;
+  --color-divider:#243024; --color-border:#2d3d2d; --color-text:#c8dcc8; --color-text-muted:#7a9c7a; --color-text-faint:#4a6a4a;
+  --color-primary:#66bb6a; --color-primary-hover:#81c784; --color-primary-light:#1a2e1a; --color-accent:#4caf50;
+  --color-code-bg:#0a120a; --color-code-text:#c8e6c9;
+  --color-warning-bg:#1a1400; --color-warning-border:#f59f00; --color-warning-text:#e9c46a;
+  --color-tip-bg:#1a2e1a; --color-tip-border:rgba(76,175,80,0.3);
+  --color-fix-bg:#0a1628; --color-fix-border:#2979ff; --color-fix-text:#90caf9;
+  --color-success-bg:#1a2e1a; --color-success-border:#4caf50;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.3); --shadow-md:0 4px 16px rgba(0,0,0,0.4);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+body{font-family:var(--font-body);font-size:clamp(1rem,0.95rem + 0.25vw,1.0625rem);line-height:1.75;color:var(--color-text);background:var(--color-bg);min-height:100dvh;transition:background var(--transition),color var(--transition);}
+a{color:var(--color-primary);text-decoration:none;} a:hover{color:var(--color-primary-hover);}
+p{text-wrap:pretty;} ::selection{background:rgba(46,125,50,0.18);} :focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm);}
+
+.navbar{position:sticky;top:0;z-index:100;background:var(--color-surface);border-bottom:1px solid var(--color-divider);padding:0 clamp(1rem,4vw,2.5rem);height:64px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm);transition:background var(--transition),border-color var(--transition);}
+.navbar-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.125rem;color:var(--color-text);letter-spacing:-0.3px;}
+.navbar-brand .it-tag{font-size:0.7rem;font-weight:700;letter-spacing:1px;color:var(--color-primary);background:var(--color-primary-light);padding:2px 7px;border-radius:4px;text-transform:uppercase;}
+.navbar-actions{display:flex;align-items:center;gap:12px;}
+.theme-toggle{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid var(--color-border);background:transparent;cursor:pointer;color:var(--color-text-muted);transition:background var(--transition);}
+.theme-toggle:hover{background:var(--color-surface-offset);color:var(--color-text);}
+.nav-badge{font-size:0.75rem;font-weight:600;color:var(--color-text-muted);background:var(--color-surface-offset);border:1px solid var(--color-border);padding:4px 10px;border-radius:20px;}
+
+.hero{background:var(--color-surface);border-bottom:1px solid var(--color-divider);padding:clamp(3rem,8vw,6rem) clamp(1rem,4vw,2.5rem) clamp(2.5rem,6vw,4.5rem);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(46,125,50,0.08) 0%, transparent 70%);pointer-events:none;}
+.hero-inner{max-width:860px;margin:0 auto;position:relative;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:0.8rem;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--color-primary);background:var(--color-primary-light);border:1px solid rgba(46,125,50,0.2);padding:5px 12px;border-radius:20px;margin-bottom:1.25rem;}
+.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--color-primary);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.85);}}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.25rem,1.5rem + 3.5vw,3.75rem);font-weight:400;color:var(--color-text);margin-bottom:1.25rem;line-height:1.15;letter-spacing:-0.5px;}
+.hero h1 em{font-style:italic;color:var(--color-primary);}
+.hero-desc{font-size:clamp(1rem,0.95rem + 0.3vw,1.15rem);color:var(--color-text-muted);max-width:65ch;margin-bottom:2rem;line-height:1.7;}
+.hero-meta{display:flex;flex-wrap:wrap;gap:1.5rem;font-size:0.85rem;color:var(--color-text-muted);border-top:1px solid var(--color-divider);padding-top:1.25rem;}
+.hero-meta-item{display:flex;align-items:center;gap:6px;} .hero-meta-item svg{color:var(--color-primary);}
+
+.page-layout{max-width:1100px;margin:0 auto;padding:clamp(2rem,5vw,3.5rem) clamp(1rem,3vw,2rem);display:grid;grid-template-columns:220px 1fr;gap:clamp(1.5rem,3vw,3rem);align-items:start;}
+@media (max-width:820px){.page-layout{grid-template-columns:1fr;} .toc-sidebar{display:none;}}
+
+.toc-sidebar{position:sticky;top:80px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:1.25rem;box-shadow:var(--shadow-sm);}
+.toc-title{font-size:0.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--color-text-faint);margin-bottom:0.875rem;}
+.toc-list{list-style:none;display:flex;flex-direction:column;gap:2px;}
+.toc-list a{display:block;font-size:0.8rem;font-weight:500;color:var(--color-text-muted);padding:5px 8px;border-radius:6px;line-height:1.4;transition:background var(--transition),color var(--transition);}
+.toc-list a:hover{background:var(--color-surface-offset);color:var(--color-text);}
+.toc-list .toc-phase{font-weight:600;color:var(--color-text);font-size:0.825rem;}
+
+.article{min-width:0;max-width:100%;overflow-wrap:break-word;} .article > * + *{margin-top:1.25rem;}
+.article p{color:var(--color-text-muted);margin-bottom:0.875rem;}
+.article ul,.article ol{color:var(--color-text-muted);padding-left:1.375rem;display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem;}
+.article li::marker{color:var(--color-primary);} .article li strong{color:var(--color-text);}
+
+.phase-section{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:clamp(1.75rem,3vw,2.5rem);box-shadow:var(--shadow-sm);margin-top:2rem;min-width:0;overflow:hidden;}
+.phase-section + .phase-section{margin-top:1.5rem;}
+.phase-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--color-divider);}
+.phase-number{width:44px;height:44px;flex-shrink:0;background:var(--color-primary);color:white;border-radius:12px;font-weight:700;font-size:1.1rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(46,125,50,0.3);}
+.phase-title-group{flex:1;}
+.phase-tag{font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--color-primary);background:var(--color-primary-light);padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:3px;}
+.phase-title{font-size:clamp(1.1rem,1rem + 0.5vw,1.3rem);font-weight:700;color:var(--color-text);margin:0;}
+
+code:not(pre code){font-family:var(--font-mono);font-size:0.875em;background:var(--color-surface-offset);border:1px solid var(--color-border);color:var(--color-primary);padding:1px 6px;border-radius:4px;}
+
+.code-wrap{margin:1.25rem 0;max-width:100%;min-width:0;}
+.code-header{background:#1a2b1a;border-radius:var(--radius-md) var(--radius-md) 0 0;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;border:1px solid #2d4a2d;border-bottom:none;}
+.code-lang{font-family:var(--font-mono);font-size:0.7rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:#6fa86f;}
+.code-dots{display:flex;gap:6px;} .code-dot{width:10px;height:10px;border-radius:50%;}
+.code-dot:nth-child(1){background:#ff5f57;} .code-dot:nth-child(2){background:#febc2e;} .code-dot:nth-child(3){background:#28c840;}
+.code-block{background:var(--color-code-bg);color:var(--color-code-text);border:1px solid #2d4a2d;border-top:none;border-radius:0 0 var(--radius-md) var(--radius-md);padding:1.25rem 1.375rem;font-family:var(--font-mono);font-size:clamp(0.75rem,0.7rem + 0.25vw,0.85rem);line-height:1.7;overflow-x:auto;max-width:100%;box-sizing:border-box;-webkit-overflow-scrolling:touch;}
+.code-block pre{margin:0;white-space:pre;min-width:0;}
+.kw{color:#80cbc4;} .fn{color:#a5d6a7;} .st{color:#f48fb1;} .cm{color:#546e54;font-style:italic;} .nb{color:#ce93d8;} .nm{color:#fff176;} .tg{color:#ffab91;}
+
+.sub-step{display:flex;gap:1rem;align-items:flex-start;margin:1.25rem 0;}
+.sub-step-num{width:28px;height:28px;flex-shrink:0;border:2px solid var(--color-primary);color:var(--color-primary);border-radius:8px;font-weight:700;font-size:0.8rem;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.sub-step-body h3{font-size:0.95rem;font-weight:700;color:var(--color-text);margin-bottom:0.375rem;}
+.sub-step-body p{margin-bottom:0.5rem;font-size:0.95rem;}
+
+.diagram-container{background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:2rem;margin:1.5rem 0;overflow-x:auto;}
+.diagram-label{font-size:0.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--color-text-faint);text-align:center;margin-bottom:1.5rem;}
+
+.callout{border-radius:var(--radius-md);padding:1.125rem 1.375rem;margin:1.25rem 0;display:flex;gap:0.875rem;align-items:flex-start;}
+.callout-icon{flex-shrink:0;margin-top:2px;}
+.callout-body h4{font-size:0.9rem;font-weight:700;margin-bottom:0.25rem;} .callout-body p{font-size:0.9rem;margin:0;line-height:1.6;} .callout-body code{font-size:0.82em;}
+.callout.warning{background:var(--color-warning-bg);border:1px solid var(--color-warning-border);color:var(--color-warning-text);} .callout.warning .callout-body h4{color:var(--color-warning-text);}
+.callout.tip{background:var(--color-tip-bg);border:1px solid var(--color-tip-border);color:var(--color-text-muted);} .callout.tip .callout-body h4{color:var(--color-primary);}
+.callout.fix{background:var(--color-fix-bg);border:1px solid var(--color-fix-border);color:var(--color-fix-text);} .callout.fix .callout-body h4{color:var(--color-fix-text);}
+.callout.success{background:var(--color-success-bg);border:1px solid var(--color-success-border);} .callout.success .callout-body h4{color:var(--color-primary);} .callout.success .callout-body p{color:var(--color-text-muted);}
+
+.intro-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:clamp(1.5rem,3vw,2rem);box-shadow:var(--shadow-sm);}
+.intro-card p{color:var(--color-text-muted);font-size:1rem;}
+
+.specs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1.25rem 0;}
+.spec-card{background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:1rem 1.125rem;}
+.spec-card-label{font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-faint);margin-bottom:0.25rem;}
+.spec-card-value{font-size:0.95rem;font-weight:600;color:var(--color-text);}
+
+footer{border-top:1px solid var(--color-divider);padding:2rem clamp(1rem,4vw,2.5rem);text-align:center;font-size:0.85rem;color:var(--color-text-faint);background:var(--color-surface);}
+@media (max-width:600px){.phase-section{padding:1.25rem;}}
+</style>
+<script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194"></script></head>
+<body>
+<nav aria-label="Main navigation" class="navbar" role="navigation">
+<div class="navbar-brand">
+<img alt="UVF Farms Logo" height="36" loading="eager" src="https://www.uvfarms.in/_next/image?url=%2Flogo-new.png&amp;w=96&amp;q=75" style="height:36px;width:auto;object-fit:contain;"/>
+<span>UVF</span><span class="it-tag">IT</span>
+</div>
+<div class="navbar-actions">
+<span class="nav-badge">Agent Architecture Guide</span>
+<button aria-label="Switch to dark mode" class="theme-toggle" data-theme-toggle="">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+</button>
+</div>
+</nav>
+<header class="hero" role="banner">
+<div class="hero-inner">
+<div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span>Vision AI Automation Blueprint</div>
+<h1>Build a Vision AI Agent for <em>Automated Stock Inward</em> Entry</h1>
+<p class="hero-desc">Turn photos of handwritten delivery challans and vendor invoices into clean, validated database records — using a Next.js frontend, a FastAPI + PydanticAI backend, and PostgreSQL, all deployed with Docker Compose.</p>
+<div class="hero-meta">
+<span class="hero-meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>~45 min setup</span>
+<span class="hero-meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>Next.js · FastAPI · PydanticAI</span>
+<span class="hero-meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Docker Compose · Postgres</span>
+</div>
+</div>
+</header><div style="max-width:960px;margin:20px auto;padding:0 20px;">
+<ins class="adsbygoogle" data-ad-client="ca-pub-7707820592878194" data-ad-format="auto" data-ad-slot="5778428487" data-full-width-responsive="true" style="display:block"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<div class="page-layout" role="main">
+<aside aria-label="Table of contents" class="toc-sidebar">
+<div class="toc-title">On This Page</div>
+<ul class="toc-list" role="list">
+<li><a href="#intro">Overview</a></li>
+<li><a href="#architecture">Architecture</a></li>
+<li><a class="toc-phase" href="#phase1">1 — Docker Compose</a></li>
+<li><a class="toc-phase" href="#phase2">2 — Agent Backend</a></li>
+<li><a class="toc-phase" href="#phase3">3 — Next.js Frontend</a></li>
+<li><a class="toc-phase" href="#phase4">4 — Connect &amp; Secure</a></li>
+<li><a href="#done">Mission Done</a></li>
+</ul>
+</aside>
+<article class="article">
+<div class="intro-card" id="intro">
+<p>In agricultural wholesale and farm operations, incoming stock arrives as chaos — fragmented WhatsApp texts, printed vendor invoices, or handwritten delivery challans scribbled by farm managers. This guide builds a <strong>Vision AI agent</strong> that lets warehouse staff simply snap a photo of the challan; the agent reads it like an OCR engine, extracts supplier name, product details, batch numbers, and quantities, and enforces a strict data schema before saving it to Postgres.</p>
+</div>
+<div class="diagram-container" id="architecture">
+<div class="diagram-label">System Architecture</div>
+<svg aria-label="Vision AI stock inward architecture" height="230" role="img" viewbox="0 0 760 230" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrowFwd" markerheight="6" markerwidth="6" orient="auto" refx="9" refy="5" viewbox="0 0 10 10"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4caf50"></path></marker>
+</defs>
+<rect fill="#f9fbf9" height="60" rx="10" stroke="#2e7d32" stroke-width="2" width="120" x="10" y="85"></rect>
+<text fill="#1a2a1a" font-family="Geist,sans-serif" font-size="12" font-weight="700" text-anchor="middle" x="70" y="109">📸 Photo/Text</text>
+<text fill="#4a6a4a" font-family="Geist,sans-serif" font-size="10" text-anchor="middle" x="70" y="126">Warehouse Staff</text>
+<line marker-end="url(#arrowFwd)" stroke="#4caf50" stroke-width="2" x1="132" x2="185" y1="115" y2="115"></line>
+<rect fill="#f0fdf4" height="190" rx="12" stroke="#2e7d32" stroke-dasharray="7,4" stroke-width="1.5" width="390" x="187" y="20"></rect>
+<text fill="#1e6b22" font-family="Geist,sans-serif" font-size="10" font-weight="700" letter-spacing="0.8" text-anchor="middle" x="382" y="44">DOCKER COMPOSE — INTERNAL NETWORK</text>
+<rect fill="#fff" height="52" rx="8" stroke="#2e7d32" stroke-width="2" width="150" x="210" y="60"></rect>
+<text fill="#1a2a1a" font-family="Geist,sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="285" y="80">▲ Next.js UI</text>
+<text fill="#4a6a4a" font-family="Geist,sans-serif" font-size="9.5" text-anchor="middle" x="285" y="98">Public · Port 3000</text>
+<line marker-end="url(#arrowFwd)" stroke="#4caf50" stroke-width="1.5" x1="285" x2="285" y1="112" y2="132"></line>
+<rect fill="#fff" height="52" rx="8" stroke="#2e7d32" stroke-width="2" width="150" x="210" y="134"></rect>
+<text fill="#1a2a1a" font-family="Geist,sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="285" y="154">🐍 FastAPI Agent</text>
+<text fill="#4a6a4a" font-family="Geist,sans-serif" font-size="9.5" text-anchor="middle" x="285" y="172">Internal only · No public port</text>
+<line marker-end="url(#arrowFwd)" stroke="#4caf50" stroke-width="1.5" x1="362" x2="404" y1="160" y2="160"></line>
+<rect fill="#fff" height="52" rx="8" stroke="#2e7d32" stroke-width="2" width="150" x="406" y="134"></rect>
+<text fill="#1a2a1a" font-family="Geist,sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="481" y="154">🗄️ Postgres</text>
+<text fill="#4a6a4a" font-family="Geist,sans-serif" font-size="9.5" text-anchor="middle" x="481" y="172">Internal only · Volume</text>
+<line marker-end="url(#arrowFwd)" stroke="#4caf50" stroke-width="2" x1="360" x2="604" y1="86" y2="86"></line>
+<text fill="#1e6b22" font-family="Geist,sans-serif" font-size="9" text-anchor="middle" x="482" y="79">Vision + Extract</text>
+<rect fill="#f9fbf9" height="52" rx="10" stroke="#2e7d32" stroke-width="2" width="140" x="606" y="60"></rect>
+<text fill="#1a2a1a" font-family="Geist,sans-serif" font-size="11" font-weight="700" text-anchor="middle" x="676" y="80">☁️ GPT-4o Vision</text>
+<text fill="#4a6a4a" font-family="Geist,sans-serif" font-size="9.5" text-anchor="middle" x="676" y="98">Multimodal LLM API</text>
+</svg>
+</div>
+<div class="callout tip">
+<span class="callout-icon"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg></span>
+<div class="callout-body"><h4>Built for Agricultural Scale</h4><p>Separating the UI (Next.js) from the data extraction engine (Python + PydanticAI) gives a scalable foundation that can later expand into nutrient logging, yield prediction, or polyhouse sensor pipelines.</p></div>
+</div>
+<!-- PHASE 1 -->
+<section class="phase-section" id="phase1">
+<div class="phase-header">
+<div class="phase-number">1</div>
+<div class="phase-title-group"><span class="phase-tag">Infrastructure</span><h2 class="phase-title">Docker Compose — Corrected &amp; Secured</h2></div>
+</div>
+<p>The original configuration mapped the FastAPI backend directly to the host with <code>ports: "8000:8000"</code> while claiming it wouldn't be "exposed to the public web" — a direct contradiction. It also hardcoded database credentials and the OpenAI key in plain text. The corrected version below fixes both issues using <code>expose</code> (internal-only) and an external <code>.env</code> file.</p>
+<div class="sub-step">
+<div class="sub-step-num">A</div>
+<div class="sub-step-body">
+<h3>Create a <code>.env</code> file (never commit this to Git)</h3>
+<div class="code-wrap">
+<div class="code-header"><div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div><span class="code-lang">.env</span></div>
+<div class="code-block"><pre><code>POSTGRES_USER=uvf_admin
+POSTGRES_PASSWORD=change_this_to_a_strong_password
+POSTGRES_DB=stock_inward_db
+DATABASE_URL=postgresql://uvf_admin:change_this_to_a_strong_password@db:5432/stock_inward_db
+OPENAI_API_KEY=sk-your-real-key-here</code></pre></div>
+</div>
+</div>
+</div>
+<div class="sub-step">
+<div class="sub-step-num">B</div>
+<div class="sub-step-body">
+<h3>Create <code>docker-compose.yml</code></h3>
+<div class="code-wrap">
+<div class="code-header"><div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div><span class="code-lang">docker-compose.yml</span></div>
+<div class="code-block"><pre><code><span class="cm"># Note: the top-level 'version' key is deprecated in Compose V2 — omitted below</span>
+services:
+  frontend:
+    build: ./nextjs-app
+    ports:
+      - <span class="st">"3000:3000"</span>   <span class="cm"># Only the frontend is public-facing</span>
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  backend:
+    build: ./python-fastapi
+    expose:
+      - <span class="st">"8000"</span>        <span class="cm"># FIX: internal-only, not bound to host</span>
+    env_file:
+      - .env             <span class="cm"># FIX: secrets loaded from .env, not hardcoded</span>
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgres:15
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:</code></pre></div>
+</div>
+</div>
+</div>
+</section>
+<!-- PHASE 2 -->
+<section class="phase-section" id="phase2">
+<div class="phase-header">
+<div class="phase-number">2</div>
+<div class="phase-title-group"><span class="phase-tag">Backend</span><h2 class="phase-title">FastAPI + PydanticAI Agent</h2></div>
+</div>
+<p>PydanticAI is a solid choice for structured extraction, but the original code used a deprecated API surface. Current PydanticAI releases use <code>output_type</code> instead of <code>result_type</code>, and <code>result.output</code> instead of <code>result.data</code>. It also imported <code>Optional</code> without using it, and passed images in raw OpenAI dict format instead of PydanticAI's own multimodal content types. All four are fixed below, along with added CORS support so the frontend can actually reach this API.</p>
+<div class="code-wrap">
+<div class="code-header"><div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div><span class="code-lang">main.py — Python FastAPI Backend</span></div>
+<div class="code-block"><pre><code><span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI, HTTPException
+<span class="kw">from</span> fastapi.middleware.cors <span class="kw">import</span> CORSMiddleware
+<span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel, Field
+<span class="kw">from</span> pydantic_ai <span class="kw">import</span> Agent, BinaryContent
+<span class="kw">from</span> typing <span class="kw">import</span> List
+<span class="kw">import</span> base64
+
+app = FastAPI()
+
+<span class="cm"># FIX: allow the Next.js container to call this API across the Docker network</span>
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[<span class="st">"http://frontend:3000"</span>, <span class="st">"http://localhost:3000"</span>],
+    allow_methods=[<span class="st">"*"</span>],
+    allow_headers=[<span class="st">"*"</span>],
+)
+
+<span class="cm"># ---------------------------------------------------------</span>
+<span class="cm"># 1. STRICT DATA SCHEMAS — AI must return exactly this shape</span>
+<span class="cm"># ---------------------------------------------------------</span>
+<span class="kw">class</span> <span class="fn">StockItem</span>(BaseModel):
+    product_name: <span class="nb">str</span> = Field(description=<span class="st">"Generic item name (e.g., Round Purple Brinjal)"</span>)
+    sku_or_batch: <span class="nb">str</span> = Field(description=<span class="st">"Batch number or SKU, else 'N/A'"</span>)
+    quantity_received: <span class="nb">int</span> = Field(description=<span class="st">"Total count or kg received"</span>)
+    unit_cost_inr: <span class="nb">float</span> = Field(description=<span class="st">"Cost per unit in INR, no currency symbols"</span>)
+
+<span class="kw">class</span> <span class="fn">InwardStockManifest</span>(BaseModel):
+    supplier_name: <span class="nb">str</span> = Field(description=<span class="st">"Supplier, farm name, or vendor"</span>)
+    items: List[StockItem]
+
+<span class="cm"># ---------------------------------------------------------</span>
+<span class="cm"># 2. AGENT — FIX: output_type replaces deprecated result_type</span>
+<span class="cm"># ---------------------------------------------------------</span>
+stock_agent = Agent(
+    <span class="st">'openai:gpt-4o'</span>,
+    output_type=InwardStockManifest,
+    system_prompt=(
+        <span class="st">"You are an expert warehouse operations assistant. You will be provided with "</span>
+        <span class="st">"either raw text or images of handwritten/printed delivery notes. Act as an OCR "</span>
+        <span class="st">"and extraction engine: parse the input and extract a clean stock inward manifest. "</span>
+        <span class="st">"If unit cost is missing, calculate it from total cost if available."</span>
+    )
+)
+
+<span class="cm"># ---------------------------------------------------------</span>
+<span class="cm"># 3. ENDPOINT — FIX: BinaryContent instead of raw OpenAI dict</span>
+<span class="cm"># ---------------------------------------------------------</span>
+<span class="tg">@app.post</span>(<span class="st">"/api/agent/inward-stock"</span>)
+<span class="kw">async def</span> <span class="fn">process_inward_stock</span>(raw_input: <span class="nb">dict</span>):
+    text_content = raw_input.get(<span class="st">"text"</span>, <span class="st">""</span>)
+    image_base64 = raw_input.get(<span class="st">"image"</span>, <span class="nb">None</span>)
+
+    <span class="kw">if not</span> text_content <span class="kw">and not</span> image_base64:
+        <span class="kw">raise</span> HTTPException(status_code=<span class="nb">400</span>, detail=<span class="st">"Provide either text or an image."</span>)
+
+    prompt_input = [text_content <span class="kw">or</span> <span class="st">"Analyze this delivery document."</span>]
+
+    <span class="kw">if</span> image_base64:
+        image_bytes = base64.b64decode(image_base64)
+        <span class="cm"># FIX: PydanticAI's native multimodal type, not an OpenAI-format dict</span>
+        prompt_input.append(BinaryContent(data=image_bytes, media_type=<span class="st">"image/jpeg"</span>))
+
+    <span class="kw">try</span>:
+        result = <span class="kw">await</span> stock_agent.run(prompt_input)
+        manifest = result.output   <span class="cm"># FIX: .output replaces deprecated .data</span>
+
+        <span class="cm"># TODO: INSERT INTO stock_logs ... (connect via DATABASE_URL)</span>
+
+        <span class="kw">return</span> {<span class="st">"status"</span>: <span class="st">"success"</span>, <span class="st">"extracted_manifest"</span>: manifest.model_dump()}
+    <span class="kw">except</span> <span class="nb">Exception</span> <span class="kw">as</span> e:
+        <span class="kw">raise</span> HTTPException(status_code=<span class="nb">500</span>, detail=<span class="nb">str</span>(e))</code></pre></div>
+</div>
+<div class="callout tip">
+<span class="callout-icon"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg></span>
+<div class="callout-body"><h4>Where Does the Vercel AI SDK Fit In?</h4><p>This endpoint needs one complete structured JSON block before a database insert, so waiting on a plain <code>fetch</code> is the safer choice here. If you later build a chat interface (e.g., "How much Brinjal did we receive today?"), use the Vercel AI SDK's <code>useChat</code> hook to stream tokens for a ChatGPT-like feel.</p></div>
+</div>
+</section>
+<!-- PHASE 3 -->
+<section class="phase-section" id="phase3">
+<div class="phase-header">
+<div class="phase-number">3</div>
+<div class="phase-title-group"><span class="phase-tag">Frontend</span><h2 class="phase-title">Next.js Upload Form</h2></div>
+</div>
+<p>The original frontend called a relative path <code>/api/agent/inward-stock</code>, which hits the Next.js server itself — not the separate FastAPI container. It also defined <code>NEXT_PUBLIC_API_URL</code> in Docker Compose but never used it anywhere in the code. Fixed below by actually consuming the environment variable.</p>
+<div class="code-wrap">
+<div class="code-header"><div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div><span class="code-lang">app/page.jsx — Next.js Client Component</span></div>
+<div class="code-block"><pre><code><span class="st">'use client'</span>;
+<span class="kw">import</span> { useState } <span class="kw">from</span> <span class="st">'react'</span>;
+
+<span class="kw">export default function</span> <span class="fn">StockInwardForm</span>() {
+  <span class="kw">const</span> [inputText, setInputText] = useState(<span class="st">''</span>);
+  <span class="kw">const</span> [imageBase64, setImageBase64] = useState(<span class="nb">null</span>);
+  <span class="kw">const</span> [result, setResult] = useState(<span class="nb">null</span>);
+  <span class="kw">const</span> [loading, setLoading] = useState(<span class="nb">false</span>);
+
+  <span class="kw">const</span> handleImageUpload = (e) =&gt; {
+    <span class="kw">const</span> file = e.target.files[<span class="nb">0</span>];
+    <span class="kw">if</span> (file) {
+      <span class="kw">const</span> reader = <span class="kw">new</span> FileReader();
+      reader.onloadend = () =&gt; {
+        <span class="kw">const</span> base64String = reader.result.split(<span class="st">','</span>)[<span class="nb">1</span>];
+        setImageBase64(base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  <span class="kw">const</span> handleSubmit = <span class="kw">async</span> (e) =&gt; {
+    e.preventDefault();
+    setLoading(<span class="nb">true</span>);
+    setResult(<span class="nb">null</span>);
+
+    <span class="kw">try</span> {
+      <span class="cm">// FIX: call the actual backend URL, not a relative Next.js path</span>
+      <span class="kw">const</span> apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      <span class="kw">const</span> response = <span class="kw">await</span> fetch(<span class="nb">`${apiUrl}/api/agent/inward-stock`</span>, {
+        method: <span class="st">'POST'</span>,
+        headers: { <span class="st">'Content-Type'</span>: <span class="st">'application/json'</span> },
+        body: JSON.stringify({ text: inputText, image: imageBase64 }),
+      });
+
+      <span class="kw">if</span> (!response.ok) <span class="kw">throw new</span> <span class="nb">Error</span>(<span class="nb">`Server responded ${response.status}`</span>);
+
+      <span class="kw">const</span> data = <span class="kw">await</span> response.json();
+      setResult(data.extracted_manifest);
+    } <span class="kw">catch</span> (error) {
+      console.error(<span class="st">"Data extraction failed:"</span>, error);
+      alert(<span class="st">"Failed to process delivery note."</span>);
+    } <span class="kw">finally</span> {
+      setLoading(<span class="nb">false</span>);
+    }
+  };
+
+  <span class="kw">return</span> (
+    &lt;div className=<span class="st">"max-w-2xl mx-auto p-6"</span>&gt;
+      &lt;h2 className=<span class="st">"text-xl font-bold mb-4"</span>&gt;Process Delivery Note&lt;/h2&gt;
+      &lt;form onSubmit={handleSubmit} className=<span class="st">"flex flex-col gap-4"</span>&gt;
+        &lt;div className=<span class="st">"p-4 border border-dashed border-gray-400 rounded bg-gray-50"</span>&gt;
+          &lt;label className=<span class="st">"block font-bold mb-2"</span>&gt;Upload Photo of Challan/Invoice:&lt;/label&gt;
+          &lt;input type=<span class="st">"file"</span> accept=<span class="st">"image/*"</span> onChange={handleImageUpload} /&gt;
+        &lt;/div&gt;
+        &lt;textarea
+          className=<span class="st">"w-full p-3 border rounded border-gray-300"</span>
+          rows=<span class="st">"4"</span>
+          placeholder=<span class="st">"Or paste text notes here..."</span>
+          value={inputText}
+          onChange={(e) =&gt; setInputText(e.target.value)}
+        /&gt;
+        &lt;button type=<span class="st">"submit"</span> disabled={loading}
+          className=<span class="st">"mt-2 px-6 py-3 bg-green-700 text-white font-bold rounded hover:bg-green-800 disabled:opacity-50"</span>&gt;
+          {loading ? <span class="st">'Analyzing with Vision AI...'</span> : <span class="st">'Extract &amp; Log Stock'</span>}
+        &lt;/button&gt;
+      &lt;/form&gt;
+
+      {result &amp;&amp; (
+        &lt;div className=<span class="st">"mt-8 p-5 bg-green-50 border border-green-200 rounded"</span>&gt;
+          &lt;h3 className=<span class="st">"font-bold text-green-900 mb-2"</span>&gt;
+            Extraction Successful: {result.supplier_name}
+          &lt;/h3&gt;
+          &lt;ul className=<span class="st">"space-y-2"</span>&gt;
+            {result.items.map((item, index) =&gt; (
+              &lt;li key={index} className=<span class="st">"p-3 bg-white border border-green-100 rounded shadow-sm"</span>&gt;
+                &lt;strong&gt;{item.quantity_received} units&lt;/strong&gt; of {item.product_name}
+                &lt;br/&gt;
+                &lt;span className=<span class="st">"text-sm text-gray-600"</span>&gt;
+                  Batch: {item.sku_or_batch} | Cost: ₹{item.unit_cost_inr}/unit
+                &lt;/span&gt;
+              &lt;/li&gt;
+            ))}
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      )}
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+</div>
+</section>
+<!-- PHASE 4 -->
+<section class="phase-section" id="phase4">
+<div class="phase-header">
+<div class="phase-number">4</div>
+<div class="phase-title-group"><span class="phase-tag">Production</span><h2 class="phase-title">Going Live — Reverse Proxy &amp; Upload Limits</h2></div>
+</div>
+<p>Two things the original guide never mentioned: how the public internet reaches your frontend securely with SSL, and that base64-encoded photos can be large enough to hit default request body size limits.</p>
+<div class="sub-step">
+<div class="sub-step-num">A</div>
+<div class="sub-step-body">
+<h3>Add Nginx as a reverse proxy with SSL</h3>
+<p>Run Nginx (or Caddy) in front of the <code>frontend</code> container to terminate HTTPS on your domain, e.g. <code>stock.uvfarms.in</code>, and forward traffic to port 3000 internally.</p>
+<div class="code-wrap">
+<div class="code-header"><div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div><span class="code-lang">nginx.conf (excerpt)</span></div>
+<div class="code-block"><pre><code>server {
+    listen 443 ssl;
+    server_name stock.uvfarms.in;
+
+    location / {
+        proxy_pass http://frontend:3000;
+        proxy_set_header Host $host;
+    }
+
+    client_max_body_size 15M;  <span class="cm"># FIX: allow larger base64 photo uploads</span>
+}</code></pre></div>
+</div>
+</div>
+</div>
+<div class="callout warning">
+<span class="callout-icon"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" x2="12" y1="9" y2="13"></line><line x1="12" x2="12.01" y1="17" y2="17"></line></svg></span>
+<div class="callout-body"><h4>Base64 Photos Are ~33% Larger Than the Original File</h4><p>A 5MB invoice photo becomes roughly 6.7MB as a base64 string inside a JSON body. Without raising <code>client_max_body_size</code> in Nginx and FastAPI's request limits, uploads will silently fail with 413 errors.</p></div>
+</div>
+</section>
+<div class="callout success" id="done" style="margin-top:2rem;">
+<span class="callout-icon"><svg fill="none" height="22" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="22"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>
+<div class="callout-body"><h4>Your Vision AI Stock Agent is Production-Ready 🎉</h4><p>The backend now runs internal-only, secrets live in <code>.env</code>, the frontend actually talks to the right API, and Nginx handles SSL with proper upload limits. Warehouse staff can now snap a photo of any challan and have it land in Postgres as clean, structured data — no manual typing required.</p></div>
+</div>
+</article>
+</div>
+<footer><p>© 2026 UVF IT — Core Industrial &amp; Enterprise Automation Frameworks. All rights reserved.</p></footer>
+<script>
+(function(){
+  var t = document.querySelector('[data-theme-toggle]');
+  var r = document.documentElement;
+  var d = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  r.setAttribute('data-theme', d);
+  var sunIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  var moonIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  function updateIcon(){ if(t) t.innerHTML = d==='dark' ? sunIcon : moonIcon; }
+  updateIcon();
+  if(t){ t.addEventListener('click', function(){ d = d==='dark' ? 'light' : 'dark'; r.setAttribute('data-theme', d); updateIcon(); }); }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Minimal File Transfer Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Python/Flask</div>
+    </nav>
+
+    <header>
+        <h1>Minimal File Transfer Clone</h1>
+        <p>Build a WeTransfer-inspired file sharing app with tracking in 45 minutes</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build. Today we are constructing a minimal, working clone of Campsend, the open-source alternative to WeTransfer, focusing on the core value proposition: sending files via expiring links with delivery tracking.</p>
+        <p>This guide strips away the complex frontend animations and marketing fluff to reveal the engineering skeleton. You will build a backend that handles file uploads, generates secure temporary URLs, and logs when a recipient views or downloads the asset, all using a free-tier Python stack.</p>
+
+        <div class="fix-box">
+            <h4>Prerequisites &amp; Simplifications</h4>
+            <ul>
+                <li>Requires Python 3.9+ and pip installed; this guide uses Flask for simplicity over heavier frameworks like Django.</li>
+                <li>Storage is local filesystem-based for this tutorial; in production, you would replace this with S3 or MinIO to handle large files and persistence.</li>
+                <li>Security is minimal: links are random strings but not encrypted at rest; do not use this exact code for sensitive corporate data without adding authentication and TLS.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">System Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 630 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<rect x="426" y="96" width="198" height="70" fill="none" stroke="#b91c1c" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="525.0" y="114" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:#b91c1c">EXTERNAL SERVICES</text>
+<line x1="440" y1="146" x2="400" y2="74" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="420" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Upload/Download Requests</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Store Metadata/Logs</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Read/Write Files</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Flask App</text>
+<text x="315.0" y="87" class="node-subtext">Python/Flask</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite</text>
+<text x="315.0" y="159" class="node-subtext">Metadata &amp; Logs</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">File Storage</text>
+<text x="315.0" y="231" class="node-subtext">Local Disk</text>
+<rect x="440" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="525.0" y="143" class="node-text">Browser</text>
+<text x="525.0" y="159" class="node-subtext">Sender/Receiver</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold &amp; Dependencies</h2>
+                <p>Initialize the project directory and install the necessary Python libraries. We use Flask for the web server, SQLite3 for the database (built-in), and uuid for generating unique file IDs.</p>
+                <p>Creating a virtual environment ensures that your system Python remains clean and that dependencies are isolated to this specific project. This is a best practice for any Python development workflow.</p>
+                <p><strong>setup.sh</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/bin/bash</span>
+<span class="code-comment"># Create project directory and navigate into it</span>
+mkdir campsend-clone
+cd campsend-clone
+
+<span class="code-comment"># Create virtual environment</span>
+python3 -m venv venv
+
+<span class="code-comment"># Activate virtual environment</span>
+source venv/bin/activate
+
+<span class="code-comment"># Install Flask</span>
+pip install flask
+
+<span class="code-comment"># Create necessary directories</span>
+mkdir uploads
+
+<span class="code-comment"># Verify installation</span>
+python -c "import flask; print(f'Flask {flask.__version__} installed')"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Database &amp; Model</h2>
+                <p>Create the SQLite database schema. We need two tables: 'files' to store metadata (filename, original_name, expiry) and 'events' to track when files are viewed or downloaded. This mimics Campsend's tracking feature.</p>
+                <p>The 'files' table stores the unique ID used in the URL, the original filename for display, and the expiry timestamp. The 'events' table logs every access attempt, allowing us to notify the sender later. We use a simple Python script to initialize this schema.</p>
+                <p><strong>db.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+import os
+
+DB_NAME = 'campsend.db'
+
+def init_db():
+    """Initialize the database and create tables if they don't exist."""
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    
+    <span class="code-comment"># Create files table</span>
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS files (
+            id TEXT PRIMARY KEY,
+            original_filename TEXT NOT NULL,
+            uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            expires_at TIMESTAMP NOT NULL
+        )
+    ''')
+    
+    <span class="code-comment"># Create events table for tracking</span>
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS events (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_id TEXT NOT NULL,
+            event_type TEXT NOT NULL CHECK(event_type IN ('upload', 'download', 'view')),
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (file_id) REFERENCES files(id)
+        )
+    ''')
+    
+    conn.commit()
+    conn.close()
+    print(f"Database '{DB_NAME}' initialized successfully.")
+
+if __name__ == '__main__':
+    init_db()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core Logic (Upload &amp; Track)</h2>
+                <p>Now we implement the core Flask application logic that ties our database and file system together. We will create two main endpoints: a POST route for uploading files and a GET route for downloading them by their unique ID.</p>
+                <p>The upload endpoint saves the file to a local 'uploads' directory, generates a unique UUID, and records the metadata in our SQLite database. It then returns a JSON response containing the shareable download link, mimicking the Campsend user experience.</p>
+                <p>The download endpoint retrieves the file metadata from the database. If the file exists and hasn't expired, it logs a 'download' event to the 'events' table to track usage, then streams the file back to the user. This ensures every access is recorded for the sender.</p>
+                <p>We also include a helper function to check if a file link is valid and not expired, ensuring that old links automatically become inaccessible after their designated lifetime.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import os
+import uuid
+from datetime import datetime, timedelta
+from flask import Flask, request, jsonify, send_file, abort
+from db import init_db, get_db
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+
+<span class="code-comment"># Ensure upload folder exists</span>
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+    
+    <span class="code-comment"># Generate unique ID and save file</span>
+    file_id = str(uuid.uuid4())
+    original_filename = file.filename
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], file_id)
+    file.save(file_path)
+    
+    <span class="code-comment"># Set expiry to 24 hours from now</span>
+    expiry_date = datetime.now() + timedelta(hours=24)
+    
+    <span class="code-comment"># Save metadata to database</span>
+    db = get_db()
+    db.execute(
+        'INSERT INTO files (id, original_name, file_path, expiry_date) VALUES (?, ?, ?, ?)',
+        (file_id, original_filename, file_path, expiry_date)
+    )
+    db.commit()
+    
+    <span class="code-comment"># Construct download link</span>
+    download_link = f"http://127.0.0.1:5000/download/{file_id}"
+    
+    return jsonify({
+        'message': 'File uploaded successfully',
+        'link': download_link,
+        'expires_in': '24 hours'
+    }), 201
+
+@app.route('/download/&lt;file_id&gt;', methods=['GET'])
+def download_file(file_id):
+    db = get_db()
+    
+    <span class="code-comment"># Fetch file metadata</span>
+    file_row = db.execute('SELECT * FROM files WHERE id = ?', (file_id,)).fetchone()
+    
+    if file_row is None:
+        abort(404, description='File not found')
+    
+    <span class="code-comment"># Check if file has expired</span>
+    expiry_date = datetime.fromisoformat(file_row['expiry_date'])
+    if datetime.now() &gt; expiry_date:
+        abort(410, description='Link has expired')
+    
+    <span class="code-comment"># Log the download event</span>
+    db.execute(
+        'INSERT INTO events (file_id, event_type, timestamp) VALUES (?, ?, ?)',
+        (file_id, 'download', datetime.now().isoformat())
+    )
+    db.commit()
+    
+    <span class="code-comment"># Send the file</span>
+    return send_file(file_row['file_path'], as_attachment=True, download_name=file_row['original_name'])
+
+@app.route('/status/&lt;file_id&gt;', methods=['GET'])
+def get_file_status(file_id):
+    db = get_db()
+    
+    <span class="code-comment"># Fetch file metadata</span>
+    file_row = db.execute('SELECT * FROM files WHERE id = ?', (file_id,)).fetchone()
+    
+    if file_row is None:
+        return jsonify({'error': 'File not found'}), 404
+    
+    <span class="code-comment"># Get download count</span>
+    event_count = db.execute(
+        'SELECT COUNT(*) as count FROM events WHERE file_id = ? AND event_type = ?',
+        (file_id, 'download')
+    ).fetchone()['count']
+    
+    <span class="code-comment"># Check if expired</span>
+    expiry_date = datetime.fromisoformat(file_row['expiry_date'])
+    is_expired = datetime.now() &gt; expiry_date
+    
+    return jsonify({
+        'file_name': file_row['original_name'],
+        'download_count': event_count,
+        'expired': is_expired,
+        'expiry_date': file_row['expiry_date']
+    })
+
+if __name__ == '__main__':
+    init_db()
+    app.run(debug=True, host='0.0.0.0', port=5000)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run &amp; Verify</h2>
+                <p>With the application code complete, we can now start the Flask server and test the entire workflow. We will use curl to simulate file uploads and downloads, verifying that the endpoints respond correctly.</p>
+                <p>First, we start the Flask server in the background. Then, we create a dummy text file to upload. This simulates a user sending a file through the Campsend clone interface.</p>
+                <p>Next, we send the file to the /upload endpoint. The server should respond with a JSON object containing the unique download link. We extract this link to use in the next step.</p>
+                <p>Finally, we use the download link to retrieve the file and check the database to confirm that the download event was logged. This proves our tracking system is working as intended.</p>
+                <p><strong>test.sh</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/bin/bash</span>
+
+<span class="code-comment"># Start the Flask server in the background</span>
+python app.py &amp;
+SERVER_PID=$!
+sleep 2  # Wait for server to start
+
+<span class="code-comment"># Create a dummy file to upload</span>
+echo "This is a test file for Campsend clone" &gt; test_file.txt
+
+<span class="code-comment"># Upload the file</span>
+echo "Uploading file..."
+RESPONSE=$(curl -s -X POST -F "file=@test_file.txt" http://127.0.0.1:5000/upload)
+echo "Upload Response: $RESPONSE"
+
+<span class="code-comment"># Extract the download link from the JSON response</span>
+DOWNLOAD_LINK=$(echo $RESPONSE | python -c "import sys, json; print(json.load(sys.stdin)['link'])")
+echo "Download Link: $DOWNLOAD_LINK"
+
+<span class="code-comment"># Download the file using the link</span>
+echo "Downloading file..."
+curl -s -o downloaded_file.txt $DOWNLOAD_LINK
+
+<span class="code-comment"># Verify the downloaded content</span>
+echo "Downloaded Content:"
+cat downloaded_file.txt
+
+<span class="code-comment"># Check the database for the download event</span>
+echo "Checking database for events..."
+sqlite3 campsend.db "SELECT * FROM events;"
+
+<span class="code-comment"># Clean up</span>
+kill $SERVER_PID
+rm test_file.txt downloaded_file.txt
+echo "Test complete."</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>python app.py should output 'Running on http://127.0.0.1:5000' in the terminal</td></tr>
+            <tr><td>File upload returns a JSON link</td><td>curl -X POST -F 'file=@test.txt' http://127.0.0.1:5000/upload returns {"link": "http://..."}</td></tr>
+            <tr><td>Download link serves the file</td><td>curl -O http://127.0.0.1:5000/download/&lt;id&gt; saves the file content correctly to disk</td></tr>
+            <tr><td>Event is logged in SQLite</td><td>sqlite3 campsend.db 'SELECT * FROM events;' shows a row with event_type='download'</td></tr>
+            <tr><td>Expired links return 410</td><td>Accessing a link after its expiry_date returns HTTP 410 Gone status</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>To extend this clone, add a simple HTML frontend for the upload form, implement email notifications for the sender when the link is clicked, and replace local storage with AWS S3 for scalability.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

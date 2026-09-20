@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Minimal Satellite Map Viewer</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Minimal Satellite Map Viewer</h1>
+        <p>Track live aircraft on a 3D globe with Python and Cesium.</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> beginner build. Today we are constructing a minimal clone of a 'God's Eye View' style satellite map, focusing on the core experience: visualizing real-time public data on a photorealistic 3D Earth.</p>
+        <p>We will build your own live aircraft tracker inspired by open-source intelligence tools. Using Python for the backend and CesiumJS for the frontend, you will create a working system that fetches live ADS-B data and plots it on a globe in under 45 minutes.</p>
+
+        <div class="fix-box">
+            <h4>Prerequisites &amp; Constraints</h4>
+            <ul>
+                <li>Requires Node.js v18+ and Python 3.9+ installed locally; no paid APIs are used, but you need a free OpenSky Network API key (or use their demo credentials).</li>
+                <li>This is a simplified clone: it tracks only aircraft positions (lat/lon) and does not include voice control, satellite imagery layers, or complex 3D modeling found in the full product.</li>
+                <li>CORS restrictions may block direct browser-to-OpenSky requests; our Python backend acts as a proxy to handle this securely.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">System Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 630 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL DEVELOPMENT</text>
+<rect x="426" y="96" width="198" height="70" fill="none" stroke="#b91c1c" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="525.0" y="114" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:#b91c1c">EXTERNAL SERVICES</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">GET /aircraft</text>
+<line x1="400" y1="146" x2="440" y2="146" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="420" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Fetch State</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Cache/Log</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Browser</text>
+<text x="315.0" y="87" class="node-subtext">CesiumJS UI</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Python API</text>
+<text x="315.0" y="159" class="node-subtext">Flask Server</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">SQLite</text>
+<text x="315.0" y="231" class="node-subtext">State Store</text>
+<rect x="440" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="525.0" y="143" class="node-text">OpenSky API</text>
+<text x="525.0" y="159" class="node-subtext">Live ADS-B Data</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the Backend</h2>
+                <p>Initialize a Python project using Flask to serve API endpoints. This backend will proxy requests to the OpenSky Network to avoid CORS issues in the browser.</p>
+                <p>Install dependencies and create the main application file. We will use <code>requests</code> to fetch data and <code>sqlite3</code> for minimal state persistence.</p>
+                <p><strong>setup.sh</strong></p>
+<div class="code-block"><pre><code>mkdir satellite-viewer
+cd satellite-viewer
+python3 -m venv venv
+source venv/bin/activate
+pip install flask requests</code></pre></div>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route('/health')
+def health():
+    return jsonify({"status": "ok"})
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Core Feature 1 (Data Fetching)</h2>
+                <p>Implement the logic to fetch live aircraft data from OpenSky. We will limit the request to a specific bounding box (e.g., around London) to keep the payload small and responsive.</p>
+                <p>Parse the JSON response to extract only necessary fields: ICAO24 address, latitude, longitude, and callsign.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import requests
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+<span class="code-comment"># OpenSky Network API credentials (use demo or your own)</span>
+OPENSKY_USER = 'demo'
+OPENSKY_PASS = 'demo'
+
+<span class="code-comment"># Bounding box for London (min_lat, min_lon, max_lat, max_lon)</span>
+LON_MIN = -0.5
+LON_MAX = 0.5
+LAT_MIN = 51.2
+LAT_MAX = 51.6
+
+@app.route('/health')
+def health():
+    return jsonify({"status": "ok"})
+
+@app.route('/aircraft')
+def get_aircraft():
+    url = 'https://opensky-network.org/api/states/all'
+    params = {
+        'lamin': LAT_MIN,
+        'lomin': LON_MIN,
+        'lamax': LAT_MAX,
+        'lomax': LON_MAX
+    }
+    try:
+        response = requests.get(url, auth=(OPENSKY_USER, OPENSKY_PASS), params=params, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        
+        <span class="code-comment"># Parse relevant fields</span>
+        aircraft_list = []
+        for state in data.get('states', []):
+            <span class="code-comment"># state structure: [icao24, callsign, origin_country, time_position, last_contact,</span>
+            <span class="code-comment">#                   longitude, latitude, baro_altitude, on_ground, velocity,</span>
+            <span class="code-comment">#                   heading, vertical_rate, sensors, geo_altitude, squawk,</span>
+            <span class="code-comment">#                   spi, position_source]</span>
+            icao24 = state[0]
+            callsign = state[1].strip() if state[1] else 'N/A'
+            longitude = state[5]
+            latitude = state[6]
+            
+            if latitude and longitude:
+                aircraft_list.append({
+                    'icao24': icao24,
+                    'callsign': callsign,
+                    'latitude': latitude,
+                    'longitude': longitude
+                })
+                
+        return jsonify({"aircraft": aircraft_list})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core Feature 2 (3D Globe UI)</h2>
+                <p>Create a simple HTML file that uses CesiumJS, a powerful WebGL library for 3D globes. This will serve as our frontend.</p>
+                <p>Add JavaScript to fetch data from our local Flask API and render aircraft as billboards (icons) on the globe.</p>
+                <p><strong>templates/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Minimal Satellite Viewer&lt;/title&gt;
+    <span class="code-comment">&lt;!-- CesiumJS --&gt;</span>
+    &lt;script src="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Cesium.js"&gt;&lt;/script&gt;
+    &lt;link href="https://cesium.com/downloads/cesiumjs/releases/1.108/Build/Cesium/Widgets/widgets.css" rel="stylesheet"&gt;
+    &lt;style&gt;
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; }
+        #cesiumContainer { width: 100%; height: 100%; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="cesiumContainer"&gt;&lt;/div&gt;
+    &lt;script&gt;
+        // Initialize Cesium Viewer
+        const viewer = new Cesium.Viewer('cesiumContainer', {
+            baseLayerPicker: false,
+            geocoder: false,
+            homeButton: false,
+            infoBox: false,
+            sceneModePicker: false,
+            selectionIndicator: false,
+            timeline: false,
+            navigationHelpButton: false
+        });
+
+        // Function to fetch and render aircraft
+        async function updateAircraft() {
+            try {
+                const response = await fetch('/aircraft');
+                const data = await response.json();
+                
+                // Clear existing entities
+                viewer.entities.removeAll();
+                
+                // Add new aircraft
+                data.aircraft.forEach(aircraft =&gt; {
+                    viewer.entities.add({
+                        position: Cesium.Cartesian3.fromDegrees(aircraft.longitude, aircraft.latitude),
+                        point: {
+                            pixelSize: 10,
+                            color: Cesium.Color.RED,
+                            outlineColor: Cesium.Color.WHITE,
+                            outlineWidth: 2
+                        },
+                        label: {
+                            text: aircraft.callsign,
+                            font: '14px monospace',
+                            fillColor: Cesium.Color.WHITE,
+                            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                            outlineWidth: 2,
+                            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                            pixelOffset: new Cesium.Cartesian2(0, -9)
+                        }
+                    });
+                });
+                
+                console.log(`Updated ${data.aircraft.length} aircraft`);
+            } catch (error) {
+                console.error('Error fetching aircraft:', error);
+            }
+        }
+
+        // Initial fetch
+        updateAircraft();
+        
+        // Update every 5 seconds
+        setInterval(updateAircraft, 5000);
+        
+        // Zoom to London
+        viewer.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(-0.1276, 51.5074, 100000),
+            orientation: {
+                heading: Cesium.Math.toRadians(0),
+                pitch: Cesium.Math.toRadians(-90),
+                roll: 0.0
+            }
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import requests
+from flask import Flask, jsonify, render_template
+
+app = Flask(__name__)
+
+<span class="code-comment"># OpenSky Network API credentials (use demo or your own)</span>
+OPENSKY_USER = 'demo'
+OPENSKY_PASS = 'demo'
+
+<span class="code-comment"># Bounding box for London (min_lat, min_lon, max_lat, max_lon)</span>
+LON_MIN = -0.5
+LON_MAX = 0.5
+LAT_MIN = 51.2
+LAT_MAX = 51.6
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/health')
+def health():
+    return jsonify({"status": "ok"})
+
+@app.route('/aircraft')
+def get_aircraft():
+    url = 'https://opensky-network.org/api/states/all'
+    params = {
+        'lamin': LAT_MIN,
+        'lomin': LON_MIN,
+        'lamax': LAT_MAX,
+        'lomax': LON_MAX
+    }
+    try:
+        response = requests.get(url, auth=(OPENSKY_USER, OPENSKY_PASS), params=params, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        
+        <span class="code-comment"># Parse relevant fields</span>
+        aircraft_list = []
+        for state in data.get('states', []):
+            <span class="code-comment"># state structure: [icao24, callsign, origin_country, time_position, last_contact,</span>
+            <span class="code-comment">#                   longitude, latitude, baro_altitude, on_ground, velocity,</span>
+            <span class="code-comment">#                   heading, vertical_rate, sensors, geo_altitude, squawk,</span>
+            <span class="code-comment">#                   spi, position_source]</span>
+            icao24 = state[0]
+            callsign = state[1].strip() if state[1] else 'N/A'
+            longitude = state[5]
+            latitude = state[6]
+            
+            if latitude and longitude:
+                aircraft_list.append({
+                    'icao24': icao24,
+                    'callsign': callsign,
+                    'latitude': latitude,
+                    'longitude': longitude
+                })
+                
+        return jsonify({"aircraft": aircraft_list})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run Locally</h2>
+                <p>With the backend and frontend files in place, it is time to launch your local development server. We will use a simple bash script to start the Flask application, which will serve both the API endpoints and the HTML interface.</p>
+                <p>Ensure you are in the project root directory. Running the server will bind to localhost on port 5000, allowing your browser to communicate with the Python backend without CORS issues.</p>
+                <p><strong>run.sh</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/bin/bash</span>
+<span class="code-comment"># Make sure you have installed dependencies: pip install flask requests</span>
+
+<span class="code-comment"># Set environment variable for Flask to run in debug mode</span>
+export FLASK_APP=app.py
+export FLASK_ENV=development
+
+<span class="code-comment"># Start the Flask server</span>
+echo "Starting God's Eye View server on http://localhost:5000..."
+flask run</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and Extend</h2>
+                <p>Now that the server is running, verify the data pipeline by checking the raw JSON output from the API endpoint. This ensures your Python backend is successfully fetching and formatting data from OpenSky before the frontend even touches it.</p>
+                <p>Next, open your browser to <code>http://localhost:5000</code>. You should see a 3D globe centered on London. Wait a few seconds for the Cesium viewer to load and the JavaScript to fetch aircraft data. Red dots should appear, representing live flights. Hover over them to see callsigns.</p>
+                <p>To extend the clone, consider adding a SQLite database to log historical positions for flight path visualization. You could also enhance the UI by adding controls to zoom into specific aircraft or switch between different map imagery layers.</p>
+                <p><strong>verify.sh</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/bin/bash</span>
+
+<span class="code-comment"># Verify the API is returning valid JSON with aircraft data</span>
+<span class="code-comment"># This command fetches the last 5 aircraft in the London bounding box</span>
+echo "Fetching aircraft data from local API..."
+curl -s http://localhost:5000/aircraft | python3 -m json.tool | head -n 20
+
+echo ""
+echo "Check your browser at http://localhost:5000 for the 3D globe view."</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Flask server starts without errors</td><td><code>bash run.sh</code> and check for 'Running on http://127.0.0.1:5000' in terminal</td></tr>
+            <tr><td>API returns JSON with aircraft data</td><td><code>curl http://localhost:5000/aircraft</code> should return a JSON array with lat/lon fields</td></tr>
+            <tr><td>Browser shows 3D globe with red dots</td><td>Open <code>http://localhost:5000</code> in Chrome/Firefox and visually confirm red markers over London</td></tr>
+            <tr><td>Dots update every 5 seconds</td><td>Observe movement or change in dot positions/callsigns over a 10-second period</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>You have built a minimal live satellite viewer. To extend this, consider adding a SQLite database to store historical flight paths or integrating a map tile provider for higher resolution imagery.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

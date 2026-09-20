@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Build a PostHog-like A/B Testing Tracker</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Python + SQLite</div>
+    </nav>
+
+    <header>
+        <h1>Build a PostHog-like A/B Testing Tracker</h1>
+        <p>Create a lightweight A/B testing tool that lets you split traffic, track conversion metrics, and visualize results — the kind of tool that a startup needs to make data-driven decisions.</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide. Today, we are going to build your own A/B testing tracker inspired by <strong>PostHog</strong>. Instead of relying on a heavy SaaS platform, we will create a minimal, self-contained system that handles traffic splitting and event tracking using Python and SQLite.</p>
+        <p>This project is designed for beginners who want to understand the core mechanics of experimentation. By the end of this 45-minute session, you will have a working local server that can assign users to variants, record their actions, and calculate basic conversion rates. It is a perfect foundation for learning how product analytics tools work under the hood.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need <strong>Python 3.8+</strong> installed on your machine. We will use <code>pip</code> to install dependencies, so ensure your environment is set up correctly.</li>
+                <li>This is a <strong>simplified</strong> clone. Real tools like PostHog handle complex statistical significance, session replay, and large-scale data ingestion. Our version focuses on the core logic of variant assignment and basic metric calculation.</li>
+                <li>SQLite is a single-file database. It is perfect for this local build, but do not expect it to handle high-concurrency production traffic. If you scale this, you would need to switch to PostgreSQL or a similar RDBMS.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">System Architecture</div>
+            <svg width="100%" height="334" viewBox="0 0 420 334" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="286" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP Request</text>
+<line x1="315" y1="170" x2="315" y2="266" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="212" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Assign Variant</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link" marker-start="url(#gw-arrow)" marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Write/Read</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Browser / Client</text>
+<text x="315.0" y="87" class="node-subtext">Sends requests</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">FastAPI Server</text>
+<text x="315.0" y="159" class="node-subtext">Handles logic</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node" />
+<text x="315.0" y="215" class="node-text">SQLite Database</text>
+<text x="315.0" y="231" class="node-subtext">Stores events</text>
+<rect x="230" y="266" width="170" height="48" rx="10" class="node" />
+<text x="315.0" y="287" class="node-text">Variant Engine</text>
+<text x="315.0" y="303" class="node-subtext">Splits traffic</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the Project</h2>
+                <p>First, we set up our Python environment and install the necessary libraries. We will use <strong>FastAPI</strong> for the web framework because it is fast and easy to use, and <strong>Uvicorn</strong> to run the server. We also install <strong>SQLite3</strong> (built into Python) for our database.</p>
+                <p>Create a new directory for your project and initialize a virtual environment to keep your dependencies isolated.</p>
+<div class="code-block"><pre><code>mkdir uvf_ab_tracker &amp;&amp; cd uvf_ab_tracker
+python3 -m venv venv
+source venv/bin/activate  # On Windows use: venv\Scripts\activate
+pip install fastapi uvicorn</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Core Data Model</h2>
+                <p>Next, we define our database schema. We need two main tables: <code>experiments</code> to store the test configurations (name, variants, split ratio) and <code>events</code> to log user actions (user_id, experiment_id, variant, converted).</p>
+                <p>We will write a Python script to initialize the SQLite database and create these tables if they don't already exist. This ensures our data structure is ready before we start handling requests.</p>
+                <p><strong>database.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+from contextlib import contextmanager
+
+DB_NAME = "ab_testing.db"
+
+@contextmanager
+def get_db():
+    """Context manager to handle database connections."""
+    conn = sqlite3.connect(DB_NAME)
+    conn.row_factory = sqlite3.Row
+    try:
+        yield conn
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        raise e
+    finally:
+        conn.close()
+
+def init_db():
+    """Initialize the database and create tables if they don't exist."""
+    with get_db() as conn:
+        cursor = conn.cursor()
+        
+        <span class="code-comment"># Table for experiment configurations</span>
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS experiments (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
+        <span class="code-comment"># Table for tracking user events and conversions</span>
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS events (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                experiment_id INTEGER NOT NULL,
+                user_id TEXT NOT NULL,
+                variant TEXT NOT NULL,
+                converted INTEGER DEFAULT 0,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (experiment_id) REFERENCES experiments(id)
+            )
+        ''')
+        
+        <span class="code-comment"># Index for faster lookups by experiment</span>
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_events_exp ON events(experiment_id)')
+        
+    print(f"Database initialized: {DB_NAME}")</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: The Variant Assignment Logic</h2>
+                <p>The heart of any A/B testing tool is the traffic splitter. We need a function that takes a <code>user_id</code> and an <code>experiment_id</code> and deterministically assigns the user to either Variant A or Variant B.</p>
+                <p>We will use a simple hash function on the <code>user_id</code> to ensure the same user always gets the same variant. This prevents users from flickering between experiences. We'll use a 50/50 split for simplicity.</p>
+                <p><strong>logic.py</strong></p>
+<div class="code-block"><pre><code>import hashlib
+
+def assign_variant(user_id: str, experiment_id: int) -&gt; str:
+    """
+    Deterministically assign a user to a variant.
+    
+    Uses MD5 hashing of the combined user_id and experiment_id.
+    This ensures:
+    1. Consistency: Same user + experiment always gets the same variant.
+    2. Distribution: Hashes are evenly distributed, approximating 50/50 split.
+    """
+    <span class="code-comment"># Combine user and experiment to ensure isolation between tests</span>
+    key = f"{user_id}_{experiment_id}"
+    
+    <span class="code-comment"># Generate a hash</span>
+    hash_obj = hashlib.md5(key.encode()).hexdigest()
+    
+    <span class="code-comment"># Take the last character of the hash (0-9, a-f)</span>
+    <span class="code-comment"># Map to 0-15 range</span>
+    last_char = hash_obj[-1]
+    hash_value = int(last_char, 16)
+    
+    <span class="code-comment"># 50/50 Split: 0-7 -&gt; A, 8-15 -&gt; B</span>
+    if hash_value &lt; 8:
+        return "A"
+    else:
+        return "B"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Build the API Endpoints</h2>
+                <p>Now we connect the logic to the web interface using FastAPI. This file, <code>main.py</code>, acts as the entry point for our application. We import our database helpers and the variant assignment logic to wire everything together. We define three main routes: one to create experiments, one to assign users, and one to track events.</p>
+                <p>The <code>GET /assign/{experiment_id}/{user_id}</code> endpoint is crucial. It calls our <code>assign_variant</code> function to determine which group the user belongs to and returns that variant in the JSON response. The <code>POST /track</code> endpoint accepts a payload with the user, experiment, and conversion status, then writes this data to our SQLite database via the <code>track_event</code> function.</p>
+                <p><strong>main.py</strong></p>
+<div class="code-block"><pre><code>from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+import database
+import logic
+
+app = FastAPI()
+
+class ExperimentCreate(BaseModel):
+    name: str
+    variants: list[str]
+    split_ratio: int = 50
+
+class TrackEvent(BaseModel):
+    user_id: str
+    experiment_id: int
+    variant: str
+    converted: bool
+
+@app.on_event("startup")
+def startup_event():
+    database.init_db()
+
+@app.post("/experiments")
+def create_experiment(experiment: ExperimentCreate):
+    return database.create_experiment(experiment.name, experiment.variants, experiment.split_ratio)
+
+@app.get("/assign/{experiment_id}/{user_id}")
+def assign_variant(experiment_id: int, user_id: str):
+    experiment = database.get_experiment(experiment_id)
+    if not experiment:
+        raise HTTPException(status_code=404, detail="Experiment not found")
+    
+    variant = logic.assign_variant(user_id, experiment['variants'], experiment['split_ratio'])
+    return {"user_id": user_id, "experiment_id": experiment_id, "variant": variant}
+
+@app.post("/track")
+def track_event(event: TrackEvent):
+    database.track_event(event.user_id, event.experiment_id, event.variant, event.converted)
+    return {"status": "tracked"}
+
+@app.get("/results/{experiment_id}")
+def get_results(experiment_id: int):
+    return database.get_results(experiment_id)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run and Verify</h2>
+                <p>Finally, we run the server and test our endpoints using <code>curl</code>. We will create an experiment, assign a few users, track some conversions, and check the results. This verifies that the entire flow from data creation to metric calculation works correctly.</p>
+                <p>Start the server in your terminal. Then, open a new terminal to run the curl commands below to simulate user behavior. Pay attention to the JSON responses to ensure the data is being saved and retrieved as expected.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Terminal 1: Start the server</span>
+uvicorn main:app --reload
+
+<span class="code-comment"># Terminal 2: Test the endpoints</span>
+
+<span class="code-comment"># 1. Create an experiment</span>
+<span class="code-comment"># This returns a JSON object with an 'id', which we will use in subsequent steps</span>
+<span class="code-comment"># For this example, let's assume the returned id is 1</span>
+<span class="code-comment"># curl -X POST http://127.0.0.1:8000/experiments -H "Content-Type: application/json" -d '{"name": "Landing Page Test", "variants": ["A", "B"], "split_ratio": 50}'</span>
+
+<span class="code-comment"># 2. Assign a user to a variant</span>
+<span class="code-comment"># Check the response to see which variant (A or B) user123 is assigned to</span>
+<span class="code-comment"># curl http://127.0.0.1:8000/assign/1/user123</span>
+
+<span class="code-comment"># 3. Track a conversion for that user</span>
+<span class="code-comment"># If user123 was assigned to 'A', we track a conversion for 'A'</span>
+<span class="code-comment"># curl -X POST http://127.0.0.1:8000/track -H "Content-Type: application/json" -d '{"user_id": "user123", "experiment_id": 1, "variant": "A", "converted": true}'</span>
+
+<span class="code-comment"># 4. Check the results</span>
+<span class="code-comment"># This returns the conversion rates for both variants</span>
+<span class="code-comment"># curl http://127.0.0.1:8000/results/1</span></code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>Run <code>uvicorn main:app --reload</code> and look for 'Application startup complete' in the terminal.</td></tr>
+            <tr><td>Experiment creation works</td><td>Run the <code>curl</code> command to create an experiment and verify it returns a JSON object with an <code>id</code>.</td></tr>
+            <tr><td>Variant assignment is consistent</td><td>Call <code>/assign/user123/{id}</code> twice. The returned variant should be the same both times.</td></tr>
+            <tr><td>Results calculation is correct</td><td>After tracking events, call <code>/results/{id}</code> and verify the <code>rate</code> is a percentage between 0 and 100.</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>You now have a working A/B testing tracker! To extend this, you could add a simple HTML dashboard to visualize the results, implement statistical significance testing (p-values), or add authentication to manage experiments securely. Happy building!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

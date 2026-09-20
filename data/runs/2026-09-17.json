@@ -1,0 +1,62 @@
+{
+  "date": "2026-09-17",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Spendalyst-like Recurring Charge Monitor in Python",
+      "source": "hn_show",
+      "url": "https://app.spendalyst.com/demo",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-17_recurring-charge-monitor.html",
+      "tagline": "Detect price hikes in your bank transactions with Python and SQLite",
+      "navbar_badge": "Python Build",
+      "est_minutes": 45,
+      "tags": [
+        "Python",
+        "SQLite",
+        "Data Processing"
+      ]
+    },
+    {
+      "title": "Build a Nullsec-like Server-Blind Encrypted Paste Service",
+      "source": "hn_show",
+      "url": "https://nullsec.pntr.dev",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-17_server-blind-encrypted-paste-service.html",
+      "tagline": "Build a minimal, client-side encrypted paste app where the server never sees plaintext",
+      "navbar_badge": "Python + SQLite",
+      "est_minutes": 50,
+      "tags": [
+        "JavaScript",
+        "Web Crypto",
+        "Security"
+      ]
+    },
+    {
+      "title": "Build a Vaultisse-like Self-Hosted Book Collection Tracker",
+      "source": "reddit_selfhosted",
+      "url": "https://www.reddit.com/r/selfhosted/comments/1wdu5sd/vaultisse_selfhosted_physical_book_collection/",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-17_shelflife-minimal-book-collection-tracker.html",
+      "tagline": "Track your physical books with shelf locations using Python and SQLite",
+      "navbar_badge": "Python + SQLite",
+      "est_minutes": 40,
+      "tags": [
+        "Node.js",
+        "Postgres",
+        "Full-Stack"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1549970893076168804",
+    "1549970898713583748",
+    "1549970905193517136"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

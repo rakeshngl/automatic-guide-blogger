@@ -1,0 +1,214 @@
+{
+  "guides": [
+    {
+      "date": "2026-08-23T05:33:42+00:00",
+      "title": "Deploy n8n Workflow Automation on Docker",
+      "source_url": "https://github.com/n8n-io/n8n",
+      "slug": "2026-08-23_deploy-n8n-workflow-automation-on-docker.html"
+    },
+    {
+      "date": "2026-08-23T05:35:49+00:00",
+      "title": "Deploy Open Analytics: Privacy-First Web Stats",
+      "source_url": "https://www.producthunt.com/r/AGWMLNH2CQI3U6?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-08-23_deploy-open-analytics-privacy-first-web-stats.html"
+    },
+    {
+      "date": "2026-08-23T05:37:55+00:00",
+      "title": "Self-Host Plane: Open-Source Project Management",
+      "source_url": "https://github.com/makeplane/plane",
+      "slug": "2026-08-23_self-host-plane-open-source-project-management.html"
+    },
+    {
+      "date": "2026-08-24T07:34:16+00:00",
+      "title": "Minimal Password Manager Backend Clone",
+      "source_url": "https://github.com/dani-garcia/vaultwarden",
+      "slug": "2026-08-24_minimal-password-manager-backend-clone.html"
+    },
+    {
+      "date": "2026-08-24T07:36:27+00:00",
+      "title": "Minimal Node-Based Image Pipeline",
+      "source_url": "https://github.com/Comfy-Org/ComfyUI",
+      "slug": "2026-08-24_minimal-node-based-image-pipeline.html"
+    },
+    {
+      "date": "2026-08-24T07:38:34+00:00",
+      "title": "Video-to-Text Transcriber",
+      "source_url": "https://www.producthunt.com/r/WIK6XYTUHOAGBV?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-08-24_video-to-text-transcriber.html"
+    },
+    {
+      "date": "2026-08-26T03:55:09+00:00",
+      "title": "Local-First AI Job Search Agent",
+      "source_url": "https://github.com/MadsLorentzen/ai-job-search",
+      "slug": "2026-08-26_local-first-ai-job-search-agent.html"
+    },
+    {
+      "date": "2026-08-26T06:19:25+00:00",
+      "title": "Minimal AI Job Search Agent",
+      "source_url": "https://github.com/MadsLorentzen/ai-job-search",
+      "slug": "2026-08-26_minimal-ai-job-search-agent.html"
+    },
+    {
+      "date": "2026-08-26T06:21:33+00:00",
+      "title": "Minimal Personal Search Engine Clone",
+      "source_url": "https://github.com/asciimoo/hister",
+      "slug": "2026-08-26_minimal-personal-search-engine-clone.html"
+    },
+    {
+      "date": "2026-08-27T05:01:34+00:00",
+      "title": "PostHog Desktop",
+      "source_url": "https://www.producthunt.com/r/2RW3QOUU4OK7XB?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-08-27_posthog-desktop.html"
+    },
+    {
+      "date": "2026-08-28T11:04:59+00:00",
+      "title": "HTML Cleaner",
+      "source_url": "https://snipper.kreisvier.ch/",
+      "slug": "2026-08-28_html-cleaner.html"
+    },
+    {
+      "date": "2026-08-28T11:07:11+00:00",
+      "title": "Minimal Satellite Map Viewer",
+      "source_url": "https://github.com/bilawalsidhu/gods-eye-view",
+      "slug": "2026-08-28_minimal-satellite-map-viewer.html"
+    },
+    {
+      "date": "2026-08-30T02:56:28+00:00",
+      "title": "GitHub Activity Receipt Generator",
+      "source_url": "https://receipthub.io/github",
+      "slug": "2026-08-30_github-activity-receipt-generator.html"
+    },
+    {
+      "date": "2026-08-30T02:58:42+00:00",
+      "title": "Manual Data Broker Opt-Out Script",
+      "source_url": "https://github.com/k7cfo/remove-your-data",
+      "slug": "2026-08-30_manual-data-broker-opt-out-script.html"
+    },
+    {
+      "date": "2026-09-02T08:36:33+00:00",
+      "title": "Minimal File Transfer Clone",
+      "source_url": "https://campsend.app/",
+      "slug": "2026-09-02_minimal-file-transfer-clone.html"
+    },
+    {
+      "date": "2026-09-02T08:38:46+00:00",
+      "title": "Local AI Photo Organizer",
+      "source_url": "https://ringlochid.me/imagesage/index.html",
+      "slug": "2026-09-02_local-ai-photo-organizer.html"
+    },
+    {
+      "date": "2026-09-02T08:40:56+00:00",
+      "title": "Minimal PDF Inspector Clone",
+      "source_url": "https://github.com/firecrawl/pdf-inspector",
+      "slug": "2026-09-02_minimal-pdf-inspector-clone.html"
+    },
+    {
+      "date": "2026-09-05T02:21:16+00:00",
+      "title": "Grid Maker for Drawing",
+      "source_url": "https://www.producthunt.com/r/U3AUDIQXE4YGTQ?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-09-05_grid-maker-for-drawing.html"
+    },
+    {
+      "date": "2026-09-05T02:34:19+00:00",
+      "title": "Local-First Routine Scheduler",
+      "source_url": "https://timervana.net/browse",
+      "slug": "2026-09-05_local-first-routine-scheduler.html"
+    },
+    {
+      "date": "2026-09-05T02:38:52+00:00",
+      "title": "Build a File-to-Prompt Converter",
+      "source_url": "https://github.com/sebastiancarlos/mongotar",
+      "slug": "2026-09-05_build-a-file-to-prompt-converter.html"
+    },
+    {
+      "date": "2026-09-13T15:25:04+00:00",
+      "title": "Minimal Blog Engine Clone",
+      "source_url": "https://github.com/bilawalsidhu/gods-eye-view",
+      "slug": "2026-09-13_minimal-blog-engine-clone.html"
+    },
+    {
+      "date": "2026-09-15T00:34:24+00:00",
+      "title": "Build a LocalSend-like File Transfer Tool with Python + WebSockets",
+      "source_url": "https://github.com/localsend/localsend",
+      "slug": "2026-09-15_local-file-transfer-tool.html"
+    },
+    {
+      "date": "2026-09-15T00:41:27+00:00",
+      "title": "Build a Trackd-like Gmail Subscription Tracker in Python",
+      "source_url": "https://trackd.deanware.com",
+      "slug": "2026-09-15_gmail-subscription-tracker.html"
+    },
+    {
+      "date": "2026-09-15T00:47:12+00:00",
+      "title": "Build a VideoHighlighter-like Clip Extractor with FFmpeg",
+      "source_url": "https://github.com/Aseiel/VideoHighlighter",
+      "slug": "2026-09-15_mini-clip-extractor-with-ffmpeg.html"
+    },
+    {
+      "date": "2026-09-17T01:57:11+00:00",
+      "title": "Build a FastRecall-like Cross-Model Memory Store in Python",
+      "source_url": "https://fastrecall.ai/",
+      "slug": "2026-09-17_cross-model-memory-store.html"
+    },
+    {
+      "date": "2026-09-17T02:15:10+00:00",
+      "title": "Build a Spendalyst-like Recurring Charge Monitor in Python",
+      "source_url": "https://app.spendalyst.com/demo",
+      "slug": "2026-09-17_recurring-charge-monitor.html"
+    },
+    {
+      "date": "2026-09-17T02:21:36+00:00",
+      "title": "Build a Nullsec-like Server-Blind Encrypted Paste Service",
+      "source_url": "https://nullsec.pntr.dev",
+      "slug": "2026-09-17_server-blind-encrypted-paste-service.html"
+    },
+    {
+      "date": "2026-09-17T02:30:58+00:00",
+      "title": "Build a Vaultisse-like Self-Hosted Book Collection Tracker",
+      "source_url": "https://www.reddit.com/r/selfhosted/comments/1wdu5sd/vaultisse_selfhosted_physical_book_collection/",
+      "slug": "2026-09-17_shelflife-minimal-book-collection-tracker.html"
+    },
+    {
+      "date": "2026-09-18T00:33:11+00:00",
+      "title": "Build a PostHog-like A/B Testing Tracker in Python + SQLite",
+      "source_url": "https://www.reddit.com/r/Startup_Ideas/comments/1wf6z90",
+      "slug": "2026-09-18_build-a-posthog-like-a-b-testing-tracker.html"
+    },
+    {
+      "date": "2026-09-18T00:44:04+00:00",
+      "title": "Build a WeKnora-like Local RAG Knowledge Base in Python",
+      "source_url": "https://github.com/Tencent/WeKnora",
+      "slug": "2026-09-18_local-rag-knowledge-base.html"
+    },
+    {
+      "date": "2026-09-18T00:50:14+00:00",
+      "title": "Build a VoiceBox-like AI Voice Studio in TypeScript",
+      "source_url": "https://github.com/jamiepine/voicebox",
+      "slug": "2026-09-18_voicebox-clone-ai-voice-studio.html"
+    },
+    {
+      "date": "2026-09-19T00:36:01+00:00",
+      "title": "Build a Simple Repository Diagram Generator with TypeScript (gitdiagram)",
+      "source_url": "https://github.com/ahmedkhaleel2004/gitdiagram",
+      "slug": "2026-09-19_simple-repository-diagram-generator-typescript.html"
+    },
+    {
+      "date": "2026-09-19T00:40:15+00:00",
+      "title": "Build a Tiny Go‑Based Search Engine Clone (hister)",
+      "source_url": "https://github.com/asciimoo/hister",
+      "slug": "2026-09-19_tiny-go-search-engine-clone.html"
+    },
+    {
+      "date": "2026-09-20T00:35:59+00:00",
+      "title": "Build a Real‑Time Stock Tracker Clone with TypeScript and OpenStock",
+      "source_url": "https://www.producthunt.com/r/4A3VQBDVIUMA2D?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-09-20_real-time-stock-tracker-clone.html"
+    },
+    {
+      "date": "2026-09-20T00:40:11+00:00",
+      "title": "Build a Document‑Prep Tool for Gen‑AI with Python and Docling",
+      "source_url": "https://github.com/docling-project/docling",
+      "slug": "2026-09-20_document-prep-tool-for-gen-ai-python.html"
+    }
+  ]
+}

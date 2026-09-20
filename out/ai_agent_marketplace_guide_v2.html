@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UVF IT: Building an AI Agent Marketplace with Supabase</title>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+        :root {
+            --primary: #1e3a1e;
+            --accent: #2e7d32;
+            --tech-green: #4caf50;
+            --dark-earth: #111827;
+            --bg-light: #f4f7f4;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --fix-bg: #fff8e6;
+            --fix-border: #d97706;
+            --warn-red: #b91c1c;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.7;
+            padding-bottom: 60px;
+        }
+
+        .navbar {
+            background-color: var(--primary);
+            padding: 15px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        .navbar-brand { font-size: 1.5rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .navbar-brand span { color: var(--tech-green); }
+        .navbar-badge { color: #d1d5db; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 999px; }
+
+        header { background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%); color: white; padding: 90px 20px; text-align: center; position: relative; overflow: hidden; }
+        header h1 { font-size: 3.1rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+        header p { font-size: 1.2rem; font-weight: 400; max-width: 720px; margin: 0 auto; color: #d1d5db; }
+
+        .container { max-width: 980px; margin: -50px auto 40px; background: var(--card-bg); border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.06); padding: 60px; border: 1px solid rgba(0,0,0,0.05); }
+
+        h2 { color: var(--primary); font-size: 2rem; font-weight: 700; border-bottom: 2px solid #e8f5e9; padding-bottom: 12px; margin-top: 55px; margin-bottom: 20px; letter-spacing: -0.5px; }
+        h3 { color: var(--dark-earth); font-size: 1.3rem; margin-top: 28px; margin-bottom: 14px; }
+        p { color: var(--text-muted); font-size: 1.08rem; margin-bottom: 20px; }
+        ul, ol { margin-bottom: 20px; padding-left: 22px; color: var(--text-muted); font-size: 1.08rem; }
+        li { margin-bottom: 8px; }
+        p code, li code { background-color: #F3F4F6; color: #B91C1C; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; font-family: 'Fira Code', monospace; }
+
+        .diagram-container { background: #f7f9f7; border-radius: 14px; padding: 40px; margin: 40px 0; text-align: center; border: 1px solid #e1e8e1; overflow-x: auto; }
+        .diagram-title { font-size: 0.85rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 25px; font-weight: 700; }
+        .node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+        .node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+        .node-ext { fill: #fef2f2; stroke: var(--warn-red); stroke-width: 2.5px; rx: 10px; stroke-dasharray: 5,4; }
+        .node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+        .node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 10px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+        .link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+        .link-arrow { fill: #a3b8a3; }
+        .link-ext { fill: none; stroke: #e5a3a3; stroke-width: 2px; stroke-dasharray: 4,3; }
+        .link-arrow-ext { fill: #e5a3a3; }
+
+        .code-block { background: #111c11; color: #e8f5e9; padding: 24px; border-radius: 10px; font-family: 'Fira Code', monospace; font-size: 0.92rem; overflow-x: auto; margin: 22px 0; border-left: 4px solid var(--tech-green); }
+        .code-block pre { margin: 0; }
+        .code-comment { color: #6a9955; font-style: italic; }
+
+        .step-box { display: flex; align-items: flex-start; margin-top: 40px; margin-bottom: 20px; }
+        .step-box > div { min-width: 0; }
+        .step-number { background: var(--accent); color: white; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; flex-shrink: 0; margin-right: 20px; box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2); }
+
+        .alert-box { background: #e8f5e9; border-left: 5px solid var(--accent); padding: 25px; border-radius: 8px; margin: 35px 0; }
+        .alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.15rem; font-weight: 700; }
+
+        .fix-box { background: var(--fix-bg); border-left: 5px solid var(--fix-border); padding: 25px; border-radius: 8px; margin: 30px 0; }
+        .fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+        .fix-box ul { margin: 10px 0 0 0; }
+        .fix-box li { font-size: 0.98rem; margin-bottom: 8px; }
+        .fix-box li strong { color: var(--dark-earth); }
+
+        .danger-box { background: #fef2f2; border-left: 5px solid var(--warn-red); padding: 22px 25px; border-radius: 8px; margin: 28px 0; }
+        .danger-box h4 { margin: 0 0 8px 0; color: var(--warn-red); font-size: 1.05rem; font-weight: 700; }
+        .danger-box p { margin-bottom: 0; }
+
+        table.checklist { width: 100%; border-collapse: collapse; margin: 22px 0; font-size: 0.95rem; }
+        table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+        table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        table.checklist td { color: var(--text-muted); }
+
+        .stack-pills { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 30px 0; }
+        .pill { background: #f0fdf4; border: 1px solid #c8e6c9; color: var(--primary); padding: 7px 16px; border-radius: 999px; font-size: 0.88rem; font-weight: 600; }
+
+        .image-slot {
+            width: 100%;
+            border-radius: 14px;
+            border: 2px dashed #c8e6c9;
+            background: repeating-linear-gradient(135deg, #f7f9f7, #f7f9f7 10px, #f0fdf4 10px, #f0fdf4 20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 35px 0;
+            padding: 20px;
+        }
+        .image-slot.hero { aspect-ratio: 16 / 7; }
+        .image-slot.divider { aspect-ratio: 16 / 5; }
+        .image-slot strong { display: block; color: var(--primary); font-size: 1rem; margin-bottom: 4px; }
+        /* Once you have the generated image, replace this div's contents with:
+           <img src="your-image.png" alt="..." style="width:100%; border-radius:14px; display:block;"> */
+
+        footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+        @media (min-width: 768px) {} 
+    </style>
+<script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194"></script></head>
+<body>
+<nav class="navbar">
+<div class="navbar-brand">UVF <span>IT</span></div>
+<div class="navbar-badge">Full-Stack Blueprint</div>
+</nav>
+<header>
+<h1>Building an AI Agent Marketplace</h1>
+<p>A complete Supabase blueprint: creators list specialized AI agents, buyers purchase and chat with them in real time, powered by pgvector search, Edge Functions, and free-tier LLM APIs.</p>
+</header><div style="max-width:960px;margin:20px auto;padding:0 20px;">
+<ins class="adsbygoogle" data-ad-client="ca-pub-7707820592878194" data-ad-format="auto" data-ad-slot="5778428487" data-full-width-responsive="true" style="display:block"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<div class="container">
+<p>Think of this as a mini App Store — except instead of mobile apps, creators publish <strong>specialized AI agents</strong> ("SEO Writer Agent", "Code Review Agent", "Contract Summarizer Agent"). Buyers browse, purchase, and chat directly with an agent to get a task done, watching the response stream in live.</p>
+<p>What makes this build interesting is that <strong>Supabase alone covers almost the entire backend</strong> — database, auth, vector search, real-time streaming, file storage, and event-driven webhooks — leaving only the LLM inference and payment processing to external APIs. This guide wires all of it together correctly, including a few gotchas that trip up most first attempts.</p>
+<div class="stack-pills">
+<span class="pill">Next.js</span>
+<span class="pill">Supabase Postgres + pgvector</span>
+<span class="pill">Supabase Auth + RLS</span>
+<span class="pill">Supabase Edge Functions (Deno)</span>
+<span class="pill">Supabase Realtime (Broadcast)</span>
+<span class="pill">Supabase Storage</span>
+<span class="pill">NVIDIA API — Embeddings</span>
+<span class="pill">Groq API — Agent Chat</span>
+<span class="pill">Stripe</span>
+</div>
+<img alt="Building an AI Agent Marketplace" src="images/ai_agent_marketplace_guide_v2-2.png" style="width:100%; border-radius:14px; display:block;"/>
+<div class="diagram-container">
+<div class="diagram-title">System Architecture: AI Agent Marketplace</div>
+<svg height="480" viewbox="0 0 900 480" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrow" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10">
+<path class="link-arrow" d="M 0 0 L 10 5 L 0 10 z"></path>
+</marker>
+<marker id="arrow-ext" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10">
+<path class="link-arrow-ext" d="M 0 0 L 10 5 L 0 10 z"></path>
+</marker>
+</defs>
+<!-- Client -->
+<rect class="node" height="50" width="160" x="370" y="15"></rect>
+<text class="node-text" x="450" y="45">Next.js Client</text>
+<!-- Supabase core box -->
+<rect class="node-tech" height="290" style="stroke-dasharray: 6,6;" width="780" x="60" y="100"></rect>
+<text class="node-text" style="fill: var(--accent); font-size: 12px; letter-spacing: 1px;" x="450" y="125">SUPABASE PLATFORM</text>
+<!-- Auth/RLS -->
+<rect class="node" height="60" width="150" x="85" y="150"></rect>
+<text class="node-text" x="160" y="175">Auth + RLS</text>
+<text class="node-subtext" x="160" y="192">Row-level policies</text>
+<!-- Database/pgvector -->
+<rect class="node" height="70" width="150" x="85" y="230"></rect>
+<text class="node-text" x="160" y="253">Postgres +</text>
+<text class="node-text" x="160" y="269">pgvector</text>
+<text class="node-subtext" x="160" y="286">agents, purchases, chats</text>
+<!-- Edge Functions -->
+<rect class="node" height="150" style="stroke: var(--accent);" width="160" x="280" y="150"></rect>
+<text class="node-text" x="360" y="175">Edge Functions</text>
+<text class="node-subtext" x="360" y="195">match-agent</text>
+<text class="node-subtext" x="360" y="212">run-agent</text>
+<text class="node-subtext" x="360" y="229">stripe-checkout</text>
+<text class="node-subtext" x="360" y="246">stripe-webhook</text>
+<text class="node-subtext" x="360" y="263">discord-relay</text>
+<!-- Realtime -->
+<rect class="node" height="60" width="150" x="480" y="150"></rect>
+<text class="node-text" x="555" y="175">Realtime</text>
+<text class="node-subtext" x="555" y="192">Broadcast channel</text>
+<!-- Storage -->
+<rect class="node" height="60" width="150" x="480" y="230"></rect>
+<text class="node-text" x="555" y="253">Storage</text>
+<text class="node-subtext" x="555" y="270">avatars + deliverables</text>
+<!-- Webhooks -->
+<rect class="node" height="60" width="140" x="670" y="150"></rect>
+<text class="node-text" x="740" y="175">DB Webhooks</text>
+<text class="node-subtext" x="740" y="192">on INSERT</text>
+<!-- External APIs -->
+<rect class="node-ext" height="55" width="780" x="60" y="420"></rect>
+<text class="node-text" style="fill: var(--warn-red); font-size: 11px; letter-spacing: 1px;" x="450" y="440">EXTERNAL APIS — data leaves Supabase for these calls</text>
+<text class="node-subtext" x="450" y="463">NVIDIA API (embeddings) · Groq API (agent chat) · Stripe (payments) · Discord (payout pings)</text>
+<!-- Links -->
+<path class="link" d="M 450 65 L 450 100" marker-end="url(#arrow)"></path>
+<path class="link" d="M 235 180 L 280 210" marker-end="url(#arrow)"></path>
+<path class="link" d="M 235 265 L 280 230" marker-end="url(#arrow)"></path>
+<path class="link" d="M 440 200 L 480 180" marker-end="url(#arrow)"></path>
+<path class="link" d="M 440 240 L 480 255" marker-end="url(#arrow)"></path>
+<path class="link" d="M 440 220 L 670 190" marker-end="url(#arrow)"></path>
+<path class="link-ext" d="M 360 300 L 360 420" marker-end="url(#arrow-ext)"></path>
+<path class="link-ext" d="M 740 210 L 740 420" marker-end="url(#arrow-ext)"></path>
+</svg>
+</div>
+<h2>Data Model</h2>
+<p>Six tables cover the whole marketplace. Auth is handled by Supabase's built-in <code>auth.users</code>, so we only add what's specific to the app.</p>
+<div class="code-block"><pre><code><span class="code-comment">-- Enable the vector extension once per project</span>
+create extension if not exists vector;
+
+<span class="code-comment">-- Public profile, one row per auth.users entry (creator or buyer)</span>
+create table profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  display_name text not null,
+  is_creator boolean default false,
+  stripe_account_id text,        <span class="code-comment">-- for creators receiving payouts</span>
+  created_at timestamptz default now()
+);
+
+<span class="code-comment">-- The agents creators list for sale</span>
+create table agents (
+  id uuid primary key default gen_random_uuid(),
+  creator_id uuid references profiles(id) not null,
+  name text not null,
+  description text not null,
+  system_prompt text not null,   <span class="code-comment">-- NEVER exposed to buyers, only read server-side</span>
+  price_cents int not null default 0,
+  avatar_url text,
+  embedding vector(1024),        <span class="code-comment">-- matches nv-embedqa-e5-v5 output size</span>
+  created_at timestamptz default now()
+);
+
+<span class="code-comment">-- Purchase records — gate access to chatting with an agent</span>
+create table purchases (
+  id uuid primary key default gen_random_uuid(),
+  buyer_id uuid references profiles(id) not null,
+  agent_id uuid references agents(id) not null,
+  stripe_payment_intent text unique,
+  amount_cents int not null,
+  created_at timestamptz default now()
+);
+
+<span class="code-comment">-- Chat sessions and finished messages (not individual streamed tokens)</span>
+create table chat_sessions (
+  id uuid primary key default gen_random_uuid(),
+  buyer_id uuid references profiles(id) not null,
+  agent_id uuid references agents(id) not null,
+  created_at timestamptz default now()
+);
+
+create table chat_messages (
+  id uuid primary key default gen_random_uuid(),
+  session_id uuid references chat_sessions(id) not null,
+  role text not null check (role in ('user', 'agent')),
+  content text not null,
+  created_at timestamptz default now()
+);
+
+<span class="code-comment">-- Reviews trigger the creator-payout notification webhook</span>
+create table reviews (
+  id uuid primary key default gen_random_uuid(),
+  agent_id uuid references agents(id) not null,
+  buyer_id uuid references profiles(id) not null,
+  rating int not null check (rating between 1 and 5),
+  comment text,
+  created_at timestamptz default now()
+);
+
+<span class="code-comment">-- Index for fast cosine similarity search over agent descriptions</span>
+create index on agents using ivfflat (embedding vector_cosine_ops) with (lists = 100);</code></pre></div>
+<div class="step-box">
+<div class="step-number">1</div>
+<div>
+<h2>Row-Level Security</h2>
+<p>This is what actually enforces "buyers can only chat with agents they've purchased" and "creators can only edit their own agents." Without RLS enabled, any authenticated user can read or write any row via the Supabase client — the frontend has no enforcement power on its own.</p>
+</div>
+</div>
+<div class="code-block"><pre><code>alter table agents enable row level security;
+alter table purchases enable row level security;
+alter table chat_sessions enable row level security;
+alter table chat_messages enable row level security;
+alter table reviews enable row level security;
+
+<span class="code-comment">-- Anyone can browse agent listings (name, description, price, avatar)</span>
+create policy "Public can view agent listings"
+  on agents for select
+  using (true);
+
+<span class="code-comment">-- Creators can list new agents</span>
+create policy "Creators can create agents"
+  on agents for insert
+  with check (auth.uid() = creator_id);
+
+<span class="code-comment">-- Only the creator can update their own agent</span>
+create policy "Creators manage their own agents"
+  on agents for update
+  using (auth.uid() = creator_id);
+
+<span class="code-comment">-- Buyers see only their own purchases</span>
+create policy "Buyers view their own purchases"
+  on purchases for select
+  using (auth.uid() = buyer_id);
+
+<span class="code-comment">-- A chat session is only visible to the buyer who owns it</span>
+create policy "Buyers view their own chat sessions"
+  on chat_sessions for select
+  using (auth.uid() = buyer_id);
+
+<span class="code-comment">-- A buyer can start a new chat session for themselves. This alone doesn't
+-- grant access to chat — run-agent still separately checks `purchases`
+-- before it will actually talk to the agent.</span>
+create policy "Buyers can start chat sessions"
+  on chat_sessions for insert
+  with check (auth.uid() = buyer_id);
+
+<span class="code-comment">-- Messages inherit access from their parent session</span>
+create policy "Buyers view messages in their sessions"
+  on chat_messages for select
+  using (
+    session_id in (
+      select id from chat_sessions where buyer_id = auth.uid()
+    )
+  );
+
+<span class="code-comment">-- Reviews are public to read (buyers browsing agents need to see ratings) —
+-- this table had RLS turned on above with no policies attached, which
+-- would otherwise block every client-side read and write on it.</span>
+create policy "Public can view reviews"
+  on reviews for select
+  using (true);
+
+<span class="code-comment">-- Only a buyer who actually purchased the agent can review it</span>
+create policy "Buyers can review agents they purchased"
+  on reviews for insert
+  with check (
+    auth.uid() = buyer_id
+    and exists (
+      select 1 from purchases
+      where purchases.buyer_id = auth.uid()
+      and purchases.agent_id = reviews.agent_id
+    )
+  );</code></pre></div>
+<div class="step-box">
+<div class="step-number">2</div>
+<div>
+<h2>Vector Search: Matching Buyers to Agents</h2>
+<p>When a buyer types "I need something to clean up messy spreadsheet data," this Edge Function embeds that query and finds the closest agents by cosine similarity — the same technique from our RAG Chat Bot guide, applied to agent descriptions instead of PDF chunks.</p>
+</div>
+</div>
+<div class="code-block"><pre><code><span class="code-comment">// supabase/functions/match-agent/index.ts</span>
+import { createClient } from 'jsr:@supabase/supabase-js@2';
+
+Deno.serve(async (req) =&gt; {
+  const { query } = await req.json();
+
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  );
+
+  <span class="code-comment">// 1. Embed the buyer's search query via NVIDIA's free API</span>
+  const embedRes = await fetch('https://integrate.api.nvidia.com/v1/embeddings', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${Deno.env.get('NVIDIA_API_KEY')}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      input: [query],
+      model: 'nvidia/nv-embedqa-e5-v5',
+      input_type: 'query', <span class="code-comment">// use 'passage' when embedding agent descriptions at creation time</span>
+    }),
+  });
+
+  if (!embedRes.ok) {
+    return new Response(JSON.stringify({ error: 'Embedding request failed' }), { status: 502 });
+  }
+
+  const embedData = await embedRes.json();
+  const queryVector = embedData.data[0].embedding;
+
+  <span class="code-comment">// 2. Cosine similarity search via a Postgres RPC function (see below)</span>
+  const { data, error } = await supabase.rpc('match_agents', {
+    query_embedding: queryVector,
+    match_threshold: 0.5,
+    match_count: 5,
+  });
+
+  if (error) {
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+  }
+
+  return new Response(JSON.stringify({ matches: data }), {
+    headers: { 'Content-Type': 'application/json' },
+  });
+});</code></pre></div>
+<p>The RPC function it calls — this has to live in Postgres, not application code, so the similarity math runs next to the data:</p>
+<div class="code-block"><pre><code>create or replace function match_agents (
+  query_embedding vector(1024),
+  match_threshold float,
+  match_count int
+)
+returns table (id uuid, name text, description text, price_cents int, similarity float)
+language sql stable
+as $$
+  select
+    agents.id,
+    agents.name,
+    agents.description,
+    agents.price_cents,
+    1 - (agents.embedding &lt;=&gt; query_embedding) as similarity
+  from agents
+  where 1 - (agents.embedding &lt;=&gt; query_embedding) &gt; match_threshold
+  order by agents.embedding &lt;=&gt; query_embedding
+  limit match_count;
+$$;</code></pre></div>
+<img alt="AI Agent Brain" src="images/ai_agent_marketplace_guide_v2_1.png" style="width:100%; border-radius:14px; display:block;"/>
+<p>Before a buyer's first message can hit <code>run-agent</code>, a <code>chat_sessions</code> row has to exist — this happens client-side, directly against Supabase, guarded by the INSERT policy above (not an Edge Function, since no privileged logic is needed yet):</p>
+<div class="code-block"><pre><code><span class="code-comment">// Called once when a buyer opens a purchased agent's chat for the first time</span>
+const { data: session, error } = await supabase
+  .from('chat_sessions')
+  .insert({ buyer_id: user.id, agent_id })
+  .select('id')
+  .single();
+
+<span class="code-comment">// session.id is then passed as `sessionId` on every run-agent call below</span></code></pre></div>
+<div class="step-box">
+<div class="step-number">3</div>
+<div>
+<h2>The Agent Brain: <code>run-agent</code></h2>
+<p>This is the function a buyer's chat message hits. It confirms they've actually purchased the agent <em>and</em> that the session belongs to them, pulls the hidden system prompt server-side, streams a response from Groq, and broadcasts each token live — without hammering the database.</p>
+</div>
+</div>
+<div class="code-block"><pre><code><span class="code-comment">// supabase/functions/run-agent/index.ts</span>
+import { createClient } from 'jsr:@supabase/supabase-js@2';
+
+Deno.serve(async (req) =&gt; {
+  const authHeader = req.headers.get('Authorization')!;
+  const { sessionId, agentId, message } = await req.json();
+
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  );
+
+  <span class="code-comment">// 1. Identify the caller from their JWT</span>
+  const { data: { user } } = await supabase.auth.getUser(
+    authHeader.replace('Bearer ', '')
+  );
+  if (!user) return new Response('Unauthorized', { status: 401 });
+
+  <span class="code-comment">// 2. Verify purchase — this is the real access gate, RLS on `agents`
+  // allows public SELECT so this check can't be skipped by trusting the client</span>
+  const { data: purchase } = await supabase
+    .from('purchases')
+    .select('id')
+    .eq('buyer_id', user.id)
+    .eq('agent_id', agentId)
+    .maybeSingle();
+
+  if (!purchase) {
+    return new Response(JSON.stringify({ error: 'Agent not purchased' }), { status: 403 });
+  }
+
+  <span class="code-comment">// 2b. Verify the session actually belongs to this buyer. Skipping this
+  // would let anyone who obtains a sessionId — leaked in a log, guessed,
+  // shared in a screenshot — read and inject messages into someone else's
+  // chat history, purchase check or not.</span>
+  const { data: session } = await supabase
+    .from('chat_sessions')
+    .select('id')
+    .eq('id', sessionId)
+    .eq('buyer_id', user.id)
+    .maybeSingle();
+
+  if (!session) {
+    return new Response(JSON.stringify({ error: 'Invalid session' }), { status: 403 });
+  }
+
+  <span class="code-comment">// 3. Fetch the hidden system prompt (service role bypasses RLS here, on purpose)</span>
+  const { data: agent } = await supabase
+    .from('agents')
+    .select('system_prompt')
+    .eq('id', agentId)
+    .single();
+
+  <span class="code-comment">// 4. Save the buyer's message immediately</span>
+  await supabase.from('chat_messages').insert({
+    session_id: sessionId, role: 'user', content: message,
+  });
+
+  <span class="code-comment">// 5. Stream the response from Groq and broadcast tokens live —
+  // NOT written to the DB one row per token, only the finished message is.
+  // channel.send() here works without calling .subscribe() first — Realtime
+  // supports fire-and-forget broadcast sends, which is what a stateless
+  // Edge Function needs since it can't hold a websocket connection open.</span>
+  const channel = supabase.channel(`chat-${sessionId}`);
+
+  const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${Deno.env.get('GROQ_API_KEY')}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: agent!.system_prompt },
+        { role: 'user', content: message },
+      ],
+      stream: true,
+    }),
+  });
+
+  <span class="code-comment">// Without this check, a failed call (bad key, rate limit, model error)
+  // returns an error body that isn't an SSE stream — the parsing loop
+  // below would silently produce an empty reply instead of surfacing why.</span>
+  if (!groqRes.ok || !groqRes.body) {
+    const errText = await groqRes.text();
+    return new Response(JSON.stringify({ error: `Groq request failed: ${errText}` }), { status: 502 });
+  }
+
+  let fullReply = '';
+  const reader = groqRes.body.getReader();
+  const decoder = new TextDecoder();
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    const chunk = decoder.decode(value);
+    for (const line of chunk.split('\n')) {
+      if (!line.startsWith('data: ') || line.includes('[DONE]')) continue;
+      const json = JSON.parse(line.slice(6));
+      const token = json.choices?.[0]?.delta?.content;
+      if (token) {
+        fullReply += token;
+        await channel.send({
+          type: 'broadcast',
+          event: 'token',
+          payload: { token },
+        });
+      }
+    }
+  }
+
+  <span class="code-comment">// 6. Persist only the finished message</span>
+  await supabase.from('chat_messages').insert({
+    session_id: sessionId, role: 'agent', content: fullReply,
+  });
+
+  return new Response(JSON.stringify({ reply: fullReply }), {
+    headers: { 'Content-Type': 'application/json' },
+  });
+});</code></pre></div>
+<p>On the frontend, subscribe to the same broadcast channel to render tokens as they arrive:</p>
+<div class="code-block"><pre><code><span class="code-comment">// nextjs-app/app/chat/[sessionId]/page.jsx (relevant excerpt)</span>
+'use client';
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase-client';
+
+export function useAgentStream(sessionId) {
+  const [streamedText, setStreamedText] = useState('');
+
+  useEffect(() =&gt; {
+    const supabase = createClient();
+    const channel = supabase
+      .channel(`chat-${sessionId}`)
+      .on('broadcast', { event: 'token' }, ({ payload }) =&gt; {
+        setStreamedText((prev) =&gt; prev + payload.token);
+      })
+      .subscribe();
+
+    return () =&gt; { supabase.removeChannel(channel); };
+  }, [sessionId]);
+
+  return streamedText;
+}</code></pre></div>
+<div class="step-box">
+<div class="step-number">4</div>
+<div>
+<h2>Storage: Avatars &amp; Deliverables</h2>
+<p>Two buckets with very different access rules — public for anything meant to be browsed, private with time-limited links for anything a buyer paid for.</p>
+</div>
+</div>
+<div class="code-block"><pre><code><span class="code-comment">-- Public bucket: agent avatar images, freely viewable</span>
+insert into storage.buckets (id, name, public) values ('avatars', 'avatars', true);
+
+<span class="code-comment">-- Private bucket: generated deliverables (CSV reports, images, etc.)</span>
+insert into storage.buckets (id, name, public) values ('deliverables', 'deliverables', false);
+
+<span class="code-comment">-- Only the buyer who owns the purchase can read their deliverable</span>
+create policy "Buyers access their own deliverables"
+  on storage.objects for select
+  using (
+    bucket_id = 'deliverables'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );</code></pre></div>
+<div class="code-block"><pre><code><span class="code-comment">// Generating a time-limited link for a paid deliverable</span>
+const { data, error } = await supabase.storage
+  .from('deliverables')
+  .createSignedUrl(`${userId}/report-${purchaseId}.csv`, 60 * 10); <span class="code-comment">// expires in 10 min</span></code></pre></div>
+<div class="step-box">
+<div class="step-number">5</div>
+<div>
+<h2>Payments: Stripe Checkout + Verified Webhook</h2>
+<p>Two Edge Functions: one creates the Checkout session, the other listens for Stripe's confirmation — and actually checks that the event is genuinely from Stripe before trusting it.</p>
+</div>
+</div>
+<div class="code-block"><pre><code><span class="code-comment">// supabase/functions/stripe-webhook/index.ts</span>
+import Stripe from 'npm:stripe@17';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
+
+const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!);
+const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')!;
+
+Deno.serve(async (req) =&gt; {
+  const signature = req.headers.get('Stripe-Signature')!;
+  const body = await req.text();
+
+  let event;
+  try {
+    <span class="code-comment">// This is the check that stops a forged "payment succeeded" request
+    // from unlocking a paid agent for free.</span>
+    event = await stripe.webhooks.constructEventAsync(body, signature, webhookSecret);
+  } catch (err) {
+    return new Response(`Webhook signature verification failed`, { status: 400 });
+  }
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    );
+
+    await supabase.from('purchases').insert({
+      buyer_id: session.metadata.buyer_id,
+      agent_id: session.metadata.agent_id,
+      stripe_payment_intent: session.payment_intent,
+      amount_cents: session.amount_total,
+    });
+  }
+
+  return new Response(JSON.stringify({ received: true }));
+});</code></pre></div>
+<div class="step-box">
+<div class="step-number">6</div>
+<div>
+<h2>Database Webhooks: Creator Payout Pings</h2>
+<p>A new 5-star review should notify the creator. Supabase's Database Webhooks can call any HTTP endpoint on <code>INSERT</code> — but as flagged earlier, it can't call Discord directly. This relay function reshapes the payload first.</p>
+</div>
+</div>
+<div class="code-block"><pre><code><span class="code-comment">// supabase/functions/discord-relay/index.ts
+// Configure a Database Webhook on `reviews` (event: INSERT) to POST here.</span>
+Deno.serve(async (req) =&gt; {
+  const payload = await req.json(); <span class="code-comment">// Supabase's webhook shape: { type, table, record, ... }</span>
+  const review = payload.record;
+
+  if (review.rating &lt; 5) return new Response('ok'); <span class="code-comment">// only ping on 5-star reviews</span>
+
+  <span class="code-comment">// Discord expects a specific JSON body — this is the translation step
+  // that a direct Supabase-to-Discord webhook would be missing.</span>
+  await fetch(Deno.env.get('DISCORD_WEBHOOK_URL')!, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      content: `⭐️⭐️⭐️⭐️⭐️ New 5-star review on agent \`${review.agent_id}\`: "${review.comment ?? ''}"`,
+    }),
+  });
+
+  return new Response('ok');
+});</code></pre></div>
+<h2>Secrets Checklist</h2>
+<p>Every key below is an Edge Function secret (<code>supabase secrets set KEY=value</code>), never a value shipped to the browser:</p>
+<table class="checklist">
+<tr><th>Secret</th><th>Used by</th><th>Notes</th></tr>
+<tr><td><code>SUPABASE_SERVICE_ROLE_KEY</code></td><td>match-agent, run-agent, stripe-webhook</td><td>Bypasses RLS — server-side only, never exposed to the client.</td></tr>
+<tr><td><code>NVIDIA_API_KEY</code></td><td>match-agent</td><td>Free tier, <code>nvapi-</code> prefix, expires every 6 months.</td></tr>
+<tr><td><code>GROQ_API_KEY</code></td><td>run-agent</td><td>Free tier, rate-limited per model — add retry/backoff for production traffic.</td></tr>
+<tr><td><code>STRIPE_SECRET_KEY</code> / <code>STRIPE_WEBHOOK_SECRET</code></td><td>stripe-checkout, stripe-webhook</td><td>Webhook secret is what makes signature verification possible — get it from the Stripe Dashboard, not the API key itself.</td></tr>
+<tr><td><code>DISCORD_WEBHOOK_URL</code></td><td>discord-relay</td><td>Treat as a secret — anyone with this URL can post to your channel.</td></tr>
+</table>
+<div class="alert-box">
+<h4>What's Actually Enforcing Security Here</h4>
+<p>Four checks, not one: RLS policies stop a buyer from ever reading another agent's <code>system_prompt</code> or another buyer's chat history at the database level; <code>run-agent</code> independently re-checks the <code>purchases</code> table before running any prompt; it also confirms the <code>sessionId</code> actually belongs to the caller, so a leaked or guessed session ID can't be used to read or inject into someone else's chat; and Stripe's signature check stops anyone from faking a purchase in the first place. Remove any one of these and the others aren't enough on their own.</p>
+</div>
+</div>
+<footer>© 2026 UVF IT. <a href="https://www.uvfarms.in" rel="noopener" style="color: inherit;" target="_blank">www.uvfarms.in</a>. All rights reserved.</footer>
+</body>
+</html>

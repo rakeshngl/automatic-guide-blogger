@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UVF IT — Engineering Guides &amp; Blueprints</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@300..700&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root, [data-theme="light"] {
+            --color-bg:             #f5f7f5;
+            --color-surface:        #ffffff;
+            --color-surface-2:      #f9fbf9;
+            --color-surface-offset: #eef2ee;
+            --color-divider:        #dde5dd;
+            --color-border:         #d0dbd0;
+            --color-text:           #1a2a1a;
+            --color-text-muted:     #4a6a4a;
+            --color-text-faint:     #8aaa8a;
+            --color-primary:        #1e6b22;
+            --color-primary-hover:  #165019;
+            --color-primary-light:  #e8f5e9;
+            --color-accent:         #2e7d32;
+            --color-code-bg:        #0d1a0e;
+            --color-code-text:      #e8f5e9;
+            --color-warning-bg:     #fff8e1;
+            --color-warning-border: #f9a825;
+            --color-warning-text:   #5d4037;
+            --color-tip-bg:         #e8f5e9;
+            --color-tip-border:     rgba(46,125,50,0.25);
+            --color-success-bg:     #e8f5e9;
+            --color-success-border: #2e7d32;
+            --shadow-sm: 0 1px 3px rgba(0,40,0,0.07);
+            --shadow-md: 0 4px 16px rgba(0,40,0,0.09);
+            --shadow-lg: 0 12px 32px rgba(0,40,0,0.12);
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'Geist', 'Inter', system-ui, sans-serif;
+            --font-mono: 'Geist Mono', 'Fira Code', monospace;
+            --transition: 240ms cubic-bezier(0.16, 1, 0.3, 1);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.625rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+        }
+        [data-theme="dark"] {
+            --color-bg:             #0e160e;
+            --color-surface:        #131f13;
+            --color-surface-2:      #172017;
+            --color-surface-offset: #1c271c;
+            --color-divider:        #243024;
+            --color-border:         #2d3d2d;
+            --color-text:           #c8dcc8;
+            --color-text-muted:     #7a9c7a;
+            --color-text-faint:     #4a6a4a;
+            --color-primary:        #66bb6a;
+            --color-primary-hover:  #81c784;
+            --color-primary-light:  #1a2e1a;
+            --color-accent:         #4caf50;
+            --color-code-bg:        #0a120a;
+            --color-code-text:      #c8e6c9;
+            --color-code-border:    #388e3c;
+            --color-warning-bg:     #1a1400;
+            --color-warning-border: #f59f00;
+            --color-warning-text:   #e9c46a;
+            --color-tip-bg:         #1a2e1a;
+            --color-tip-border:     rgba(76,175,80,0.3);
+            --color-success-bg:     #1a2e1a;
+            --color-success-border: #4caf50;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+        body { font-family: var(--font-body); font-size: clamp(1rem, 0.95rem + 0.25vw, 1.0625rem); line-height: 1.75; color: var(--color-text); background: var(--color-bg); min-height: 100dvh; transition: background var(--transition), color var(--transition); display: flex; flex-direction: column; }
+        a { color: inherit; text-decoration: none; }
+        p { text-wrap: pretty; }
+        ::selection { background: rgba(46,125,50,0.18); }
+        :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+        /* Navbar */
+        .navbar { position: sticky; top: 0; z-index: 100; background: var(--color-surface); border-bottom: 1px solid var(--color-divider); padding: 0 clamp(1rem, 4vw, 2.5rem); height: 64px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); transition: background var(--transition), border-color var(--transition); }
+        .navbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.125rem; color: var(--color-text); letter-spacing: -0.3px; }
+        .navbar-brand .it-tag { font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; color: var(--color-primary); background: var(--color-primary-light); padding: 2px 7px; border-radius: 4px; text-transform: uppercase; }
+        .navbar-actions { display: flex; align-items: center; gap: 12px; }
+        .theme-toggle { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-border); background: transparent; cursor: pointer; color: var(--color-text-muted); transition: background var(--transition); }
+        .theme-toggle:hover { background: var(--color-surface-offset); color: var(--color-text); }
+        .nav-badge { font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); background: var(--color-surface-offset); border: 1px solid var(--color-border); padding: 4px 10px; border-radius: 20px; }
+
+        /* Hero */
+        .hero { background: var(--color-surface); border-bottom: 1px solid var(--color-divider); padding: clamp(4rem, 10vw, 7rem) clamp(1rem, 4vw, 2.5rem) clamp(3rem, 8vw, 5rem); position: relative; overflow: hidden; text-align: center; }
+        .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% -20%, rgba(46,125,50,0.12) 0%, transparent 60%); pointer-events: none; }
+        .hero-inner { max-width: 800px; margin: 0 auto; position: relative; }
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-primary); background: var(--color-primary-light); border: 1px solid rgba(46,125,50,0.2); padding: 5px 14px; border-radius: 20px; margin-bottom: 1.5rem; }
+        .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-primary); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
+        .hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 2rem + 4vw, 4.5rem); font-weight: 400; color: var(--color-text); margin-bottom: 1.5rem; line-height: 1.1; letter-spacing: -1px; }
+        .hero h1 em { font-style: italic; color: var(--color-primary); }
+        .hero-desc { font-size: clamp(1.1rem, 1.05rem + 0.3vw, 1.25rem); color: var(--color-text-muted); max-width: 60ch; margin: 0 auto 2rem; line-height: 1.6; }
+
+        /* Main Content & Grid */
+        .container { max-width: 1200px; margin: 0 auto; padding: clamp(2.5rem, 6vw, 5.5rem) clamp(1rem, 4vw, 2.5rem); flex-grow: 1; }
+        .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+
+        /* Blog Card */
+        .post-card { display: flex; flex-direction: column; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 2rem; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition); }
+        .post-card:hover { transform: translateY(-4px); border-color: var(--color-primary); box-shadow: var(--shadow-lg); }
+        
+        .card-eyebrow { display: inline-flex; align-items: center; align-self: flex-start; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--color-primary); background: var(--color-primary-light); padding: 4px 10px; border-radius: 6px; margin-bottom: 1.25rem; }
+        
+        .post-card h2 { font-family: var(--font-body); font-size: clamp(1.3rem, 1.2rem + 0.4vw, 1.6rem); font-weight: 700; color: var(--color-text); line-height: 1.3; margin-bottom: 1rem; letter-spacing: -0.3px; }
+        .post-card h2 a:hover { color: var(--color-primary); }
+        
+        .post-card-desc { font-size: 0.95rem; color: var(--color-text-muted); line-height: 1.6; margin-bottom: 1.5rem; flex-grow: 1; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .post-card-meta { display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.825rem; color: var(--color-text-faint); padding-top: 1rem; border-top: 1px solid var(--color-divider); }
+        .meta-item { display: flex; align-items: center; gap: 6px; }
+        .meta-item svg { color: var(--color-primary); flex-shrink: 0; }
+        
+        .read-more { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.9rem; color: var(--color-primary); margin-top: 1.25rem; transition: gap var(--transition); }
+        .post-card:hover .read-more { gap: 10px; color: var(--color-primary-hover); }
+
+        /* Footer */
+        footer { border-top: 1px solid var(--color-divider); padding: 2.5rem clamp(1rem, 4vw, 2.5rem); text-align: center; font-size: 0.85rem; color: var(--color-text-faint); background: var(--color-surface); margin-top: auto; }
+        
+        @media (max-width: 1000px) {
+            .blog-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .blog-grid { grid-template-columns: 1fr; }
+            .post-card { padding: 1.5rem; }
+        }
+    
+        /* clickable cards */
+        .post-card { cursor: pointer; }
+        .post-card:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+        /* pagination */
+        .pagination { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; margin: 2.5rem 0 0; }
+        .pagination button { min-width: 36px; height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background var(--transition), border-color var(--transition), color var(--transition); }
+        .pagination button:hover { background: var(--color-surface-offset); border-color: var(--color-primary); }
+        .pagination button.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+        .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+        .pagination .page-info { font-size: 0.85rem; color: var(--color-text-faint); margin-left: 8px; }
+</style>
+<script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194"></script></head>
+<body>
+<!-- Navbar -->
+<nav aria-label="Main navigation" class="navbar" role="navigation">
+<div class="navbar-brand">
+<img alt="UVF Farms Logo" height="36" loading="eager" src="https://www.uvfarms.in/_next/image?url=%2Flogo-new.png&amp;w=96&amp;q=75" style="height:36px;width:auto;object-fit:contain;"/>
+<span>UVF</span>
+<span class="it-tag">IT</span>
+</div>
+<div class="navbar-actions">
+<span class="nav-badge">Guides Catalog</span>
+<button aria-label="Switch to dark mode" class="theme-toggle" data-theme-toggle="">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+</button>
+</div>
+</nav>
+<!-- Hero -->
+<header class="hero" role="banner">
+<div class="hero-inner">
+<div class="hero-eyebrow">
+<span class="hero-eyebrow-dot"></span>
+            UVF IT Blueprints
+        </div>
+<h1>Technical Guides &amp; <em>Automation Blueprints</em></h1>
+<p class="hero-desc">
+            Step-by-step “build it yourself” guides for self-hosted tools, AI-powered automations, and developer-grade clones — from analytics trackers to local-first AI agents.
+        </p>
+<img alt="UVF IT Technical Blueprints Banner" src="images/guides_catalog_hero.png" style="width: 100%; max-width: 800px; border-radius: var(--radius-lg); margin-top: 2rem; box-shadow: var(--shadow-lg); display: block; margin-left: auto; margin-right: auto;"/>
+</div>
+</header><div style="max-width:960px;margin:20px auto;padding:0 20px;">
+<ins class="adsbygoogle" data-ad-client="ca-pub-7707820592878194" data-ad-format="auto" data-ad-slot="5778428487" data-full-width-responsive="true" style="display:block"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<!-- Catalog Main Container -->
+<main class="container">
+<div class="blog-grid"><article aria-label="Build a Document‑Prep Tool for Gen‑AI with Python and Docling" class="post-card" data-href="html/2026-09-20_document-prep-tool-for-gen-ai-python.html" role="link" tabindex="0">
+<div class="card-eyebrow">🛠️</div>
+<h2><a href="html/2026-09-20_document-prep-tool-for-gen-ai-python.html">Build a Document‑Prep Tool for Gen‑AI with Python and Docling</a></h2>
+<p class="post-card-desc">A minimal clone of Docling using free‑tier Python stack</p>
+<div class="read-more">
+                Read Blueprint
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    40 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Python · PDF · CLI
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 20, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Real‑Time Stock Tracker Clone with TypeScript and OpenStock" class="post-card" data-href="html/2026-09-20_real-time-stock-tracker-clone.html" role="link" tabindex="0">
+<div class="card-eyebrow">Beginner Friendly</div>
+<h2><a href="html/2026-09-20_real-time-stock-tracker-clone.html">Build a Real‑Time Stock Tracker Clone with TypeScript and OpenStock</a></h2>
+<p class="post-card-desc">A minimal TypeScript/Node.js app that streams live prices using a free stock API</p>
+<div class="read-more">
+                Read Blueprint
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    45 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    TypeScript · SQLite · REST
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 20, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Tiny Go‑Based Search Engine Clone (hister)" class="post-card" data-href="html/2026-09-19_tiny-go-search-engine-clone.html" role="link" tabindex="0">
+<div class="card-eyebrow">UVF IT</div>
+<h2><a href="html/2026-09-19_tiny-go-search-engine-clone.html">Build a Tiny Go‑Based Search Engine Clone (hister)</a></h2>
+<p class="post-card-desc">A minimal personal search engine in 45 minutes</p>
+<div class="read-more">
+                Read Blueprint
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    45 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Go · Search · CLI
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 19, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Simple Repository Diagram Generator with TypeScript (gitdiagram)" class="post-card" data-href="html/2026-09-19_simple-repository-diagram-generator-typescript.html" role="link" tabindex="0">
+<div class="card-eyebrow">Beginner Friendly</div>
+<h2><a href="html/2026-09-19_simple-repository-diagram-generator-typescript.html">Build a Simple Repository Diagram Generator with TypeScript (gitdiagram)</a></h2>
+<p class="post-card-desc">A minimal clone of GitDiagram using Node, Express, and SQLite</p>
+<div class="read-more">
+                Read Blueprint
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    40 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    TypeScript · GitHub API · Visualization
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 19, 2026
+                </span>
+</div>
+</article><article aria-label="Build a VoiceBox-like AI Voice Studio in TypeScript" class="post-card" data-href="html/2026-09-18_voicebox-clone-ai-voice-studio.html" role="link" tabindex="0">
+<div class="card-eyebrow">TypeScript</div>
+<h2><a href="html/2026-09-18_voicebox-clone-ai-voice-studio.html">Build a VoiceBox-like AI Voice Studio in TypeScript</a></h2>
+<p class="post-card-desc">Build a local voice cloning &amp; TTS studio with Node.js and Whisper</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    40 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    typescript · ai · web
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 18, 2026
+                </span>
+</div>
+</article><article aria-label="Build a WeKnora-like Local RAG Knowledge Base in Python" class="post-card" data-href="html/2026-09-18_local-rag-knowledge-base.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python</div>
+<h2><a href="html/2026-09-18_local-rag-knowledge-base.html">Build a WeKnora-like Local RAG Knowledge Base in Python</a></h2>
+<p class="post-card-desc">Build a minimal WeKnora-inspired document Q&amp;A engine in Python</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    50 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    python · rag · llm
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 18, 2026
+                </span>
+</div>
+</article><article aria-label="Build a PostHog-like A/B Testing Tracker in Python + SQLite" class="post-card" data-href="html/2026-09-18_build-a-posthog-like-a-b-testing-tracker.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python + SQLite</div>
+<h2><a href="html/2026-09-18_build-a-posthog-like-a-b-testing-tracker.html">Build a PostHog-like A/B Testing Tracker in Python + SQLite</a></h2>
+<p class="post-card-desc">Create a lightweight A/B testing tool that lets you split traffic, track conversion metrics, and visualize results — the kind of tool that a startup needs to make data-driven decis</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    45 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    python · sqlite · analytics
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 18, 2026
+                </span>
+</div>
+</article><article aria-label="Build a FastRecall-like Cross-Model Memory Store in Python" class="post-card" data-href="html/2026-09-17_cross-model-memory-store.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python Build</div>
+<h2><a href="html/2026-09-17_cross-model-memory-store.html">Build a FastRecall-like Cross-Model Memory Store in Python</a></h2>
+<p class="post-card-desc">Build a lightweight vector database for AI context sharing</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    40 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Python · FastAPI · SQLite
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 17, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Vaultisse-like Self-Hosted Book Collection Tracker" class="post-card" data-href="html/2026-09-17_shelflife-minimal-book-collection-tracker.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python + SQLite</div>
+<h2><a href="html/2026-09-17_shelflife-minimal-book-collection-tracker.html">Build a Vaultisse-like Self-Hosted Book Collection Tracker</a></h2>
+<p class="post-card-desc">Track your physical books with shelf locations using Python and SQLite</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    40 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Node.js · Postgres · Full-Stack
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 17, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Nullsec-like Server-Blind Encrypted Paste Service" class="post-card" data-href="html/2026-09-17_server-blind-encrypted-paste-service.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python + SQLite</div>
+<h2><a href="html/2026-09-17_server-blind-encrypted-paste-service.html">Build a Nullsec-like Server-Blind Encrypted Paste Service</a></h2>
+<p class="post-card-desc">Build a minimal, client-side encrypted paste app where the server never sees plaintext</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    50 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    JavaScript · Web Crypto · Security
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 17, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Spendalyst-like Recurring Charge Monitor in Python" class="post-card" data-href="html/2026-09-17_recurring-charge-monitor.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python Build</div>
+<h2><a href="html/2026-09-17_recurring-charge-monitor.html">Build a Spendalyst-like Recurring Charge Monitor in Python</a></h2>
+<p class="post-card-desc">Detect price hikes in your bank transactions with Python and SQLite</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    45 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Python · SQLite · Data Processing
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 17, 2026
+                </span>
+</div>
+</article><article aria-label="Build a VideoHighlighter-like Clip Extractor with FFmpeg" class="post-card" data-href="html/2026-09-15_mini-clip-extractor-with-ffmpeg.html" role="link" tabindex="0">
+<div class="card-eyebrow">45 min</div>
+<h2><a href="html/2026-09-15_mini-clip-extractor-with-ffmpeg.html">Build a VideoHighlighter-like Clip Extractor with FFmpeg</a></h2>
+<p class="post-card-desc">Build a local tool that slices videos into clips using Python and FFmpeg.</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    40 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    FFmpeg · Python · Video Processing
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 15, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Trackd-like Gmail Subscription Tracker in Python" class="post-card" data-href="html/2026-09-15_gmail-subscription-tracker.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python</div>
+<h2><a href="html/2026-09-15_gmail-subscription-tracker.html">Build a Trackd-like Gmail Subscription Tracker in Python</a></h2>
+<p class="post-card-desc">Find forgotten subscriptions by scanning local email data</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    50 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Python · Gmail API · SQLite
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 15, 2026
+                </span>
+</div>
+</article><article aria-label="Build a LocalSend-like File Transfer Tool with Python + WebSockets" class="post-card" data-href="html/2026-09-15_local-file-transfer-tool.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python + WebSockets</div>
+<h2><a href="html/2026-09-15_local-file-transfer-tool.html">Build a LocalSend-like File Transfer Tool with Python + WebSockets</a></h2>
+<p class="post-card-desc">Build a LocalSend-inspired LAN file sharing app with Python and WebSockets</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    45 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Python · WebSockets · File Transfer
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 15, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Ghost-like Blog with Node.js + SQLite" class="post-card" data-href="html/2026-09-13_minimal-blog-engine-clone.html" role="link" tabindex="0">
+<div class="card-eyebrow">Beginner</div>
+<h2><a href="html/2026-09-13_minimal-blog-engine-clone.html">Build a Ghost-like Blog with Node.js + SQLite</a></h2>
+<p class="post-card-desc">Build a lightweight, server-side rendered blog in 45 minutes using Node.js and SQLite.</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    40 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Node.js · SQLite · Web Dev
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 13, 2026
+                </span>
+</div>
+</article><article aria-label="Build a File-to-Prompt Converter with Python + LangChain" class="post-card" data-href="html/2026-09-05_build-a-file-to-prompt-converter.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python • LangChain • SQLite</div>
+<h2><a href="html/2026-09-05_build-a-file-to-prompt-converter.html">Build a File-to-Prompt Converter with Python + LangChain</a></h2>
+<p class="post-card-desc">Turn local files into LLM-ready prompts in 45 minutes</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    40 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    python · langchain · ai-tools
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 05, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Local-First Routine Scheduler with SQLite + React" class="post-card" data-href="html/2026-09-05_local-first-routine-scheduler.html" role="link" tabindex="0">
+<div class="card-eyebrow">Beginner</div>
+<h2><a href="html/2026-09-05_local-first-routine-scheduler.html">Build a Local-First Routine Scheduler with SQLite + React</a></h2>
+<p class="post-card-desc">Build a minimal timer sequence app with React and SQLite</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    45 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    react · sqlite · local-first
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 05, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Grid Maker for Drawing with Python + Pillow" class="post-card" data-href="html/2026-09-05_grid-maker-for-drawing.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python</div>
+<h2><a href="html/2026-09-05_grid-maker-for-drawing.html">Build a Grid Maker for Drawing with Python + Pillow</a></h2>
+<p class="post-card-desc">Turn reference photos into printable drawing grids</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    30 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    python · pillow · image-processing
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 05, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Minimal PDF Inspector Tool with Rust" class="post-card" data-href="html/2026-09-02_minimal-pdf-inspector-clone.html" role="link" tabindex="0">
+<div class="card-eyebrow">Rust Beginner</div>
+<h2><a href="html/2026-09-02_minimal-pdf-inspector-clone.html">Build a Minimal PDF Inspector Tool with Rust</a></h2>
+<p class="post-card-desc">Detect text vs scanned PDFs and extract content in under 45 minutes</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    40 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Rust · PDF Parsing · CLI
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 02, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Local AI Photo Organizer with ImageSage" class="post-card" data-href="html/2026-09-02_local-ai-photo-organizer.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python + SQLite</div>
+<h2><a href="html/2026-09-02_local-ai-photo-organizer.html">Build a Local AI Photo Organizer with ImageSage</a></h2>
+<p class="post-card-desc">Build a private, local AI gallery inspired by ImageSage</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    50 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Python · Local AI · Computer Vision
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 02, 2026
+                </span>
+</div>
+</article><article aria-label="Build a WeTransfer-like File Sharing App with Campsend" class="post-card" data-href="html/2026-09-02_minimal-file-transfer-clone.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python/Flask</div>
+<h2><a href="html/2026-09-02_minimal-file-transfer-clone.html">Build a WeTransfer-like File Sharing App with Campsend</a></h2>
+<p class="post-card-desc">Build a WeTransfer-inspired file sharing app with tracking in 45 minutes</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    45 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Node.js · File Storage · Open Source
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Sep 02, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Privacy-First Data Broker Removal Script" class="post-card" data-href="html/2026-08-30_manual-data-broker-opt-out-script.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python</div>
+<h2><a href="html/2026-08-30_manual-data-broker-opt-out-script.html">Build a Privacy-First Data Broker Removal Script</a></h2>
+<p class="post-card-desc">Build a Python script to automate privacy opt-outs</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    40 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Python · Automation · Privacy
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Aug 30, 2026
+                </span>
+</div>
+</article><article aria-label="Build a GitHub Activity Receipt Generator" class="post-card" data-href="html/2026-08-30_github-activity-receipt-generator.html" role="link" tabindex="0">
+<div class="card-eyebrow">Beginner</div>
+<h2><a href="html/2026-08-30_github-activity-receipt-generator.html">Build a GitHub Activity Receipt Generator</a></h2>
+<p class="post-card-desc">Turn your commits into a thermal-paper style receipt</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    30 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    JavaScript · API · Visualization
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Aug 30, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Gods-Eye-View-like Satellite Map Viewer" class="post-card" data-href="html/2026-08-28_minimal-satellite-map-viewer.html" role="link" tabindex="0">
+<div class="card-eyebrow">UVF IT</div>
+<h2><a href="html/2026-08-28_minimal-satellite-map-viewer.html">Build a Gods-Eye-View-like Satellite Map Viewer</a></h2>
+<p class="post-card-desc">Track live aircraft on a 3D globe with Python and Cesium.</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    40 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    JavaScript · Mapbox · WebGL
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Aug 28, 2026
+                </span>
+</div>
+</article><article aria-label="Build a Jack the Snipper-like HTML Cleaner" class="post-card" data-href="html/2026-08-28_html-cleaner.html" role="link" tabindex="0">
+<div class="card-eyebrow">Beginner</div>
+<h2><a href="html/2026-08-28_html-cleaner.html">Build a Jack the Snipper-like HTML Cleaner</a></h2>
+<p class="post-card-desc">Paste messy HTML, get clean text back.</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    30 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Python · BeautifulSoup · Web Scraping
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Aug 28, 2026
+                </span>
+</div>
+</article><article aria-label="Build a PostHog-like Analytics Tracker with Python + SQLite" class="post-card" data-href="html/2026-08-27_posthog-desktop.html" role="link" tabindex="0">
+<div class="card-eyebrow">UVF IT</div>
+<h2><a href="html/2026-08-27_posthog-desktop.html">Build a PostHog-like Analytics Tracker with Python + SQLite</a></h2>
+<p class="post-card-desc">The product editor for product builders</p>
+<div class="read-more">
+                Read Blueprint 
+                <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+</div>
+<div class="post-card-meta">
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    45 min setup
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    Python · SQLite · Analytics
+                </span>
+<span class="meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    Posted on: Aug 27, 2026
+                </span>
+</div>
+</article><article aria-label="Minimal Personal Search Engine Clone" class="post-card" data-href="html/2026-08-26_minimal-personal-search-engine-clone.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python</div>
+<h2><a href="html/2026-08-26_minimal-personal-search-engine-clone.html">Minimal Personal Search Engine Clone</a></h2>
+<p class="post-card-desc">Build a private, full-text search index for your local files in 45 minutes.</p>
+<div class="read-more">Read Blueprint <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+<div class="post-card-meta">
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~40 min setup</span>
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg> Build Guide</span>
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg> Posted on: Aug 26, 2026</span>
+</div>
+</article><article aria-label="Minimal AI Job Search Agent" class="post-card" data-href="html/2026-08-26_minimal-ai-job-search-agent.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python</div>
+<h2><a href="html/2026-08-26_minimal-ai-job-search-agent.html">Minimal AI Job Search Agent</a></h2>
+<p class="post-card-desc">Automate job filtering and cover letter drafting locally with Python and SQLite.</p>
+<div class="read-more">Read Blueprint <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+<div class="post-card-meta">
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~40 min setup</span>
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg> Build Guide</span>
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg> Posted on: Aug 26, 2026</span>
+</div>
+</article><article aria-label="Local-First AI Job Search Agent" class="post-card" data-href="html/2026-08-26_local-first-ai-job-search-agent.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python/SQLite</div>
+<h2><a href="html/2026-08-26_local-first-ai-job-search-agent.html">Local-First AI Job Search Agent</a></h2>
+<p class="post-card-desc">Clone the workflow: scrape, evaluate, and tailor applications locally.</p>
+<div class="read-more">Read Blueprint <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+<div class="post-card-meta">
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~40 min setup</span>
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg> Build Guide</span>
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg> Posted on: Aug 26, 2026</span>
+</div>
+</article><article aria-label="Video-to-Text Transcriber" class="post-card" data-href="html/2026-08-24_video-to-text-transcriber.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python</div>
+<h2><a href="html/2026-08-24_video-to-text-transcriber.html">Video-to-Text Transcriber</a></h2>
+<p class="post-card-desc">Turn short videos into searchable text in minutes</p>
+<div class="read-more">Read Blueprint <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+<div class="post-card-meta">
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~40 min setup</span>
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg> Build Guide</span>
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg> Posted on: Aug 24, 2026</span>
+</div>
+</article><article aria-label="Minimal Password Manager Backend Clone" class="post-card" data-href="html/2026-08-24_minimal-password-manager-backend-clone.html" role="link" tabindex="0">
+<div class="card-eyebrow">Rust/SQLite</div>
+<h2><a href="html/2026-08-24_minimal-password-manager-backend-clone.html">Minimal Password Manager Backend Clone</a></h2>
+<p class="post-card-desc">A lightweight, self-hosted password vault API inspired by Vaultwarden.</p>
+<div class="read-more">Read Blueprint <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+<div class="post-card-meta">
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~40 min setup</span>
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg> Build Guide</span>
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg> Posted on: Aug 24, 2026</span>
+</div>
+</article><article aria-label="Minimal Node-Based Image Pipeline" class="post-card" data-href="html/2026-08-24_minimal-node-based-image-pipeline.html" role="link" tabindex="0">
+<div class="card-eyebrow">Python + SQLite</div>
+<h2><a href="html/2026-08-24_minimal-node-based-image-pipeline.html">Minimal Node-Based Image Pipeline</a></h2>
+<p class="post-card-desc">Build a ComfyUI-inspired workflow engine in 45 minutes</p>
+<div class="read-more">Read Blueprint <svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+<div class="post-card-meta">
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ~40 min setup</span>
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg> Build Guide</span>
+<span class="meta-item"><svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg> Posted on: Aug 24, 2026</span>
+</div>
+</article>
+<!-- Post Card: AI Agent Marketplace -->
+<!-- Post Card: RAG Chat Bot -->
+<!-- Post Card 1: Vision AI Stock Inward Agent -->
+<!-- Post Card 2: AI Recruitment Agent -->
+<!-- Post Card 3: Coolify Setup Guide -->
+</div><div aria-label="Pagination" class="pagination" id="pagination"></div>
+</main>
+<!-- Footer -->
+<footer>
+<p>© 2026 UVF IT — Core Industrial &amp; Enterprise Automation Frameworks. All rights reserved.</p>
+</footer>
+<script>
+(function(){
+    var t = document.querySelector('[data-theme-toggle]');
+    var r = document.documentElement;
+    var d = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    r.setAttribute('data-theme', d);
+    
+    var sunIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+    var moonIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    
+    function updateIcon(){ 
+        if(t) t.innerHTML = d === 'dark' ? sunIcon : moonIcon; 
+    }
+    
+    updateIcon();
+    
+    if(t){ 
+        t.addEventListener('click', function(){ 
+            d = d === 'dark' ? 'light' : 'dark'; 
+            r.setAttribute('data-theme', d); 
+            localStorage.setItem('theme', d);
+            updateIcon(); 
+        }); 
+    }
+})();
+</script>
+<script>
+(function(){
+  // whole-card clicks
+  document.addEventListener("click", function(e){
+    var card = e.target.closest("article.post-card[data-href]");
+    if(!card) return;
+    // don't double-navigate if inner link was clicked
+    if(e.target.closest("a[href]")) return;
+    window.location.href = card.getAttribute("data-href");
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key !== "Enter" && e.key !== " ") return;
+    var card = e.target.closest("article.post-card[data-href]");
+    if(!card) return;
+    e.preventDefault();
+    window.location.href = card.getAttribute("data-href");
+  });
+
+  // pagination: 30 per page
+  var perPage = 30;
+  var grid = document.querySelector("div.blog-grid");
+  var pagination = document.getElementById("pagination");
+  if(!grid || !pagination) return;
+  var cards = Array.from(grid.querySelectorAll("article.post-card"));
+  var total = cards.length;
+  var pages = Math.ceil(total / perPage);
+  if(pages <= 1){
+    pagination.style.display = "none";
+    return;
+  }
+  var current = 1;
+  function render(){
+    cards.forEach(function(card, idx){
+      var page = Math.floor(idx / perPage) + 1;
+      card.style.display = (page === current) ? "" : "none";
+    });
+    pagination.innerHTML = "";
+    var prev = document.createElement("button");
+    prev.textContent = "? Prev";
+    prev.disabled = current === 1;
+    prev.addEventListener("click", function(){ if(current>1){ current--; render(); window.scrollTo({top:0, behavior:"smooth"}); }});
+    pagination.appendChild(prev);
+    for(var p=1; p<=pages; p++){
+      var btn = document.createElement("button");
+      btn.textContent = p;
+      if(p===current) btn.classList.add("active");
+      (function(page){ btn.addEventListener("click", function(){ current=page; render(); window.scrollTo({top:0, behavior:"smooth"}); }); })(p);
+      pagination.appendChild(btn);
+    }
+    var next = document.createElement("button");
+    next.textContent = "Next ?";
+    next.disabled = current === pages;
+    next.addEventListener("click", function(){ if(current<pages){ current++; render(); window.scrollTo({top:0, behavior:"smooth"}); }});
+    pagination.appendChild(next);
+    var info = document.createElement("span");
+    info.className = "page-info";
+    info.textContent = "Page " + current + " of " + pages + " ? " + total + " guides";
+    pagination.appendChild(info);
+  }
+  render();
+})();
+</script><script crossorigin="anonymous" data-cf-beacon='{"version":"2024.11.0","token":"934fdff989d4464ca8a995e5633bbe8d","r":1,"spa":2}' integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" type="module"></script>
+</body>
+</html>

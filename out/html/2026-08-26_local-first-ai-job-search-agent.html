@@ -1,0 +1,479 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UVF IT: Local-First AI Job Search Agent</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+<script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194"></script></head>
+<body>
+<nav class="navbar">
+<div class="navbar-brand">UVF <span>IT</span></div>
+<div class="navbar-badge">Python/SQLite</div>
+</nav>
+<header>
+<h1>Local-First AI Job Search Agent</h1>
+<p>Clone the workflow: scrape, evaluate, and tailor applications locally.</p>
+</header><div style="max-width:960px;margin:20px auto;padding:0 20px;">
+<ins class="adsbygoogle" data-ad-client="ca-pub-7707820592878194" data-ad-format="auto" data-ad-slot="5778428487" data-full-width-responsive="true" style="display:block"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<div class="container">
+<p>Welcome to another official <strong>UVF IT</strong> build guide. Today we are constructing a minimal, local-first AI job search agent inspired by the open-source workflow of MadsLorentzen/ai-job-search.</p>
+<p>You will build a Python application that scrapes a sample job listing, evaluates it against a user profile using a local LLM interface, and stores the results in a SQLite database. This guide focuses on the core logic: data ingestion, AI evaluation, and persistence, without requiring paid API keys for the initial build.</p>
+<div class="fix-box">
+<h4>Before You Begin</h4>
+<ul>
+<li>Requires Python 3.9+ and <code>pip</code>. We use <code>sqlite3</code> (built-in) and <code>requests</code> for scraping; no external database setup needed.</li>
+<li>This is a simplified clone. The original uses Claude Code for complex reasoning; here we simulate the 'AI' step with a local heuristic or a free-tier local LLM endpoint (like Ollama) to keep it free and local.</li>
+<li>Scraping real job sites may violate Terms of Service. We use a mock HTML structure for safety and reproducibility in this guide.</li>
+</ul>
+</div>
+<div class="diagram-container">
+<div class="diagram-title">Local Job Search Agent Architecture</div>
+<svg height="262" role="img" viewbox="0 0 630 262" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="gw-arrow" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10"><path class="link-arrow" d="M 0 0 L 10 5 L 0 10 z"></path></marker></defs>
+<rect fill="none" height="214" rx="10" stroke="var(--accent)" stroke-dasharray="6,6" stroke-width="2.5" width="198" x="216" y="24"></rect>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)" text-anchor="middle" x="315.0" y="42">LOCAL RUNTIME</text>
+<rect fill="none" height="70" rx="10" stroke="#b91c1c" stroke-dasharray="6,6" stroke-width="2.5" width="198" x="426" y="96"></rect>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:#b91c1c" text-anchor="middle" x="525.0" y="114">EXTERNAL DATA</text>
+<line class="link" marker-end="url(#gw-arrow)" x1="400" x2="440" y1="74" y2="146"></line>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280" text-anchor="middle" x="420" y="104">Fetches HTML</text>
+<line class="link" marker-end="url(#gw-arrow)" x1="315" x2="315" y1="98" y2="122"></line>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280" text-anchor="middle" x="315" y="104">Passes Job Data</text>
+<line class="link" marker-end="url(#gw-arrow)" x1="315" x2="315" y1="170" y2="194"></line>
+<text style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280" text-anchor="middle" x="315" y="176">Stores Match Score</text>
+<rect class="node-tech" height="48" rx="10" width="170" x="230" y="50"></rect>
+<text class="node-text" x="315.0" y="71">Job Scraper</text>
+<text class="node-subtext" x="315.0" y="87">Python Script</text>
+<rect class="node-tech" height="48" rx="10" width="170" x="230" y="122"></rect>
+<text class="node-text" x="315.0" y="143">AI Evaluator</text>
+<text class="node-subtext" x="315.0" y="159">Local LLM/Heuristic</text>
+<rect class="node-tech" height="48" rx="10" width="170" x="230" y="194"></rect>
+<text class="node-text" x="315.0" y="215">SQLite DB</text>
+<text class="node-subtext" x="315.0" y="231">jobs.db</text>
+<rect class="node-tech" height="48" rx="10" width="170" x="440" y="122"></rect>
+<text class="node-text" x="525.0" y="143">Job Source</text>
+<text class="node-subtext" x="525.0" y="159">Mock HTML/API</text>
+</svg>
+</div>
+<div class="step-box">
+<div class="step-number">1</div>
+<div>
+<h2>Phase 1: Scaffold and Mock Data</h2>
+<p>Create the project directory and install dependencies. We need <code>requests</code> for fetching and <code>beautifulsoup4</code> for parsing HTML.</p>
+<p>Create a mock job source. Since we cannot scrape live sites reliably in a beginner guide, we create a local HTML file that mimics a job posting.</p>
+<div class="code-block"><pre><code>mkdir ai-job-search-agent
+cd ai-job-search-agent
+pip install requests beautifulsoup4</code></pre></div>
+<p><strong>mock_job.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Senior Python Developer&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="job-posting"&gt;
+        &lt;h1 class="job-title"&gt;Senior Python Developer&lt;/h1&gt;
+        &lt;div class="job-description"&gt;
+            &lt;p&gt;We are looking for an experienced Python developer to join our team.&lt;/p&gt;
+            &lt;h2&gt;Requirements:&lt;/h2&gt;
+            &lt;ul class="requirements"&gt;
+                &lt;li&gt;5+ years of Python experience&lt;/li&gt;
+                &lt;li&gt;Experience with Django or Flask&lt;/li&gt;
+                &lt;li&gt;Knowledge of SQL and databases&lt;/li&gt;
+                &lt;li&gt;Strong communication skills&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">2</div>
+<div>
+<h2>Phase 2: Core Model and Database</h2>
+<p>Set up a SQLite database to store job listings and their evaluation scores.</p>
+<p>Create a Python script to initialize the database schema. This ensures we have a persistent store for our 'agent' to work with.</p>
+<p><strong>db_setup.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+
+DB_NAME = "jobs.db"
+
+def init_db():
+    """Initialize the SQLite database and create the jobs table if it doesn't exist."""
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS jobs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            description TEXT,
+            requirements TEXT,
+            match_score REAL DEFAULT 0.0,
+            evaluated INTEGER DEFAULT 0
+        )
+    ''')
+    
+    conn.commit()
+    conn.close()
+    print(f"Database '{DB_NAME}' initialized successfully.")
+
+if __name__ == "__main__":
+    init_db()</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">3</div>
+<div>
+<h2>Phase 3: Scraper and Parser</h2>
+<p>Build the scraper module. It will read the local HTML file (simulating a fetch) and extract the title, description, and requirements.</p>
+<p>Insert the parsed data into the SQLite database. This represents the 'ingestion' phase of the job search agent.</p>
+<p><strong>scraper.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+from bs4 import BeautifulSoup
+
+def scrape_mock_job(html_file_path="mock_job.html"):
+    """Reads a local HTML file and extracts job details."""
+    with open(html_file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
+    
+    soup = BeautifulSoup(content, 'html.parser')
+    
+    <span class="code-comment"># Extract title</span>
+    title_tag = soup.find('h1', class_='job-title')
+    title = title_tag.get_text(strip=True) if title_tag else "Unknown Title"
+    
+    <span class="code-comment"># Extract description</span>
+    desc_tag = soup.find('div', class_='job-description')
+    description = desc_tag.get_text(separator=' ', strip=True) if desc_tag else ""
+    
+    <span class="code-comment"># Extract requirements as a single string</span>
+    req_list = soup.find_all('li', class_='requirements')
+    requirements = "; ".join([li.get_text(strip=True) for li in req_list])
+    
+    return {
+        "title": title,
+        "description": description,
+        "requirements": requirements
+    }
+
+def store_job(job_data):
+    """Inserts the parsed job data into the SQLite database."""
+    conn = sqlite3.connect("jobs.db")
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+        INSERT INTO jobs (title, description, requirements, match_score, evaluated)
+        VALUES (?, ?, ?, 0.0, 0)
+    ''', (job_data['title'], job_data['description'], job_data['requirements']))
+    
+    conn.commit()
+    job_id = cursor.lastrowid
+    conn.close()
+    print(f"Stored job: {job_data['title']} (ID: {job_id})")
+    return job_id
+
+def run_scraper():
+    """Orchestrates scraping and storing."""
+    job_data = scrape_mock_job()
+    store_job(job_data)
+
+if __name__ == "__main__":
+    run_scraper()</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">4</div>
+<div>
+<h2>Phase 4: AI Evaluation Logic</h2>
+<p>Implement the 'AI' agent. For this minimal clone, we use a keyword-based heuristic to simulate AI evaluation. In a real scenario, you would replace this with a call to a local LLM like Ollama.</p>
+<p>The evaluator checks if the job requirements match a predefined user profile (e.g., 'Python', 'Django'). It calculates a match score and updates the database.</p>
+<p><strong>evaluator.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+
+def evaluate_jobs(db_path="jobs.db"):
+    """
+    Simulates AI evaluation by matching job descriptions against a user profile.
+    In a production app, this would call a local LLM (e.g., Ollama) for nuanced reasoning.
+    """
+    <span class="code-comment"># Define a simple user profile for matching</span>
+    user_skills = ["python", "django", "sql", "html", "css"]
+    
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    
+    <span class="code-comment"># Fetch all jobs that haven't been evaluated yet (score is NULL)</span>
+    cursor.execute("SELECT id, title, description FROM jobs WHERE match_score IS NULL")
+    jobs = cursor.fetchall()
+    
+    for job_id, title, description in jobs:
+        <span class="code-comment"># Simple heuristic: count matching keywords</span>
+        desc_lower = description.lower()
+        title_lower = title.lower()
+        
+        matches = 0
+        for skill in user_skills:
+            if skill in desc_lower or skill in title_lower:
+                matches += 1
+        
+        <span class="code-comment"># Calculate a simple score (0-100 scale)</span>
+        score = min(100, int((matches / len(user_skills)) * 100))
+        
+        <span class="code-comment"># Update the database with the score</span>
+        cursor.execute(
+            "UPDATE jobs SET match_score = ? WHERE id = ?",
+            (score, job_id)
+        )
+        print(f"Evaluated '{title}': Match Score {score}%")
+    
+    conn.commit()
+    conn.close()
+    print("Evaluation complete.")
+
+if __name__ == "__main__":
+    evaluate_jobs()</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">5</div>
+<div>
+<h2>Phase 5: Run and Verify</h2>
+<p>Create a main runner script that orchestrates the entire workflow: init DB, scrape, evaluate.</p>
+<p>Run the application and verify the output in the console and the SQLite database.</p>
+<p><strong>main.py</strong></p>
+<div class="code-block"><pre><code>from db_setup import init_db
+from scraper import scrape_mock_job
+from evaluator import evaluate_jobs
+
+def main():
+    print("--- Starting AI Job Search Agent ---")
+    
+    <span class="code-comment"># Step 1: Initialize Database</span>
+    print("1. Initializing database...")
+    init_db()
+    
+    <span class="code-comment"># Step 2: Scrape Job Listings</span>
+    print("2. Scraping job listings...")
+    scrape_mock_job()
+    
+    <span class="code-comment"># Step 3: Evaluate Jobs</span>
+    print("3. Evaluating jobs against profile...")
+    evaluate_jobs()
+    
+    print("--- Workflow Complete ---")
+
+if __name__ == "__main__":
+    main()</code></pre></div>
+</div>
+</div>
+<h2>Verifying the Stack</h2>
+<table class="checklist">
+<tr><th>Check</th><th>Command / Why it matters</th></tr>
+<tr><td>Database file created</td><td>ls jobs.db</td></tr>
+<tr><td>Job stored in DB</td><td>sqlite3 jobs.db 'SELECT * FROM jobs;'</td></tr>
+<tr><td>Match score calculated</td><td>sqlite3 jobs.db 'SELECT title, match_score FROM jobs;'</td></tr>
+</table>
+<div class="alert-box">
+<h4>Next Steps</h4>
+<p>To extend this, replace the heuristic in <code>evaluator.py</code> with a call to a local LLM (e.g., using <code>ollama</code> CLI) to generate tailored cover letters.</p>
+</div>
+</div>
+<footer>Â© 2026 UVF IT. <a href="https://www.uvfarms.in" rel="noopener" style="color: inherit;" target="_blank">www.uvfarms.in</a>. All rights reserved.</footer>
+</body>
+</html>

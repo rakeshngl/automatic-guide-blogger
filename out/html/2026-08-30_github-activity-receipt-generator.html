@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: GitHub Activity Receipt Generator</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner</div>
+    </nav>
+
+    <header>
+        <h1>GitHub Activity Receipt Generator</h1>
+        <p>Turn your commits into a thermal-paper style receipt</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide. Today we will construct a minimal clone of ReceiptHub, transforming raw GitHub API data into a nostalgic, thermal-paper style receipt.</p>
+        <p>This project demonstrates how to fetch public user data, aggregate statistics, and render them in a constrained, retro UI using a simple Python stack. No complex databases or paid APIs are required.</p>
+
+        <div class="fix-box">
+            <h4>Prerequisites &amp; Limitations</h4>
+            <ul>
+                <li>Requires Python 3.8+ and pip installed. You will need a free GitHub Personal Access Token (classic) with 'public_repo' scope to bypass rate limits.</li>
+                <li>This is a simplified clone: it only fetches recent events (last 30 days) and does not support real-time streaming or complex contribution graph heatmaps.</li>
+                <li>The 'thermal paper' look is achieved via CSS styling, not actual hardware printing drivers.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">System Architecture</div>
+            <svg width="100%" height="190" viewBox="0 0 630 190" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="142" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<rect x="426" y="60" width="198" height="70" fill="none" stroke="#b91c1c" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="525.0" y="78" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:#b91c1c">EXTERNAL SERVICES</text>
+<line x1="400" y1="74" x2="440" y2="110" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="420" y="86" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">GET /users/{username}/events</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link" marker-start="url(#gw-arrow)" marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Store/Retrieve Cache</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Flask App</text>
+<text x="315.0" y="87" class="node-subtext">Python/HTML</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite</text>
+<text x="315.0" y="159" class="node-subtext">User Cache</text>
+<rect x="440" y="86" width="170" height="48" rx="10" class="node-tech" />
+<text x="525.0" y="107" class="node-text">GitHub API</text>
+<text x="525.0" y="123" class="node-subtext">REST Endpoint</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold &amp; Dependencies</h2>
+                <p>Create a project directory and initialize a virtual environment to isolate dependencies. This ensures your system Python remains clean while you experiment with Flask.</p>
+                <p>Install Flask for the web server and Requests for API communication. These are the only two external libraries we need for this minimal clone.</p>
+<div class="code-block"><pre><code>mkdir github-receipt-clone
+cd github-receipt-clone
+python3 -m venv venv
+source venv/bin/activate
+pip install flask requests</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Core Data Model &amp; API Fetcher</h2>
+                <p>Create a Python script that connects to the GitHub API to fetch public events for a given username. We will use the <code>requests</code> library to handle the HTTP GET request securely.</p>
+                <p>Parse the JSON response to extract commits, PRs, issues, and stars. We'll store this in a simple dictionary structure that our template can easily iterate over.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import os
+import requests
+from flask import Flask
+
+app = Flask(__name__)
+
+<span class="code-comment"># Helper function to fetch and parse GitHub data</span>
+def fetch_github_stats(username):
+    token = os.environ.get('GITHUB_TOKEN')
+    if not token:
+        return {'error': 'GITHUB_TOKEN environment variable not set'}
+    
+    url = f'https://api.github.com/users/{username}/events/public'
+    headers = {'Authorization': f'token {token}'}
+    
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        events = response.json()
+        
+        <span class="code-comment"># Initialize counters</span>
+        stats = {
+            'commits': 0,
+            'prs': 0,
+            'issues': 0,
+            'stars': 0
+        }
+        
+        <span class="code-comment"># Process last 30 days of events (approx 300 events max from API)</span>
+        for event in events:
+            type_ = event['type']
+            if type_ == 'PushEvent':
+                stats['commits'] += len(event['payload']['commits'])
+            elif type_ == 'PullRequestEvent':
+                stats['prs'] += 1
+            elif type_ == 'IssuesEvent':
+                stats['issues'] += 1
+            elif type_ == 'WatchEvent':
+                stats['stars'] += 1
+                
+        return {'username': username, 'stats': stats}
+    except requests.exceptions.HTTPError as e:
+        if response.status_code == 404:
+            return {'error': 'User not found'}
+        return {'error': str(e)}
+    except Exception as e:
+        return {'error': str(e)}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: API/UI Integration</h2>
+                <p>Build the Flask routes: one for the input form and one to display the receipt. The root route will handle GET requests to show the form and POST requests to process the username.</p>
+                <p>Create a simple HTML template that styles the output to look like a thermal receipt. We'll use monospace fonts, narrow widths, and dashed lines to achieve the retro aesthetic.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>from flask import render_template, request, redirect, url_for
+
+<span class="code-comment"># ... [Previous code from Phase 2] ...</span>
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        if not username:
+            return redirect(url_for('index'))
+        
+        data = fetch_github_stats(username)
+        return render_template('receipt.html', data=data)
+    
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre></div>
+                <p><strong>templates/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;GitHub Receipt Generator&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        input {
+            padding: 0.5rem;
+            font-family: inherit;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 0.5rem;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;h1&gt;GitHub Receipt&lt;/h1&gt;
+        &lt;form action="/" method="POST"&gt;
+            &lt;input type="text" name="username" placeholder="Enter GitHub username" required&gt;
+            &lt;button type="submit"&gt;Generate Receipt&lt;/button&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+                <p><strong>templates/receipt.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;GitHub Receipt&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .receipt {
+            background: white;
+            padding: 2rem;
+            width: 300px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .receipt::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(45deg, transparent 33.333%, white 33.333%, white 66.667%, transparent 66.667%),
+                        linear-gradient(-45deg, transparent 33.333%, white 33.333%, white 66.667%, transparent 66.667%);
+            background-size: 10px 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px dashed #000;
+            padding-bottom: 0.5rem;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .total {
+            margin-top: 1rem;
+            border-top: 1px dashed #000;
+            padding-top: 0.5rem;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            text-decoration: none;
+            color: #333;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="receipt"&gt;
+        &lt;h1&gt;GitHub Activity&lt;/h1&gt;
+        {% if data.error %}
+            &lt;p class="error"&gt;{{ data.error }}&lt;/p&gt;
+        {% else %}
+            &lt;p class="item"&gt;&lt;span&gt;User:&lt;/span&gt; &lt;span&gt;{{ data.username }}&lt;/span&gt;&lt;/p&gt;
+            &lt;div class="item"&gt;&lt;span&gt;Commits:&lt;/span&gt; &lt;span&gt;{{ data.stats.commits }}&lt;/span&gt;&lt;/div&gt;
+            &lt;div class="item"&gt;&lt;span&gt;PRs:&lt;/span&gt; &lt;span&gt;{{ data.stats.prs }}&lt;/span&gt;&lt;/div&gt;
+            &lt;div class="item"&gt;&lt;span&gt;Issues:&lt;/span&gt; &lt;span&gt;{{ data.stats.issues }}&lt;/span&gt;&lt;/div&gt;
+            &lt;div class="item"&gt;&lt;span&gt;Stars:&lt;/span&gt; &lt;span&gt;{{ data.stats.stars }}&lt;/span&gt;&lt;/div&gt;
+            &lt;div class="total"&gt;
+                &lt;div class="item"&gt;&lt;span&gt;Total Events:&lt;/span&gt; &lt;span&gt;{{ data.stats.commits + data.stats.prs + data.stats.issues + data.stats.stars }}&lt;/span&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        {% endif %}
+        &lt;a href="/" class="back-link"&gt;Back to Home&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run Locally</h2>
+                <p>Before starting the server, you must secure your GitHub token. Never hardcode secrets in your source files; instead, export them as environment variables so the application can access them safely at runtime.</p>
+                <p>Start the Flask development server using the standard command. This will launch a local web server on port 5000, allowing you to interact with your receipt generator in the browser.</p>
+<div class="code-block"><pre><code>export GITHUB_TOKEN="your_personal_access_token_here"
+python app.py</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and Extend</h2>
+                <p>Open your web browser and navigate to http://localhost:5000. You should see the input form where you can enter any public GitHub username to generate their activity receipt.</p>
+                <p>Submit a well-known username like 'torvalds' to verify that the API fetches data correctly and the thermal receipt renders with accurate commit and PR counts.</p>
+                <p>To extend the project, you could add a calculation for 'Contribution Streaks' by analyzing the dates of the fetched events, or add a 'Print' button that triggers the browser's print dialog with CSS media queries optimized for thermal paper width.</p>
+<div class="code-block"><pre><code>curl http://localhost:5000</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Flask server starts without errors</td><td><code>python app.py</code></td></tr>
+            <tr><td>Input form renders at localhost:5000</td><td>Open browser to http://localhost:5000</td></tr>
+            <tr><td>Receipt displays non-zero stats for active users</td><td>Submit 'torvalds' and check HTML output</td></tr>
+            <tr><td>Invalid username shows error message</td><td>Submit 'nonexistent_user_123' and verify error handling</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>To extend this clone, consider adding a SQLite database to cache results and reduce API calls, or implement a 'Print' button using window.print() with specific CSS media queries for paper size.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

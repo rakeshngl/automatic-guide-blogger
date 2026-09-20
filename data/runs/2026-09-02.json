@@ -1,0 +1,62 @@
+{
+  "date": "2026-09-02",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a WeTransfer-like File Sharing App with Campsend",
+      "source": "hn_show",
+      "url": "https://campsend.app/",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-02_minimal-file-transfer-clone.html",
+      "tagline": "Build a WeTransfer-inspired file sharing app with tracking in 45 minutes",
+      "navbar_badge": "Python/Flask",
+      "est_minutes": 45,
+      "tags": [
+        "Node.js",
+        "File Storage",
+        "Open Source"
+      ]
+    },
+    {
+      "title": "Build a Local AI Photo Organizer with ImageSage",
+      "source": "hn_show",
+      "url": "https://ringlochid.me/imagesage/index.html",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-02_local-ai-photo-organizer.html",
+      "tagline": "Build a private, local AI gallery inspired by ImageSage",
+      "navbar_badge": "Python + SQLite",
+      "est_minutes": 50,
+      "tags": [
+        "Python",
+        "Local AI",
+        "Computer Vision"
+      ]
+    },
+    {
+      "title": "Build a Minimal PDF Inspector Tool with Rust",
+      "source": "github_trending",
+      "url": "https://github.com/firecrawl/pdf-inspector",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-02_minimal-pdf-inspector-clone.html",
+      "tagline": "Detect text vs scanned PDFs and extract content in under 45 minutes",
+      "navbar_badge": "Rust Beginner",
+      "est_minutes": 40,
+      "tags": [
+        "Rust",
+        "PDF Parsing",
+        "CLI"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1544628184102866946",
+    "1544628193070284950",
+    "1544628201643450421"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

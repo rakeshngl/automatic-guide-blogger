@@ -1,10 +1,15 @@
 # Secrets & local state
 .env
 secrets/
-data/
-out/
 logs/
 .wrangler/
+
+# Runtime state - only safe data snapshots are tracked (data/history.json, data/runs/)
+data/cache/
+data/run.lock
+data/reddit_digests/
+data/reddit_ideas_log.json
+data/removed_guides/
 
 # Python
 __pycache__/

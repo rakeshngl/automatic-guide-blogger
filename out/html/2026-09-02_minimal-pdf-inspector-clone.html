@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Minimal PDF Inspector Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Rust Beginner</div>
+    </nav>
+
+    <header>
+        <h1>Minimal PDF Inspector Clone</h1>
+        <p>Detect text vs scanned PDFs and extract content in under 45 minutes</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide. Today we are constructing a lightweight PDF inspector inspired by Firecrawl's high-performance Rust library, but simplified for educational purposes.</p>
+        <p>You will build a tool that classifies PDFs as 'Text-Based' or 'Scanned' and extracts raw text with position awareness, using only standard Rust crates and no external APIs.</p>
+
+        <div class="fix-box">
+            <h4>Prerequisites &amp; Simplifications</h4>
+            <ul>
+                <li>Requires Rust 1.70+ installed via rustup; this guide assumes a Unix-like environment (Linux/macOS) for CLI commands.</li>
+                <li>This clone simplifies the original by skipping complex OCR routing, multi-column layout heuristics, and table detection to focus on core classification and text extraction.</li>
+                <li>We use <code>lopdf</code> and <code>pdf-extract</code> which may struggle with heavily encrypted or malformed PDFs compared to production-grade engines.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">PDF Inspector Architecture</div>
+            <svg width="100%" height="334" viewBox="0 0 630 334" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="286" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">loads</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">reads</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">returns objects</text>
+<line x1="315" y1="98" x2="315" y2="266" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">prints result</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Rust Binary</text>
+<text x="315.0" y="87" class="node-subtext">main.rs</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node" />
+<text x="315.0" y="143" class="node-text">Input PDF</text>
+<text x="315.0" y="159" class="node-subtext">.pdf</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node" />
+<text x="315.0" y="215" class="node-text">lopdf Crate</text>
+<text x="315.0" y="231" class="node-subtext">Parsing</text>
+<rect x="230" y="266" width="170" height="48" rx="10" class="node" />
+<text x="315.0" y="287" class="node-text">Terminal Output</text>
+<text x="315.0" y="303" class="node-subtext">JSON/Text</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold Project</h2>
+                <p>Initialize a new Rust binary project and add the necessary dependencies for PDF parsing and JSON serialization. We use <code>lopdf</code> for low-level PDF object access and <code>serde_json</code> for structured output.</p>
+                <p>Run the following commands to create the project structure and update your Cargo.toml with the required libraries. This sets the foundation for our inspector tool.</p>
+<div class="code-block"><pre><code>cargo new pdf-inspector-clone
+cd pdf-inspector-clone
+cargo add lopdf serde_json</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Core Feature 1 (Data/Model)</h2>
+                <p>Define the data structures for our classification result. We will classify a PDF as 'TextBased' or 'Scanned' based on the presence of text objects in the content stream.</p>
+                <p>Create a simple struct to hold the classification confidence and extracted text. This struct will be serialized to JSON for our final output.</p>
+                <p><strong>src/main.rs</strong></p>
+<div class="code-block"><pre><code>use serde::{Serialize, Deserialize};
+use lopdf::Document;
+use std::env;
+use std::path::Path;
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct PdfInspectionResult {
+    pub classification: String,
+    pub confidence: f32,
+    pub text_preview: String,
+    pub page_count: u32,
+}
+
+fn main() {
+    let args: Vec&lt;String&gt; = env::args().collect();
+    if args.len() &lt; 2 {
+        eprintln!("Usage: pdf-inspector &lt;path-to-pdf&gt;");
+        std::process::exit(1);
+    }
+
+    let pdf_path = &amp;args[1];
+    match inspect_pdf(pdf_path) {
+        Ok(result) =&gt; {
+            let json = serde_json::to_string_pretty(&amp;result).unwrap();
+            println!("{}", json);
+        }
+        Err(e) =&gt; {
+            eprintln!("Error inspecting PDF: {}", e);
+            std::process::exit(1);
+        }
+    }
+}
+
+fn inspect_pdf(path: &amp;str) -&gt; Result&lt;PdfInspectionResult, Box&lt;dyn std::error::Error&gt;&gt; {
+    let doc = Document::load(path)?;
+    let page_count = doc.get_pages().len() as u32;
+    
+    <span class="code-comment">// Placeholder for logic in Phase 3</span>
+    let mut has_text = false;
+    let mut text_preview = String::new();
+
+    <span class="code-comment">// TODO: Implement page iteration and text detection</span>
+
+    let classification = if has_text { "TextBased" } else { "Scanned" }.to_string();
+    let confidence = if has_text { 0.95 } else { 0.80 };
+
+    Ok(PdfInspectionResult {
+        classification,
+        confidence,
+        text_preview,
+        page_count,
+    })
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core Feature 2 (API/UI)</h2>
+                <p>Implement the core logic: load the PDF, iterate through pages, and check for text operators. If text operators are found, classify as 'TextBased'; otherwise, assume 'Scanned'.</p>
+                <p>We will extract the first 200 characters of text found. Note that <code>lopdf</code> provides low-level access, so we must manually parse the content streams to find text commands like 'Tj' or 'TJ'.</p>
+                <p><strong>src/main.rs</strong></p>
+<div class="code-block"><pre><code>use serde::{Serialize, Deserialize};
+use lopdf::Document;
+use std::env;
+use std::path::Path;
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct PdfInspectionResult {
+    pub classification: String,
+    pub confidence: f32,
+    pub text_preview: String,
+    pub page_count: u32,
+}
+
+fn main() {
+    let args: Vec&lt;String&gt; = env::args().collect();
+    if args.len() &lt; 2 {
+        eprintln!("Usage: pdf-inspector &lt;path-to-pdf&gt;");
+        std::process::exit(1);
+    }
+
+    let pdf_path = &amp;args[1];
+    match inspect_pdf(pdf_path) {
+        Ok(result) =&gt; {
+            let json = serde_json::to_string_pretty(&amp;result).unwrap();
+            println!("{}", json);
+        }
+        Err(e) =&gt; {
+            eprintln!("Error inspecting PDF: {}", e);
+            std::process::exit(1);
+        }
+    }
+}
+
+fn inspect_pdf(path: &amp;str) -&gt; Result&lt;PdfInspectionResult, Box&lt;dyn std::error::Error&gt;&gt; {
+    let doc = Document::load(path)?;
+    let page_count = doc.get_pages().len() as u32;
+    
+    let mut has_text = false;
+    let mut text_preview = String::new();
+
+    for (page_id, _page) in doc.get_pages() {
+        let content_stream = doc.get_page_content(page_id)?;
+        let content_str = String::from_utf8_lossy(&amp;content_stream.0);
+        
+        <span class="code-comment">// Simple heuristic: check for common PDF text operators</span>
+        if content_str.contains("Tj") || content_str.contains("TJ") {
+            has_text = true;
+            <span class="code-comment">// Extract a simple preview by finding text between parentheses</span>
+            <span class="code-comment">// This is a naive extraction for demonstration purposes</span>
+            if text_preview.is_empty() {
+                let start = content_str.find('(');
+                if let Some(start_idx) = start {
+                    let end = content_str[start_idx..].find(')');
+                    if let Some(end_idx) = end {
+                        let raw_text = &amp;content_str[start_idx + 1..start_idx + end_idx];
+                        <span class="code-comment">// Remove escape sequences and clean up</span>
+                        let cleaned = raw_text.replace("\\n", " ").replace("\\t", " ");
+                        text_preview = cleaned.chars().take(200).collect();
+                    }
+                }
+            }
+            break; // Found text, no need to check further pages for classification
+        }
+    }
+
+    let classification = if has_text { "TextBased" } else { "Scanned" }.to_string();
+    let confidence = if has_text { 0.95 } else { 0.80 };
+
+    Ok(PdfInspectionResult {
+        classification,
+        confidence,
+        text_preview,
+        page_count,
+    })
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run Locally</h2>
+                <p>Now that the logic is in place, we compile the Rust binary and execute it against a sample PDF file. You should have a test file ready, such as a simple text-based PDF or a scanned image PDF, to see how the classifier behaves.</p>
+                <p>Running the binary with <code>cargo run</code> will trigger the PDF parsing routine. The program will read the file path provided as an argument, analyze the content streams, and print the resulting JSON classification to your terminal.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Compile the project in release mode for optimized performance</span>
+cargo build --release
+
+<span class="code-comment"># Run the binary against a sample PDF file</span>
+<span class="code-comment"># Replace 'sample.pdf' with the path to your actual test file</span>
+./target/release/pdf-inspector sample.pdf</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and Extend</h2>
+                <p>Verify the output by piping the result into <code>jq</code> to pretty-print the JSON. This allows you to confirm that the 'classification' field correctly identifies the PDF as 'TextBased' or 'Scanned'.</p>
+                <p>To extend this minimal clone, consider integrating the <code>pdf-extract</code> crate. This library can pull actual text strings from the PDF, allowing you to populate the 'extracted_text' field with real content rather than just a placeholder or empty string.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Verify the JSON structure and classification result</span>
+./target/release/pdf-inspector sample.pdf | jq .
+
+<span class="code-comment"># Example of extending with pdf-extract (requires adding to Cargo.toml)</span>
+<span class="code-comment"># cargo add pdf-extract</span>
+<span class="code-comment"># Then update main.rs to use pdf_extract::extract_text_from_file</span></code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Project compiles without errors</td><td>cargo build --release</td></tr>
+            <tr><td>JSON output is valid and contains 'classification' field</td><td>cargo run --release -- sample.pdf | jq .classification</td></tr>
+            <tr><td>Correctly identifies a text-based PDF</td><td>Run against a known text PDF and check for 'TextBased'</td></tr>
+            <tr><td>Handles missing file gracefully</td><td>cargo run --release -- nonexistent.pdf &amp;&amp; echo 'Should have errored'</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>To make this production-ready, integrate a full text extraction library like <code>pdf-extract</code> or <code>tesseract</code> for OCR support on scanned pages.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

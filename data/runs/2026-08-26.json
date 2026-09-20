@@ -1,0 +1,33 @@
+{
+  "date": "2026-08-26",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Local-First AI Second Brain for Obsidian"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Minimal AI Job Search Agent",
+      "source": "github_trending",
+      "url": "https://github.com/MadsLorentzen/ai-job-search",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\2026-08-26_minimal-ai-job-search-agent.html",
+      "tagline": "Automate job filtering and cover letter drafting locally with Python and SQLite."
+    },
+    {
+      "title": "Build a Self-Hosted Search Engine Clone",
+      "source": "github_trending",
+      "url": "https://github.com/asciimoo/hister",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\2026-08-26_minimal-personal-search-engine-clone.html",
+      "tagline": "Build a private, full-text search index for your local files in 45 minutes."
+    }
+  ],
+  "delivery_ids": [
+    "1542056392414728244",
+    "1542056400254148758"
+  ],
+  "delivery_errors": []
+}

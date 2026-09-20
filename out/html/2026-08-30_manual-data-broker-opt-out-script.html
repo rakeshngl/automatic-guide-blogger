@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Manual Data Broker Opt-Out Script</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Python</div>
+    </nav>
+
+    <header>
+        <h1>Manual Data Broker Opt-Out Script</h1>
+        <p>Build a Python script to automate privacy opt-outs</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> beginner build. Today we are constructing a minimal, privacy-first tool inspired by the open-source project <code>remove-your-data</code>. Instead of paying for subscription services, you will write a script that systematically visits data broker websites to submit removal requests.</p>
+        <p>This guide focuses on the core mechanic: identifying a target broker, extracting the necessary form fields, and submitting a removal request. We will build a working prototype that handles one major broker (Whitepages) to demonstrate the pattern, which you can then extend to others. No paid APIs or complex infrastructure are required.</p>
+
+        <div class="fix-box">
+            <h4>Before You Begin</h4>
+            <ul>
+                <li>You must have Python 3.9+ installed. This script uses <code>requests</code> and <code>BeautifulSoup4</code>, which are standard free libraries.</li>
+                <li>This is a simplified clone. Real-world brokers use CAPTCHAs, dynamic JavaScript, and legal hurdles. This script works on static HTML forms only and may break if the broker updates their site structure.</li>
+                <li>Respect <code>robots.txt</code> and rate limits. Do not run this in a tight loop against a single site; add delays between requests to avoid being blocked.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">System Architecture</div>
+            <svg width="100%" height="190" viewBox="0 0 630 190" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="142" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL ENVIRONMENT</text>
+<rect x="426" y="60" width="198" height="70" fill="none" stroke="#b91c1c" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="525.0" y="78" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:#b91c1c">DATA BROKER SITES</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">reads targets</text>
+<line x1="400" y1="74" x2="440" y2="110" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="420" y="86" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">GET/POST requests</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Python Script</text>
+<text x="315.0" y="87" class="node-subtext">requests + bs4</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node" />
+<text x="315.0" y="143" class="node-text">Config File</text>
+<text x="315.0" y="159" class="node-subtext">JSON/YAML</text>
+<rect x="440" y="86" width="170" height="48" rx="10" class="node" />
+<text x="525.0" y="107" class="node-text">Whitepages.com</text>
+<text x="525.0" y="123" class="node-subtext">Opt-Out Form</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold and Dependencies</h2>
+                <p>Create a new directory for your project. We will use a virtual environment to keep dependencies isolated. Install <code>requests</code> for HTTP calls and <code>beautifulsoup4</code> for parsing HTML forms.</p>
+                <p>Initialize the project structure. We need a main script file and a configuration file where you will store your personal details (name, address) to be removed.</p>
+                <p><strong>terminal</strong></p>
+<div class="code-block"><pre><code>mkdir data-broker-remover
+cd data-broker-remover
+python3 -m venv venv
+source venv/bin/activate
+pip install requests beautifulsoup4</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define Target Data</h2>
+                <p>Create a <code>config.json</code> file. This acts as your 'identity' for the script. It holds the name and address you want to remove from the broker. This separates data from logic, making it easy to update.</p>
+                <p>The script will read this file to populate the removal forms. Ensure the data matches what is publicly listed on the broker site.</p>
+                <p><strong>config.json</strong></p>
+<div class="code-block"><pre><code>{
+  "first_name": "John",
+  "last_name": "Doe",
+  "address": "123 Main St",
+  "city": "Anytown",
+  "state": "CA",
+  "zip": "12345"
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core Feature - Fetch and Parse Form</h2>
+                <p>Write the main script <code>remover.py</code>. First, load the config. Then, use <code>requests</code> to fetch the opt-out page of a broker (e.g., Whitepages).</p>
+                <p>Use <code>BeautifulSoup</code> to find the HTML form. Most brokers have a form with hidden fields (like CSRF tokens or form IDs) that must be included in the submission. We will extract these automatically.</p>
+                <p><strong>remover.py</strong></p>
+<div class="code-block"><pre><code>import json
+import requests
+from bs4 import BeautifulSoup
+
+<span class="code-comment"># Load configuration</span>
+with open('config.json', 'r') as f:
+    user_data = json.load(f)
+
+<span class="code-comment"># Target URL (Example: Whitepages opt-out form)</span>
+TARGET_URL = "https://www.whitepages.com/opt-out"
+
+<span class="code-comment"># Fetch the page</span>
+response = requests.get(TARGET_URL)
+if response.status_code != 200:
+    print(f"Failed to fetch page: {response.status_code}")
+    exit(1)
+
+<span class="code-comment"># Parse HTML</span>
+soup = BeautifulSoup(response.text, 'html.parser')
+form = soup.find('form')
+
+if not form:
+    print("No form found on the page.")
+    exit(1)
+
+print("Form found.")
+
+<span class="code-comment"># Extract hidden fields (e.g., CSRF tokens)</span>
+hidden_fields = {}
+for input_tag in form.find_all('input', type='hidden'):
+    name = input_tag.get('name')
+    value = input_tag.get('value')
+    if name and value:
+        hidden_fields[name] = value
+
+print(f"Extracted {len(hidden_fields)} hidden fields.")</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Submit Removal Request</h2>
+                <p>Now we submit the form. We need to map our <code>user_data</code> to the form's input fields. Inspect the broker's HTML (using browser DevTools) to find the <code>name</code> attributes for name, address, etc.</p>
+                <p>Add a delay after submission to be polite to the server. Print the response status to verify success.</p>
+                <p><strong>remover.py</strong></p>
+<div class="code-block"><pre><code>import requests
+from bs4 import BeautifulSoup
+import json
+import time
+import os
+
+def load_config():
+    with open('config.json', 'r') as f:
+        return json.load(f)
+
+def submit_removal_request(url, user_data):
+    print(f"Fetching form from {url}...")
+    response = requests.get(url)
+    response.raise_for_status()
+    
+    soup = BeautifulSoup(response.text, 'html.parser')
+    form = soup.find('form')
+    
+    if not form:
+        print("No form found on the page.")
+        return
+    
+    <span class="code-comment"># Extract hidden fields</span>
+    hidden_fields = {}
+    for input_tag in form.find_all('input', type='hidden'):
+        if input_tag.get('name') and input_tag.get('value'):
+            hidden_fields[input_tag['name']] = input_tag['value']
+    
+    <span class="code-comment"># Map user data to form fields</span>
+    <span class="code-comment"># Note: These field names are examples. You must inspect the target site's HTML</span>
+    <span class="code-comment"># to find the correct 'name' attributes for the inputs you want to fill.</span>
+    payload = {
+        'first_name': user_data.get('first_name', ''),
+        'last_name': user_data.get('last_name', ''),
+        'address': user_data.get('address', ''),
+        'city': user_data.get('city', ''),
+        'state': user_data.get('state', ''),
+        'zip': user_data.get('zip', '')
+    }
+    
+    <span class="code-comment"># Combine hidden fields and user data</span>
+    payload.update(hidden_fields)
+    
+    print(f"Submitting removal request...")
+    submit_url = form.get('action')
+    if not submit_url or submit_url.startswith('/'):
+        <span class="code-comment"># Handle relative URLs</span>
+        from urllib.parse import urljoin
+        submit_url = urljoin(url, submit_url)
+    
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    
+    response = requests.post(submit_url, data=payload, headers=headers)
+    response.raise_for_status()
+    
+    print(f"Request submitted successfully. Status code: {response.status_code}")
+    
+    <span class="code-comment"># Be polite</span>
+    time.sleep(5)
+
+def main():
+    config = load_config()
+    url = "https://www.whitepages.com/opt-out"
+    submit_removal_request(url, config)
+
+if __name__ == "__main__":
+    main()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run and Verify</h2>
+                <p>Run the script. It will fetch the page, extract hidden tokens, and submit your data. Check the console output for success.</p>
+                <p>Verify by visiting the broker site and searching for your name. Note that removals can take days to process. This script is a starting point; you will need to adapt the field names for each different broker.</p>
+                <p><strong>terminal</strong></p>
+<div class="code-block"><pre><code>python remover.py</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Virtual environment activated and libraries installed</td><td>pip list | grep requests</td></tr>
+            <tr><td>Config file created with valid JSON</td><td>cat config.json</td></tr>
+            <tr><td>Script runs without errors and prints 'Form found'</td><td>python remover.py</td></tr>
+            <tr><td>Script prints 'Request submitted successfully'</td><td>python remover.py</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>This script handles one broker. To build a full 'Data Broker Removal' tool, create a list of URLs and loop through them, adjusting the form field mappings for each site. Always respect rate limits and terms of service.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

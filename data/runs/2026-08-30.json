@@ -1,0 +1,50 @@
+{
+  "date": "2026-08-30",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Screenshot-to-Code Converter with Python and AI"
+  ],
+  "failed_sources": [
+    "reddit_selfhosted"
+  ],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a GitHub Activity Receipt Generator",
+      "source": "hn_show",
+      "url": "https://receipthub.io/github",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-08-30_github-activity-receipt-generator.html",
+      "tagline": "Turn your commits into a thermal-paper style receipt",
+      "navbar_badge": "Beginner",
+      "est_minutes": 30,
+      "tags": [
+        "JavaScript",
+        "API",
+        "Visualization"
+      ]
+    },
+    {
+      "title": "Build a Privacy-First Data Broker Removal Script",
+      "source": "hn_show",
+      "url": "https://github.com/k7cfo/remove-your-data",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-08-30_manual-data-broker-opt-out-script.html",
+      "tagline": "Build a Python script to automate privacy opt-outs",
+      "navbar_badge": "Python",
+      "est_minutes": 40,
+      "tags": [
+        "Python",
+        "Automation",
+        "Privacy"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1543454896588718202",
+    "1543454903568179244"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

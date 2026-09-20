@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: VoiceBox Clone: AI Voice Studio</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">TypeScript</div>
+    </nav>
+
+    <header>
+        <h1>VoiceBox Clone: AI Voice Studio</h1>
+        <p>Build a local voice cloning &amp; TTS studio with Node.js and Whisper</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build. Today we are creating a minimal, working clone of <strong>VoiceBox</strong>, the open-source AI voice studio that lets you clone voices and generate speech locally.</p>
+        <p>We will use a free-tier stack: <strong>Node.js</strong>, <strong>Express</strong>, and <strong>Whisper</strong> (via <code>whisper.cpp</code> or a local API) for transcription, and a simple TTS engine for synthesis. No paid APIs required—everything runs on your machine.</p>
+
+        <div class="fix-box">
+            <h4>Prerequisites &amp; Simplifications</h4>
+            <ul>
+                <li>Requires <strong>Node.js v18+</strong> and <strong>FFmpeg</strong> installed on your system for audio processing.</li>
+                <li>This clone simplifies VoiceBox’s full GUI into a <strong>REST API + minimal HTML UI</strong>; real VoiceBox has a full Electron desktop app with real-time voice cloning.</li>
+                <li>Voice cloning quality depends on your local Whisper model size; use <code>base</code> or <code>small</code> for speed on CPU.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">VoiceBox Clone Architecture</div>
+            <svg width="100%" height="406" viewBox="0 0 420 406" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="358" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Transcribe</text>
+<line x1="315" y1="170" x2="315" y2="266" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="212" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Synthesize</text>
+<line x1="315" y1="170" x2="315" y2="338" class="link" marker-start="url(#gw-arrow)" marker-end="url(#gw-arrow)"/>
+<text x="315" y="248" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">Store/Load</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">HTML UI</text>
+<text x="315.0" y="87" class="node-subtext">Browser</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Express API</text>
+<text x="315.0" y="159" class="node-subtext">Node.js</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">Whisper</text>
+<text x="315.0" y="231" class="node-subtext">Transcription</text>
+<rect x="230" y="266" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="287" class="node-text">TTS Engine</text>
+<text x="315.0" y="303" class="node-subtext">Speech Synthesis</text>
+<rect x="230" y="338" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="359" class="node-text">SQLite</text>
+<text x="315.0" y="375" class="node-subtext">Voice Profiles</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold Project</h2>
+                <p>We start by initializing a Node.js project with TypeScript, Express, and SQLite. This setup gives us a type-safe backend that can handle file uploads and database operations without external services.</p>
+                <p>We also create the necessary directories for storing uploaded audio files and generated speech outputs. This keeps our project organized and ensures the server knows where to look for media assets.</p>
+<div class="code-block"><pre><code>mkdir voicebox-clone &amp;&amp; cd voicebox-clone
+npm init -y
+npm install express multer better-sqlite3 uuid
+npm install -D typescript @types/node @types/express @types/multer @types/better-sqlite3 ts-node
+mkdir -p src/routes public uploads generated
+npx tsc --init
+<span class="code-comment"># Configure tsconfig.json for Node.js</span>
+node -e "const fs=require('fs'); const cfg=JSON.parse(fs.readFileSync('tsconfig.json','utf8')); cfg.compilerOptions={module:'commonjs',target:'es2016',esModuleInterop:true,strict:true,skipLibCheck:true,outDir:'./dist'}; fs.writeFileSync('tsconfig.json',JSON.stringify(cfg,null,2));"
+<span class="code-comment"># Update package.json scripts</span>
+node -e "const fs=require('fs'); const pkg=JSON.parse(fs.readFileSync('package.json','utf8')); pkg.scripts={dev:'ts-node src/index.ts',build:'tsc',start:'node dist/index.js'}; fs.writeFileSync('package.json',JSON.stringify(pkg,null,2));"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data Model &amp; SQLite Setup</h2>
+                <p>Next, we define our data layer using SQLite via the <code>better-sqlite3</code> package. This is a synchronous, fast database that is perfect for local applications.</p>
+                <p>We create a <code>voice_profiles</code> table to store metadata about each cloned voice, including the name, the path to the sample audio, and the transcription text. We also write a helper function to initialize the database schema and insert a sample profile for testing.</p>
+                <p><strong>src/db.ts</strong></p>
+<div class="code-block"><pre><code>import Database from 'better-sqlite3';
+import path from 'path';
+
+const dbPath = path.join(__dirname, '..', 'voicebox.db');
+const db = new Database(dbPath);
+
+<span class="code-comment">// Enable WAL mode for better performance</span>
+pragma(db);
+
+function pragma(db: Database.Database) {
+  db.pragma('journal_mode = WAL');
+}
+
+<span class="code-comment">// Initialize schema</span>
+export function initDb() {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS voice_profiles (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      audio_path TEXT NOT NULL,
+      transcription TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+  
+  <span class="code-comment">// Insert sample profile if table is empty</span>
+  const count = db.prepare('SELECT COUNT(*) as count FROM voice_profiles').get() as { count: number };
+  if (count.count === 0) {
+    db.prepare('INSERT INTO voice_profiles (id, name, audio_path, transcription) VALUES (?, ?, ?, ?)')
+      .run('sample-1', 'Sample Voice', 'uploads/sample.mp3', 'This is a sample voice profile for testing.');
+  }
+}
+
+export function getDb() {
+  return db;
+}
+
+export function getVoiceProfiles() {
+  return db.prepare('SELECT * FROM voice_profiles ORDER BY created_at DESC').all();
+}
+
+export function getVoiceProfileById(id: string) {
+  return db.prepare('SELECT * FROM voice_profiles WHERE id = ?').get(id);
+}
+
+export function insertVoiceProfile(id: string, name: string, audioPath: string, transcription: string) {
+  db.prepare('INSERT INTO voice_profiles (id, name, audio_path, transcription) VALUES (?, ?, ?, ?)')
+    .run(id, name, audioPath, transcription);
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core Feature 1 – Voice Upload &amp; Transcription</h2>
+                <p>Now we build the core upload functionality. We create an Express route that accepts audio files using <code>multer</code> for multipart form data handling.</p>
+                <p>Upon receiving an audio file, we simulate the Whisper transcription process. In a full implementation, you would call a local <code>whisper.cpp</code> binary or API. For this clone, we generate a mock transcription to demonstrate the flow and store the result in our SQLite database.</p>
+                <p><strong>src/routes/voice.ts</strong></p>
+<div class="code-block"><pre><code>import { Router, Request, Response } from 'express';
+import multer from 'multer';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+import { insertVoiceProfile, getVoiceProfiles } from '../db';
+
+const router = Router();
+
+<span class="code-comment">// Configure Multer for file uploads</span>
+const storage = multer.diskStorage({
+  destination: (req, file, cb) =&gt; {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) =&gt; {
+    const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`;
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({ 
+  storage: storage,
+  fileFilter: (req, file, cb) =&gt; {
+    if (file.mimetype === 'audio/mpeg' || file.mimetype === 'audio/wav') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only MP3 and WAV files are allowed'), false);
+    }
+  }
+});
+
+<span class="code-comment">// GET /api/voices - List all voice profiles</span>
+router.get('/', (req: Request, res: Response) =&gt; {
+  const profiles = getVoiceProfiles();
+  res.json(profiles);
+});
+
+<span class="code-comment">// POST /api/voices - Upload a new voice profile</span>
+router.post('/', upload.single('audio'), (req: Request, res: Response) =&gt; {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No audio file provided' });
+  }
+
+  const id = uuidv4();
+  const name = req.body.name || 'Unnamed Voice';
+  const audioPath = req.file.path;
+  
+  <span class="code-comment">// Simulate Whisper Transcription</span>
+  <span class="code-comment">// In a real app, you would call whisper.cpp here:</span>
+  <span class="code-comment">// const { stdout } = await exec(`whisper-cli -m models/base.en -f ${audioPath} -oj -of output`);</span>
+  const mockTranscription = `Transcription of ${req.file.originalname} at ${new Date().toISOString()}`;
+
+  insertVoiceProfile(id, name, audioPath, mockTranscription);
+
+  res.status(201).json({
+    id,
+    name,
+    audio_path: audioPath,
+    transcription: mockTranscription
+  });
+});
+
+export default router;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Core Feature 2 – TTS Synthesis API</h2>
+                <p>Now that we can transcribe audio, let's build the reverse: turning text back into speech. We will create a <code>/synthesize</code> endpoint that takes a text string and a voice profile ID.</p>
+                <p>For this minimal clone, we will use <code>espeak-ng</code> on Linux or <code>say</code> on macOS as our TTS engine. In a production VoiceBox clone, you would swap this out for a neural TTS model like Coqui TTS, but for now, we want a working pipeline that proves the architecture.</p>
+                <p><strong>src/routes/tts.ts</strong></p>
+<div class="code-block"><pre><code>import { Router, Request, Response } from 'express';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import path from 'path';
+import fs from 'fs';
+import { getVoiceProfile } from '../db';
+
+const execAsync = promisify(exec);
+const router = Router();
+
+<span class="code-comment">// Configuration for TTS engine</span>
+const TTS_ENGINE = process.platform === 'darwin' ? 'say' : 'espeak-ng';
+const OUTPUT_DIR = path.join(process.cwd(), 'generated');
+
+<span class="code-comment">// Ensure output directory exists</span>
+if (!fs.existsSync(OUTPUT_DIR)) {
+  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+}
+
+router.post('/synthesize', async (req: Request, res: Response) =&gt; {
+  const { text, voiceId } = req.body;
+
+  <span class="code-comment">// Validate input</span>
+  if (!text || !voiceId) {
+    return res.status(400).json({ error: 'Text and voiceId are required' });
+  }
+
+  <span class="code-comment">// Fetch voice profile to ensure it exists</span>
+  const profile = getVoiceProfile(voiceId);
+  if (!profile) {
+    return res.status(404).json({ error: 'Voice profile not found' });
+  }
+
+  <span class="code-comment">// Generate a unique filename</span>
+  const filename = `tts_${Date.now()}.wav`;
+  const outputFilePath = path.join(OUTPUT_DIR, filename);
+
+  try {
+    <span class="code-comment">// Sanitize text to prevent command injection</span>
+    const safeText = text.replace(/[^a-zA-Z0-9 ,.!?]/g, '');
+
+    let command = '';
+    if (process.platform === 'darwin') {
+      <span class="code-comment">// macOS say command</span>
+      command = `say -o "${outputFilePath}" -f /dev/stdin &lt;&lt;&lt; "${safeText}"`;
+    } else {
+      <span class="code-comment">// Linux espeak-ng command</span>
+      command = `espeak-ng -w "${outputFilePath}" "${safeText}"`;
+    }
+
+    await execAsync(command);
+
+    <span class="code-comment">// Return the audio file as a download</span>
+    res.download(outputFilePath, filename, (err) =&gt; {
+      if (err) {
+        console.error('Error downloading file:', err);
+        res.status(500).json({ error: 'Failed to send audio file' });
+      }
+    });
+
+  } catch (error) {
+    console.error('TTS generation error:', error);
+    res.status(500).json({ error: 'Failed to generate speech' });
+  }
+});
+
+export default router;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Minimal HTML UI</h2>
+                <p>With our API endpoints ready, we need a simple interface to interact with them. We will create a single <code>index.html</code> file that serves as the frontend for our VoiceBox clone.</p>
+                <p>This UI will have two main sections: a file upload form for voice samples and a text input area for TTS generation. We will use vanilla JavaScript with <code>fetch</code> to communicate with the Express server, keeping the setup lightweight and dependency-free.</p>
+                <p><strong>public/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;VoiceBox Clone&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+    h1 { color: #333; }
+    section { margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input[type="file"], input[type="text"], textarea { width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; }
+    button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background-color: #0056b3; }
+    #results { margin-top: 10px; padding: 10px; background-color: #f9f9f9; border-radius: 4px; }
+    audio { width: 100%; margin-top: 10px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;VoiceBox Clone&lt;/h1&gt;
+
+  &lt;section&gt;
+    &lt;h2&gt;Upload Voice Sample&lt;/h2&gt;
+    &lt;form id="uploadForm"&gt;
+      &lt;label for="audioFile"&gt;Select Audio File (MP3/WAV):&lt;/label&gt;
+      &lt;input type="file" id="audioFile" accept=".mp3,.wav" required&gt;
+      &lt;button type="submit"&gt;Upload &amp; Transcribe&lt;/button&gt;
+    &lt;/form&gt;
+    &lt;div id="uploadResults"&gt;&lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;section&gt;
+    &lt;h2&gt;Text-to-Speech&lt;/h2&gt;
+    &lt;form id="ttsForm"&gt;
+      &lt;label for="voiceId"&gt;Voice Profile ID:&lt;/label&gt;
+      &lt;input type="text" id="voiceId" placeholder="Enter voice ID" required&gt;
+      &lt;label for="ttsText"&gt;Text to Synthesize:&lt;/label&gt;
+      &lt;textarea id="ttsText" rows="4" placeholder="Enter text here" required&gt;&lt;/textarea&gt;
+      &lt;button type="submit"&gt;Generate Speech&lt;/button&gt;
+    &lt;/form&gt;
+    &lt;div id="ttsResults"&gt;&lt;/div&gt;
+  &lt;/section&gt;
+
+  &lt;script&gt;
+    // Handle Voice Upload
+    document.getElementById('uploadForm').addEventListener('submit', async (e) =&gt; {
+      e.preventDefault();
+      const fileInput = document.getElementById('audioFile');
+      const resultsDiv = document.getElementById('uploadResults');
+      
+      if (!fileInput.files.length) return;
+      
+      const formData = new FormData();
+      formData.append('audio', fileInput.files[0]);
+      
+      resultsDiv.innerHTML = 'Uploading and transcribing...';
+      
+      try {
+        const response = await fetch('/api/voice/upload', { method: 'POST', body: formData });
+        const data = await response.json();
+        
+        if (response.ok) {
+          resultsDiv.innerHTML = `
+            &lt;strong&gt;Transcription:&lt;/strong&gt; ${data.transcription}&lt;br&gt;
+            &lt;strong&gt;Voice ID:&lt;/strong&gt; ${data.voiceId}
+          `;
+        } else {
+          resultsDiv.innerHTML = `Error: ${data.error}`;
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = `Upload failed: ${error.message}`;
+      }
+    });
+
+    // Handle TTS Generation
+    document.getElementById('ttsForm').addEventListener('submit', async (e) =&gt; {
+      e.preventDefault();
+      const voiceId = document.getElementById('voiceId').value;
+      const text = document.getElementById('ttsText').value;
+      const resultsDiv = document.getElementById('ttsResults');
+      
+      resultsDiv.innerHTML = 'Generating speech...';
+      
+      try {
+        const response = await fetch('/api/tts/synthesize', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, voiceId })
+        });
+        
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          resultsDiv.innerHTML = `&lt;audio controls src="${url}"&gt;&lt;/audio&gt;`;
+        } else {
+          const data = await response.json();
+          resultsDiv.innerHTML = `Error: ${data.error}`;
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = `TTS failed: ${error.message}`;
+      }
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">6</div>
+            <div>
+                <h2>Phase 6: Run Locally &amp; Verify</h2>
+                <p>Finally, let's start our server and test the full workflow. We will use <code>ts-node-dev</code> to automatically restart the server when we make changes, making development smoother.</p>
+                <p>Once the server is running, open your browser to <code>http://localhost:3000</code>. You should see the minimal UI. Upload a short audio clip to test transcription, then use the TTS section to generate speech from text.</p>
+<div class="code-block"><pre><code>npm run dev</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>Run <code>npm run dev</code> and confirm <code>http://localhost:3000</code> loads the HTML UI.</td></tr>
+            <tr><td>Voice upload works</td><td>Upload a 10-second MP3 via the UI; verify the transcription text appears in the response.</td></tr>
+            <tr><td>TTS synthesis works</td><td>Enter text in the UI, click Generate, and confirm an audio file is downloaded and playable.</td></tr>
+            <tr><td>SQLite persistence works</td><td>Restart the server and verify the uploaded voice profile is still listed in the UI.</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>Extend this clone by adding real-time voice cloning with a neural TTS model (e.g., Coqui TTS), implementing a full Electron GUI, or adding voice profile management features. Explore the VoiceBox GitHub repo for advanced features like agent integration and multi-voice mixing.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

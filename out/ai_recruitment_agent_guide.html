@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html data-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UVF IT — AI Recruitment Agent Guide</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@300..700&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* ─── Design Tokens ────────────────────────────────── */
+        :root, [data-theme="light"] {
+            --color-bg:             #f5f7f5;
+            --color-surface:        #ffffff;
+            --color-surface-2:      #f9fbf9;
+            --color-surface-offset: #eef2ee;
+            --color-divider:        #dde5dd;
+            --color-border:         #d0dbd0;
+            --color-text:           #1a2a1a;
+            --color-text-muted:     #4a6a4a;
+            --color-text-faint:     #8aaa8a;
+            --color-primary:        #1e6b22;
+            --color-primary-hover:  #165019;
+            --color-primary-light:  #e8f5e9;
+            --color-accent:         #2e7d32;
+            --color-code-bg:        #0d1a0e;
+            --color-code-text:      #e8f5e9;
+            --color-code-border:    #4caf50;
+            --color-warning-bg:     #fff8e1;
+            --color-warning-border: #f9a825;
+            --color-warning-text:   #5d4037;
+            --color-fix-bg:         #e3f2fd;
+            --color-fix-border:     #1565c0;
+            --color-fix-text:       #0d2b5e;
+            --shadow-sm: 0 1px 3px rgba(0,40,0,0.07);
+            --shadow-md: 0 4px 16px rgba(0,40,0,0.09);
+            --shadow-lg: 0 12px 40px rgba(0,40,0,0.12);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.625rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'Geist', 'Inter', system-ui, sans-serif;
+            --font-mono: 'Geist Mono', 'Fira Code', monospace;
+            --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        [data-theme="dark"] {
+            --color-bg:             #0e160e;
+            --color-surface:        #131f13;
+            --color-surface-2:      #172017;
+            --color-surface-offset: #1c271c;
+            --color-divider:        #243024;
+            --color-border:         #2d3d2d;
+            --color-text:           #c8dcc8;
+            --color-text-muted:     #7a9c7a;
+            --color-text-faint:     #4a6a4a;
+            --color-primary:        #66bb6a;
+            --color-primary-hover:  #81c784;
+            --color-primary-light:  #1a2e1a;
+            --color-accent:         #4caf50;
+            --color-code-bg:        #0a120a;
+            --color-code-text:      #c8e6c9;
+            --color-code-border:    #388e3c;
+            --color-warning-bg:     #1a1400;
+            --color-warning-border: #f59f00;
+            --color-warning-text:   #e9c46a;
+            --color-fix-bg:         #0a1628;
+            --color-fix-border:     #2979ff;
+            --color-fix-text:       #90caf9;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.5);
+        }
+
+        /* ─── Base ─────────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        body {
+            font-family: var(--font-body);
+            font-size: clamp(1rem, 0.95rem + 0.25vw, 1.0625rem);
+            line-height: 1.75;
+            color: var(--color-text);
+            background: var(--color-bg);
+            min-height: 100dvh;
+            transition: background var(--transition), color var(--transition);
+        }
+        img, svg { display: block; max-width: 100%; }
+        a { color: var(--color-primary); text-decoration: none; transition: color var(--transition); }
+        a:hover { color: var(--color-primary-hover); }
+        p { text-wrap: pretty; }
+        h1, h2, h3, h4 { text-wrap: balance; line-height: 1.2; }
+        ::selection { background: rgba(46,125,50,0.18); color: var(--color-text); }
+        :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+        /* ─── Navigation ───────────────────────────────────── */
+        .navbar {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-divider);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 0 clamp(1rem, 4vw, 2.5rem);
+            height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .navbar-brand {
+            display: flex; align-items: center; gap: 10px;
+            font-family: var(--font-body);
+            font-weight: 700; font-size: 1.125rem;
+            color: var(--color-text); letter-spacing: -0.3px;
+        }
+        .navbar-brand .it-tag {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
+            color: var(--color-primary); background: var(--color-primary-light);
+            padding: 2px 7px; border-radius: 4px; text-transform: uppercase;
+        }
+        .navbar-actions { display: flex; align-items: center; gap: 12px; }
+        .theme-toggle {
+            width: 36px; height: 36px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--color-border);
+            background: transparent; cursor: pointer;
+            color: var(--color-text-muted);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+        .theme-toggle:hover { background: var(--color-surface-offset); color: var(--color-text); }
+        .nav-badge {
+            font-size: 0.75rem; font-weight: 600; letter-spacing: 0.3px;
+            color: var(--color-text-muted);
+            background: var(--color-surface-offset);
+            border: 1px solid var(--color-border);
+            padding: 4px 10px; border-radius: 20px;
+        }
+
+        /* ─── Hero ─────────────────────────────────────────── */
+        .hero {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-divider);
+            padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 4vw, 2.5rem) clamp(2.5rem, 6vw, 4.5rem);
+            position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(46,125,50,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-inner {
+            max-width: 860px; margin: 0 auto; position: relative;
+        }
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 0.8rem; font-weight: 600; letter-spacing: 1.2px;
+            text-transform: uppercase; color: var(--color-primary);
+            background: var(--color-primary-light);
+            border: 1px solid rgba(46,125,50,0.2);
+            padding: 5px 12px; border-radius: 20px;
+            margin-bottom: 1.25rem;
+        }
+        .hero-eyebrow-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--color-primary);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.25rem, 1.5rem + 3.5vw, 3.75rem);
+            font-weight: 400; letter-spacing: -0.5px;
+            color: var(--color-text); margin-bottom: 1.25rem;
+            line-height: 1.15;
+        }
+        .hero h1 em { font-style: italic; color: var(--color-primary); }
+        .hero-desc {
+            font-size: clamp(1rem, 0.95rem + 0.3vw, 1.15rem);
+            color: var(--color-text-muted); max-width: 62ch;
+            margin-bottom: 2rem; line-height: 1.7;
+        }
+        .hero-meta {
+            display: flex; flex-wrap: wrap; gap: 1.5rem;
+            font-size: 0.85rem; color: var(--color-text-muted);
+            border-top: 1px solid var(--color-divider);
+            padding-top: 1.25rem;
+        }
+        .hero-meta-item { display: flex; align-items: center; gap: 6px; }
+        .hero-meta-item svg { color: var(--color-primary); }
+
+        /* ─── Layout ───────────────────────────────────────── */
+        .page-layout {
+            max-width: 1100px; margin: 0 auto;
+            padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 3vw, 2rem);
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: clamp(1.5rem, 3vw, 3rem);
+            align-items: start;
+        }
+        @media (max-width: 820px) {
+            .page-layout { grid-template-columns: 1fr; }
+            .toc-sidebar { display: none; }
+        }
+
+        /* ─── Table of Contents ────────────────────────────── */
+        .toc-sidebar {
+            position: sticky; top: 80px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .toc-title {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; color: var(--color-text-faint);
+            margin-bottom: 0.875rem;
+        }
+        .toc-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+        .toc-list a {
+            display: block; font-size: 0.8rem; font-weight: 500;
+            color: var(--color-text-muted); padding: 5px 8px;
+            border-radius: 6px; line-height: 1.4;
+            transition: background var(--transition), color var(--transition);
+        }
+        .toc-list a:hover { background: var(--color-surface-offset); color: var(--color-text); }
+        .toc-list .toc-phase { font-weight: 600; color: var(--color-text); font-size: 0.825rem; }
+
+        /* ─── Article Content ──────────────────────────────── */
+        .article { min-width: 0; }
+        .article > * + * { margin-top: 1.25rem; }
+
+        /* ─── Phase Sections ───────────────────────────────── */
+        .phase-section {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: clamp(1.75rem, 3vw, 2.5rem);
+            box-shadow: var(--shadow-sm);
+            margin-top: 2rem;
+        }
+        .phase-section + .phase-section { margin-top: 1.5rem; }
+        .phase-header {
+            display: flex; align-items: center; gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--color-divider);
+        }
+        .phase-number {
+            width: 44px; height: 44px; flex-shrink: 0;
+            background: var(--color-primary); color: white;
+            border-radius: 12px; font-weight: 700; font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(46,125,50,0.3);
+            font-family: var(--font-body);
+        }
+        .phase-title-group { flex: 1; }
+        .phase-tag {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--color-primary);
+            background: var(--color-primary-light);
+            padding: 2px 8px; border-radius: 4px;
+            display: inline-block; margin-bottom: 3px;
+        }
+        .phase-title {
+            font-family: var(--font-body);
+            font-size: clamp(1.1rem, 1rem + 0.5vw, 1.3rem);
+            font-weight: 700; color: var(--color-text); margin: 0;
+        }
+        .article p { color: var(--color-text-muted); margin-bottom: 0.875rem; }
+        .article ul, .article ol {
+            color: var(--color-text-muted); padding-left: 1.375rem;
+            display: flex; flex-direction: column; gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .article li::marker { color: var(--color-primary); }
+        .article li strong { color: var(--color-text); }
+
+        /* ─── Inline Code ──────────────────────────────────── */
+        code:not(pre code) {
+            font-family: var(--font-mono);
+            font-size: 0.875em;
+            background: var(--color-surface-offset);
+            border: 1px solid var(--color-border);
+            color: var(--color-primary);
+            padding: 1px 6px; border-radius: 4px;
+        }
+
+        /* ─── Code Blocks ──────────────────────────────────── */
+        .code-wrap { margin: 1.25rem 0; }
+        .code-header {
+            background: #1a2b1a;
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            padding: 8px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            border: 1px solid #2d4a2d; border-bottom: none;
+        }
+        .code-lang {
+            font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500;
+            letter-spacing: 1px; text-transform: uppercase; color: #6fa86f;
+        }
+        .code-dots { display: flex; gap: 6px; }
+        .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .code-dot:nth-child(1) { background: #ff5f57; }
+        .code-dot:nth-child(2) { background: #febc2e; }
+        .code-dot:nth-child(3) { background: #28c840; }
+        .code-block {
+            background: var(--color-code-bg);
+            color: var(--color-code-text);
+            border: 1px solid #2d4a2d;
+            border-top: none;
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+            padding: 1.25rem 1.375rem;
+            font-family: var(--font-mono);
+            font-size: clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem);
+            line-height: 1.7; overflow-x: auto;
+        }
+        .code-block pre { margin: 0; white-space: pre; }
+        /* Syntax highlight tokens */
+        .kw { color: #80cbc4; } /* keywords */
+        .fn { color: #a5d6a7; } /* functions */
+        .st { color: #f48fb1; } /* strings */
+        .cm { color: #546e54; font-style: italic; } /* comments */
+        .nb { color: #ce93d8; } /* builtins */
+        .nm { color: #fff176; } /* names/vars */
+
+        /* ─── Sub-steps ────────────────────────────────────── */
+        .sub-step {
+            display: flex; gap: 1rem; align-items: flex-start;
+            margin: 1.25rem 0;
+        }
+        .sub-step-num {
+            width: 28px; height: 28px; flex-shrink: 0;
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+            border-radius: 8px; font-weight: 700; font-size: 0.8rem;
+            display: flex; align-items: center; justify-content: center;
+            margin-top: 2px;
+        }
+        .sub-step-body h3 {
+            font-size: 0.95rem; font-weight: 700;
+            color: var(--color-text); margin-bottom: 0.375rem;
+        }
+        .sub-step-body p { margin-bottom: 0.5rem; font-size: 0.95rem; }
+
+        /* ─── Architecture Diagram ─────────────────────────── */
+        .diagram-container {
+            background: var(--color-surface-2);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+        .diagram-label {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; color: var(--color-text-faint);
+            text-align: center; margin-bottom: 1.5rem;
+        }
+
+        /* ─── Callout Boxes ────────────────────────────────── */
+        .callout {
+            border-radius: var(--radius-md);
+            padding: 1.125rem 1.375rem;
+            margin: 1.5rem 0;
+            display: flex; gap: 0.875rem; align-items: flex-start;
+        }
+        .callout-icon { flex-shrink: 0; margin-top: 2px; }
+        .callout-body h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .callout-body p { font-size: 0.9rem; margin: 0; line-height: 1.6; }
+        .callout-body code { font-size: 0.82em; }
+        .callout.warning {
+            background: var(--color-warning-bg);
+            border: 1px solid var(--color-warning-border);
+            color: var(--color-warning-text);
+        }
+        .callout.warning .callout-body h4 { color: var(--color-warning-text); }
+        .callout.tip {
+            background: var(--color-primary-light);
+            border: 1px solid rgba(46,125,50,0.25);
+            color: var(--color-text-muted);
+        }
+        .callout.tip .callout-body h4 { color: var(--color-primary); }
+        .callout.fix {
+            background: var(--color-fix-bg);
+            border: 1px solid var(--color-fix-border);
+            color: var(--color-fix-text);
+        }
+        .callout.fix .callout-body h4 { color: var(--color-fix-text); }
+        .callout.success {
+            background: var(--color-primary-light);
+            border: 1px solid var(--color-primary);
+        }
+        .callout.success .callout-body h4 { color: var(--color-primary); }
+        .callout.success .callout-body p { color: var(--color-text-muted); }
+
+        /* ─── Intro Card ───────────────────────────────────── */
+        .intro-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: clamp(1.5rem, 3vw, 2rem);
+            box-shadow: var(--shadow-sm);
+        }
+        .intro-card p { color: var(--color-text-muted); font-size: 1rem; }
+
+        /* ─── Footer ───────────────────────────────────────── */
+        footer {
+            border-top: 1px solid var(--color-divider);
+            padding: 2rem clamp(1rem, 4vw, 2.5rem);
+            text-align: center;
+            font-size: 0.85rem; color: var(--color-text-faint);
+            background: var(--color-surface);
+        }
+
+        /* ─── Responsive ───────────────────────────────────── */
+        @media (max-width: 600px) {
+            .hero-meta { gap: 0.875rem; }
+            .phase-section { padding: 1.25rem; }
+        }
+    </style>
+<script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194"></script></head>
+<body>
+<!-- Navigation -->
+<nav aria-label="Main navigation" class="navbar" role="navigation">
+<div class="navbar-brand">
+<img alt="UVF Farms Logo" height="36" loading="eager" src="https://www.uvfarms.in/_next/image?url=%2Flogo-new.png&amp;w=96&amp;q=75" style="height:36px;width:auto;object-fit:contain;" width="auto"/>
+<span>UVF</span>
+<span class="it-tag">IT</span>
+</div>
+<div class="navbar-actions">
+<span class="nav-badge">Beginner Guide</span>
+<button aria-label="Switch to dark mode" class="theme-toggle" data-theme-toggle="">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+</button>
+</div>
+</nav>
+<!-- Hero -->
+<header class="hero" role="banner">
+<div class="hero-inner">
+<div class="hero-eyebrow">
+<span class="hero-eyebrow-dot"></span>
+            Enterprise Automation Blueprint
+        </div>
+<h1>Deploy an <em>AI Recruitment</em> Agent in 4 Steps</h1>
+<p class="hero-desc">
+            Build a Python agent that reads your Gmail inbox, uses Cloudflare's free AI (Llama 3) to evaluate candidates, auto-sends interview invites, and runs 24/7 on a Contabo VPS with Docker.
+        </p>
+<div class="hero-meta">
+<span class="hero-meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                ~30 min setup
+            </span>
+<span class="hero-meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                Python · Docker · Cloudflare AI
+            </span>
+<span class="hero-meta-item">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                Free AI tier · Low-cost VPS
+            </span>
+</div>
+</div>
+</header><div style="max-width:960px;margin:20px auto;padding:0 20px;">
+<ins class="adsbygoogle" data-ad-client="ca-pub-7707820592878194" data-ad-format="auto" data-ad-slot="5778428487" data-full-width-responsive="true" style="display:block"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<!-- Main Layout -->
+<div class="page-layout" role="main">
+<!-- Sidebar TOC -->
+<aside aria-label="Table of contents" class="toc-sidebar">
+<div class="toc-title">On This Page</div>
+<ul class="toc-list" role="list">
+<li><a href="#intro">Overview</a></li>
+<li><a href="#architecture">Architecture</a></li>
+<li><a class="toc-phase" href="#phase1">1 — Setup</a></li>
+<li><a class="toc-phase" href="#phase2">2 — Python Agent</a></li>
+<li><a class="toc-phase" href="#phase3">3 — Dockerize</a></li>
+<li><a class="toc-phase" href="#phase4">4 — Deploy</a></li>
+<li><a href="#done">Mission Done</a></li>
+</ul>
+</aside>
+<!-- Article -->
+<article class="article">
+<!-- Intro -->
+<div class="intro-card" id="intro">
+<p>Welcome to the official <strong>UVF IT</strong> beginner's blueprint for enterprise automation. We are going to build a system that reads your emails, uses a free, powerful AI to evaluate the text, and automatically replies to matched candidates — then package it in Docker and deploy to a low-cost server so it runs 24/7.</p>
+</div>
+<!-- Architecture Diagram -->
+<div class="diagram-container" id="architecture">
+<div class="diagram-label">System Architecture</div>
+<svg aria-label="System architecture showing Gmail, Python Agent on Contabo VPS, and Cloudflare AI" height="220" role="img" viewbox="0 0 700 220" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrowFwd" markerheight="6" markerwidth="6" orient="auto" refx="9" refy="5" viewbox="0 0 10 10">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#4caf50"></path>
+</marker>
+<marker id="arrowBack" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="1" refy="5" viewbox="0 0 10 10">
+<path d="M 10 0 L 0 5 L 10 10 z" fill="#7a9c7a"></path>
+</marker>
+</defs>
+<!-- Gmail Node -->
+<rect fill="#f9fbf9" height="60" rx="10" stroke="#2e7d32" stroke-width="2" width="130" x="20" y="80"></rect>
+<text fill="#1a2a1a" font-family="Geist,system-ui,sans-serif" font-size="12" font-weight="700" text-anchor="middle" x="85" y="104">📬 Gmail</text>
+<text fill="#4a6a4a" font-family="Geist,system-ui,sans-serif" font-size="10" text-anchor="middle" x="85" y="121">Unread Inbox</text>
+<!-- VPS Container -->
+<rect fill="#f0fdf4" height="160" rx="12" stroke="#2e7d32" stroke-dasharray="7,4" stroke-width="1.5" width="260" x="215" y="30"></rect>
+<text fill="#1e6b22" font-family="Geist,system-ui,sans-serif" font-size="10" font-weight="700" letter-spacing="0.8" text-anchor="middle" x="345" y="58">CONTABO VPS · DOCKER</text>
+<!-- Python Agent Node inside VPS -->
+<rect fill="#ffffff" height="55" rx="8" stroke="#2e7d32" stroke-width="2" width="190" x="250" y="75"></rect>
+<text fill="#1a2a1a" font-family="Geist,system-ui,sans-serif" font-size="12" font-weight="700" text-anchor="middle" x="345" y="98">🐍 Python Agent</text>
+<text fill="#4a6a4a" font-family="Geist,system-ui,sans-serif" font-size="10" text-anchor="middle" x="345" y="116">agent.py · check_inbox()</text>
+<!-- Cloudflare AI Node -->
+<rect fill="#f9fbf9" height="60" rx="10" stroke="#2e7d32" stroke-width="2" width="145" x="535" y="80"></rect>
+<text fill="#1a2a1a" font-family="Geist,system-ui,sans-serif" font-size="12" font-weight="700" text-anchor="middle" x="607" y="104">☁️ Cloudflare AI</text>
+<text fill="#4a6a4a" font-family="Geist,system-ui,sans-serif" font-size="10" text-anchor="middle" x="607" y="121">Llama 3 · Free Tier</text>
+<!-- Arrow: Gmail → Agent (IMAP read) -->
+<line marker-end="url(#arrowFwd)" stroke="#4caf50" stroke-width="2" x1="150" x2="248" y1="103" y2="103"></line>
+<!-- Arrow: Agent → Gmail (SMTP reply) -->
+<line marker-end="url(#arrowFwd)" stroke="#7a9c7a" stroke-dasharray="5,3" stroke-width="1.5" x1="248" x2="150" y1="113" y2="113"></line>
+<!-- Arrow: Agent → Cloudflare (analyze) -->
+<line marker-end="url(#arrowFwd)" stroke="#4caf50" stroke-width="2" x1="442" x2="533" y1="103" y2="103"></line>
+<!-- Arrow: Cloudflare → Agent (MATCH/NO_MATCH) -->
+<line marker-end="url(#arrowFwd)" stroke="#7a9c7a" stroke-dasharray="5,3" stroke-width="1.5" x1="533" x2="442" y1="113" y2="113"></line>
+<!-- Labels -->
+<text fill="#1e6b22" font-family="Geist,system-ui,sans-serif" font-size="9" text-anchor="middle" x="199" y="96">IMAP</text>
+<text fill="#4a6a4a" font-family="Geist,system-ui,sans-serif" font-size="9" text-anchor="middle" x="199" y="126">SMTP</text>
+<text fill="#1e6b22" font-family="Geist,system-ui,sans-serif" font-size="9" text-anchor="middle" x="489" y="96">API</text>
+<text fill="#4a6a4a" font-family="Geist,system-ui,sans-serif" font-size="9" text-anchor="middle" x="489" y="126">Response</text>
+</svg>
+</div>
+<!-- Phase 1 -->
+<section class="phase-section" id="phase1">
+<div class="phase-header">
+<div class="phase-number">1</div>
+<div class="phase-title-group">
+<span class="phase-tag">Prerequisites</span>
+<h2 class="phase-title">The Setup — What You Need</h2>
+</div>
+</div>
+<p>Before we write code, gather your tools. Think of this as getting your ingredients ready before cooking.</p>
+<ul>
+<li><strong>A Gmail Account:</strong> Create a dedicated Gmail account (e.g., <code>careers@yourdomain.com</code>). You will need an <strong>App Password</strong> — not your regular Gmail password — to allow the script to authenticate securely. Also <strong>enable IMAP</strong> in Gmail Settings → See All Settings → Forwarding and POP/IMAP.</li>
+<li><strong>Cloudflare Account (Free):</strong> Sign up at cloudflare.com, navigate to <strong>Workers &amp; Pages → AI</strong>. Grab your <strong>Account ID</strong> and create an <strong>API Token</strong> with "Workers AI" permission.</li>
+<li><strong>A Contabo VPS:</strong> Go to contabo.com and get a "Cloud VPS 1". Choose <strong>Ubuntu 22.04</strong> as your OS. They will email you an IP address and root password.</li>
+<li><strong>Local machine:</strong> Python 3.11+ installed, and a code editor (VS Code recommended).</li>
+</ul>
+<div class="callout warning">
+<span class="callout-icon">
+<svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" x2="12" y1="9" y2="13"></line><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
+</span>
+<div class="callout-body">
+<h4>Use a Gmail App Password — Not Your Main Password</h4>
+<p>Go to your Google Account → Security → 2-Step Verification → App passwords. Generate a 16-character password specifically for this script. Never paste your real Gmail password into environment variables.</p>
+</div>
+</div>
+</section>
+<!-- Phase 2 -->
+<section class="phase-section" id="phase2">
+<div class="phase-header">
+<div class="phase-number">2</div>
+<div class="phase-title-group">
+<span class="phase-tag">Code</span>
+<h2 class="phase-title">The Python Brains — agent.py</h2>
+</div>
+</div>
+<p>Create a folder called <code>ai-agent</code> on your computer, and inside it create <code>agent.py</code> with the code below. Read the inline comments carefully — key bug fixes are noted.</p>
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots">
+<span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span>
+</div>
+<span class="code-lang">Python — agent.py</span>
+</div>
+<div class="code-block"><pre><code><span class="kw">import</span> imaplib
+<span class="kw">import</span> email
+<span class="kw">import</span> smtplib
+<span class="kw">from</span> email.message <span class="kw">import</span> EmailMessage
+<span class="kw">import</span> requests
+<span class="kw">import</span> os
+<span class="kw">import</span> time
+
+<span class="cm"># --- CONFIGURATION (Loaded from server environment variables) ---</span>
+<span class="nm">EMAIL_ADDRESS</span>  = os.getenv(<span class="st">"EMAIL_ADDRESS"</span>)
+<span class="nm">EMAIL_PASSWORD</span> = os.getenv(<span class="st">"EMAIL_PASSWORD"</span>)   <span class="cm"># Gmail App Password</span>
+<span class="nm">CF_ACCOUNT_ID</span>  = os.getenv(<span class="st">"CF_ACCOUNT_ID"</span>)
+<span class="nm">CF_API_TOKEN</span>   = os.getenv(<span class="st">"CF_API_TOKEN"</span>)
+
+<span class="cm"># Cloudflare AI endpoint — Meta Llama 3 (8B) via Workers AI</span>
+<span class="nm">AI_URL</span> = <span class="nb">f</span><span class="st">"https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT_ID}/ai/run/@cf/meta/llama-3-8b-instruct"</span>
+
+
+<span class="kw">def</span> <span class="fn">analyze_candidate</span>(email_text):
+    <span class="st">"""Sends email text to Cloudflare AI for screening."""</span>
+    headers = {<span class="st">"Authorization"</span>: <span class="nb">f</span><span class="st">"Bearer {CF_API_TOKEN}"</span>}
+
+    system_prompt = <span class="st">"""You are an expert tech recruiter. Read the candidate's email.
+    If they mention experience with Python, Docker, AND Git, reply ONLY with: MATCH
+    Otherwise, reply ONLY with: NO_MATCH"""</span>
+
+    payload = {
+        <span class="st">"messages"</span>: [
+            {<span class="st">"role"</span>: <span class="st">"system"</span>, <span class="st">"content"</span>: system_prompt},
+            {<span class="st">"role"</span>: <span class="st">"user"</span>,   <span class="st">"content"</span>: email_text}
+        ]
+    }
+
+    <span class="nb">print</span>(<span class="st">"Asking Cloudflare AI..."</span>)
+    response = requests.post(AI_URL, headers=headers, json=payload).json()
+    <span class="kw">return</span> response[<span class="st">'result'</span>][<span class="st">'response'</span>].strip()
+
+
+<span class="kw">def</span> <span class="fn">send_interview_invite</span>(to_email):
+    <span class="st">"""Sends an interview invitation email to a matched candidate."""</span>
+    msg = EmailMessage()
+    msg.set_content(
+        <span class="st">"Hi!\n\nWe loved your profile. Please pick a time for an interview here:\n[Calendly Link]\n\nBest regards,\nUVF IT Recruitment Team"</span>
+    )
+    msg[<span class="st">'Subject'</span>] = <span class="st">'Interview Invitation — Software Developer'</span>
+    msg[<span class="st">'From'</span>]    = EMAIL_ADDRESS
+    msg[<span class="st">'To'</span>]      = to_email
+
+    <span class="kw">with</span> smtplib.SMTP_SSL(<span class="st">'smtp.gmail.com'</span>, <span class="nb">465</span>) <span class="kw">as</span> server:
+        server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        server.send_message(msg)
+    <span class="nb">print</span>(<span class="nb">f</span><span class="st">"✓ Sent invite to {to_email}"</span>)
+
+
+<span class="kw">def</span> <span class="fn">check_inbox</span>():
+    <span class="st">"""Logs into Gmail via IMAP and processes all unread emails."""</span>
+    <span class="kw">try</span>:
+        mail = imaplib.IMAP4_SSL(<span class="st">'imap.gmail.com'</span>)
+        mail.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        mail.select(<span class="st">'inbox'</span>)
+
+        _, selected_emails = mail.search(<span class="nb">None</span>, <span class="st">'UNSEEN'</span>)
+
+        <span class="kw">for</span> num <span class="kw">in</span> selected_emails[<span class="nb">0</span>].split():
+            _, data = mail.fetch(num, <span class="st">'(RFC822)'</span>)
+            raw_email = data[<span class="nb">0</span>][<span class="nb">1</span>]
+            msg = email.message_from_bytes(raw_email)
+
+            sender = msg[<span class="st">'From'</span>]
+            <span class="nb">print</span>(<span class="nb">f</span><span class="st">"\nProcessing email from: {sender}"</span>)
+
+            email_body = <span class="st">""</span>
+            <span class="kw">if</span> msg.is_multipart():
+                <span class="kw">for</span> part <span class="kw">in</span> msg.walk():
+                    <span class="kw">if</span> part.get_content_type() == <span class="st">"text/plain"</span>:
+                        email_body = part.get_payload(decode=<span class="nb">True</span>).decode()
+                        <span class="kw">break</span>  <span class="cm"># stop at first text/plain part</span>
+            <span class="kw">else</span>:
+                email_body = msg.get_payload(decode=<span class="nb">True</span>).decode()
+
+            ai_decision = analyze_candidate(email_body)
+            <span class="nb">print</span>(<span class="nb">f</span><span class="st">"AI Decision: {ai_decision}"</span>)
+
+            <span class="cm"># FIX: Use exact equality — "MATCH" in "NO_MATCH" would incorrectly be True</span>
+            <span class="kw">if</span> ai_decision == <span class="st">"MATCH"</span>:
+                send_interview_invite(sender)
+
+        mail.logout()  <span class="cm"># FIX: Always close the IMAP connection cleanly</span>
+
+    <span class="kw">except</span> <span class="nb">Exception</span> <span class="kw">as</span> e:
+        <span class="nb">print</span>(<span class="nb">f</span><span class="st">"An error occurred: {e}"</span>)
+
+
+<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    <span class="nb">print</span>(<span class="st">"AI Agent Started! Checking inbox every 60 seconds..."</span>)
+    <span class="kw">while</span> <span class="nb">True</span>:
+        check_inbox()
+        time.sleep(<span class="nb">60</span>)</code></pre></div>
+</div>
+<div class="callout tip">
+<span class="callout-icon">
+<svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg>
+</span>
+<div class="callout-body">
+<h4>How the AI Decision Works</h4>
+<p>The system prompt constrains Llama 3 to respond with exactly <code>MATCH</code> or <code>NO_MATCH</code>. The prompt is strict by design — LLMs can sometimes add extra words, so the <code>.strip()</code> call removes whitespace. You can expand the criteria in the <code>system_prompt</code> string to match your own job requirements.</p>
+</div>
+</div>
+</section>
+<!-- Phase 3 -->
+<section class="phase-section" id="phase3">
+<div class="phase-header">
+<div class="phase-number">3</div>
+<div class="phase-title-group">
+<span class="phase-tag">Packaging</span>
+<h2 class="phase-title">Dockerizing the Agent</h2>
+</div>
+</div>
+<p>If we run the Python script on our local machine, it stops when we close the lid or the terminal. Docker packages your code into a portable "shipping container" that can run anywhere — including your VPS — without installing Python manually.</p>
+<div class="sub-step">
+<div class="sub-step-num">A</div>
+<div class="sub-step-body">
+<h3>Create <code>requirements.txt</code></h3>
+<p>This lists the third-party libraries Docker will install. Note: <code>imaplib</code>, <code>smtplib</code>, <code>email</code>, <code>os</code>, and <code>time</code> are all Python standard library modules — no installation needed.</p>
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+<span class="code-lang">requirements.txt</span>
+</div>
+<div class="code-block"><pre><code>requests</code></pre></div>
+</div>
+</div>
+</div>
+<div class="sub-step">
+<div class="sub-step-num">B</div>
+<div class="sub-step-body">
+<h3>Create <code>Dockerfile</code></h3>
+<p>This is the build recipe. It uses the official Python 3.11 slim image (minimal size), copies your files, installs dependencies, and sets the startup command.</p>
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+<span class="code-lang">Dockerfile</span>
+</div>
+<div class="code-block"><pre><code>FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+COPY agent.py .
+RUN pip install -r requirements.txt
+CMD ["python", "agent.py"]</code></pre></div>
+</div>
+</div>
+</div>
+<p>Your <code>ai-agent/</code> folder should now contain exactly three files: <code>agent.py</code>, <code>requirements.txt</code>, and <code>Dockerfile</code>.</p>
+</section>
+<!-- Phase 4 -->
+<section class="phase-section" id="phase4">
+<div class="phase-header">
+<div class="phase-number">4</div>
+<div class="phase-title-group">
+<span class="phase-tag">Deployment</span>
+<h2 class="phase-title">Deploying to Contabo — Going Live</h2>
+</div>
+</div>
+<p>Now we move everything to the cloud. You will need the IP address and root password that Contabo emailed you when you set up your VPS.</p>
+<div class="sub-step">
+<div class="sub-step-num">1</div>
+<div class="sub-step-body">
+<h3>Connect to your server via SSH</h3>
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+<span class="code-lang">Terminal (your local machine)</span>
+</div>
+<div class="code-block"><pre><code>ssh root@YOUR_CONTABO_IP_ADDRESS</code></pre></div>
+</div>
+</div>
+</div>
+<div class="sub-step">
+<div class="sub-step-num">2</div>
+<div class="sub-step-body">
+<h3>Install Docker on the VPS</h3>
+<p>Run these two commands after you are connected via SSH:</p>
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+<span class="code-lang">Bash (VPS)</span>
+</div>
+<div class="code-block"><pre><code>curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh</code></pre></div>
+</div>
+</div>
+</div>
+<div class="sub-step">
+<div class="sub-step-num">3</div>
+<div class="sub-step-body">
+<h3>Upload Files &amp; Build the Docker Image</h3>
+<p>Use <code>scp</code> from your local terminal to copy files to the VPS, then SSH back in and build:</p>
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+<span class="code-lang">Terminal (local → VPS)</span>
+</div>
+<div class="code-block"><pre><code><span class="cm"># From your local machine — upload the project folder</span>
+scp -r ./ai-agent root@YOUR_CONTABO_IP_ADDRESS:/root/ai-agent
+
+<span class="cm"># SSH back into your VPS, then build</span>
+ssh root@YOUR_CONTABO_IP_ADDRESS
+cd /root/ai-agent
+docker build -t my-ai-agent .</code></pre></div>
+</div>
+<div class="callout tip">
+<span class="callout-icon">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg>
+</span>
+<div class="callout-body">
+<h4>Alternative: Use nano to create files directly on VPS</h4>
+<p>If you prefer, SSH into your VPS and use <code>nano agent.py</code>, <code>nano requirements.txt</code>, <code>nano Dockerfile</code> to paste content directly without SCP.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sub-step">
+<div class="sub-step-num">4</div>
+<div class="sub-step-body">
+<h3>Run the Agent Container</h3>
+<p>This command starts the container in detached mode (<code>-d</code>), injects your secrets as environment variables (<code>-e</code>), names the container, and sets it to auto-restart on crash or server reboot.</p>
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+<span class="code-lang">Bash (VPS)</span>
+</div>
+<div class="code-block"><pre><code>docker run -d \
+  -e EMAIL_ADDRESS="careers@yourdomain.com" \
+  -e EMAIL_PASSWORD="your-gmail-app-password" \
+  -e CF_ACCOUNT_ID="your-cloudflare-account-id" \
+  -e CF_API_TOKEN="your-cloudflare-api-token" \
+  --name recruitment-agent \
+  --restart always \
+  my-ai-agent</code></pre></div>
+</div>
+<p>Check that the container is running with:</p>
+<div class="code-wrap">
+<div class="code-header">
+<div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+<span class="code-lang">Bash (VPS)</span>
+</div>
+<div class="code-block"><pre><code>docker ps                              # Should show recruitment-agent
+docker logs -f recruitment-agent       # Tail the live logs</code></pre></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Mission Done -->
+<div class="callout success" id="done" style="margin-top:2rem;">
+<span class="callout-icon">
+<svg fill="none" height="22" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="22"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+</span>
+<div class="callout-body">
+<h4>Mission Accomplished — Your AI Agent is Live 🎉</h4>
+<p>The <code>--restart always</code> flag is the magic trick. If the script crashes or the server reboots, Docker automatically brings the agent back up. You now have an enterprise-grade AI recruitment employee running 24/7 on your own infrastructure, at near-zero cost.</p>
+</div>
+</div>
+</article>
+</div>
+<footer>
+<p>© 2026 UVF IT — Core Industrial &amp; Enterprise Automation Frameworks. All rights reserved.</p>
+</footer>
+<script>
+(function(){
+    const t = document.querySelector('[data-theme-toggle]');
+    const r = document.documentElement;
+    let d = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    r.setAttribute('data-theme', d);
+
+    const sunIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`;
+    const moonIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+
+    function updateIcon() {
+        if (t) t.innerHTML = d === 'dark' ? sunIcon : moonIcon;
+    }
+    updateIcon();
+
+    if (t) {
+        t.addEventListener('click', () => {
+            d = d === 'dark' ? 'light' : 'dark';
+            r.setAttribute('data-theme', d);
+            t.setAttribute('aria-label', 'Switch to ' + (d === 'dark' ? 'light' : 'dark') + ' mode');
+            updateIcon();
+        });
+    }
+})();
+</script>
+</body>
+</html>

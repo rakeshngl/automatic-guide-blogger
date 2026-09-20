@@ -1,0 +1,56 @@
+{
+  "date": "2026-08-28",
+  "status": "partial",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [
+    "producthunt"
+  ],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a SubSmith-like Language Learning Video Tool",
+      "source": "hn_show",
+      "url": "https://subsmith.app",
+      "status": "failed: LLM JSON generation failed (400 json_validate_failed): {\"error\":{\"message\":\"Failed to generate JSON. Please adjust your prompt. See 'failed_generation' for more details.\",\"type\":\"invalid_request_error\",\"code\":\"json_validate_failed\",\"failed_generation\":\"{\\n\\\"title\\\": \\\"SubSmith Clone: Local Video Transcript \\u0026 Vocabulary Tool\\\",\\n\\\"tagline\\\": \\\"Turn any video into a language learning resource with local processing\\\",\\n\\\"navbar_badge\\\": \\\"Beginner\\\",\\n\\\"intro_points\\\": [\\n\\\"Welcome to another official **UVF IT** build guide. Today we are constructing a minimal clone of SubSmith, a tool that transforms standard video files into interactive language learning materials.\\\",\\n\\\"By leveraging open-source speech recognition and simple web technologies, you will build a system that generates transcripts and highlights vocabulary, all running locally on your machine without paid APIs.\\\"\\n],\\n\\\"warning_heading\\\": \\\"Prerequisites \\u0026 Limitations\\\",\\n\\\"warning_bullets\\\": [\\n\\\"You must have Python 3.9+ and Node.js 18+ installed; this build uses Python for backend processing and a static frontend for simplicity.\\\",\\n\\\"Speech recognition uses Whisper (via `faster-whisper` or `openai-whisper`), which requires downloading a model (~1GB) on first run; ensure you have sufficient disk space.\\\",\\n\\\"This is a simplified clone: it processes local files only, does not support real-time streaming, and lacks user accounts or cloud storage.\\\"\\n],\\n\\\"diagram\\\": {\\n\\\"title\\\": \\\"System Architecture\\\",\\n\\\"groups\\\": [\\n{\\n\\\"id\\\": \\\"local\\\",\\n\\\"label\\\": \\\"Local Environment\\\",\\n\\\"style\\\": \\\"local\\\"\\n},\\n{\\n\\\"id\\\": \\\"cloud\\\",\\n\\\"label\\\": \\\"External Resources\\\",\\n\\\"style\\\": \\\"cloud\\\"\\n}\\n],\\n\\\"nodes\\\": [\\n{\\n\\\"id\\\": \\\"app\\\",\\n\\\"label\\\": \\\"Web UI\\\",\\n\\\"sublabel\\\": \\\"HTML/JS\\\",\\n\\\"group\\\": \\\"local\\\",\\n\\\"style\\\": \\\"tech\\\"\\n},\\n{\\n\\\"id\\\": \\\"api\\\",\\n\\\"label\\\": \\\"Python API\\\",\\n\\\"sublabel\\\": \\\"Flask\\\",\\n\\\"group\\\": \\\"local\\\",\\n\\\"style\\\": \\\"tech\\\"\\n},\\n{\\n\\\"id\\\": \\\"whisper\\\",\\n\\\"label\\\": \\\"Whisper Engine\\\",\\n\\\"sublabel\\\": \\\"Speech-to-Text\\\",\\n\\\"group\\\": \\\"lo"
+    },
+    {
+      "title": "Build a Jack the Snipper-like HTML Cleaner",
+      "source": "hn_show",
+      "url": "https://snipper.kreisvier.ch/",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-08-28_html-cleaner.html",
+      "tagline": "Paste messy HTML, get clean text back.",
+      "navbar_badge": "Beginner",
+      "est_minutes": 30,
+      "tags": [
+        "Python",
+        "BeautifulSoup",
+        "Web Scraping",
+        "CLI"
+      ]
+    },
+    {
+      "title": "Build a Gods-Eye-View-like Satellite Map Viewer",
+      "source": "github_trending",
+      "url": "https://github.com/bilawalsidhu/gods-eye-view",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-08-28_minimal-satellite-map-viewer.html",
+      "tagline": "Track live aircraft on a 3D globe with Python and Cesium.",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 40,
+      "tags": [
+        "JavaScript",
+        "Mapbox",
+        "WebGL",
+        "Frontend"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1542853051277381715",
+    "1542853058101518426"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UVF IT: RAG Chat Bot</title>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+        :root {
+            --primary: #1e3a1e;
+            --accent: #2e7d32;
+            --tech-green: #4caf50;
+            --dark-earth: #111827;
+            --bg-light: #f4f7f4;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --fix-bg: #fff8e6;
+            --fix-border: #d97706;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.7;
+            padding-bottom: 60px;
+        }
+
+        .navbar {
+            background-color: var(--primary);
+            padding: 15px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar-brand span { color: var(--tech-green); }
+
+        .navbar-badge {
+            color: #d1d5db;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 999px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+            color: white;
+            padding: 90px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+        header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+        .container {
+            max-width: 960px;
+            margin: -50px auto 40px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            padding: 60px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 2.1rem;
+            font-weight: 700;
+            border-bottom: 2px solid #e8f5e9;
+            padding-bottom: 12px;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+        p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+        ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+        li { margin-bottom: 10px; }
+
+        .diagram-container {
+            background: #f7f9f7;
+            border-radius: 14px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+            border: 1px solid #e1e8e1;
+            overflow-x: auto;
+        }
+
+        .diagram-title {
+            font-size: 0.85rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+        .node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+        .node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+        .node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+        .link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+        .link-arrow { fill: #a3b8a3; }
+
+        .code-block {
+            background: #111c11;
+            color: #e8f5e9;
+            padding: 24px;
+            border-radius: 10px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            margin: 25px 0;
+            border-left: 4px solid var(--tech-green);
+        }
+
+        .code-block pre { margin: 0; }
+        .code-comment { color: #6a9955; font-style: italic; }
+
+        .step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+        /* Flex items default to a min-width based on their content, so a long
+           unbreakable line inside a code block (e.g. a pip install command)
+           can force the whole page to overflow horizontally. This makes
+           step-box's content column shrinkable so overflow-x:auto on
+           .code-block actually contains it instead. */
+        .step-box > div { min-width: 0; }
+
+        .step-number {
+            background: var(--accent);
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            margin-right: 20px;
+            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+        }
+
+        .alert-box {
+            background: #e8f5e9;
+            border-left: 5px solid var(--accent);
+            padding: 25px;
+            border-radius: 8px;
+            margin: 40px 0;
+        }
+
+        .alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+        .fix-box {
+            background: var(--fix-bg);
+            border-left: 5px solid var(--fix-border);
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+        .fix-box ul { margin: 10px 0 0 0; }
+        .fix-box li { font-size: 1rem; margin-bottom: 8px; }
+        .fix-box li strong { color: var(--dark-earth); }
+
+        table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+        table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+        table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        table.checklist td { color: var(--text-muted); }
+
+        footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+    </style>
+<script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194"></script></head>
+<body>
+<nav class="navbar">
+<div class="navbar-brand">UVF <span>IT</span></div>
+<div class="navbar-badge">RAG chat bots</div>
+</nav>
+<header>
+<h1>RAG Chat Bot</h1>
+<p>Chat with your company PDFs using a zero-cost, GPU-free AI stack: Python, ChromaDB, Docker, and Google's Gemma 4 served free via the NVIDIA API.</p>
+</header><div style="max-width:960px;margin:20px auto;padding:0 20px;">
+<ins class="adsbygoogle" data-ad-client="ca-pub-7707820592878194" data-ad-format="auto" data-ad-slot="5778428487" data-full-width-responsive="true" style="display:block"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<div class="container">
+<p>Welcome to another official <strong>UVF IT</strong> enterprise deployment blueprint. Feeding internal company documents (like financial reports, HR policies, or proprietary technical schematics) into public cloud AI APIs deserves a clear-eyed look at exactly what leaves your network and what doesn't — so this guide is upfront about it below.</p>
+<p>Today, we are building a <strong>Retrieval-Augmented Generation (RAG)</strong> system where the vector database lives entirely on your own infrastructure, but the heavy AI lifting — embedding and answering — runs on NVIDIA's free, GPU-accelerated API instead of a local model. No GPU required on your end, no per-token billing, and you can "chat" with gigabytes of internal PDFs without provisioning any inference hardware.</p>
+<div class="fix-box">
+<h4>⚠ Read this before you pick this architecture</h4>
+<p>This version trades full data locality for zero infrastructure cost. Know the difference before choosing it for sensitive documents:</p>
+<ul>
+<li><strong>Stays on your machine:</strong> the raw PDFs, the ChromaDB vector index, and everything at rest.</li>
+<li><strong>Leaves your machine:</strong> each text chunk (sent to NVIDIA for embedding) and each question + retrieved context (sent to NVIDIA for the Gemma 4 answer). NVIDIA's API terms govern how that data is handled on their side — read them before sending anything regulated (financial records, PII, legal contracts).</li>
+<li><strong>Want true air-gapped privacy instead?</strong> See the earlier version of this guide, which runs both embedding and generation locally via Ollama — slower and needs a GPU/CPU with headroom, but nothing leaves the network.</li>
+</ul>
+</div>
+<div class="diagram-container">
+<div class="diagram-title">System Architecture Blueprint: Offline RAG Pipeline</div>
+<svg height="320" viewbox="0 0 700 320" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrow" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="9" refy="5" viewbox="0 0 10 10">
+<path class="link-arrow" d="M 0 0 L 10 5 L 0 10 z"></path>
+</marker>
+</defs>
+<!-- Input -->
+<rect class="node" height="50" width="120" x="20" y="135"></rect>
+<text class="node-text" x="80" y="165">Private PDFs</text>
+<!-- Core Python App -->
+<rect class="node-tech" height="110" style="stroke-dasharray: 6,6;" width="170" x="190" y="105"></rect>
+<text class="node-text" style="fill: var(--accent); font-size: 12px; letter-spacing: 0.5px;" x="275" y="128">PYTHON ENGINE</text>
+<rect class="node" height="45" style="stroke: var(--accent);" width="130" x="210" y="145"></rect>
+<text class="node-text" x="275" y="168">LangChain Script</text>
+<text class="node-subtext" x="275" y="183">connects via HTTP</text>
+<!-- Local Docker: ChromaDB only -->
+<rect class="node-tech" height="90" style="stroke-dasharray: 6,6;" width="160" x="420" y="70"></rect>
+<text class="node-text" style="fill: var(--accent); font-size: 11px; letter-spacing: 0.5px;" x="500" y="92">LOCAL DOCKER</text>
+<rect class="node" height="45" width="130" x="435" y="105"></rect>
+<text class="node-text" x="500" y="128">ChromaDB :8000</text>
+<text class="node-subtext" x="500" y="143">persistent, 127.0.0.1</text>
+<!-- NVIDIA Cloud API -->
+<rect class="node-tech" height="100" style="stroke-dasharray: 6,6; stroke: #b91c1c;" width="260" x="420" y="185"></rect>
+<text class="node-text" style="fill: #b91c1c; font-size: 11px; letter-spacing: 0.5px;" x="550" y="207">NVIDIA API — CLOUD (data leaves network)</text>
+<rect class="node" height="50" style="stroke: #b91c1c;" width="220" x="440" y="220"></rect>
+<text class="node-text" x="550" y="240">Gemma 4 31B + nv-embedqa-e5</text>
+<text class="node-subtext" x="550" y="257">integrate.api.nvidia.com</text>
+<!-- Links -->
+<path class="link" d="M 140 160 L 190 160" marker-end="url(#arrow)"></path>
+<path class="link" d="M 360 150 L 400 150 L 400 130 L 435 130" marker-end="url(#arrow)"></path>
+<path class="link" d="M 435 140 L 400 140 L 400 150 L 360 150" marker-end="url(#arrow)"></path>
+<path class="link" d="M 360 175 L 400 175 L 400 245 L 440 245" marker-end="url(#arrow)"></path>
+<path class="link" d="M 440 255 L 400 255 L 400 175 L 360 175" marker-end="url(#arrow)"></path>
+</svg>
+</div>
+<div class="step-box">
+<div class="step-number">1</div>
+<div>
+<h2>Phase 1: Get a Free NVIDIA API Key</h2>
+<p>Sign up at <a href="https://build.nvidia.com" rel="noopener" target="_blank">build.nvidia.com</a> (no credit card required), open your profile, and generate an API key. It starts with <code>nvapi-</code> and is valid for 6 months — put a reminder in your calendar to rotate it before then.</p>
+<p>Create a <code>.env</code> file next to your project and add <code>.env</code> to <code>.gitignore</code> so the key never ends up in version control:</p>
+<div class="code-block"><pre><code><span class="code-comment"># .env</span>
+NVIDIA_API_KEY=nvapi-your-key-here</code></pre></div>
+</div>
+</div>
+<div class="step-box">
+<div class="step-number">2</div>
+<div>
+<h2>Phase 2: The Docker Infrastructure</h2>
+<p>We only need one local service now: <strong>ChromaDB</strong>, the vector database that stores your embedded PDF text. Docker Compose handles this beautifully.</p>
+<p>Create a file named <code>docker-compose.yml</code> in your project folder:</p>
+</div>
+</div>
+<div class="code-block"><pre><code>services:
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      <span class="code-comment"># Bound to localhost only — the script runs on this same machine,
+      # so there's no need to expose the vector DB to the whole network.</span>
+      - "127.0.0.1:8000:8000"
+    environment:
+      <span class="code-comment"># Without these two, Chroma silently runs in-memory and loses
+      # everything on restart — even with the volume mounted below.</span>
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma
+      - ANONYMIZED_TELEMETRY=FALSE
+    volumes:
+      - chroma_data:/chroma/chroma
+    restart: unless-stopped
+
+volumes:
+  chroma_data:</code></pre></div>
+<p>Run the stack from your terminal:</p>
+<div class="code-block"><pre><code>docker compose up -d</code></pre></div>
+<p>That's it for local infrastructure — no models to pull, no GPU to provision. Gemma 4 and the embedding model both run on NVIDIA's servers.</p>
+<div class="step-box">
+<div class="step-number">3</div>
+<div>
+<h2>Phase 3: The Python Engine (LangChain)</h2>
+<p>Now we write the script that reads your PDF, chops it into readable chunks, sends them to NVIDIA for embedding, saves the vectors to the local ChromaDB server, and asks Gemma 4 questions about it.</p>
+<p>First, install the requirements (create a virtual environment if preferred):</p>
+<div class="code-block"><pre><code>pip install langchain langchain-community langchain-nvidia-ai-endpoints langchain-chroma chromadb pypdf python-dotenv</code></pre></div>
+</div>
+</div>
+<p>Create a file named <code>rag_agent.py</code> and add this code:</p>
+<div class="code-block"><pre><code>import os
+import time
+from dotenv import load_dotenv
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_nvidia_ai_endpoints import ChatNVIDIA, NVIDIAEmbeddings
+from langchain_chroma import Chroma
+from langchain.chains import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_core.prompts import ChatPromptTemplate
+
+load_dotenv() <span class="code-comment"># reads NVIDIA_API_KEY from your .env file</span>
+
+NVIDIA_API_KEY = os.environ.get("NVIDIA_API_KEY")
+if not NVIDIA_API_KEY:
+    raise RuntimeError(
+        "Set NVIDIA_API_KEY in your .env file. Get a free key at https://build.nvidia.com"
+    )
+
+<span class="code-comment"># 1. Setup connections — both models run on NVIDIA's servers, not this machine.
+# A dedicated embedding model (not the chat model) for indexing,
+# and Gemma 4 reserved for actually answering questions.</span>
+embeddings = NVIDIAEmbeddings(model="nvidia/nv-embedqa-e5-v5", api_key=NVIDIA_API_KEY)
+llm = ChatNVIDIA(model="google/gemma-4-31b-it", api_key=NVIDIA_API_KEY, temperature=0.2)
+
+<span class="code-comment"># Connect to the LOCAL ChromaDB server container over HTTP — the vector
+# index itself stays on your infrastructure even though the embedding
+# calls that built it went out to NVIDIA's API.</span>
+vectorstore = Chroma(
+    collection_name="company_docs",
+    embedding_function=embeddings,
+    host="localhost",
+    port=8000,
+)
+
+<span class="code-comment"># Free-tier NVIDIA endpoints cap around 40 requests/minute per model.
+# Batch and pause so a big PDF doesn't get throttled mid-ingest.</span>
+BATCH_SIZE = 20
+BATCH_PAUSE_SECONDS = 5
+
+def ingest_pdf(pdf_path):
+    print(f"Loading {pdf_path}...")
+    loader = PyPDFLoader(pdf_path)
+    docs = loader.load()
+
+    print("Splitting document into chunks...")
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    splits = text_splitter.split_documents(docs)
+
+    print(f"Embedding {len(splits)} chunks via NVIDIA API and saving to ChromaDB...")
+    for i in range(0, len(splits), BATCH_SIZE):
+        batch = splits[i:i + BATCH_SIZE]
+        vectorstore.add_documents(batch)
+        print(f"  Embedded {min(i + BATCH_SIZE, len(splits))}/{len(splits)} chunks")
+        if i + BATCH_SIZE &lt; len(splits):
+            time.sleep(BATCH_PAUSE_SECONDS)
+
+def ask_question(question):
+    print(f"\nQuestion: {question}")
+
+    system_prompt = (
+        "You are an assistant for question-answering tasks. "
+        "Use the following pieces of retrieved context to answer the question. "
+        "If you don't know the answer, say that you don't know. "
+        "\n\nContext: {context}"
+    )
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", system_prompt),
+        ("human", "{input}"),
+    ])
+
+    retriever = vectorstore.as_retriever()
+    question_answer_chain = create_stuff_documents_chain(llm, prompt)
+    rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+
+    response = rag_chain.invoke({"input": question})
+    print(f"Answer: {response['answer']}")
+
+if __name__ == "__main__":
+    pdf_file = "company_policy.pdf"
+
+    if os.path.exists(pdf_file):
+        ingest_pdf(pdf_file)
+        ask_question("What is the company's remote work policy?")
+        ask_question("Who is the CEO?")
+    else:
+        print("Please place a 'company_policy.pdf' file in this directory to test.")
+</code></pre></div>
+<div class="step-box">
+<div class="step-number">4</div>
+<div>
+<h2>Phase 4: Execution</h2>
+<p>Drop a PDF into the same folder as your script and name it <code>company_policy.pdf</code> (or change the filename in the script to match yours). Then run it:</p>
+<div class="code-block"><pre><code>python rag_agent.py</code></pre></div>
+<p>The script sends each chunk to NVIDIA's <code>nv-embedqa-e5-v5</code> model over HTTPS, maps the text into mathematical vectors, and stores them in your local ChromaDB container. When you ask a question, it fetches only the relevant paragraphs and sends them to Gemma 4 (also on NVIDIA's servers) for a final, synthesized answer — and because the collection lives in the persistent ChromaDB container, you can re-run the script later, ask new questions, and skip re-ingesting the same PDF.</p>
+</div>
+</div>
+<h2>Verifying the Stack</h2>
+<table class="checklist">
+<tr><th>Check</th><th>Command / Why it matters</th></tr>
+<tr><td>ChromaDB is actually persisting</td><td><code>curl http://localhost:8000/api/v2/heartbeat</code> — then restart the container and confirm your collection still exists.</td></tr>
+<tr><td>NVIDIA API key is valid</td><td>A 401/403 on first run means the key is wrong, expired, or missing from <code>.env</code>. Keys last 6 months — put a renewal reminder on the calendar.</td></tr>
+<tr><td>Not hitting rate limits</td><td>If ingestion errors out partway through a large PDF, increase <code>BATCH_PAUSE_SECONDS</code> in the script.</td></tr>
+<tr><td>ChromaDB port isn't public</td><td>From another machine, <code>curl http://&lt;your-vps-ip&gt;:8000</code> should fail to connect — confirms the <code>127.0.0.1</code> binding worked.</td></tr>
+<tr><td>Not re-embedding on every run</td><td>Ingest once per PDF; re-running <code>ingest_pdf()</code> on the same file duplicates chunks in the collection.</td></tr>
+</table>
+<div class="alert-box">
+<h4>What's Actually Private Here</h4>
+<p>ChromaDB runs locally inside your Docker environment, bound to localhost — your vector index and raw PDFs never leave this machine and are never reachable from the public internet. What does leave: each document chunk (sent to NVIDIA for embedding) and each question with its retrieved context (sent to NVIDIA for the Gemma 4 answer). For internal wikis, product docs, or anything not under strict data-residency requirements, this is a fast, zero-cost way to get a capable RAG assistant running. For regulated data — financial records, PII, contracts under NDA — review NVIDIA's API data-handling terms first, or use the fully local Ollama-based version of this stack instead.</p>
+</div>
+</div>
+<footer>© 2026 UVF IT. <a href="https://www.uvfarms.in" rel="noopener" style="color: inherit;" target="_blank">www.uvfarms.in</a>. All rights reserved.</footer>
+</body>
+</html>
