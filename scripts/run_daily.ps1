@@ -73,6 +73,29 @@ if ($shouldPublish) {
     }
 }
 
+if ($publishDone) {
+    Write-Host ""
+    Write-Host "Syncing site snapshot to git (origin/main)..."
+    git add out data
+    git diff --cached --quiet
+    $changed = -not $?
+    if ($changed) {
+        git commit -q -m "chore(run): site update $(Get-Date -Format 'yyyy-MM-dd')"
+        if ($LASTEXITCODE -eq 0) {
+            git push -q origin main
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "[OK] Pushed site snapshot to GitHub (origin/main)"
+            } else {
+                Write-Host "[WARN] Git push failed - commit is local only, push manually: git push origin main"
+            }
+        } else {
+            Write-Host "[WARN] Git commit failed - site changes remain unstaged"
+        }
+    } else {
+        Write-Host "[INFO] No site changes to commit"
+    }
+}
+
 Write-Host "------------------------------------------"
 Write-Host "Log: logs\app.log"
 Write-Host "Guides: out\html"
