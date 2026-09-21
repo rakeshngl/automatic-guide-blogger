@@ -209,6 +209,18 @@
       "title": "Build a Document‑Prep Tool for Gen‑AI with Python and Docling",
       "source_url": "https://github.com/docling-project/docling",
       "slug": "2026-09-20_document-prep-tool-for-gen-ai-python.html"
+    },
+    {
+      "date": "2026-09-21T00:36:03+00:00",
+      "title": "Build a Paperless‑ngx‑style Document Management System with Python + SQLite",
+      "source_url": "https://github.com/paperless-ngx/paperless-ngx",
+      "slug": "2026-09-21_paperless-ngx-style-document-manager-python-sqlite.html"
+    },
+    {
+      "date": "2026-09-21T00:39:26+00:00",
+      "title": "Build a Termphin‑style Persistent SSH Client with Node.js",
+      "source_url": "https://www.producthunt.com/r/BIYJFP53BWOFNH?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-09-21_build-a-persistent-ssh-client-clone-with-node-js.html"
     }
   ]
 }

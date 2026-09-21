@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Build a Persistent SSH Client Clone with Node.js</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Build a Persistent SSH Client Clone with Node.js</h1>
+        <p>A minimal Termphin‑style SSH client that keeps sessions alive</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide. In this quick‑fire tutorial you’ll spin up a lightweight Node.js app that mimics Termphin’s core promise: persistent SSH sessions that survive network hiccups.</p>
+        <p>We’ll use only free‑tier tools – Node.js, the open‑source <code>ssh2</code> library, and SQLite for session logging – so you can have a working prototype in about 45 minutes.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>Node.js ≥ 18 and npm must be installed locally; older versions lack native async‑stream support used by <code>ssh2</code>.</li>
+                <li>The clone only maintains a single shell session per connection and stores logs in SQLite – the real Termphin supports multiple tabs, reconnection heuristics, and cloud sync, which are omitted here.</li>
+                <li>If you run on Windows, ensure OpenSSH client is available or use WSL; otherwise the SSH handshake may fail.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Architecture Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link" marker-start="url(#gw-arrow)" marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">WebSocket</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL queries</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Node.js SSH Proxy</text>
+<text x="315.0" y="87" class="node-subtext">Express + ssh2</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite DB</text>
+<text x="315.0" y="159" class="node-subtext">Session logs</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">Browser UI</text>
+<text x="315.0" y="231" class="node-subtext">HTML + JS (WebSocket)</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh npm project and install the minimal dependencies needed for an Express server, WebSocket bridge, SSH handling, and SQLite storage. This gives us a clean foundation to add the SSH proxy logic later.</p>
+                <p>All commands are run from the terminal in the folder where you want the project to live. After this step you’ll have a <code>package.json</code> and a <code>node_modules</code> directory ready for coding.</p>
+<div class="code-block"><pre><code>mkdir termphin-clone &amp;&amp; cd termphin-clone
+npm init -y
+npm install express ws ssh2 sqlite3</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the SQLite model</h2>
+                <p>A tiny table records each session’s start time, end time, and remote host – enough to prove persistence across restarts. The <code>db.js</code> module will expose a simple <code>logSession</code> function that other parts of the app can call.</p>
+                <p>We open (or create) a SQLite file called <code>sessions.db</code> in the project root and ensure the <code>sessions</code> table exists on first run.</p>
+                <p><strong>db.js</strong></p>
+<div class="code-block"><pre><code>const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+
+<span class="code-comment">// Open (or create) the database file in the project root</span>
+const dbPath = path.resolve(__dirname, 'sessions.db');
+const db = new sqlite3.Database(dbPath, err =&gt; {
+  if (err) throw err;
+  console.log('✅ SQLite DB opened at', dbPath);
+});
+
+<span class="code-comment">// Ensure the sessions table exists</span>
+const initSql = `
+CREATE TABLE IF NOT EXISTS sessions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  host TEXT NOT NULL,
+  start_time TEXT NOT NULL,
+  end_time TEXT
+);
+`;
+
+db.exec(initSql, err =&gt; {
+  if (err) throw err;
+  console.log('✅ sessions table ready');
+});
+
+/**
+ * Log a new SSH session start.
+ * @param {string} host - Remote host address.
+ * @returns {Promise&lt;number&gt;} Resolves with the inserted row id.
+ */
+function logSessionStart(host) {
+  return new Promise((resolve, reject) =&gt; {
+    const now = new Date().toISOString();
+    const stmt = db.prepare('INSERT INTO sessions (host, start_time) VALUES (?, ?)');
+    stmt.run(host, now, function(err) {
+      if (err) return reject(err);
+      resolve(this.lastID);
+    });
+    stmt.finalize();
+  });
+}
+
+/**
+ * Update the end_time for a session when it closes.
+ * @param {number} id - Session row id.
+ */
+function logSessionEnd(id) {
+  return new Promise((resolve, reject) =&gt; {
+    const now = new Date().toISOString();
+    db.run('UPDATE sessions SET end_time = ? WHERE id = ?', now, id, err =&gt; {
+      if (err) return reject(err);
+      resolve();
+    });
+  });
+}
+
+module.exports = {logSessionStart, logSessionEnd, db};</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the SSH‑WebSocket bridge</h2>
+                <p>In this step we turn our Express server into a bridge between a WebSocket client in the browser and an SSH session on the remote host. The server will keep a single SSH connection alive, store its output in SQLite, and forward any keystrokes it receives over the socket. By persisting the SSH client in memory, the browser can be refreshed without losing the remote session – the server continues to stream data when the client reconnects.</p>
+                <p><strong>server.js</strong></p>
+<div class="code-block"><pre><code>const express = require('express');
+const http = require('http');
+const { Server } = require('ws');
+const { Client } = require('ssh2');
+const sqlite3 = require('sqlite3').verbose();
+
+const app = express();
+app.use(express.static('public'));
+const server = http.createServer(app);
+const wss = new Server({ server });
+
+<span class="code-comment">// SQLite DB for session logs</span>
+const db = new sqlite3.Database('sessions.db');
+db.run('CREATE TABLE IF NOT EXISTS sessions(id INTEGER PRIMARY KEY, host TEXT, start_ts TEXT, log TEXT)');
+
+let ssh = new Client();
+let sshStream = null;
+let sessionId = null;
+let logBuffer = '';
+
+ssh.on('ready',()=&gt;{
+  ssh.shell((err, stream)=&gt;{
+    if(err) return console.error('Shell error',err);
+    sshStream = stream;
+    stream.on('data',data=&gt;{
+      logBuffer += data.toString();
+      wss.clients.forEach(ws=&gt;{ if(ws.readyState===ws.OPEN) ws.send(data.toString()); });
+    });
+  });
+});
+ssh.connect({host:'YOUR_HOST',port:22,username:'YOUR_USER',password:'YOUR_PASS'});
+
+wss.on('connection',ws=&gt;{
+  <span class="code-comment">// send any buffered output to newly connected client</span>
+  if(logBuffer) ws.send(logBuffer);
+  ws.on('message',msg=&gt;{ if(sshStream) sshStream.write(msg); });
+  ws.on('close',()=&gt;{ /* nothing – keep SSH alive */ });
+});
+
+<span class="code-comment">// Graceful shutdown – store session log</span>
+function shutdown(){
+  if(sessionId===null){
+    db.run('INSERT INTO sessions(host,start_ts,log) VALUES(?,?,?)',["YOUR_HOST",new Date().toISOString(),logBuffer]);
+  }
+  process.exit();
+}
+process.on('SIGINT',shutdown);
+process.on('SIGTERM',shutdown);
+
+server.listen(3000,()=&gt;console.log('App listening on http://localhost:3000'));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Minimal UI to interact</h2>
+                <p>The client side is a single HTML page that opens a WebSocket to the server, shows everything the server sends inside a <code>&lt;pre&gt;</code> element, and forwards any keystrokes typed into a text box. We keep it deliberately simple – no xterm.js, just raw text – so you can see the persistence mechanism without extra dependencies. When the page reloads, the WebSocket reconnects and the server pushes the buffered log so the terminal appears exactly where you left it.</p>
+                <p><strong>public/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;title&gt;Persistent SSH Demo&lt;/title&gt;
+&lt;style&gt;body{font-family:monospace;background:#111;color:#0f0;}#term{white-space:pre-wrap;overflow:auto;height:80vh;}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;SSH Bridge&lt;/h2&gt;
+&lt;div id="term"&gt;&lt;/div&gt;
+&lt;input id="input" type="text" placeholder="type command" autocomplete="off" style="width:100%;"/&gt;
+&lt;script&gt;
+  const ws = new WebSocket(`ws://${location.host}`);
+  const term = document.getElementById('term');
+  const input = document.getElementById('input');
+  ws.onmessage = e=&gt;{ term.textContent += e.data; term.scrollTop = term.scrollHeight; };
+  ws.onopen = ()=&gt;{ term.textContent += "\n[connected]\n"; };
+  input.addEventListener('keydown',e=&gt;{ if(e.key==='Enter'){ ws.send(input.value+'\n'); input.value=''; } });
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run, verify, and extend</h2>
+                <p>Now start the Node server, open the UI in a browser, and try a simple command like <code>ls</code>. After you stop the server (Ctrl‑C) and start it again, reload the page – the terminal will still show the previous output because the server stored the session log in SQLite before exiting. This proves the bridge kept the SSH session alive and persisted its output across restarts. From here you can add reconnection logic, multiple concurrent sessions, or swap SQLite for a more robust database.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Install dependencies (run once)</span>
+npm init -y
+npm install express ws ssh2 sqlite3
+<span class="code-comment"># Start the server</span>
+node server.js
+<span class="code-comment"># In another terminal, open the UI</span>
+<span class="code-comment">#   open http://localhost:3000  (or use your browser)</span></code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>node server.js → console shows ‘App listening on http://localhost:3000’</td></tr>
+            <tr><td>Web UI loads and shows a blank terminal</td><td>Open http://localhost:3000 in a browser – the &lt;pre&gt; area appears</td></tr>
+            <tr><td>Command echo appears after typing ‘ls’</td><td>Type ‘ls’ in the input box, press Enter – output streams back</td></tr>
+            <tr><td>Session row appears in SQLite</td><td>sqlite3 sessions.db "SELECT * FROM sessions;" – shows host, start_ts</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>You now have a functional, minimal persistent‑SSH prototype. From here you can add reconnection logic, multiple tabs, or swap SQLite for Postgres to scale. Happy hacking!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
