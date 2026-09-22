@@ -1,0 +1,48 @@
+{
+  "date": "2026-09-22",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Real‑Time Stock Tracker Clone with OpenStock (TypeScript)"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Agentic App with Agent‑Native (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/BuilderIO/agent-native",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-22_simple-agentic-chat-clone-with-agent-native.html",
+      "tagline": "A minimal TypeScript app that mimics a chat‑agent using shared actions",
+      "navbar_badge": "Beginner",
+      "est_minutes": 45,
+      "tags": [
+        "TypeScript",
+        "AI",
+        "agent"
+      ]
+    },
+    {
+      "title": "Build an AI‑Powered Video Clip Generator with Autoclip (Python)",
+      "source": "github_trending",
+      "url": "https://github.com/zhouxiaoka/autoclip",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-22_ai-powered-video-clip-generator-clone.html",
+      "tagline": "A minimal Python‑SQLite clone of AutoClip in 45 minutes",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "Python",
+        "AI",
+        "Video"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1551754316929310770",
+    "1551754321555755118"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: AI‑Powered Video Clip Generator Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner Friendly</div>
+    </nav>
+
+    <header>
+        <h1>AI‑Powered Video Clip Generator Clone</h1>
+        <p>A minimal Python‑SQLite clone of AutoClip in 45 minutes</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick‑fire tutorial we’ll build a tiny version of AutoClip – an AI‑assisted video clip generator that extracts highlights from long videos using subtitles.</p>
+        <p>You’ll end up with a Flask app that accepts a video file and an optional SRT, runs a simple keyword‑density model to pick highlight timestamps, and serves the clipped MP4s – all on your local machine, no paid APIs required.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Python 3.10+ and ffmpeg installed and reachable in your PATH.</li>
+                <li>The clone uses a naïve TF‑IDF keyword scorer instead of the full LLM pipeline – results will be rough but functional.</li>
+                <li>Running the clip extraction may be CPU‑heavy for long videos; keep test files under 2 minutes.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RESOURCES</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">stores metadata</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">calls for clipping</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Flask API + UI</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB (clips metadata)</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">ffmpeg (video processing)</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh virtual environment so our dependencies stay isolated from any system Python packages. Then install Flask, which will serve the web UI and API, and the SQLite driver (the built‑in <code>sqlite3</code> module works, but we also install <code>pysqlite3</code> for a nicer API). Finally, lay out a minimal folder tree: a place for the Flask app, a <code>models.py</code> for the database schema, and a <code>static</code> folder for uploaded videos.</p>
+                <p>The scaffold gives us a clean starting point. All later code will live inside the <code>src</code> package, making imports straightforward and keeping the repository tidy.</p>
+<div class="code-block"><pre><code>python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install Flask pysqlite3
+mkdir -p src/static src/templates
+touch src/__init__.py src/app.py src/models.py</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data model – SQLite clip table</h2>
+                <p>We need a single table to remember each generated clip: the original video filename, start and end seconds, and a short AI‑generated title. Using <code>pysqlite3</code> we can create the table if it doesn’t exist and expose a tiny helper to insert new rows.</p>
+                <p>Keeping the schema in <code>models.py</code> means the rest of the code can import <code>get_db()</code> and <code>add_clip()</code> without worrying about raw SQL strings. This keeps the project modular and easy to extend later.</p>
+                <p><strong>src/models.py</strong></p>
+<div class="code-block"><pre><code>import os
+import sqlite3
+from pathlib import Path
+
+DB_PATH = Path(__file__).parent / "clips.db"
+
+def get_db():
+    """Return a connection to the SQLite DB, creating the file if needed."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    """Create the clips table if it doesn't already exist."""
+    with get_db() as conn:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS clips (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                video_filename TEXT NOT NULL,
+                start_sec REAL NOT NULL,
+                end_sec REAL NOT NULL,
+                title TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+        conn.commit()
+
+def add_clip(video_filename: str, start_sec: float, end_sec: float, title: str) -&gt; int:
+    """Insert a new clip record and return its new ID."""
+    with get_db() as conn:
+        cur = conn.execute(
+            "INSERT INTO clips (video_filename, start_sec, end_sec, title) VALUES (?,?,?,?)",
+            (video_filename, start_sec, end_sec, title),
+        )
+        conn.commit()
+        return cur.lastrowid
+
+<span class="code-comment"># Initialise the DB when this module is first imported</span>
+if not DB_PATH.exists():
+    init_db()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core logic – simple highlight extractor</h2>
+                <p>In this step we turn raw subtitles into actionable highlight windows. We read an optional SRT file, split it into 10‑second buckets, and count how often each word appears inside each bucket. The two buckets with the highest word‑frequency scores become our highlight candidates – a lightweight TF‑IDF‑like heuristic that works without any heavy ML libraries.</p>
+                <p>The extractor returns a list of <code>(start_seconds, end_seconds)</code> tuples that the rest of the pipeline can feed into ffmpeg. Keeping the logic pure Python makes it easy to test and swap out later if you want a smarter model.</p>
+                <p><strong>extractor.py</strong></p>
+<div class="code-block"><pre><code>import re
+import os
+from collections import Counter, defaultdict
+
+def _load_srt(srt_path):
+    """Read an SRT file and return a list of (start, end, text) tuples in seconds."""
+    if not os.path.isfile(srt_path):
+        return []
+    pattern = re.compile(r"(\d{2}:\d{2}:\d{2},\d{3}) --&gt; (\d{2}:\d{2}:\d{2},\d{3})\n(.+?)(?=\n\n|\Z)", re.DOTALL)
+    def _ts(t):
+        h,m,s = t.split(':')
+        s,ms = s.split(',')
+        return int(h)*3600 + int(m)*60 + int(s) + int(ms)/1000.0
+    entries = []
+    with open(srt_path, 'r', encoding='utf-8') as f:
+        content = f.read().strip()
+    for match in pattern.finditer(content):
+        start = _ts(match.group(1))
+        end = _ts(match.group(2))
+        text = match.group(3).replace('\n', ' ')
+        entries.append((start, end, text))
+    return entries
+
+def _tokenize(text):
+    return re.findall(r"\b\w+\b", text.lower())
+
+def extract_highlights(video_path, srt_path=None, window=10, top_n=2):
+    """Return a list of (start, end) seconds for the most "interesting" windows.
+    If no SRT is supplied we fall back to the first `top_n` windows of the video.
+    """
+    <span class="code-comment"># Load subtitles; if missing, create empty placeholder list</span>
+    subs = _load_srt(srt_path) if srt_path else []
+    <span class="code-comment"># Determine video duration (fallback to 60s if unknown)</span>
+    try:
+        import subprocess, json
+        probe = subprocess.check_output([
+            'ffprobe', '-v', 'error', '-show_entries', 'format=duration',
+            '-of', 'json', video_path
+        ])
+        duration = float(json.loads(probe)['format']['duration'])
+    except Exception:
+        duration = 60.0
+    <span class="code-comment"># Build buckets</span>
+    buckets = defaultdict(list)  # start_sec -&gt; list of words
+    for start, end, text in subs:
+        bucket_start = int(start // window) * window
+        buckets[bucket_start].extend(_tokenize(text))
+    <span class="code-comment"># Score each bucket by raw word frequency</span>
+    scores = []
+    for b_start in range(0, int(duration), window):
+        words = buckets.get(b_start, [])
+        freq = Counter(words)
+        score = sum(freq.values())  # simple count
+        scores.append((score, b_start))
+    <span class="code-comment"># Pick top windows</span>
+    top = sorted(scores, reverse=True)[:top_n]
+    highlights = []
+    for _, b_start in top:
+        highlights.append((b_start, min(b_start + window, duration)))
+    return highlights</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: API &amp; UI – upload, process, serve clips</h2>
+                <p>Now we glue everything together with a tiny Flask app. The root route shows a simple HTML form where you can drop a video and an optional SRT file. When the form is submitted we store the uploads, call <code>extract_highlights</code> to get the interesting segments, and invoke <code>ffmpeg</code> to slice those segments into separate MP4 files.</p>
+                <p>Each generated clip is recorded in a SQLite database (created earlier in the scaffold) so the results page can list them with download links. The UI stays minimal – just an unordered list – but it proves the end‑to‑end flow works from upload to playback.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import os
+import sqlite3
+from flask import Flask, request, redirect, url_for, send_from_directory, render_template_string
+from werkzeug.utils import secure_filename
+from extractor import extract_highlights
+import subprocess
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['CLIP_FOLDER'] = 'clips'
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(app.config['CLIP_FOLDER'], exist_ok=True)
+DB_PATH = 'clips.db'
+
+<span class="code-comment"># Simple DB helper</span>
+def init_db():
+    with sqlite3.connect(DB_PATH) as conn:
+        conn.execute('''CREATE TABLE IF NOT EXISTS clips (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            video TEXT,
+            start REAL,
+            end REAL,
+            clip_path TEXT
+        )''')
+init_db()
+
+HTML_FORM = '''
+&lt;!doctype html&gt;&lt;title&gt;AutoClip Clone&lt;/title&gt;
+&lt;h1&gt;Upload video (and optional .srt)&lt;/h1&gt;
+&lt;form method=post enctype=multipart/form-data&gt;
+  &lt;input type=file name=video required&gt;&lt;br&gt;&lt;br&gt;
+  &lt;input type=file name=srt&gt;&lt;br&gt;&lt;br&gt;
+  &lt;input type=submit value=Upload&gt;
+&lt;/form&gt;
+{% if clips %}&lt;h2&gt;Generated Clips&lt;/h2&gt;&lt;ul&gt;{% for c in clips %}&lt;li&gt;&lt;a href="{{url_for('download_clip', filename=c['clip_name'])}}"&gt;Clip {{c['id']}} ({{c['start']}}‑{{c['end']}}s)&lt;/a&gt;&lt;/li&gt;{% endfor %}&lt;/ul&gt;{% endif %}
+''' 
+
+@app.route('/', methods=['GET', 'POST'])
+def upload():
+    clips = []
+    if request.method == 'POST':
+        video_file = request.files['video']
+        srt_file = request.files.get('srt')
+        if not video_file:
+            return 'No video uploaded', 400
+        video_name = secure_filename(video_file.filename)
+        video_path = os.path.join(app.config['UPLOAD_FOLDER'], video_name)
+        video_file.save(video_path)
+        srt_path = None
+        if srt_file and srt_file.filename:
+            srt_name = secure_filename(srt_file.filename)
+            srt_path = os.path.join(app.config['UPLOAD_FOLDER'], srt_name)
+            srt_file.save(srt_path)
+        <span class="code-comment"># Extract highlight windows</span>
+        highlights = extract_highlights(video_path, srt_path)
+        <span class="code-comment"># Generate clips via ffmpeg</span>
+        for start, end in highlights:
+            clip_name = f"clip_{int(start)}_{int(end)}.mp4"
+            clip_path = os.path.join(app.config['CLIP_FOLDER'], clip_name)
+            subprocess.run([
+                'ffmpeg', '-y', '-i', video_path,
+                '-ss', str(start), '-to', str(end),
+                '-c', 'copy', clip_path
+            ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            <span class="code-comment"># Store metadata</span>
+            with sqlite3.connect(DB_PATH) as conn:
+                cur = conn.execute('INSERT INTO clips (video, start, end, clip_path) VALUES (?,?,?,?)',
+                                   (video_name, start, end, clip_name))
+                clip_id = cur.lastrowid
+            clips.append({'id': clip_id, 'clip_name': clip_name, 'start': start, 'end': end})
+    else:
+        <span class="code-comment"># GET – show any existing clips for demo purposes</span>
+        with sqlite3.connect(DB_PATH) as conn:
+            rows = conn.execute('SELECT id, clip_path, start, end FROM clips').fetchall()
+        clips = [{'id': r[0], 'clip_name': r[1], 'start': r[2], 'end': r[3]} for r in rows]
+    return render_template_string(HTML_FORM, clips=clips)
+
+@app.route('/clips/&lt;filename&gt;')
+def download_clip(filename):
+    return send_from_directory(app.config['CLIP_FOLDER'], filename, as_attachment=True)
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run &amp; verify locally</h2>
+                <p>With the code in place, start the Flask development server and point your browser at the root URL. The upload page will appear; choose a short MP4 (and an SRT if you have one) and hit Upload. After a few seconds ffmpeg will slice the two highlight clips and the page will refresh showing download links.</p>
+                <p>You can click each link to confirm the MP4 files were created and play correctly. This completes the minimal clone – you now have a working pipeline from raw video to AI‑style highlights without any external ML services.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Ensure dependencies are installed</span>
+pip install flask werkzeug
+<span class="code-comment"># ffmpeg must be on PATH – on Ubuntu you can install with:</span>
+<span class="code-comment"># sudo apt-get install ffmpeg</span>
+<span class="code-comment"># Start the app</span>
+python app.py</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without error</td><td>Observe "Running on http://127.0.0.1:5000/" in terminal</td></tr>
+            <tr><td>Upload page loads in browser</td><td>Navigate to http://127.0.0.1:5000/ and see the upload form</td></tr>
+            <tr><td>Clips appear after processing</td><td>After submitting a video, the results page lists downloadable MP4 links</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your minimal AutoClip clone is up and running. Experiment by tweaking the window size or swapping the TF‑IDF scorer for a small transformer model – the sky’s the limit!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
