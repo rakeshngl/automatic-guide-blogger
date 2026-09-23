@@ -1,0 +1,62 @@
+{
+  "date": "2026-09-23",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Claude CLI Helper with Python",
+      "source": "github_trending",
+      "url": "https://github.com/davila7/claude-code-templates",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-23_claude-cli-helper-python-minimal-clone.html",
+      "tagline": "A quick‑start guide to build a local command‑line assistant using Claude‑style prompts",
+      "navbar_badge": "beta",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "cli",
+        "ai"
+      ]
+    },
+    {
+      "title": "Build a Browser‑Based Video Editor with Python Agents",
+      "source": "github_trending",
+      "url": "https://github.com/browser-use/video-use",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-23_browser-based-video-editor-mini-clone.html",
+      "tagline": "A lightweight Python/Flask prototype inspired by video‑use",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "python",
+        "web",
+        "ffmpeg"
+      ]
+    },
+    {
+      "title": "Build a Zero‑Dependency PostgreSQL Job Queue in Node.js",
+      "source": "hn_show",
+      "url": "https://github.com/karanrajsurya/CatQueue",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-23_zero-dependency-postgresql-job-queue-node-js.html",
+      "tagline": "A minimal clone of CatQueue built in ~45 min with Node and Postgres",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 40,
+      "tags": [
+        "nodejs",
+        "typescript",
+        "postgresql"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1552118273745616959",
+    "1552118279538086000",
+    "1552118284260745337"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

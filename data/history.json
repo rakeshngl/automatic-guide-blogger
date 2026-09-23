@@ -233,6 +233,24 @@
       "title": "Build an AI‑Powered Video Clip Generator with Autoclip (Python)",
       "source_url": "https://github.com/zhouxiaoka/autoclip",
       "slug": "2026-09-22_ai-powered-video-clip-generator-clone.html"
+    },
+    {
+      "date": "2026-09-23T00:36:19+00:00",
+      "title": "Build a Claude CLI Helper with Python",
+      "source_url": "https://github.com/davila7/claude-code-templates",
+      "slug": "2026-09-23_claude-cli-helper-python-minimal-clone.html"
+    },
+    {
+      "date": "2026-09-23T00:40:31+00:00",
+      "title": "Build a Browser‑Based Video Editor with Python Agents",
+      "source_url": "https://github.com/browser-use/video-use",
+      "slug": "2026-09-23_browser-based-video-editor-mini-clone.html"
+    },
+    {
+      "date": "2026-09-23T00:43:52+00:00",
+      "title": "Build a Zero‑Dependency PostgreSQL Job Queue in Node.js",
+      "source_url": "https://github.com/karanrajsurya/CatQueue",
+      "slug": "2026-09-23_zero-dependency-postgresql-job-queue-node-js.html"
     }
   ]
 }

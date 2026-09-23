@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Browser‑Based Video Editor Mini‑Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Browser‑Based Video Editor Mini‑Clone</h1>
+        <p>A lightweight Python/Flask prototype inspired by video‑use</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVU IT</strong> build guide. In the next 45 minutes you’ll spin up a tiny web app that lets you upload raw footage, trigger a simple ffmpeg trim, and download the edited result – a stripped‑down echo of the video‑use project.</p>
+        <p>We’ll use Python 3, Flask, SQLite (for a tiny metadata store), and free‑tier ffmpeg binaries. No paid APIs, no AI – just the core upload‑process‑download loop you can extend later.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Python 3.9+ and ffmpeg installed and reachable from your PATH.</li>
+                <li>The clone only supports a single static trim (cut from 0 to 10 seconds); the real product does AI‑driven cuts and subtitles.</li>
+                <li>Running on Windows may require quoting paths for ffmpeg; the script assumes a Unix‑like shell.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal Video‑Edit Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">store metadata</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">process video</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Flask Web Server</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">ffmpeg CLI</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>First we create an isolated Python environment so our dependencies don’t clash with any global packages. Then we install Flask, the lightweight web framework that will serve our upload page and API endpoints. Finally we lay out a simple folder structure that keeps code, templates, and static assets tidy.</p>
+                <p>The scaffold gives us a predictable entry point (<code>run.py</code>) and a place (<code>app/</code>) for all future modules. Keeping everything inside the virtual environment also makes the later <code>ffmpeg</code> calls reproducible on any machine that meets the prerequisites.</p>
+<div class="code-block"><pre><code>python3 -m venv venv
+source venv/bin/activate
+pip install Flask
+mkdir -p app/templates app/static app/models
+touch run.py app/__init__.py</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model</h2>
+                <p>We need a minimal way to remember which files a user has uploaded and where the trimmed output lives. SQLite is perfect for this because it requires no separate server and stores a single file on disk.</p>
+                <p>The <code>models.py</code> module creates a <code>videos</code> table with columns for the original filename, the path to the stored upload, and the path to the processed clip. Flask can later import this module to query or insert records as part of the upload workflow.</p>
+                <p><strong>app/models.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+import os
+
+DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'videos.db')
+
+def get_connection():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    with get_connection() as conn:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS videos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                original_name TEXT NOT NULL,
+                upload_path TEXT NOT NULL,
+                output_path TEXT
+            )
+        ''')
+        conn.commit()
+
+<span class="code-comment"># Initialize the DB when this module is imported</span>
+init_db()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the Flask API &amp; UI</h2>
+                <p>In this step we create a tiny Flask server that serves a single HTML page and handles file uploads. When a user posts a video, the server runs an ffmpeg command to cut the first 10 seconds and stores the result in a temporary folder. The trimmed file is then sent back to the browser as a downloadable attachment. Keeping everything in one file makes the prototype easy to read and extend.</p>
+                <p><strong>app/main.py</strong></p>
+<div class="code-block"><pre><code>import os
+from flask import Flask, request, send_from_directory, render_template, redirect, url_for
+import subprocess
+
+app = Flask(__name__)
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
+TRIMMED_FOLDER = os.path.join(BASE_DIR, 'trimmed')
+for folder in (UPLOAD_FOLDER, TRIMMED_FOLDER):
+    os.makedirs(folder, exist_ok=True)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/trim', methods=['POST'])
+def trim():
+    file = request.files.get('video')
+    if not file:
+        return redirect(url_for('index'))
+    src_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    file.save(src_path)
+    dst_path = os.path.join(TRIMMED_FOLDER, f'trimmed_{file.filename}')
+    <span class="code-comment"># ffmpeg: -t 10 limits output to first 10 seconds</span>
+    subprocess.run(['ffmpeg', '-y', '-i', src_path, '-t', '10', dst_path],
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return send_from_directory(TRIMMED_FOLDER, os.path.basename(dst_path), as_attachment=True)
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Minimal HTML UI</h2>
+                <p>The UI is just a plain HTML form that posts the selected video to the <code>/trim</code> endpoint. We use <code>enctype="multipart/form-data"</code> so the file is correctly transmitted. After the server processes the video it returns the trimmed file, prompting the browser to download it automatically.</p>
+                <p><strong>app/templates/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Video Trim Demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Upload a video to get a 10‑second preview&lt;/h1&gt;
+  &lt;form action="/trim" method="post" enctype="multipart/form-data"&gt;
+    &lt;input type="file" name="video" accept="video/*" required&gt;
+    &lt;button type="submit"&gt;Trim &amp;amp; Download&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run and verify</h2>
+                <p>Now start the Flask development server and point your browser at the root URL. Choose any short MP4 file, hit the button, and the browser will download a new file prefixed with <code>trimmed_</code>. Open that file in any media player – it should be roughly 10 seconds long. This confirms the end‑to‑end flow works.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Ensure you are in the project root where the app folder lives</span>
+python -m pip install flask
+<span class="code-comment"># ffmpeg must be installed on your system (apt, brew, choco, etc.)</span>
+python app/main.py</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without error</td><td>python app/main.py → should show *Running on http://127.0.0.1:5000/*</td></tr>
+            <tr><td>Upload page loads in browser</td><td>Open http://127.0.0.1:5000/ → see upload form</td></tr>
+            <tr><td>Trimmed video downloads and plays ~10 s</td><td>Upload any mp4, click download, verify duration with any media player</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional upload‑trim service. Extend it by adding subtitle overlay (ffmpeg drawtext), storing metadata in SQLite, or wiring an LLM to decide cut points – the same patterns the full video‑use project uses.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

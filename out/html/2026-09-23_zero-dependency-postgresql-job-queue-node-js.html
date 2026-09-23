@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Zero‑Dependency PostgreSQL Job Queue (Node.js)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Zero‑Dependency PostgreSQL Job Queue (Node.js)</h1>
+        <p>A minimal clone of CatQueue built in ~45 min with Node and Postgres</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide. In this tutorial we’ll spin up a tiny PostgreSQL‑backed job queue in pure Node.js—no external libraries, no paid services. The result behaves like the core of CatQueue: enqueue jobs, claim them, and mark them done.</p>
+        <p>You’ll see how a few dozen lines of JavaScript plus a local Postgres instance give you a reliable, persistent work queue you can extend for any background processing need.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>Node ≥ 18 and a running PostgreSQL server (Docker or local install) are required.</li>
+                <li>The clone omits advanced features such as delayed jobs, retries, and metrics—focus is on the basic enqueue/claim/complete cycle.</li>
+                <li>Make sure the database user has CREATE TABLE privileges; otherwise the init script will fail.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL queries</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP requests</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Node.js Queue Service</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">PostgreSQL (local)</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">Worker Process (curl demo)</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold &amp; Init DB</h2>
+                <p>Create a fresh folder for the project, install the official <code>pg</code> driver, and add a tiny SQL schema that stores jobs. The schema includes an auto‑increment id, a JSON payload column, a status flag, and timestamps for visibility and debugging.</p>
+                <p>We’ll also add a short shell script that runs the <code>CREATE TABLE</code> statement, so you can re‑run it whenever you spin up a fresh database.</p>
+                <p>All of this is pure Node and plain SQL—no ORM, no migrations framework, just what you need to get a queue table ready.</p>
+<div class="code-block"><pre><code>mkdir catqueue-clone &amp;&amp; cd catqueue-clone
+npm init -y &gt; /dev/null
+npm install pg@8
+
+<span class="code-comment"># Create init.sql with the job table definition</span>
+cat &gt; init.sql &lt;&lt;'SQL'
+CREATE TABLE IF NOT EXISTS jobs (
+  id SERIAL PRIMARY KEY,
+  payload JSONB NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+SQL
+
+<span class="code-comment"># Run the script (adjust connection string as needed)</span>
+export DATABASE_URL=postgres://postgres:password@localhost:5432/queue_db
+psql $DATABASE_URL -f init.sql</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Enqueue Function</h2>
+                <p>Add a tiny module that inserts a job row and returns its generated id. The function receives any JSON‑serializable payload, stores it in the <code>payload</code> column, and leaves the status as <code>pending</code>.</p>
+                <p>We keep the module self‑contained: it creates a <code>Pool</code> from the <code>pg</code> driver, runs a parameterised INSERT, and resolves with the new job id. This mirrors CatQueue’s <code>enqueue</code> API but stays dependency‑free.</p>
+                <p><strong>queue.js</strong></p>
+<div class="code-block"><pre><code>const { Pool } = require('pg');
+
+<span class="code-comment">// Connection string can be set via env var DATABASE_URL</span>
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+/**
+ * Enqueue a new job.
+ * @param {object} payload - Any JSON‑serialisable data.
+ * @returns {Promise&lt;number&gt;} The id of the newly created job.
+ */
+async function enqueue(payload) {
+  const client = await pool.connect();
+  try {
+    const res = await client.query(
+      `INSERT INTO jobs (payload) VALUES ($1) RETURNING id;`,
+      [payload]
+    );
+    return res.rows[0].id;
+  } finally {
+    client.release();
+  }
+}
+
+module.exports = { enqueue };</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Claim &amp; Complete API</h2>
+                <p>We now add the two HTTP endpoints that make the queue useful. The <code>/claim</code> route will atomically lock the oldest job whose status is "pending" and return its payload, while <code>/complete</code> will mark a claimed job as "done". Both endpoints use the same PostgreSQL client we set up earlier, so there are no extra dependencies. This keeps the server tiny and easy to understand for beginners.</p>
+                <p><strong>server.js</strong></p>
+<div class="code-block"><pre><code>const http = require('http');
+const { Pool } = require('pg');
+const url = require('url');
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+async function claimJob() {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const res = await client.query(
+      `SELECT id, payload FROM jobs WHERE status='pending' ORDER BY created_at ASC LIMIT 1 FOR UPDATE SKIP LOCKED`
+    );
+    if (res.rowCount === 0) return null;
+    const job = res.rows[0];
+    await client.query('UPDATE jobs SET status=$1 WHERE id=$2', ['claimed', job.id]);
+    await client.query('COMMIT');
+    return { id: job.id, payload: job.payload, status: 'claimed' };
+  } catch (e) {
+    await client.query('ROLLBACK');
+    throw e;
+  } finally { client.release(); }
+}
+
+async function completeJob(id) {
+  await pool.query('UPDATE jobs SET status=$1 WHERE id=$2', ['done', id]);
+}
+
+const server = http.createServer(async (req, res) =&gt; {
+  const parsed = url.parse(req.url, true);
+  if (req.method === 'POST' &amp;&amp; parsed.pathname === '/claim') {
+    try {
+      const job = await claimJob();
+      if (!job) { res.writeHead(204); return res.end(); }
+      res.writeHead(200, {'Content-Type':'application/json'});
+      res.end(JSON.stringify(job));
+    } catch (e) { res.writeHead(500); res.end(e.message); }
+  } else if (req.method === 'POST' &amp;&amp; parsed.pathname === '/complete') {
+    let body = '';
+    req.on('data', chunk =&gt; body += chunk);
+    req.on('end', async () =&gt; {
+      try {
+        const {id} = JSON.parse(body);
+        await completeJob(id);
+        res.writeHead(200); res.end('ok');
+      } catch (e) { res.writeHead(400); res.end(e.message); }
+    });
+  } else { res.writeHead(404); res.end('Not found'); }
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () =&gt; console.log(`Server listening on ${PORT}`));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run Locally</h2>
+                <p>With the server ready, we launch it and immediately test the new endpoints using <code>curl</code>. The first request to <code>/claim</code> should return a JSON object representing the oldest pending job, and the second request to <code>/complete</code> will tell the server which job to mark as done. Running these commands locally verifies that our queue works end‑to‑end without any external tooling.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Install dependencies and start the server</span>
+npm install pg &amp;&amp; node server.js &amp;
+SERVER_PID=$!
+<span class="code-comment"># Give the server a moment to start</span>
+sleep 1
+<span class="code-comment"># Claim the oldest pending job</span>
+curl -s -X POST http://localhost:3000/claim | tee claim.json
+<span class="code-comment"># Extract the job id and mark it complete</span>
+JOB_ID=$(jq .id &lt; claim.json)
+curl -s -X POST -H "Content-Type: application/json" -d "{\"id\":$JOB_ID}" http://localhost:3000/complete
+<span class="code-comment"># Clean up</span>
+kill $SERVER_PID</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; Extend</h2>
+                <p>After the API calls succeed, we inspect the PostgreSQL table to confirm the job status changed from "claimed" to "done". This step shows the full round‑trip: enqueue → claim → complete → persisted state. Once you’re comfortable, you can extend the queue with retries, a dead‑letter table, or richer job metadata without altering the core API.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Show all jobs and their statuses</span>
+echo "Current jobs:" &amp;&amp; psql $DATABASE_URL -c "SELECT id, status, payload FROM jobs ORDER BY id;"</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Project initializes without errors</td><td>npm i pg &amp;&amp; node server.js (no stack trace)</td></tr>
+            <tr><td>Enqueue returns a numeric id</td><td>node -e "require('./queue').enqueue({x:1}).then(id=&gt;console.log('id',id))" prints a number</td></tr>
+            <tr><td>/claim returns a job JSON with status 'claimed'</td><td>curl -X POST http://localhost:3000/claim | jq .status yields "claimed"</td></tr>
+            <tr><td>/complete updates status to 'done' in DB</td><td>psql $DATABASE_URL -c "SELECT status FROM jobs WHERE id=1;" shows 'done'</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You’re ready to queue!</h4>
+            <p>You now have a functional, zero‑dependency PostgreSQL job queue. Plug it into any worker process, add retry logic, or expose a richer API as you grow.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
