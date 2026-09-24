@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-24",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Real‑Time Stock Tracker Clone with TypeScript and OpenStock",
+    "Build a Simple Agentic App with Agent‑Native (TypeScript)"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Python Agent Harness with Harness‑SDK",
+      "source": "github_trending",
+      "url": "https://github.com/strands-agents/harness-sdk",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-24_python-agent-harness-clone.html",
+      "tagline": "A tiny, free‑tier clone of Strands Agents Harness‑SDK",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "Python",
+        "AI",
+        "SDK"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1552478881104011305"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 1
+}
