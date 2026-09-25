@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Build a Basic Agent Memory Store with Hindsight in Python</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner</div>
+    </nav>
+
+    <header>
+        <h1>Build a Basic Agent Memory Store with Hindsight in Python</h1>
+        <p>A minimal local clone of Hindsight’s memory API using FastAPI &amp; SQLite</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick build you’ll create a tiny agent‑memory service inspired by Hindsight, the open‑source memory store for smarter agents. We’ll spin up a local FastAPI server, persist embeddings in SQLite, and expose a tiny REST API – all in under an hour.</p>
+        <p>The clone focuses on the core concepts: storing a vector (as a JSON list) with a key, and retrieving the most similar entries via a simple cosine similarity query. No external cloud services or paid APIs are required.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>You need Python 3.10+ and <code>pip</code>. The real Hindsight supports massive vector indexes; our SQLite version is only for demo purposes and won’t scale.</li>
+                <li>Make sure no other process is using port 8000 – the server will bind there.</li>
+                <li>If you see <code>sqlite3.OperationalError: database is locked</code>, stop the server and retry – the simple demo doesn’t handle concurrent writes.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP API</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL queries</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">cURL / Browser</text>
+<text x="315.0" y="87" class="node-subtext">Test Calls</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">FastAPI Server</text>
+<text x="315.0" y="159" class="node-subtext">Python + SQLite</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">SQLite DB</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>We start by isolating our work in a virtual environment so dependencies don’t clash with other Python projects. Then we install FastAPI for the web layer, Uvicorn as the ASGI server, and the built‑in SQLite driver (via the standard library) – nothing extra is required.</p>
+                <p>All files will live in a fresh folder called <code>hindsight_clone</code>; this keeps the demo tidy and makes it easy to delete later.</p>
+<div class="code-block"><pre><code>mkdir hindsight_clone &amp;&amp; cd hindsight_clone
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install fastapi uvicorn</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Initialise the SQLite store</h2>
+                <p>Next we create a tiny SQLite database with a single table to hold each memory entry. The table stores an auto‑increment id, the vector as a JSON‑encoded list, and an optional metadata JSON column for future extensions.</p>
+                <p>Running this script will create <code>memory.db</code> in the project root; the FastAPI app will later reuse the same file for reads and writes.</p>
+                <p><strong>db_init.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3, json
+
+conn = sqlite3.connect('memory.db')
+cur = conn.cursor()
+cur.execute('''
+CREATE TABLE IF NOT EXISTS memories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    vector TEXT NOT NULL,          -- JSON array of floats
+    metadata TEXT                  -- optional JSON object
+)
+''')
+conn.commit()
+conn.close()
+print('SQLite store initialised: memory.db')</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Implement FastAPI endpoints</h2>
+                <p>In this step we wire up a tiny FastAPI app that talks to a local SQLite file. The <code>/store</code> endpoint will accept a JSON payload containing an <code>id</code> and a numeric <code>vector</code>, then persist it. The <code>/search</code> endpoint reads the query vector from the <code>q</code> query‑string, computes cosine similarity against all stored vectors, and returns the three most similar records as JSON. Keeping everything in a single file makes the clone easy to run and extend.</p>
+                <p><strong>main.py</strong></p>
+<div class="code-block"><pre><code>import json, math, sqlite3
+from fastapi import FastAPI, HTTPException, Query
+from pydantic import BaseModel
+
+app = FastAPI()
+DB = 'memory.db'
+
+<span class="code-comment"># Ensure table exists</span>
+with sqlite3.connect(DB) as conn:
+    conn.execute('''CREATE TABLE IF NOT EXISTS vectors (
+        id TEXT PRIMARY KEY,
+        vec TEXT NOT NULL
+    )''')
+
+class StoreItem(BaseModel):
+    id: str
+    vector: list[float]
+
+def cosine(a, b):
+    dot = sum(x*y for x,y in zip(a,b))
+    norm_a = math.sqrt(sum(x*x for x in a))
+    norm_b = math.sqrt(sum(y*y for y in b))
+    return dot/(norm_a*norm_b) if norm_a and norm_b else 0.0
+
+@app.post('/store')
+def store(item: StoreItem):
+    vec_json = json.dumps(item.vector)
+    try:
+        with sqlite3.connect(DB) as conn:
+            conn.execute('INSERT OR REPLACE INTO vectors (id, vec) VALUES (?,?)',
+                         (item.id, vec_json))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {'status':'ok'}
+
+@app.get('/search')
+def search(q: str = Query(..., description='comma‑separated floats')):
+    try:
+        query_vec = [float(x) for x in q.split(',')]
+    except ValueError:
+        raise HTTPException(status_code=400, detail='Invalid vector format')
+    results = []
+    with sqlite3.connect(DB) as conn:
+        for row in conn.execute('SELECT id, vec FROM vectors'):
+            stored_vec = json.loads(row[1])
+            sim = cosine(query_vec, stored_vec)
+            results.append({'id': row[0], 'score': sim})
+    top3 = sorted(results, key=lambda x: x['score'], reverse=True)[:3]
+    return top3</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run the server locally</h2>
+                <p>Now that the API code is ready, we launch it with Uvicorn, the recommended ASGI server for FastAPI. The <code>--reload</code> flag watches source changes so you can iterate quickly. The server will be reachable at <code>http://localhost:8000</code>. </p>
+<div class="code-block"><pre><code>uvicorn main:app --reload</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>With the server running, we can use <code>curl</code> to store a sample vector and then query for similar ones. The response should be a JSON array containing the stored record with a high similarity score. From here you might add a tiny HTML front‑end, batch upserts, or swap SQLite for PostgreSQL for a more robust clone.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Store a vector</span>
+curl -X POST http://localhost:8000/store \
+  -H 'Content-Type: application/json' \
+  -d '{"id":"vec1","vector":[0.1,0.2,0.3]}'
+
+<span class="code-comment"># Query for similar vectors</span>
+curl 'http://localhost:8000/search?q=0.1,0.2,0.3' | jq '.'</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>uvicorn main:app --reload shows 'Uvicorn running on http://127.0.0.1:8000'</td></tr>
+            <tr><td>POST /store returns status ok</td><td>curl -X POST http://localhost:8000/store -H 'Content-Type: application/json' -d '{\"id\":\"vec1\",\"vector\":[0.1,0.2,0.3]}' | grep ok</td></tr>
+            <tr><td>GET /search returns a JSON array with at least one entry</td><td>curl 'http://localhost:8000/search?q=0.1,0.2,0.3' | jq '.'</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a working local memory store. Try adding batch upserts, a simple front‑end UI, or switching to PostgreSQL for a more production‑ready clone of Hindsight.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

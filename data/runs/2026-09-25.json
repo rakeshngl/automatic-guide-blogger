@@ -1,0 +1,62 @@
+{
+  "date": "2026-09-25",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple AI Engineering Pipeline from Scratch with Python",
+      "source": "github_trending",
+      "url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-25_simple-ai-engineering-pipeline-python.html",
+      "tagline": "A beginner-friendly clone of an AI pipeline using Flask and SQLite",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "ml",
+        "cli"
+      ]
+    },
+    {
+      "title": "Build a CLI‑Anything Mini Command‑Line Tool in Python",
+      "source": "github_trending",
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-25_cli-anything-mini-clone.html",
+      "tagline": "A tiny Python CLI harness for running arbitrary commands",
+      "navbar_badge": "beta",
+      "est_minutes": 40,
+      "tags": [
+        "python",
+        "cli",
+        "automation"
+      ]
+    },
+    {
+      "title": "Build a Basic Agent Memory Store with Hindsight in Python",
+      "source": "github_trending",
+      "url": "https://github.com/vectorize-io/hindsight",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-25_build-a-basic-agent-memory-store-with-hindsight-in-python.html",
+      "tagline": "A minimal local clone of Hindsight’s memory API using FastAPI & SQLite",
+      "navbar_badge": "Beginner",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "ai",
+        "memory"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1552844617458909304",
+    "1552844641567514645",
+    "1552844646013739048"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

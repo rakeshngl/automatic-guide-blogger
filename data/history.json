@@ -257,6 +257,24 @@
       "title": "Build a Python Agent Harness with Harness‑SDK",
       "source_url": "https://github.com/strands-agents/harness-sdk",
       "slug": "2026-09-24_python-agent-harness-clone.html"
+    },
+    {
+      "date": "2026-09-25T00:35:07+00:00",
+      "title": "Build a Simple AI Engineering Pipeline from Scratch with Python",
+      "source_url": "https://github.com/rohitg00/ai-engineering-from-scratch",
+      "slug": "2026-09-25_simple-ai-engineering-pipeline-python.html"
+    },
+    {
+      "date": "2026-09-25T00:42:26+00:00",
+      "title": "Build a CLI‑Anything Mini Command‑Line Tool in Python",
+      "source_url": "https://github.com/HKUDS/CLI-Anything",
+      "slug": "2026-09-25_cli-anything-mini-clone.html"
+    },
+    {
+      "date": "2026-09-25T00:50:06+00:00",
+      "title": "Build a Basic Agent Memory Store with Hindsight in Python",
+      "source_url": "https://github.com/vectorize-io/hindsight",
+      "slug": "2026-09-25_build-a-basic-agent-memory-store-with-hindsight-in-python.html"
     }
   ]
 }
