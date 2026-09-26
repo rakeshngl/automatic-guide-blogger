@@ -1,0 +1,48 @@
+{
+  "date": "2026-09-26",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Simple Agent Memory Store with Hindsight in Python"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Claude Plugin from Scratch with the Official Plugin SDK",
+      "source": "github_trending",
+      "url": "https://github.com/anthropics/claude-plugins-official",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-26_build-a-minimal-claude-plugin-clone.html",
+      "tagline": "A quick‑start guide to create a working Claude plugin using the official SDK",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "python",
+        "api",
+        "claude"
+      ]
+    },
+    {
+      "title": "Build a Command‑Line Superpowers Script to Automate Repetitive Tasks",
+      "source": "github_trending",
+      "url": "https://github.com/obra/superpowers",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-26_command-line-superpowers-script.html",
+      "tagline": "Automate repetitive tasks with a tiny Python CLI",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 40,
+      "tags": [
+        "shell",
+        "cli",
+        "automation"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1553207179782393936",
+    "1553207195825348668"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}
