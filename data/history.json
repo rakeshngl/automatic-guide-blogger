@@ -287,6 +287,18 @@
       "title": "Build a Command‑Line Superpowers Script to Automate Repetitive Tasks",
       "source_url": "https://github.com/obra/superpowers",
       "slug": "2026-09-26_command-line-superpowers-script.html"
+    },
+    {
+      "date": "2026-09-27T00:34:01+00:00",
+      "title": "Build a Simple AI Agent Dashboard with Paperclip (TypeScript)",
+      "source_url": "https://github.com/paperclipai/paperclip",
+      "slug": "2026-09-27_simple-ai-agent-dashboard-clone.html"
+    },
+    {
+      "date": "2026-09-27T00:37:08+00:00",
+      "title": "Build a Mini Spreadsheet‑Style Workspace with Univer (TypeScript)",
+      "source_url": "https://github.com/dream-num/univer",
+      "slug": "2026-09-27_mini-spreadsheet-style-workspace-with-univer.html"
     }
   ]
 }

@@ -1,0 +1,48 @@
+{
+  "date": "2026-09-27",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Searchable Agent Memory Store with Hindsight (Python)"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple AI Agent Dashboard with Paperclip (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/paperclipai/paperclip",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-27_simple-ai-agent-dashboard-clone.html",
+      "tagline": "A minimal Node/React dashboard inspired by Paperclip",
+      "navbar_badge": "Beginner",
+      "est_minutes": 45,
+      "tags": [
+        "typescript",
+        "nodejs",
+        "ai-agents"
+      ]
+    },
+    {
+      "title": "Build a Mini Spreadsheet‑Style Workspace with Univer (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/dream-num/univer",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-09-27_mini-spreadsheet-style-workspace-with-univer.html",
+      "tagline": "A quick‑start clone using the Univer SDK",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "typescript",
+        "react",
+        "office"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1553566131455791164",
+    "1553566137269354600"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}
