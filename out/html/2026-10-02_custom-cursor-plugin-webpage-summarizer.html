@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Custom Cursor Plugin: Webpage Summarizer</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner</div>
+    </nav>
+
+    <header>
+        <h1>Custom Cursor Plugin: Webpage Summarizer</h1>
+        <p>A minimal TypeScript plugin that fetches a page and returns a concise summary</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick‑fire tutorial you’ll build a tiny Cursor plugin that pulls the HTML of any public URL and returns a short summary using a free‑tier LLM endpoint.</p>
+        <p>The clone mirrors the real Cursor “Web Summarizer” plugin but runs entirely locally with Node.js, TypeScript, and SQLite for caching – perfect for a 45‑minute sprint.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>Node.js ≥ 18 and npm are required; older versions lack native fetch support.</li>
+                <li>The real product calls a paid AI model – we’ll use the free HuggingFace inference API, so results are less polished.</li>
+                <li>SQLite is used for simple caching; in production you’d replace it with a proper DB.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Plugin Architecture</div>
+            <svg width="100%" height="190" viewBox="0 0 420 190" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="142" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="230" y1="74" x2="190" y2="110" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="210" y="86" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">POST /summarize</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SELECT/INSERT</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Cursor Plugin (TS)</text>
+<text x="315.0" y="87" class="node-subtext">fetch + summarize</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite Cache</text>
+<rect x="20" y="86" width="170" height="48" rx="10" class="node-tech" />
+<text x="105.0" y="107" class="node-text">HF Summarization API</text>
+<text x="105.0" y="123" class="node-subtext">free tier</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Initialize a Node/TS project and install dependencies.</p>
+<div class="code-block"><pre><code>mkdir cursor-summarizer &amp;&amp; cd cursor-summarizer
+npm init -y
+npm install typescript @types/node better-sqlite3 node-fetch
+npx tsc --init --rootDir src --outDir dist --esModuleInterop true --module commonjs --target es2022
+mkdir src &amp;&amp; touch src/index.ts src/cache.ts</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data layer – SQLite cache</h2>
+                <p>A tiny helper stores previously summarized URLs to avoid duplicate calls.</p>
+                <p><strong>src/cache.ts</strong></p>
+<div class="code-block"><pre><code>import Database from 'better-sqlite3';
+
+const db = new Database('cache.db');
+
+db.exec(`CREATE TABLE IF NOT EXISTS summaries (
+  url TEXT PRIMARY KEY,
+  summary TEXT NOT NULL,
+  fetched_at INTEGER NOT NULL
+);`);
+
+export function getSummary(url: string): string | null {
+  const row = db.prepare('SELECT summary FROM summaries WHERE url = ?').get(url);
+  return row ? row.summary : null;
+}
+
+export function setSummary(url: string, summary: string): void {
+  const now = Date.now();
+  db.prepare('INSERT OR REPLACE INTO summaries (url, summary, fetched_at) VALUES (?, ?, ?)')
+    .run(url, summary, now);
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core logic – fetch &amp; summarize</h2>
+                <p>In this step we write the heart of the plugin: a function that downloads a webpage, sends its text to a free HuggingFace summarization model, and returns the short summary. We also add a tiny in‑memory cache so repeated calls for the same URL are instant, which keeps the demo snappy and demonstrates good practice.</p>
+                <p>The code uses the standard <code>fetch</code> API (via the <code>node-fetch</code> polyfill) to get the raw HTML, strips out tags with a simple regex, and then posts the cleaned text to <code>https://api-inference.huggingface.co/models/facebook/bart-large-cnn</code>. The response is parsed and cached keyed by the URL.</p>
+                <p><strong>src/summarizer.ts</strong></p>
+<div class="code-block"><pre><code>import fetch from 'node-fetch';
+
+<span class="code-comment">// Simple in‑memory cache: URL -&gt; summary</span>
+const cache = new Map&lt;string, string&gt;();
+
+/**
+ * Fetch a page, summarize it via HuggingFace, and cache the result.
+ * @param url The webpage to summarize
+ * @returns A concise summary string
+ */
+export async function summarizePage(url: string): Promise&lt;string&gt; {
+  if (cache.has(url)) return cache.get(url)!;
+
+  <span class="code-comment">// 1️⃣ Get raw HTML</span>
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`Failed to fetch ${url}: ${resp.status}`);
+  const html = await resp.text();
+
+  <span class="code-comment">// 2️⃣ Strip HTML tags (very naive but fine for demo)</span>
+  const text = html.replace(/&lt;[^&gt;]*&gt;/g, ' ').replace(/\s+/g, ' ').trim();
+
+  <span class="code-comment">// 3️⃣ Call HuggingFace summarization endpoint</span>
+  const apiResp = await fetch('https://api-inference.huggingface.co/models/facebook/bart-large-cnn', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ inputs: text })
+  });
+  if (!apiResp.ok) throw new Error(`HF API error: ${apiResp.status}`);
+  const result = await apiResp.json();
+  const summary = (result[0]?.summary_text ?? 'No summary returned').trim();
+
+  <span class="code-comment">// 4️⃣ Cache and return</span>
+  cache.set(url, summary);
+  return summary;
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Plugin manifest &amp; entry point</h2>
+                <p>Now we tell Cursor about our plugin by creating the <code>.cursor-plugin</code> folder and a <code>plugin.json</code> file inside it. The manifest declares the plugin name, version, and the command that Cursor will call. The command simply forwards the URL argument to our <code>summarizePage</code> function and prints the result to stdout.</p>
+                <p>With this minimal manifest Cursor can load the plugin, expose a <code>/summarize</code> command, and pass the user's URL directly to our TypeScript code compiled to JavaScript.</p>
+                <p><strong>.cursor-plugin/plugin.json</strong></p>
+<div class="code-block"><pre><code>{
+  "name": "webpage-summarizer",
+  "version": "0.1.0",
+  "description": "Fetch a webpage and return a concise summary.",
+  "main": "dist/index.js",
+  "commands": [
+    {
+      "name": "summarize",
+      "description": "Summarize a given URL",
+      "parameters": [
+        { "name": "url", "type": "string", "description": "The page to summarize" }
+      ]
+    }
+  ]
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Build, run &amp; test locally</h2>
+                <p>We compile the TypeScript sources to JavaScript using the TypeScript compiler (<code>tsc</code>). After building, we can invoke the plugin directly with Node to simulate how Cursor would call it, passing a URL argument and watching the summary appear on the console. The first run hits the network, while a second run should be instantaneous thanks to the cache we added.</p>
+                <p>If everything compiles and the output looks like a short paragraph, the minimal plugin is ready to be dropped into Cursor’s <code>.cursor-plugin</code> folder for real use.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Install dependencies (run once)</span>
+npm install node-fetch@2 @types/node-fetch typescript
+
+<span class="code-comment"># Compile TypeScript to ./dist</span>
+npx tsc --project tsconfig.json
+
+<span class="code-comment"># Test the plugin manually – replace URL with any public page</span>
+node -e "require('./dist/index.js').summarizePage('https://example.com').then(console.log).catch(console.error)"</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Project compiles without errors</td><td>npx tsc returns exit code 0</td></tr>
+            <tr><td>Running the test prints a short paragraph</td><td>node -e … outputs summary text</td></tr>
+            <tr><td>Repeated call returns instantly (cached)</td><td>Second run shows no network delay</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your custom Cursor plugin is now runnable and can be loaded into Cursor via the .cursor-plugin folder. Extend it by adding markdown stripping, better UI, or a paid LLM for higher quality.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "date": "2026-09-29",
+  "status": "no_candidates",
+  "failed_sources": [
+    "producthunt",
+    "github_trending",
+    "hn_show",
+    "devto",
+    "reddit_selfhosted",
+    "gmail_digest"
+  ]
+}

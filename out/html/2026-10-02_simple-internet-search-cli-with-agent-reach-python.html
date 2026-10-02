@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple Internet Search CLI with Agent‑Reach (Python)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Simple Internet Search CLI with Agent‑Reach (Python)</h1>
+        <p>A beginner‑friendly clone that queries the web from the command line using free open‑source tools</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In this tutorial we’ll create a minimal command‑line search tool inspired by Agent‑Reach, letting your Python script fetch web results without paying for proprietary APIs.</p>
+        <p>You’ll spin up a tiny FastAPI server that proxies requests to the free DuckDuckGo Instant Answer API, then call it from a local CLI – all in under 45 minutes.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>You need Python 3.10+ and <code>git</code> installed; the guide assumes a Unix‑like shell.</li>
+                <li>The real Agent‑Reach bundles headless browsers and paid proxy services – our clone uses only DuckDuckGo’s public JSON endpoint, so results are less rich and may be rate‑limited.</li>
+                <li>Make sure port 8000 is free; the FastAPI server will bind to it.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Architecture Overview</div>
+            <svg width="100%" height="190" viewBox="0 0 420 190" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="142" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL ENVIRONMENT</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP GET /search?q=…</text>
+<line x1="230" y1="146" x2="190" y2="110" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="210" y="122" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">GET https://api.duckduckgo.com/?q=…&amp;format=json</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Search CLI</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">FastAPI Proxy</text>
+<rect x="20" y="86" width="170" height="48" rx="10" class="node-tech" />
+<text x="105.0" y="115" class="node-text">DuckDuckGo JSON API</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh directory for the clone, set up an isolated Python environment, and pull in the web framework we’ll need. This gives us a clean workspace and guarantees the right package versions.</p>
+                <p>We’ll also install Uvicorn, the ASGI server that will run our FastAPI app locally. All of this is done with a few shell commands, no extra tooling required.</p>
+<div class="code-block"><pre><code>mkdir agent_reach_clone &amp;&amp; cd agent_reach_clone
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install fastapi uvicorn</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Core feature – FastAPI proxy that calls DuckDuckGo</h2>
+                <p>We expose a single <code>/search</code> endpoint that forwards the query to DuckDuckGo’s public JSON API and returns the top abstract. The endpoint accepts a <code>q</code> query‑parameter, contacts DuckDuckGo, extracts the first result, and sends it back as plain JSON.</p>
+                <p>FastAPI makes routing trivial and lets us keep the code readable for beginners. The server will run on <code>http://127.0.0.1:8000</code> and be ready for the CLI to call.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>from fastapi import FastAPI, HTTPException
+import httpx
+
+app = FastAPI()
+
+DDG_ENDPOINT = "https://api.duckduckgo.com/"
+
+@app.get("/search")
+async def search(q: str):
+    params = {"q": q, "format": "json", "no_redirect": 1, "no_html": 1}
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(DDG_ENDPOINT, params=params, timeout=10)
+    if resp.status_code != 200:
+        raise HTTPException(status_code=502, detail="DuckDuckGo service unavailable")
+    data = resp.json()
+    <span class="code-comment"># Return the first abstract if available, else a friendly message</span>
+    abstract = data.get("AbstractText") or "No concise answer found."
+    return {"query": q, "answer": abstract}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: CLI client to call the local API</h2>
+                <p>In this step we create a tiny Python script that reads a search term from the command line and asks our local FastAPI server for results. The script uses <code>httpx</code> – a lightweight async‑friendly HTTP client – to keep the code simple and fast. When the server replies, we extract the human‑readable <code>result</code> field and print it so the user sees the answer directly in the terminal.</p>
+                <p><strong>search_cli.py</strong></p>
+<div class="code-block"><pre><code>import sys
+import httpx
+
+def main():
+    if len(sys.argv) &lt; 2:
+        print('Usage: python search_cli.py &lt;query&gt;')
+        sys.exit(1)
+    query = ' '.join(sys.argv[1:])
+    try:
+        resp = httpx.get('http://127.0.0.1:8000/search', params={'q': query})
+        resp.raise_for_status()
+        data = resp.json()
+        print(data.get('result', 'No result returned'))
+    except Exception as e:
+        print(f'Error contacting API: {e}')
+
+if __name__ == '__main__':
+    main()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally and test</h2>
+                <p>Now we start the FastAPI server in the background so the CLI can talk to it, then we invoke the new script with a sample query. Running the server with <code>uvicorn</code> in detached mode lets the terminal stay free for the next command. Finally we call the CLI and watch the printed answer – if you see a sentence about your topic, the clone is working!</p>
+<div class="code-block"><pre><code><span class="code-comment"># Start the FastAPI server in the background (assumes app is defined in main.py)</span>
+nohup uvicorn main:app --host 127.0.0.1 --port 8000 &gt; server.log 2&gt;&amp;1 &amp;
+<span class="code-comment"># Give the server a moment to start</span>
+sleep 2
+<span class="code-comment"># Test the CLI with a sample search term</span>
+python search_cli.py "open source tools"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>After confirming the plain text output, you can make the CLI richer by adding a <code>--json</code> flag that prints the full JSON payload. Using Python's built‑in <code>argparse</code> keeps the interface familiar and lets you easily add more options later, such as limiting results or switching endpoints. The extended version replaces the previous script but remains backward compatible – it still works without any flags.</p>
+                <p>The extra flag is useful for developers who want to see the raw data, integrate it into other tools, or debug the API response. Feel free to experiment with additional arguments as your project grows.</p>
+                <p><strong>search_cli.py</strong></p>
+<div class="code-block"><pre><code>import sys
+import argparse
+import httpx
+import json
+
+def query_api(q: str) -&gt; dict:
+    resp = httpx.get('http://127.0.0.1:8000/search', params={'q': q})
+    resp.raise_for_status()
+    return resp.json()
+
+def main():
+    parser = argparse.ArgumentParser(description='Simple internet search via local FastAPI')
+    parser.add_argument('query', nargs='+', help='Search terms')
+    parser.add_argument('--json', action='store_true', help='Print raw JSON response')
+    args = parser.parse_args()
+    q = ' '.join(args.query)
+    try:
+        data = query_api(q)
+        if args.json:
+            print(json.dumps(data, indent=2))
+        else:
+            print(data.get('result', 'No result returned'))
+    except Exception as e:
+        print(f'Error contacting API: {e}', file=sys.stderr)
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main()</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Virtual environment activated and dependencies installed</td><td>pip list | grep -E 'fastapi|uvicorn|httpx'</td></tr>
+            <tr><td>FastAPI server responds with JSON</td><td>curl -s 'http://127.0.0.1:8000/search?q=python' | jq .result</td></tr>
+            <tr><td>CLI prints a readable result</td><td>python search_cli.py 'open source'</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional internet‑search CLI built on free services. Experiment by swapping DuckDuckGo for another public API, adding caching with SQLite, or packaging the CLI with <code>pyinstaller</code> for distribution.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

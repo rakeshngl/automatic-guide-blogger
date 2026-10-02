@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-02",
+  "status": "partial",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Internet Search CLI with Agent-Reach (Python)",
+      "source": "github_trending",
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-02_simple-internet-search-cli-with-agent-reach-python.html",
+      "tagline": "A beginner‑friendly clone that queries the web from the command line using free open‑source tools",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "cli",
+        "api"
+      ]
+    },
+    {
+      "title": "Build a Terminal Video Downloader with yoinks (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/pablostanley/yoinks",
+      "status": "failed: LLM JSON generation failed (400 json_validate_failed): {\"error\":{\"message\":\"Failed to generate JSON. Please adjust your prompt. See 'failed_generation' for more details.\",\"type\":\"invalid_request_error\",\"code\":\"json_validate_failed\",\"failed_generation\":\"{\\\"phases\\\":[{\\\"title\\\":\\\"Phase 3: Wire up a tiny CLI\\\",\\\"prose\\\":[\\\"In this step we create the entry point for our tool. We'll read the video URL from the command line, falling back to an interactive prompt when the argument is missing. The CLI then forwards the URL to the downloader module we built earlier, keeping the responsibilities nicely separated.\\\",\\\"Using `process.argv` gives us direct access to any arguments passed after `node`. If the user forgets to supply a URL we open a small `readline` interface, ask for the URL, and wait for their input before continuing. This keeps the user experience smooth while staying under 30 lines of code.\\\"],\\\"code_blocks\\\":[{\\\"lang\\\":\\\"typescript\\\",\\\"filename\\\":\\\"src/cli.ts\\\",\\\"code\\\":\\\"import { downloadVideo } from './downloader';\\\\nimport * as readline from 'readline';\\\\n\\\\n// Helper to ask for input when no CLI arg is provided\\\\nfunction askForUrl(): Promise\\u003cstring\\u003e {\\\\n  const rl = readline.createInterface({\\\\n    input: process.stdin,\\\\n    output: process.stdout,\\\\n  });\\\\n  return new Promise((resolve) =\\u003e {\\\\n    rl.question('Enter video URL: ', (answer) =\\u003e {\\\\n      rl.close();\\\\n      resolve(answer.trim());\\\\n    });\\\\n  });\\\\n}\\\\n\\\\nasync function main() {\\\\n  // process.argv[2] is the first user‑supplied argument\\\\n  let url = process.argv[2];\\\\n  if (!url) {\\\\n    url = await askForUrl();\\\\n  }\\\\n  if (!url) {\\\\n    console.error('No URL provided – exiting.');\\\\n    process.exit(1);\\\\n  }\\\\n  try {\\\\n    await downloadVideo(url);\\\\n    console.log('✅ Download complete');\\\\n  } catch (err) {\\\\n    console.error('❌ Download failed:', err);\\\\n    process.exit(1);\\\\n  }\\\\n}\\\\n\\\\nmain();\\\"}]}},{\\\"title\\\":\\\"Phase 4: Run locally and test\\\",\\\"prose\\\":[\\\"Now that the CLI exists we can execute it without a "
+    },
+    {
+      "title": "Build a Custom Cursor Plugin to Summarize Webpages (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/cursor/plugins",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-02_custom-cursor-plugin-webpage-summarizer.html",
+      "tagline": "A minimal TypeScript plugin that fetches a page and returns a concise summary",
+      "navbar_badge": "Beginner",
+      "est_minutes": 50,
+      "tags": [
+        "typescript",
+        "plugin",
+        "ai"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1555566579662721054",
+    "1555566586188791949"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

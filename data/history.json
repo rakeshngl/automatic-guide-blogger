@@ -299,6 +299,18 @@
       "title": "Build a Mini Spreadsheet‑Style Workspace with Univer (TypeScript)",
       "source_url": "https://github.com/dream-num/univer",
       "slug": "2026-09-27_mini-spreadsheet-style-workspace-with-univer.html"
+    },
+    {
+      "date": "2026-10-02T12:38:09+00:00",
+      "title": "Build a Simple Internet Search CLI with Agent-Reach (Python)",
+      "source_url": "https://github.com/Panniantong/Agent-Reach",
+      "slug": "2026-10-02_simple-internet-search-cli-with-agent-reach-python.html"
+    },
+    {
+      "date": "2026-10-02T13:06:13+00:00",
+      "title": "Build a Custom Cursor Plugin to Summarize Webpages (TypeScript)",
+      "source_url": "https://github.com/cursor/plugins",
+      "slug": "2026-10-02_custom-cursor-plugin-webpage-summarizer.html"
     }
   ]
 }
