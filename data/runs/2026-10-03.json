@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-03",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Simple Internet Search CLI with Agent-Reach (Python)"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Minimal AI Coding Assistant CLI with pi Toolkit (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/earendil-works/pi",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-03_minimal-ai-coding-assistant-cli.html",
+      "tagline": "Build a tiny TypeScript CLI that answers coding questions using Pi’s built‑in AI provider",
+      "navbar_badge": "Beginner",
+      "est_minutes": 50,
+      "tags": [
+        "typescript",
+        "cli",
+        "ai"
+      ]
+    },
+    {
+      "title": "Build a Production‑Ready Todo App with Effect‑TS (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/Effect-TS/effect",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-03_production-ready-todo-app-with-effect-ts.html",
+      "tagline": "A minimal clone built in 45 minutes using Effect‑TS, Node 18+, and SQLite",
+      "navbar_badge": "🛠️",
+      "est_minutes": 45,
+      "tags": [
+        "typescript",
+        "web",
+        "sqlite"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1555922240975937647",
+    "1555922247300947979"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

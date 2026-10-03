@@ -311,6 +311,18 @@
       "title": "Build a Custom Cursor Plugin to Summarize Webpages (TypeScript)",
       "source_url": "https://github.com/cursor/plugins",
       "slug": "2026-10-02_custom-cursor-plugin-webpage-summarizer.html"
+    },
+    {
+      "date": "2026-10-03T12:33:50+00:00",
+      "title": "Build a Minimal AI Coding Assistant CLI with pi Toolkit (TypeScript)",
+      "source_url": "https://github.com/earendil-works/pi",
+      "slug": "2026-10-03_minimal-ai-coding-assistant-cli.html"
+    },
+    {
+      "date": "2026-10-03T12:39:29+00:00",
+      "title": "Build a Production‑Ready Todo App with Effect‑TS (TypeScript)",
+      "source_url": "https://github.com/Effect-TS/effect",
+      "slug": "2026-10-03_production-ready-todo-app-with-effect-ts.html"
     }
   ]
 }
