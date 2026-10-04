@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Agent‑Reach‑style Internet Search CLI (Python)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Agent‑Reach‑style Internet Search CLI (Python)</h1>
+        <p>A beginner-friendly clone that lets your AI agent query the web from the command line</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In this tutorial you’ll create a tiny command‑line tool that mimics the core of Agent‑Reach: take a natural‑language query, fetch top web results, and return a concise summary—all with pure Python and free resources.</p>
+        <p>We’ll scaffold a minimal project, use the public DuckDuckGo instant‑answer API for search, and expose a simple <code>search.py</code> CLI. In ~45 minutes you’ll have a working prototype you can extend for your own AI agents.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>You need Python 3.10+ and <code>pip</code>. The real Agent‑Reach uses paid browser‑automation services; our clone only fetches public instant‑answer data, so results are less rich.</li>
+                <li>Network firewalls that block outbound HTTPS may cause the search request to fail.</li>
+                <li>The CLI prints raw JSON; a production version would add caching, rate‑limit handling, and better summarisation.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal Agent‑Reach Clone Architecture</div>
+            <svg width="100%" height="190" viewBox="0 0 630 190" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="142" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<rect x="426" y="60" width="198" height="70" fill="none" stroke="#b91c1c" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="525.0" y="78" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:#b91c1c">EXTERNAL SERVICE</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">import &amp; call</text>
+<line x1="400" y1="146" x2="440" y2="110" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="420" y="122" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP GET</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">search.py (CLI)</text>
+<text x="315.0" y="87" class="node-subtext">parses user query &amp; calls helper</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">search_util.py</text>
+<text x="315.0" y="159" class="node-subtext">wraps DuckDuckGo API</text>
+<rect x="440" y="86" width="170" height="48" rx="10" class="node-tech" />
+<text x="525.0" y="107" class="node-text">DuckDuckGo Instant Answer API</text>
+<text x="525.0" y="123" class="node-subtext">free public endpoint</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh folder for your clone, set up an isolated Python virtual environment, and install the single external library we need—<code>requests</code>. This gives you a clean workspace and avoids polluting your system Python.</p>
+                <p>The virtual environment also makes the later steps reproducible for anyone who follows the guide. Once activated, <code>pip install</code> will pull the library into the <code>.venv</code> directory only.</p>
+<div class="code-block"><pre><code>mkdir agent_reach_clone
+cd agent_reach_clone
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install requests</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Core – Search helper (model)</h2>
+                <p>We now wrap DuckDuckGo’s instant‑answer endpoint in a tiny helper function. The API returns JSON; we extract the <code>Results</code> array, then build a simple list of <code>(title, url)</code> tuples for the top results.</p>
+                <p>Returning a plain Python list keeps the helper reusable – later the CLI can format or further process the data however it likes.</p>
+                <p><strong>search_util.py</strong></p>
+<div class="code-block"><pre><code>import requests
+from typing import List, Tuple
+
+def duckduckgo_search(query: str, max_results: int = 5) -&gt; List[Tuple[str, str]]:
+    """Return a list of (title, url) pairs from DuckDuckGo Instant Answer.
+    Args:
+        query: Natural‑language search string.
+        max_results: Upper bound on how many results to return.
+    """
+    endpoint = "https://api.duckduckgo.com/"
+    params = {"q": query, "format": "json", "no_redirect": 1, "no_html": 1}
+    resp = requests.get(endpoint, params=params, timeout=10)
+    resp.raise_for_status()
+    data = resp.json()
+    results = []
+    for item in data.get("Results", [])[:max_results]:
+        title = item.get("Text", "").strip()
+        url = item.get("FirstURL", "").strip()
+        if title and url:
+            results.append((title, url))
+    return results</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core – CLI wrapper (API/UI)</h2>
+                <p>In this step we turn the helper function into a real command‑line tool. The script will accept a search string, forward it to the DuckDuckGo instant answer API, and then format the top results for a human‑friendly display. Keeping the logic small makes it easy to call from other programs or from an AI agent that can execute shell commands.</p>
+                <p>We use the standard <code>argparse</code> module for argument parsing and <code>requests</code> for the HTTP call. After we receive the JSON payload we extract the title and URL of each result, number them, and print them to stdout. This keeps the output deterministic and easy to pipe into other tools.</p>
+                <p><strong>search.py</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/usr/bin/env python3</span>
+import argparse, json, sys
+import requests
+
+def fetch_results(query, max_results=5):
+    url = 'https://api.duckduckgo.com/'
+    params = {'q': query, 'format': 'json', 'no_redirect': 1, 'no_html': 1, 'skip_disambig': 1}
+    resp = requests.get(url, params=params, timeout=10)
+    resp.raise_for_status()
+    data = resp.json()
+    <span class="code-comment"># DuckDuckGo returns related topics; we flatten them</span>
+    results = []
+    for topic in data.get('RelatedTopics', []):
+        if 'Text' in topic and 'FirstURL' in topic:
+            results.append((topic['Text'], topic['FirstURL']))
+        elif 'Topics' in topic:
+            for sub in topic['Topics']:
+                if 'Text' in sub and 'FirstURL' in sub:
+                    results.append((sub['Text'], sub['FirstURL']))
+        if len(results) &gt;= max_results:
+            break
+    return results[:max_results]
+
+def main():
+    parser = argparse.ArgumentParser(description='Simple web search CLI (DuckDuckGo)')
+    parser.add_argument('query', nargs='+', help='Search terms')
+    args = parser.parse_args()
+    query = ' '.join(args.query)
+    try:
+        hits = fetch_results(query)
+    except Exception as e:
+        sys.stderr.write(f'Error fetching results: {e}\n')
+        sys.exit(1)
+    if not hits:
+        print('No results found.')
+        return
+    for i, (title, url) in enumerate(hits, 1):
+        print(f"{i}. {title}\n   {url}\n")
+
+if __name__ == '__main__':
+    main()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the script is ready we make it executable and test it with a sample query. The shebang at the top lets the OS know to run it with Python, and <code>chmod +x</code> gives the file the right permissions. Running the CLI will display the first few hits directly in your terminal.</p>
+                <p>If you see numbered titles followed by URLs, the wrapper is working and you can start integrating it into larger workflows.</p>
+<div class="code-block"><pre><code>chmod +x search.py
+./search.py "Python virtualenv"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; extend</h2>
+                <p>To be confident the clone behaves as expected, we check that the output contains at least one numbered line with a title and a URL. This simple grep confirms the formatting contract that downstream agents rely on.</p>
+                <p>From here you can enhance the tool: add a local cache file to avoid repeated API calls, increase <code>max_results</code>, or feed the JSON into a language model for summarisation. The modular design keeps those extensions straightforward.</p>
+<div class="code-block"><pre><code>./search.py "UVF IT" | grep -E "^[0-9]+\. " &amp;&amp; echo "✅ Output looks good"</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Virtual environment created and <code>requests</code> installed</td><td>source .venv/bin/activate &amp;&amp; pip list | grep requests</td></tr>
+            <tr><td><code>search.py</code> runs without error and prints results</td><td>./search.py "Python virtualenv"</td></tr>
+            <tr><td>Output contains at least one numbered result line</td><td>./search.py "UVF IT" | grep -E "^[0-9]+\. " </td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional web‑search CLI that any AI agent can call. Experiment by swapping DuckDuckGo for another free API, add a simple cache file, or feed the JSON into a language model for a natural‑language summary. Happy hacking!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

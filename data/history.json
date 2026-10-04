@@ -323,6 +323,24 @@
       "title": "Build a Production‑Ready Todo App with Effect‑TS (TypeScript)",
       "source_url": "https://github.com/Effect-TS/effect",
       "slug": "2026-10-03_production-ready-todo-app-with-effect-ts.html"
+    },
+    {
+      "date": "2026-10-04T12:35:23+00:00",
+      "title": "Build a Minimal OpenCut-like Video Editor with TypeScript",
+      "source_url": "https://github.com/OpenCut-app/OpenCut",
+      "slug": "2026-10-04_minimal-opencut-style-video-editor-clone.html"
+    },
+    {
+      "date": "2026-10-04T12:39:35+00:00",
+      "title": "Build a Simple Text‑to‑CAD Converter in Python",
+      "source_url": "https://github.com/earthtojake/text-to-cad",
+      "slug": "2026-10-04_simple-text-to-cad-converter-python.html"
+    },
+    {
+      "date": "2026-10-04T12:44:09+00:00",
+      "title": "Build an Agent‑Reach‑style Internet Search CLI in Python",
+      "source_url": "https://github.com/Panniantong/Agent-Reach",
+      "slug": "2026-10-04_agent-reach-style-internet-search-cli-python.html"
     }
   ]
 }

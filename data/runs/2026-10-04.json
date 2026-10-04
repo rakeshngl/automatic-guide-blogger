@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-04",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Minimal OpenCut-like Video Editor with TypeScript",
+      "source": "github_trending",
+      "url": "https://github.com/OpenCut-app/OpenCut",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-04_minimal-opencut-style-video-editor-clone.html",
+      "tagline": "A quick‑start TypeScript project that lets you upload, list, and play videos locally",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "typescript",
+        "video",
+        "web"
+      ]
+    },
+    {
+      "title": "Build a Simple Text‑to‑CAD Converter in Python",
+      "source": "github_trending",
+      "url": "https://github.com/earthtojake/text-to-cad",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-04_simple-text-to-cad-converter-python.html",
+      "tagline": "A beginner‑friendly clone of text‑to‑cad using only Python’s standard library",
+      "navbar_badge": "Python 3.11+",
+      "est_minutes": 40,
+      "tags": [
+        "python",
+        "cad",
+        "ai"
+      ]
+    },
+    {
+      "title": "Build an Agent‑Reach‑style Internet Search CLI in Python",
+      "source": "github_trending",
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-04_agent-reach-style-internet-search-cli-python.html",
+      "tagline": "A beginner-friendly clone that lets your AI agent query the web from the command line",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "cli",
+        "api"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1556285801443237938",
+    "1556285806501564530",
+    "1556285813115977808"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}
