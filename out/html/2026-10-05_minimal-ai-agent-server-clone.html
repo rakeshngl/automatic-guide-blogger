@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Minimal AI Agent Server Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Minimal AI Agent Server Clone</h1>
+        <p>A lightweight TypeScript/Node.js server that mimics Opengeni&#39;s core agent routing</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick‑fire tutorial we’ll build a minimal AI‑agent‑server inspired by Opengeni, using only free‑tier Node.js, TypeScript and SQLite. The result is a tiny HTTP API that accepts a prompt, stores it, and returns a canned “agent” response – enough to prototype and extend later.</p>
+        <p>We’ll keep the stack simple: Node 18+, <code>express</code>, <code>better-sqlite3</code>, and TypeScript. No external AI APIs are called, so you can run everything locally in about 45 minutes.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Node 18+ and npm installed; the guide assumes a Unix‑like shell.</li>
+                <li>The real Opengeni orchestrates multiple LLM providers – our clone only returns a static mock response, so it’s not suitable for production AI workloads.</li>
+                <li>SQLite stores prompts in a file; concurrent writes are limited – fine for a demo but not for high‑traffic services.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal AI Agent Server Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">read/write</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP POST/GET</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Node.js/Express Server</text>
+<text x="315.0" y="87" class="node-subtext">TypeScript</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite DB</text>
+<text x="315.0" y="159" class="node-subtext">prompts table</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">HTTP Client (curl)</text>
+<text x="315.0" y="231" class="node-subtext">test requests</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh npm workspace and add TypeScript, Express and SQLite dependencies. This gives us a typed Node environment and a lightweight HTTP server ready to talk to a local database.</p>
+                <p>We also add development tools (<code>ts-node-dev</code>) so we can run the TypeScript code without a manual compile step, keeping the workflow fast for beginners.</p>
+<div class="code-block"><pre><code>mkdir minimal-ai-agent &amp;&amp; cd minimal-ai-agent
+npm init -y
+npm i express better-sqlite3
+npm i -D typescript @types/node @types/express ts-node-dev
+npx tsc --init --rootDir src --outDir dist --esModuleInterop true --resolveJsonModule true
+mkdir src</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model</h2>
+                <p>Set up a tiny SQLite DB with a <code>prompts</code> table and helper functions to insert and fetch records. SQLite lives in a single file, so no external service is required and the data persists between runs.</p>
+                <p>The wrapper abstracts the raw SQL calls, exposing simple <code>addPrompt</code> and <code>getAllPrompts</code> functions that the rest of the server can use without worrying about connections.</p>
+                <p><strong>src/db.ts</strong></p>
+<div class="code-block"><pre><code>import Database from 'better-sqlite3';
+
+<span class="code-comment">// Initialise (or create) a SQLite file called `prompts.db`</span>
+const db = new Database('prompts.db');
+
+<span class="code-comment">// Ensure the table exists – id auto‑increments, prompt stores the raw text, created_at timestamps the entry</span>
+db.exec(`
+  CREATE TABLE IF NOT EXISTS prompts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    prompt TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+`);
+
+/** Insert a new prompt and return its generated id */
+export function addPrompt(text: string): number {
+  const stmt = db.prepare('INSERT INTO prompts (prompt) VALUES (?)');
+  const info = stmt.run(text);
+  return Number(info.lastInsertRowid);
+}
+
+/** Retrieve all stored prompts ordered by newest first */
+export function getAllPrompts(): {id: number; prompt: string; created_at: string}[] {
+  const stmt = db.prepare('SELECT id, prompt, created_at FROM prompts ORDER BY created_at DESC');
+  return stmt.all();
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the API &amp; mock agent</h2>
+                <p>In this step we create a tiny Express server that will act like the AI‑agent router. The <code>/agent</code> endpoint accepts a JSON payload with a <code>prompt</code>, stores it in memory, and immediately returns a fake reply so you can see the round‑trip working. We also add a <code>/prompt/:id</code> GET route so you can fetch any saved prompt later, which mimics how a real system might retrieve conversation history.</p>
+                <p><strong>src/server.ts</strong></p>
+<div class="code-block"><pre><code>import express from 'express';
+import bodyParser from 'body-parser';
+
+const app = express();
+app.use(bodyParser.json());
+
+<span class="code-comment">// simple in‑memory store</span>
+let nextId = 1;
+const prompts: Record&lt;number, string&gt; = {};
+
+<span class="code-comment">// POST /agent – store prompt and return mock reply</span>
+app.post('/agent', (req, res) =&gt; {
+  const {prompt} = req.body;
+  if (typeof prompt !== 'string') {
+    return res.status(400).json({error: 'prompt must be a string'});
+  }
+  const id = nextId++;
+  prompts[id] = prompt;
+  const mockReply = `Echo: ${prompt}`; // static mock response
+  res.json({id, reply: mockReply});
+});
+
+<span class="code-comment">// GET /prompt/:id – retrieve stored prompt</span>
+app.get('/prompt/:id', (req, res) =&gt; {
+  const id = Number(req.params.id);
+  const stored = prompts[id];
+  if (!stored) return res.status(404).json({error: 'not found'});
+  res.json({id, prompt: stored});
+});
+
+const PORT = 3000;
+app.listen(PORT, () =&gt; console.log(`🚀 Server listening on http://localhost:${PORT}`));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the code is ready we’ll start the server with hot‑reloading so any changes to <code>src/server.ts</code> instantly restart the process. <code>ts-node-dev</code> compiles TypeScript on the fly and watches the files, giving you a fast feedback loop during development.</p>
+<div class="code-block"><pre><code>npx ts-node-dev src/server.ts</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; extend</h2>
+                <p>With the server running, use <code>curl</code> to hit the new endpoints and see the mock behavior in action. Once you’re comfortable, you can replace the static <code>mockReply</code> with a real call to an open‑source LLM or external API, turning this scaffold into a functional AI agent.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Test POST /agent</span>
+curl -X POST http://localhost:3000/agent \
+  -H 'Content-Type: application/json' \
+  -d '{"prompt":"Hello AI"}'
+
+<span class="code-comment"># Assuming the response gave id 1, fetch it back</span>
+curl http://localhost:3000/prompt/1</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>npm install completes without errors</td><td>npm i</td></tr>
+            <tr><td>Server starts and logs listening message</td><td>npx ts-node-dev src/server.ts</td></tr>
+            <tr><td>POST /agent returns JSON with id and reply</td><td>curl -X POST http://localhost:3000/agent -H 'Content-Type: application/json' -d '{"prompt":"test"}'</td></tr>
+            <tr><td>GET /prompt/:id returns stored prompt</td><td>curl http://localhost:3000/prompt/1</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>Replace the static reply with a call to an open‑source LLM (e.g., llama.cpp) or a free API, add authentication, rate‑limiting, and a simple UI to evolve this minimal clone into a full‑featured AI‑agent platform.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

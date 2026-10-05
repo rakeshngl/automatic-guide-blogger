@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-05",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build an Internet‑Search CLI Agent with Agent‑Reach (Python)"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Self‑Hosted Workout Tracker with openGym (JavaScript)",
+      "source": "github_trending",
+      "url": "https://github.com/DuarteSantos8/openGym",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-05_simple-self-hosted-workout-tracker-clone.html",
+      "tagline": "A minimal openGym‑inspired app in 45 minutes",
+      "navbar_badge": "Beginner",
+      "est_minutes": 45,
+      "tags": [
+        "JavaScript",
+        "SQLite",
+        "Web"
+      ]
+    },
+    {
+      "title": "Build a Minimal AI Agent Server with Opengeni (TypeScript)",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/T6GNSAK2RWSRW2?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-05_minimal-ai-agent-server-clone.html",
+      "tagline": "A lightweight TypeScript/Node.js server that mimics Opengeni's core agent routing",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "TypeScript",
+        "Node.js",
+        "AI"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1556647452067495966",
+    "1556647459583819797"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}
