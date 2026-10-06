@@ -353,6 +353,24 @@
       "title": "Build a Minimal AI Agent Server with Opengeni (TypeScript)",
       "source_url": "https://www.producthunt.com/r/T6GNSAK2RWSRW2?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
       "slug": "2026-10-05_minimal-ai-agent-server-clone.html"
+    },
+    {
+      "date": "2026-10-06T12:39:42+00:00",
+      "title": "Build a Mini Open-Source Chat Bot with OpenBot and Node.js",
+      "source_url": "https://www.producthunt.com/r/6MPDE2Q3ZJDJZF?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-10-06_mini-open-source-chat-bot-clone.html"
+    },
+    {
+      "date": "2026-10-06T12:45:29+00:00",
+      "title": "Build a Simple End‑to‑End Test Runner with e2e (TypeScript)",
+      "source_url": "https://github.com/tester-army/e2e",
+      "slug": "2026-10-06_simple-end-to-end-test-runner-clone.html"
+    },
+    {
+      "date": "2026-10-06T12:49:56+00:00",
+      "title": "Build a Basic Reverse‑Engineering Agent with REA (TypeScript)",
+      "source_url": "https://github.com/morluto/rea",
+      "slug": "2026-10-06_build-a-minimal-reverse-engineering-agent-clone.html"
     }
   ]
 }

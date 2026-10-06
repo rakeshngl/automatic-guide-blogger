@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-06",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Mini Open-Source Chat Bot with OpenBot and Node.js",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/6MPDE2Q3ZJDJZF?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-06_mini-open-source-chat-bot-clone.html",
+      "tagline": "A free‑local Node.js chat bot inspired by OpenBot",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "nodejs",
+        "websocket",
+        "open-source"
+      ]
+    },
+    {
+      "title": "Build a Simple End‑to‑End Test Runner with e2e (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/tester-army/e2e",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-06_simple-end-to-end-test-runner-clone.html",
+      "tagline": "A minimal TypeScript test runner inspired by tester‑army/e2e",
+      "navbar_badge": "🚀",
+      "est_minutes": 50,
+      "tags": [
+        "typescript",
+        "testing",
+        "webdriver"
+      ]
+    },
+    {
+      "title": "Build a Basic Reverse‑Engineering Agent with REA (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/morluto/rea",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-06_build-a-minimal-reverse-engineering-agent-clone.html",
+      "tagline": "A beginner-friendly TypeScript/Node.js guide",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 55,
+      "tags": [
+        "typescript",
+        "agents",
+        "reverse-engineering"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1557012035517157396",
+    "1557012042265657414",
+    "1557012048888598561"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}
