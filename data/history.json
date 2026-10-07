@@ -371,6 +371,24 @@
       "title": "Build a Basic Reverse‑Engineering Agent with REA (TypeScript)",
       "source_url": "https://github.com/morluto/rea",
       "slug": "2026-10-06_build-a-minimal-reverse-engineering-agent-clone.html"
+    },
+    {
+      "date": "2026-10-07T12:34:07+00:00",
+      "title": "Build a Ghost‑like Landing Page Builder with GenPage 3.0 and Node.js",
+      "source_url": "https://www.producthunt.com/r/45NVHJPQAW44TX?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-10-07_ghost-like-landing-page-builder-with-genpage-3-0.html"
+    },
+    {
+      "date": "2026-10-07T12:37:23+00:00",
+      "title": "Build a Simple Schema Diff Viewer with Schema (Postgres/MySQL/SQLite)",
+      "source_url": "https://github.com/dobrinov/schema",
+      "slug": "2026-10-07_simple-schema-diff-viewer-clone.html"
+    },
+    {
+      "date": "2026-10-07T12:40:45+00:00",
+      "title": "Build a Minimal End‑to‑End Test Runner with e2e Framework",
+      "source_url": "https://github.com/tester-army/e2e",
+      "slug": "2026-10-07_minimal-end-to-end-test-runner-clone.html"
     }
   ]
 }

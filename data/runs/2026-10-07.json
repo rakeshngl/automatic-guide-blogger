@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-07",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Ghost‑like Landing Page Builder with GenPage 3.0 and Node.js",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/45NVHJPQAW44TX?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-07_ghost-like-landing-page-builder-with-genpage-3-0.html",
+      "tagline": "Build, personalize, and optimize landing pages with AI",
+      "navbar_badge": "Beginner Guide",
+      "est_minutes": 45,
+      "tags": [
+        "nodejs",
+        "html",
+        "ai-api"
+      ]
+    },
+    {
+      "title": "Build a Simple Schema Diff Viewer with Schema (Postgres/MySQL/SQLite)",
+      "source": "hn_show",
+      "url": "https://github.com/dobrinov/schema",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-07_simple-schema-diff-viewer-clone.html",
+      "tagline": "A minimal working clone of the Schema visual diff tool using Python and SQLite",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 40,
+      "tags": [
+        "typescript",
+        "postgres",
+        "cli"
+      ]
+    },
+    {
+      "title": "Build a Minimal End‑to‑End Test Runner with e2e Framework",
+      "source": "github_trending",
+      "url": "https://github.com/tester-army/e2e",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-07_minimal-end-to-end-test-runner-clone.html",
+      "tagline": "Build a tiny e2e test runner in 45 min with Node.js and SQLite",
+      "navbar_badge": "🛠️",
+      "est_minutes": 45,
+      "tags": [
+        "typescript",
+        "testing",
+        "web"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1557372113906704546",
+    "1557372121418829914",
+    "1557372128083583067"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

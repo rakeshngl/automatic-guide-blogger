@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Minimal End‑to‑End Test Runner Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">🛠️</div>
+    </nav>
+
+    <header>
+        <h1>Minimal End‑to‑End Test Runner Clone</h1>
+        <p>Build a tiny e2e test runner in 45 min with Node.js and SQLite</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick build you’ll create a stripped‑down version of the e2e testing framework, letting you write natural‑language‑driven tests for a simple web app without any paid APIs.</p>
+        <p>We’ll use plain Node.js, Express for a tiny demo app, and SQLite to store recorded actions – all free and beginner‑friendly.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>Node ≥ 18 and npm installed – older versions lack native fetch support.</li>
+                <li>The clone skips AI model integration; agent steps are mocked to illustrate the replay flow.</li>
+                <li>SQLite file is created locally; ensure the directory is writable.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="122" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">store/replay</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Express Demo App</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">Test Runner (Node)</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">SQLite DB (actions)</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold Project</h2>
+                <p>Create a fresh npm workspace and install minimal dependencies. This gives us a clean folder, a package.json to track scripts, and the tiny libraries we need: Express for the demo server and better‑sqlite3 for fast, zero‑config SQLite access.</p>
+                <p>All commands are run from the terminal; they will produce a folder structure that subsequent phases will extend.</p>
+<div class="code-block"><pre><code>mkdir e2e-clone &amp;&amp; cd e2e-clone
+npm init -y
+npm install express better-sqlite3</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Core Feature – Data Model</h2>
+                <p>Set up a tiny SQLite DB to record agent actions as JSON strings. The DB lives in a file called <code>actions.db</code> and contains a single table <code>steps</code> with an auto‑increment id and a JSON column <code>payload</code>. Helper functions let the runner insert a step and later retrieve the full history for replay.</p>
+                <p>Keeping the DB logic isolated in <code>db.js</code> makes the rest of the codebase simple and testable.</p>
+                <p><strong>db.js</strong></p>
+<div class="code-block"><pre><code>const Database = require('better-sqlite3');
+const path = require('path');
+
+<span class="code-comment">// Ensure the DB file lives next to this module</span>
+const dbPath = path.resolve(__dirname, 'actions.db');
+const db = new Database(dbPath);
+
+<span class="code-comment">// Initialise table if it doesn't exist</span>
+db.exec(`CREATE TABLE IF NOT EXISTS steps (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  payload TEXT NOT NULL
+);`);
+
+/** Insert a step (any serialisable object) */
+function addStep(stepObj) {
+  const stmt = db.prepare('INSERT INTO steps (payload) VALUES (?)');
+  stmt.run(JSON.stringify(stepObj));
+}
+
+/** Retrieve all steps in insertion order */
+function getAllSteps() {
+  const rows = db.prepare('SELECT id, payload FROM steps ORDER BY id').all();
+  return rows.map(r =&gt; ({ id: r.id, payload: JSON.parse(r.payload) }));
+}
+
+module.exports = { addStep, getAllSteps };</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core Feature – Test Runner API/UI</h2>
+                <p>In this phase we create the heart of our clone: a tiny runner that can read a test file, simulate agent actions, and store each step in a SQLite database. On the first execution the runner records every action, and on later runs it reads the stored steps and replays them, letting you see the difference between record and replay modes. The code is deliberately simple so you can follow the flow and later replace the mock actions with real browser commands.</p>
+                <p>We’ll use the <code>sqlite3</code> package for persistence and expose a single <code>run(testPath)</code> function. The runner loads the test file, gives it a mock <code>agent</code> object with <code>click</code> and <code>type</code> methods, and decides whether to record or replay based on whether a record already exists for that test. This gives you a clear API and a tiny UI in the console.</p>
+                <p><strong>runner.js</strong></p>
+<div class="code-block"><pre><code>const fs = require('fs');
+const path = require('path');
+const sqlite = require('sqlite3').verbose();
+const db = new sqlite.Database('records.db');
+
+db.run('CREATE TABLE IF NOT EXISTS steps(test TEXT, idx INTEGER, action TEXT, target TEXT, value TEXT)');
+
+function getRecorded(test) {
+  return new Promise((res, rej) =&gt; {
+    db.all('SELECT * FROM steps WHERE test = ? ORDER BY idx', [test], (err, rows) =&gt; {
+      if (err) return rej(err);
+      res(rows);
+    });
+  });
+}
+
+function saveStep(test, idx, action, target, value) {
+  db.run('INSERT INTO steps(test, idx, action, target, value) VALUES(?,?,?,?,?)', [test, idx, action, target, value]);
+}
+
+async function run(testFile) {
+  const testName = path.basename(testFile);
+  const recorded = await getRecorded(testName);
+  const mode = recorded.length ? 'replay' : 'record';
+  console.log(`Running ${testName} in ${mode.toUpperCase()} mode`);
+  let stepIdx = 0;
+  const agent = {
+    click: (target) =&gt; {
+      if (mode === 'record') saveStep(testName, stepIdx++, 'click', target, null);
+      console.log(`${mode === 'record' ? 'Executing' : 'Replaying'} click on ${target}`);
+    },
+    type: (target, value) =&gt; {
+      if (mode === 'record') saveStep(testName, stepIdx++, 'type', target, value);
+      console.log(`${mode === 'record' ? 'Executing' : 'Replaying'} type '${value}' into ${target}`);
+    }
+  };
+  if (mode === 'replay') {
+    for (const row of recorded) {
+      console.log(`Replaying ${row.action} on ${row.target}` + (row.value ? ` with '${row.value}'` : ''));
+    }
+    return;
+  }
+  const testModule = require(path.resolve(testFile));
+  await testModule(agent);
+}
+
+module.exports = {run};</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Demo App &amp; Test File</h2>
+                <p>Now we spin up a minimal Express server that the runner can interact with. The app only needs a single <code>/status</code> endpoint that returns a short string – this keeps the focus on the runner rather than the application under test. We also create a sample test file that uses the runner’s DSL (<code>agent.click</code> and <code>agent.type</code>) to hit the endpoint and simulate a user flow.</p>
+                <p>The test file lives alongside the runner and will be passed to <code>runner.run</code>. Because the runner’s agent is a mock, the test simply demonstrates the recording and replay behavior without real HTTP calls, making it safe to run anywhere. Feel free to replace the mock actions with real <code>fetch</code> calls later on.</p>
+                <p><strong>app.js</strong></p>
+<div class="code-block"><pre><code>const express = require('express');
+const app = express();
+const PORT = 3000;
+
+app.get('/status', (req, res) =&gt; {
+  res.send('Pro');
+});
+
+app.listen(PORT, () =&gt; {
+  console.log(`Demo app listening on http://localhost:${PORT}`);
+});</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run Locally &amp; Verify</h2>
+                <p>With the server and runner in place, it’s time to see the clone in action. First start the Express app in the background, then invoke the runner twice on the same test file. The first run should record each step, printing “Executing” messages, while the second run will detect the stored steps and print “Replaying” messages instead.</p>
+                <p>Observe the console output and optionally inspect the <code>records.db</code> SQLite file to confirm that steps were persisted. This completes the minimal end‑to‑end test runner – you now have a working record‑and‑replay loop built from scratch.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Install dependencies (run once)</span>
+npm install express sqlite3
+
+<span class="code-comment"># Start the demo app in the background	node app.js &amp;</span>
+APP_PID=$!
+
+<span class="code-comment"># Give the server a moment to start</span>
+sleep 1
+
+<span class="code-comment"># First run – records actions</span>
+node -e "require('./runner').run('./test1.js')"
+
+<span class="code-comment"># Second run – replays recorded actions</span>
+node -e "require('./runner').run('./test1.js')"
+
+<span class="code-comment"># Clean up</span>
+kill $APP_PID</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>npm init and dependencies installed</td><td>npm list express sqlite3 shows versions</td></tr>
+            <tr><td>Demo app responds on http://localhost:3000/status</td><td>curl http://localhost:3000/status returns 'Pro'</td></tr>
+            <tr><td>First test run records steps (no replay output)</td><td>node -e "require('./runner').run('./test1.js')" shows 'Executing' lines</td></tr>
+            <tr><td>Second test run replays recorded steps</td><td>node -e "require('./runner').run('./test1.js')" shows 'Replaying' lines</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>You now have a minimal e2e‑style test runner that records actions to SQLite and replays them. Extend by adding real browser automation (e.g., Playwright) or plug in an LLM for natural‑language agent steps.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
