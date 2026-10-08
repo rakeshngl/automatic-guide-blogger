@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Mini SEO Analyzer Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Mini SEO Analyzer Clone</h1>
+        <p>A lightweight Python SEO tool inspired by OpenSEO</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide where we roll up our sleeves and build a tiny SEO analyzer, echoing the spirit of OpenSEO’s open‑source Semrush alternative. In just ~45 minutes you’ll have a local Flask app that fetches page titles, meta descriptions, and word counts without any paid APIs.</p>
+        <p>We’ll use Python, Flask, and SQLite – all free tier – to mimic the core insight features of OpenSEO. The result is a runnable prototype you can extend into a full‑blown visibility dashboard.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Python 3.9+ and <code>git</code> installed; older versions may break the virtual‑env setup.</li>
+                <li>The clone only extracts basic on‑page data (title, meta description, word count) – no backlink or keyword difficulty analysis like the full product.</li>
+                <li>Running on Windows may require <code>python -m venv venv</code> instead of <code>python3 -m venv venv</code>.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Mini SEO Analyzer Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">stores results</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">fetches page</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Flask API &amp; UI</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">Requests + BeautifulSoup</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>First we create an isolated Python environment so our dependencies don’t clash with other projects. Then we install Flask for the web server and BeautifulSoup for HTML parsing. Finally we lay out a tiny folder tree that keeps routes, models, and static files tidy.</p>
+                <p>Having a clear scaffold makes later steps painless: you’ll know exactly where to drop new code and where the app entry point lives.</p>
+<div class="code-block"><pre><code><span class="code-comment"># create project folder</span>
+mkdir mini_seo &amp;&amp; cd mini_seo
+<span class="code-comment"># set up virtual environment</span>
+python3 -m venv venv
+source venv/bin/activate  # on Windows use `venv\\Scripts\\activate`
+<span class="code-comment"># install core libraries</span>
+pip install Flask beautifulsoup4 requests
+<span class="code-comment"># basic folder layout</span>
+mkdir -p app/templates app/static app/models
+<span class="code-comment"># create minimal Flask init</span>
+cat &gt; app/__init__.py &lt;&lt;'EOF'
+from flask import Flask
+app = Flask(__name__)
+from . import routes
+EOF
+<span class="code-comment"># placeholder route file</span>
+cat &gt; app/routes.py &lt;&lt;'EOF'
+from . import app
+from flask import render_template, request, jsonify
+@app.route('/')
+def index():
+    return render_template('index.html')
+EOF
+<span class="code-comment"># simple run script</span>
+cat &gt; run.py &lt;&lt;'EOF'
+from app import app
+if __name__ == '__main__':
+    app.run(debug=True)
+EOF</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the SQLite model</h2>
+                <p>We need a persistent store for each URL we analyze. A single SQLite table is enough for a minimal clone; it holds the URL, the page title, the meta description, and a simple word‑count metric. Using SQLAlchemy keeps the code database‑agnostic and easy to query later.</p>
+                <p>The model lives in <code>app/models.py</code> and will be imported by the route handlers when we save analysis results.</p>
+                <p><strong>app/models.py</strong></p>
+<div class="code-block"><pre><code>from flask_sqlalchemy import SQLAlchemy
+from app import app
+
+<span class="code-comment"># configure SQLite database (file will be created automatically)</span>
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///seo_results.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+class PageAnalysis(db.Model):
+    __tablename__ = 'page_analysis'
+    id = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.String(2083), unique=True, nullable=False)
+    title = db.Column(db.String(255))
+    description = db.Column(db.Text)
+    word_count = db.Column(db.Integer)
+
+    def __repr__(self):
+        return f'&lt;PageAnalysis {self.url}&gt;'
+
+<span class="code-comment"># create tables if they don't exist yet</span>
+with app.app_context():
+    db.create_all()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the scraper and API endpoint</h2>
+                <p>In this step we create a Flask route that accepts a URL, fetches the page, and extracts the SEO basics we need. We'll pull the <code>&lt;title&gt;</code> tag, the meta description, and count the total number of words in the visible text. The result is stored in a tiny SQLite table so you can look at past analyses later. Keeping everything in one file makes the clone easy to understand and run.</p>
+                <p><strong>app/routes.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+from flask import Blueprint, request, jsonify, render_template
+import requests
+from bs4 import BeautifulSoup
+
+bp = Blueprint('seo', __name__)
+
+<span class="code-comment"># Simple SQLite helper</span>
+DB_PATH = 'seo_results.db'
+
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS results (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        url TEXT NOT NULL,
+        title TEXT,
+        description TEXT,
+        word_count INTEGER,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )''')
+    conn.commit()
+    conn.close()
+
+init_db()
+
+def scrape(url):
+    resp = requests.get(url, timeout=10)
+    resp.raise_for_status()
+    soup = BeautifulSoup(resp.text, 'html.parser')
+    title = soup.title.string.strip() if soup.title else ''
+    desc_tag = soup.find('meta', attrs={'name':'description'})
+    description = desc_tag['content'].strip() if desc_tag and desc_tag.get('content') else ''
+    <span class="code-comment"># Get visible text and count words</span>
+    for script in soup(['script', 'style']):
+        script.decompose()
+    text = soup.get_text(separator=' ', strip=True)
+    word_count = len(text.split())
+    return title, description, word_count
+
+@bp.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
+
+@bp.route('/analyze', methods=['POST'])
+def analyze():
+    url = request.form.get('url')
+    if not url:
+        return jsonify({'error': 'URL is required'}), 400
+    try:
+        title, description, word_count = scrape(url)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    <span class="code-comment"># Store result</span>
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('INSERT INTO results (url, title, description, word_count) VALUES (?,?,?,?)',
+              (url, title, description, word_count))
+    conn.commit()
+    conn.close()
+    return jsonify({'url': url, 'title': title, 'description': description, 'word_count': word_count})</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now we fire up the Flask development server and point our browser at the UI. The server will automatically reload when you edit the code, which is handy while you experiment. Make sure you have the virtual environment activated and Flask installed before you start.</p>
+<div class="code-block"><pre><code>export FLASK_APP=app
+export FLASK_ENV=development
+flask run</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>With the server running, send a quick POST request to see the JSON payload with title, description, and word count. Open the root URL in a browser to use the simple HTML form we bundled in <code>templates/index.html</code>. Once the basics work, you can easily add features like CSV export or a tiny chart using Chart.js to visualize word count trends. Experiment and have fun extending the clone!</p>
+<div class="code-block"><pre><code>curl -X POST -d "url=https://example.com" http://127.0.0.1:5000/analyze</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td><code>flask run</code> shows *Running on http://127.0.0.1:5000/*</td></tr>
+            <tr><td>POST request returns JSON with title, description, word_count</td><td><code>curl -X POST -d 'url=https://example.com' http://127.0.0.1:5000/analyze</code> prints a JSON object</td></tr>
+            <tr><td>Browser UI loads the form at http://127.0.0.1:5000/</td><td>Open the URL in a browser and see the input form</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your mini SEO analyzer is up and running. Feel free to add more metrics (H1 count, image alt tags) or swap SQLite for Postgres as you grow. Happy hacking!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

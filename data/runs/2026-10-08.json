@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-08",
+  "status": "partial",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Mini SEO Analyzer with OpenSEO and Python",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/UBW3XPFGNKPZ5S?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-08_mini-seo-analyzer-clone.html",
+      "tagline": "A lightweight Python SEO tool inspired by OpenSEO",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "flask",
+        "seo"
+      ]
+    },
+    {
+      "title": "Build an AI‑Powered Terminal Assistant with NOVA CLI",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/6CKPE3FQLUWQNP?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "failed: LLM JSON generation failed (400 json_validate_failed): {\"error\":{\"message\":\"Failed to generate JSON. Please adjust your prompt. See 'failed_generation' for more details.\",\"type\":\"invalid_request_error\",\"code\":\"json_validate_failed\",\"failed_generation\":\"{\\\"phases\\\":[{\\\"title\\\":\\\"Phase 3: API wrapper – call Groq LLM\\\",\\\"prose\\\":[\\\"In this step we create a tiny wrapper around Groq's free LLM endpoint. The wrapper hides HTTP details and returns the model's text response, so the rest of the code can stay clean. You only need to drop your personal API key into the GROQ_API_KEY environment variable before running. The function will raise a clear exception if the request fails, making debugging easier.\\\"],\\\"code_blocks\\\":[{\\\"lang\\\":\\\"python\\\",\\\"filename\\\":\\\"llm.py\\\",\\\"code\\\":\\\"import os, json, requests\\\\n\\\\nAPI_URL = \\\\\\\"https://api.groq.com/openai/v1/chat/completions\\\\\\\"\\\\nMODEL = \\\\\\\"mixtral-8x7b-32768\\\\\\\"\\\\n\\\\ndef get_api_key():\\\\n    key = os.getenv(\\\\\\\"GROQ_API_KEY\\\\\\\")\\\\n    if not key:\\\\n        raise EnvironmentError(\\\\\\\"GROQ_API_KEY not set in environment\\\\\\\")\\\\n    return key\\\\n\\\\ndef query_groq(prompt: str) -\\u003e str:\\\\n    headers = {\\\\n        \\\\\\\"Authorization\\\\\\\": f\\\\\\\"Bearer {get_api_key()}\\\\\\\",\\\\n        \\\\\\\"Content-Type\\\\\\\": \\\\\\\"application/json\\\\\\\"\\\\n    }\\\\n    payload = {\\\\n        \\\\\\\"model\\\\\\\": MODEL,\\\\n        \\\\\\\"messages\\\\\\\": [{\\\\\\\"role\\\\\\\": \\\\\\\"user\\\\\\\", \\\\\\\"content\\\\\\\": prompt}],\\\\n        \\\\\\\"temperature\\\\\\\": 0.7\\\\n    }\\\\n    response = requests.post(API_URL, headers=headers, json=payload, timeout=30)\\\\n    if response.status_code != 200:\\\\n        raise RuntimeError(f\\\\\\\"Groq API error {response.status_code}: {response.text}\\\\\\\")\\\\n    data = response.json()\\\\n    return data[\\\\\\\"choices\\\\\\\"][0][\\\\\\\"message\\\\\\\"][\\\\\\\"content\\\\\\\"].strip()\\\\n\\\\nif __name__ == \\\\\\\"__main__\\\\\\\":\\\\n    print(query_groq(\\\\\\\"Hello, Groq!\\\\\\\"))\\\"}]}]},{\\\"title\\\":\\\"Phase 4: CLI glue – input, call, output\\\",\\\"prose\\\":[\\\"Now we tie everything together with a small command‑line interface. The script reads a query from standa"
+    },
+    {
+      "title": "Build a Self‑Contained Diagram Generator with diagram‑design",
+      "source": "github_trending",
+      "url": "https://github.com/cathrynlavery/diagram-design",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-08_self-contained-diagram-generator-clone.html",
+      "tagline": "A minimal web app that renders simple SVG diagrams from JSON specs",
+      "navbar_badge": "Beta",
+      "est_minutes": 40,
+      "tags": [
+        "html",
+        "svg",
+        "javascript"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1557737766291382412",
+    "1557737773337682044"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}
