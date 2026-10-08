@@ -70,6 +70,24 @@ class JSONValidateError(LLMError):
         self.failed_generation = failed_generation
 
 
+class SchemaMismatchError(ValueError):
+    """Schema validation failed but the JSON payload still parsed.
+
+    Carries the parsed (but schema-invalid) object and the pydantic error
+    locations so callers can attempt a targeted single-field repair.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        partial: dict | None = None,
+        error_locations: list[tuple] | None = None,
+    ):
+        super().__init__(message)
+        self.partial = partial
+        self.error_locations = error_locations or []
+
+
 def _strip_fences(text: str) -> str:
     cleaned = text.strip()
     if cleaned.startswith("```"):
@@ -269,6 +287,8 @@ class LLMClient:
         temperature: float = 0.2,
         max_tokens: int | None = None,
         retries: int = 3,
+        repair_field: str | None = None,
+        repair_schema: type[BaseModel] | None = None,
     ) -> BaseModel:
         last_exc: Exception | None = None
         for attempt in range(1, retries + 1):
@@ -281,13 +301,33 @@ class LLMClient:
                     return self._parse(raw, schema)
                 except ValueError as exc:
                     last_exc = exc
-                    # client-side parse/validation failure -> targeted repair
-                    repair_messages = self._repair_messages(messages, raw)
+                    # client-side parse/validation failure -> repair
+                    if (
+                        isinstance(exc, SchemaMismatchError)
+                        and repair_field
+                        and repair_schema
+                        and exc.error_locations
+                        and all(len(loc) and loc[0] == repair_field for loc in exc.error_locations)
+                    ):
+                        try:
+                            fixed = self._repair_field(
+                                messages, raw, repair_field, repair_schema,
+                                temperature, max_tokens,
+                            )
+                            merged = dict(exc.partial) if exc.partial else {}
+                            merged[repair_field] = getattr(fixed, repair_field)
+                            return schema.model_validate(merged)
+                        except (ValueError, JSONValidateError, LLMError, httpx.HTTPError) as exc2:
+                            last_exc = exc2
+                            logger.warning(
+                                "llm_field_repair_failed field=%s err=%s",
+                                repair_field, str(exc2)[:150],
+                            )
                     logger.warning(
                         "llm_json_repair_retry error=%s", str(exc)[:200]
                     )
                     raw2 = self.chat(
-                        repair_messages, temperature=temperature,
+                        self._repair_messages(messages, raw), temperature=temperature,
                         max_tokens=max_tokens, json_response=True,
                     )
                     return self._parse(raw2, schema)
@@ -351,6 +391,38 @@ class LLMClient:
             },
         ]
 
+    def _repair_field(
+        self,
+        messages: list[dict],
+        garbled: str,
+        field: str,
+        schema: type[BaseModel],
+        temperature: float,
+        max_tokens: int | None,
+    ) -> BaseModel:
+        """Focused re-request of a single malformed JSON field.
+
+        Only ``field`` was invalid, so ask the model to return just that key
+        (e.g. ``{"checklist": [...]}``) instead of regenerating the whole part —
+        much cheaper and less likely to drift other content.
+        """
+        target_messages = messages + [
+            {"role": "assistant", "content": garbled},
+            {
+                "role": "user",
+                "content": (
+                    f'Only the "{field}" field failed validation. Return ONLY a '
+                    f"single JSON object with that exact key, e.g. "
+                    f'{{"{field}": [...]}}. No other keys, no prose, no markdown fences.'
+                ),
+            },
+        ]
+        raw = self.chat(
+            target_messages, temperature=temperature,
+            max_tokens=max_tokens, json_response=True,
+        )
+        return self._parse(raw, schema)
+
     def _parse(self, raw: str, schema: type[BaseModel]) -> BaseModel:
         text = _strip_fences(raw)
         start = text.find("{")
@@ -365,4 +437,8 @@ class LLMClient:
         try:
             return schema.model_validate(data)
         except ValidationError as exc:
-            raise ValueError(f"schema mismatch: {exc}") from exc
+            raise SchemaMismatchError(
+                f"schema mismatch: {exc}",
+                partial=data,
+                error_locations=[list(err.get("loc", ())) for err in exc.errors()],
+            ) from exc

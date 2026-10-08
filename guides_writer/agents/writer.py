@@ -33,6 +33,12 @@ class GuidePart2(BaseModel):
     checklist: list[ChecklistRow] = Field(min_length=3)
     closing_alert: ClosingAlert | None = None
 
+
+class ChecklistOnly(BaseModel):
+    """Single-field schema for the targeted part2 checklist repair."""
+
+    checklist: list[ChecklistRow] = Field(min_length=3)
+
 logger = logging.getLogger(__name__)
 
 
@@ -326,7 +332,14 @@ class GuideWriter:
                 ),
             },
         ]
-        part2 = self._client.chat_json(part2_messages, schema=GuidePart2, temperature=0.5, max_tokens=WRITE_MAX_TOKENS)
+        part2 = self._client.chat_json(
+            part2_messages,
+            schema=GuidePart2,
+            temperature=0.5,
+            max_tokens=WRITE_MAX_TOKENS,
+            repair_field="checklist",
+            repair_schema=ChecklistOnly,
+        )
         self._pause(28)
 
         guide = Guide(
