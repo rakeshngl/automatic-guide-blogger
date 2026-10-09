@@ -401,6 +401,24 @@
       "title": "Build a Self‑Contained Diagram Generator with diagram‑design",
       "source_url": "https://github.com/cathrynlavery/diagram-design",
       "slug": "2026-10-08_self-contained-diagram-generator-clone.html"
+    },
+    {
+      "date": "2026-10-09T12:34:08+00:00",
+      "title": "Build a Simple Diagram Generator with HTML+SVG using diagram-design",
+      "source_url": "https://github.com/cathrynlavery/diagram-design",
+      "slug": "2026-10-09_simple-diagram-generator-with-html-svg.html"
+    },
+    {
+      "date": "2026-10-09T12:41:49+00:00",
+      "title": "Build a Minimal LLM Gateway with litellm in Python",
+      "source_url": "https://github.com/BerriAI/litellm",
+      "slug": "2026-10-09_minimal-llm-gateway-with-litellm.html"
+    },
+    {
+      "date": "2026-10-09T12:45:10+00:00",
+      "title": "Build a CLI to Query Open Models with Together Link",
+      "source_url": "https://www.producthunt.com/r/XCPBKI3MW334HG?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-10-09_cli-to-query-open-models-with-together-link.html"
     }
   ]
 }

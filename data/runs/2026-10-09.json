@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-09",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Diagram Generator with HTML+SVG using diagram-design",
+      "source": "github_trending",
+      "url": "https://github.com/cathrynlavery/diagram-design",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-09_simple-diagram-generator-with-html-svg.html",
+      "tagline": "Clone the core of diagram-design in 45 minutes",
+      "navbar_badge": "Beginner",
+      "est_minutes": 40,
+      "tags": [
+        "HTML",
+        "SVG",
+        "JavaScript"
+      ]
+    },
+    {
+      "title": "Build a Minimal LLM Gateway with litellm in Python",
+      "source": "github_trending",
+      "url": "https://github.com/BerriAI/litellm",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-09_minimal-llm-gateway-with-litellm.html",
+      "tagline": "A 45‑minute beginner’s clone of an OpenAI‑compatible proxy",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "Python",
+        "FastAPI",
+        "LLM"
+      ]
+    },
+    {
+      "title": "Build a CLI to Query Open Models with Together Link",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/XCPBKI3MW334HG?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-09_cli-to-query-open-models-with-together-link.html",
+      "tagline": "A minimal Node.js CLI that calls the free Together API to run open‑source language models",
+      "navbar_badge": "Beginner",
+      "est_minutes": 35,
+      "tags": [
+        "Node.js",
+        "CLI",
+        "API"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1558098000209776722",
+    "1558098007440883755",
+    "1558098014562689024"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}
