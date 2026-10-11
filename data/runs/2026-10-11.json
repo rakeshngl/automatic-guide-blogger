@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-11",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Simple Diagram Generator with HTML+SVG using diagram-design"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Local‑First Writing App with FocusWrite",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/K47HKNASYUGLBN?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-11_local-first-writing-app-clone.html",
+      "tagline": "A minimal FocusWrite‑inspired editor with local persistence",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 40,
+      "tags": [
+        "javascript",
+        "pwa",
+        "indexeddb"
+      ]
+    },
+    {
+      "title": "Build a Real‑World Satellite‑View Map with gods-eye-view",
+      "source": "github_trending",
+      "url": "https://github.com/bilawalsidhu/gods-eye-view",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-11_build-a-minimal-satellite-view-map-clone.html",
+      "tagline": "A beginner‑friendly UVF IT guide to a live globe with public data",
+      "navbar_badge": "UVU IT",
+      "est_minutes": 50,
+      "tags": [
+        "javascript",
+        "webgl",
+        "maps"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1558834756953702453",
+    "1558834765111500850"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}
