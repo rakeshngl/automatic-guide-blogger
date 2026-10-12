@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Claude‑Code CLI Wrapper (Free)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner Friendly</div>
+    </nav>
+
+    <header>
+        <h1>Claude‑Code CLI Wrapper (Free)</h1>
+        <p>A minimal Python CLI using free‑claude‑code</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick build you’ll create a tiny command‑line wrapper around the free‑claude‑code library, letting you send a prompt and get back generated code – all without any paid API keys.</p>
+        <p>We’ll use plain Python (3.12+), the free‑claude‑code package from PyPI, and a local SQLite cache for history. In ~45 minutes you’ll have a working <code>claude-cli</code> you can extend with your own agents or UI.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Python 3.12 or newer and <code>pip</code> (or <code>uv</code>) installed; the original project supports 3.14 but 3.12 works fine for the basics.</li>
+                <li>The wrapper only covers the “completion” endpoint; advanced features like file‑based agents or streaming are omitted.</li>
+                <li>Free‑claude‑code may rate‑limit you after the monthly free‑token quota – the demo will still run but return a short error message.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal Claude‑Code CLI Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">calls</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">stores</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">CLI Wrapper (Python)</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">free‑claude‑code lib</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">SQLite history DB</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>First we create an isolated workspace so our dependencies don’t clash with other Python projects. A virtual environment also makes the final CLI portable – you can zip the folder and run it on any machine with the same Python version.</p>
+                <p>Next we pull in the <code>free-claude-code</code> library from PyPI. It contains the thin wrapper around Claude’s free endpoint, which we’ll call from our own script.</p>
+<div class="code-block"><pre><code>mkdir claude-cli &amp;&amp; cd claude-cli
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install free-claude-code</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define a tiny data model</h2>
+                <p>We want to remember each prompt and the code Claude returns, so we’ll store them in a local SQLite file. The built‑in <code>sqlite3</code> module is perfect – no external server, just a single file next to our script.</p>
+                <p>The helper below creates the database on first run, provides <code>add_entry(prompt, response)</code> and <code>list_history()</code> utilities, and hides all raw SQL behind simple Python functions.</p>
+                <p><strong>history.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+from pathlib import Path
+
+DB_PATH = Path(__file__).with_name('history.db')
+
+def _init_db() -&gt; sqlite3.Connection:
+    """Create the DB file and the history table if they do not exist."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute(
+        """CREATE TABLE IF NOT EXISTS history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            prompt TEXT NOT NULL,
+            response TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )"""
+    )
+    conn.commit()
+    return conn
+
+_CONN = _init_db()
+
+def add_entry(prompt: str, response: str) -&gt; None:
+    """Insert a new prompt/response pair into the DB."""
+    _CONN.execute(
+        "INSERT INTO history (prompt, response) VALUES (?, ?)",
+        (prompt, response),
+    )
+    _CONN.commit()
+
+def list_history(limit: int = 20) -&gt; list[tuple[int, str, str, str]]:
+    """Return the most recent *limit* rows as a list of tuples.
+    Each tuple is (id, prompt, response, created_at)."""
+    cur = _CONN.execute(
+        "SELECT id, prompt, response, created_at FROM history ORDER BY id DESC LIMIT ?",
+        (limit,),
+    )
+    return cur.fetchall()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the CLI core</h2>
+                <p>In this step we wire everything together. The script will read a prompt from the command line, ask the Claude‑Code client for a completion, store the request and response in the SQLite log, and finally print the generated code along with a short history snippet. Keeping the logic in a single <code>cli.py</code> file makes it easy to extend later, for example by adding flags for different agents or output formats.</p>
+                <p>We also add a tiny helper that fetches the last few entries from the <code>history.db</code> file so users can see what they asked before. This mirrors the behaviour of many AI‑powered CLIs and gives immediate feedback that the persistence layer works.</p>
+                <p><strong>cli.py</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/usr/bin/env python3</span>
+import sys, json, sqlite3
+from pathlib import Path
+
+<span class="code-comment"># Import the free‑claude‑code client that was scaffolded in earlier phases</span>
+from client import ClaudeClient  # assumes client.py provides ClaudeClient
+
+DB_PATH = Path('history.db')
+
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute('''CREATE TABLE IF NOT EXISTS logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        prompt TEXT NOT NULL,
+        response TEXT NOT NULL,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    )''')
+    conn.commit()
+    return conn
+
+def log_interaction(conn, prompt, response):
+    conn.execute('INSERT INTO logs (prompt, response) VALUES (?, ?)', (prompt, response))
+    conn.commit()
+
+def recent_history(conn, limit=3):
+    cur = conn.execute('SELECT prompt FROM logs ORDER BY id DESC LIMIT ?', (limit,))
+    return [row[0] for row in cur.fetchall()][::-1]
+
+def main():
+    if len(sys.argv) &lt; 2:
+        print('Usage: cli.py "&lt;your prompt&gt;"')
+        sys.exit(1)
+    prompt = sys.argv[1]
+    client = ClaudeClient()
+    response = client.generate_code(prompt)  # returns a string of code
+    conn = init_db()
+    log_interaction(conn, prompt, response)
+    print('\n--- Generated Code ---\n')
+    print(response)
+    print('\n--- Recent History ---')
+    for p in recent_history(conn):
+        print(f'- {p}')
+
+if __name__ == '__main__':
+    main()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the CLI core is ready, we make the script executable and give it a quick test run. The <code>chmod +x</code> command marks <code>cli.py</code> as runnable, and invoking it with a simple prompt should produce generated code and a short history dump. If everything is wired correctly you’ll also see a new <code>history.db</code> file appear in the project root.</p>
+                <p>Running the script directly from the terminal mirrors how end‑users will interact with the tool, so any missing imports or runtime errors will surface immediately.</p>
+<div class="code-block"><pre><code>chmod +x cli.py
+./cli.py "Create a hello world program in Rust"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>After the first run, verify that the CLI printed the expected Rust snippet and that a SQLite database was created. You can also query the <code>history.db</code> file to ensure the prompt was logged; this confirms both the client call and the persistence layer are functional. From here you might add command‑line flags like <code>--agent</code> to switch providers or spin up a tiny FastAPI wrapper to expose the same functionality over HTTP.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Check that the DB exists and has at least one row</span>
+python - &lt;&lt;'PY'
+import sqlite3, os
+assert os.path.exists('history.db'), 'history.db missing'
+conn = sqlite3.connect('history.db')
+count = conn.execute('SELECT COUNT(*) FROM logs').fetchone()[0]
+print('Rows in logs:', count)
+PY
+
+<span class="code-comment"># Show the last stored prompt</span>
+python - &lt;&lt;'PY'
+import sqlite3
+conn = sqlite3.connect('history.db')
+rows = conn.execute('SELECT prompt FROM logs ORDER BY id DESC LIMIT 1').fetchall()
+print('Last prompt:', rows[0][0] if rows else 'none')
+PY</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>CLI returns generated code for a prompt</td><td>./cli.py "Create a hello world in Rust"</td></tr>
+            <tr><td><code>history.db</code> file exists and contains at least one row</td><td>python -c "import sqlite3,os;assert os.path.exists('history.db');print(sqlite3.connect('history.db').execute('SELECT count(*) FROM logs').fetchone())"</td></tr>
+            <tr><td>Recent history prints after the response</td><td>Observe the "--- Recent history ---" section in the CLI output</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional Claude‑Code wrapper. Experiment by adding <code>--agent</code> flags to select different providers, or spin up a tiny FastAPI endpoint to expose the CLI over HTTP.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

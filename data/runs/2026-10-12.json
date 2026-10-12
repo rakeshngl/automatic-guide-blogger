@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-12",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Simple Diagram Generator with Diagram‑Design (HTML + SVG)"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Minimal Local LLM Chat UI with Open-WebUI and Python",
+      "source": "github_trending",
+      "url": "https://github.com/open-webui/open-webui",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-12_minimal-local-llm-chat-ui-clone.html",
+      "tagline": "A 45‑minute beginner guide to a tiny Open‑WebUI‑style chat app",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "llm",
+        "webui"
+      ]
+    },
+    {
+      "title": "Build a Claude‑Code CLI Wrapper with free‑claude‑code in Python",
+      "source": "github_trending",
+      "url": "https://github.com/Alishahryar1/free-claude-code",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-12_claude-code-cli-wrapper-free.html",
+      "tagline": "A minimal Python CLI using free‑claude‑code",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "cli",
+        "ai"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1559187664996007973",
+    "1559187673615441960"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}
