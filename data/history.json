@@ -443,6 +443,12 @@
       "title": "Build a Claude‑Code CLI Wrapper with free‑claude‑code in Python",
       "source_url": "https://github.com/Alishahryar1/free-claude-code",
       "slug": "2026-10-12_claude-code-cli-wrapper-free.html"
+    },
+    {
+      "date": "2026-10-13T14:54:57+00:00",
+      "title": "Build a Command‑Line Agent Skills Runner with Vercel’s skills tool",
+      "source_url": "https://github.com/vercel-labs/skills",
+      "slug": "2026-10-13_command-line-agent-skills-runner-clone.html"
     }
   ]
 }
