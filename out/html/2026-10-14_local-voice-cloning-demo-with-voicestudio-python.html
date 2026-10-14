@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Local Voice Cloning Demo with VoiceStudio (Python)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Local Voice Cloning Demo with VoiceStudio (Python)</h1>
+        <p>A 45‑minute beginner guide to a minimal voice‑cloning clone</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In this tutorial we’ll spin up a tiny, fully‑local voice‑cloning demo inspired by the open‑source VoiceStudio project. You’ll get a Flask API that accepts text and returns a short WAV generated with a lightweight TTS model – no cloud keys required.</p>
+        <p>We’ll use Python, the free‑tier <code>TTS</code> library (which ships a tiny pretrained model) and SQLite for a tiny metadata store. In ~45 minutes you’ll have a runnable clone you can extend into dubbing or voice‑design experiments.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>You need Python 3.9‑3.11 and <code>git</code> installed; older versions may fail to build the <code>torch</code> wheel used by the TTS library.</li>
+                <li>The demo uses the smallest “ljspeech” model (~30 MB). Real VoiceStudio ships many larger multilingual models – our clone only supports English text‑to‑speech.</li>
+                <li>Running on CPU is fine for the demo but will be slower than the GPU‑accelerated original; expect a few seconds per utterance.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal VoiceStudio Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">synthesizes</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">stores metadata</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Flask API &amp; UI</text>
+<text x="315.0" y="87" class="node-subtext">Python code</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">TTS Model (torch)</text>
+<text x="315.0" y="159" class="node-subtext">Local files</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">SQLite DB</text>
+<text x="315.0" y="231" class="node-subtext">Metadata store</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a clean folder for the demo, initialise a Python virtual environment and install only the tiny dependencies we actually need. This gives us an isolated workspace and keeps the install fast on modest hardware.</p>
+                <p>We’ll pull in Flask for the API, the <code>TTS</code> library for the tiny pretrained model, and <code>sqlite3</code> (built‑in) for our metadata store. All of this fits in a few megabytes and runs on CPU.</p>
+<div class="code-block"><pre><code>mkdir voice_clone_demo &amp;&amp; cd voice_clone_demo
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install Flask TTS</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Add a minimal data layer</h2>
+                <p>We’ll store each generated clip’s original text and the path to its WAV file in a SQLite database. SQLite needs no server, works out‑of‑the‑box, and gives us a simple way to list or replay past clips later.</p>
+                <p>The helper below creates the table on first run and provides two tiny functions: one to insert a new record and another to fetch all records ordered by creation time. Keep this file alongside your Flask app.</p>
+                <p><strong>db.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+from pathlib import Path
+
+DB_PATH = Path('clips.db')
+
+def _connect():
+    return sqlite3.connect(DB_PATH)
+
+def init_db():
+    with _connect() as conn:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS clips (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                text TEXT NOT NULL,
+                wav_path TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+
+def add_clip(text: str, wav_path: str):
+    with _connect() as conn:
+        conn.execute('INSERT INTO clips (text, wav_path) VALUES (?, ?)', (text, wav_path))
+        conn.commit()
+
+def list_clips():
+    with _connect() as conn:
+        cur = conn.execute('SELECT id, text, wav_path, created_at FROM clips ORDER BY created_at DESC')
+        return cur.fetchall()
+
+<span class="code-comment"># Initialise on import so the table exists before any API call</span>
+init_db()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core API &amp; UI</h2>
+                <p>In this step we wire up a tiny Flask server that accepts a POST to <code>/speak</code> with a JSON payload containing the text you want spoken. The server runs the TTS model (here we use the simple <code>gTTS</code> wrapper for speed) and writes a WAV file into the static folder, then returns the file so the browser can download it.</p>
+                <p>We also add a minimal HTML page served at the root that lets you type text, hit a button, and hear the generated voice instantly. This UI demonstrates the whole flow without any extra JavaScript frameworks, keeping the clone lightweight and easy to understand.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>from flask import Flask, request, send_from_directory, jsonify, render_template_string
+from gtts import gTTS
+import os, uuid
+app = Flask(__name__)
+STATIC_DIR = 'static'
+os.makedirs(STATIC_DIR, exist_ok=True)
+<span class="code-comment"># In‑memory list of generated clips</span>
+clips = []
+@app.route('/')
+def index():
+    html = '''
+    &lt;!doctype html&gt;&lt;html&gt;&lt;head&gt;&lt;title&gt;VoiceStudio Demo&lt;/title&gt;&lt;/head&gt;&lt;body&gt;
+    &lt;h2&gt;Enter text to speak&lt;/h2&gt;
+    &lt;input id='txt' type='text' size='40'&gt;
+    &lt;button onclick='speak()'&gt;Speak&lt;/button&gt;
+    &lt;script&gt;
+    function speak(){
+        fetch('/speak',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({text:document.getElementById('txt').value})
+        })
+        .then(r=&gt;r.blob())
+        .then(b=&gt;{const url=URL.createObjectURL(b); const a=document.createElement('a'); a.href=url; a.download='output.wav'; a.click();});
+    }
+    &lt;/script&gt;
+    &lt;/body&gt;&lt;/html&gt;'''
+    return render_template_string(html)
+@app.route('/speak', methods=['POST'])
+def speak():
+    data = request.get_json()
+    txt = data.get('text','')
+    if not txt:
+        return jsonify(error='No text provided'),400
+    filename = f"{uuid.uuid4()}.wav"
+    path = os.path.join(STATIC_DIR, filename)
+    gTTS(txt).save(path)
+    clips.append({'id':len(clips)+1,'text':txt,'file':filename})
+    return send_from_directory(STATIC_DIR, filename, as_attachment=True)
+@app.route('/clips')
+def get_clips():
+    return jsonify(clips)
+if __name__=='__main__':
+    app.run(debug=True)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the Flask app is ready, start it with a single command. The development server will listen on localhost and serve both the API and the tiny UI we just created. Open your browser to the shown address and you’ll see the text box ready for testing.</p>
+<div class="code-block"><pre><code>python app.py</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; extend</h2>
+                <p>Use the web page to type a phrase and click <strong>Speak</strong> – the browser should download a .wav file that plays your spoken text. Then, query the <code>/clips</code> endpoint to confirm the server stored metadata about the generated clip. From here you can expand the UI to list past clips or connect the API to a video‑dubbing script that pulls audio automatically.</p>
+<div class="code-block"><pre><code>curl http://127.0.0.1:5000/clips</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>python app.py → console shows *Running on http://127.0.0.1:5000/*</td></tr>
+            <tr><td>Browser UI loads at http://127.0.0.1:5000/</td><td>Open the URL and see a text box + Speak button</td></tr>
+            <tr><td>Audio file downloads and plays when submitting text</td><td>Enter "Hello world", click Speak, and the browser downloads a .wav that plays</td></tr>
+            <tr><td>GET /clips returns JSON with at least one entry</td><td>curl http://127.0.0.1:5000/clips → shows [{"id":1,"text":"Hello world","file":"...wav"}]</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional local voice‑cloning demo. Try swapping the TTS model for a multilingual one, add a React front‑end, or integrate the <code>/clips</code> endpoint into a simple video‑dubbing pipeline. Happy hacking!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

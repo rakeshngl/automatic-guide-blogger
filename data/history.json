@@ -449,6 +449,24 @@
       "title": "Build a Command‑Line Agent Skills Runner with Vercel’s skills tool",
       "source_url": "https://github.com/vercel-labs/skills",
       "slug": "2026-10-13_command-line-agent-skills-runner-clone.html"
+    },
+    {
+      "date": "2026-10-14T12:34:33+00:00",
+      "title": "Build a Local Voice Cloning Demo with VoiceStudio (Python)",
+      "source_url": "https://github.com/debpalash/VoiceStudio",
+      "slug": "2026-10-14_local-voice-cloning-demo-with-voicestudio-python.html"
+    },
+    {
+      "date": "2026-10-14T12:38:46+00:00",
+      "title": "Build a Simple CLI Wrapper with CLI‑Anything (Python)",
+      "source_url": "https://github.com/HKUDS/CLI-Anything",
+      "slug": "2026-10-14_simple-cli-wrapper-with-cli-anything.html"
+    },
+    {
+      "date": "2026-10-14T12:42:58+00:00",
+      "title": "Build a Context‑Window Optimizer with context‑mode (TypeScript)",
+      "source_url": "https://github.com/mksglu/context-mode",
+      "slug": "2026-10-14_context-window-optimizer-clone-typescript.html"
     }
   ]
 }

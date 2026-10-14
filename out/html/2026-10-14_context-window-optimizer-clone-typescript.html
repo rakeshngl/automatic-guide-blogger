@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Context‑Window Optimizer Clone (TypeScript)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">beta</div>
+    </nav>
+
+    <header>
+        <h1>Context‑Window Optimizer Clone (TypeScript)</h1>
+        <p>A minimal TypeScript app that trims prompts to fit a token budget</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick‑fire tutorial you’ll build a tiny clone of the popular *context‑mode* library – a tool that trims a list of messages so they fit inside a configurable token window.</p>
+        <p>We’ll use plain Node.js, TypeScript and a local SQLite DB, all on the free tier. In ~45 minutes you’ll have a runnable CLI that accepts a JSON file of messages and returns the optimal subset.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>Node ≥18 and npm must be installed; the guide uses native ES modules.</li>
+                <li>The real *context‑mode* supports many LLM providers and advanced token‑estimation heuristics – our clone only counts words as a proxy for tokens.</li>
+                <li>SQLite is stored in a temporary file; data is lost when the process exits.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<line x1="315" y1="194" x2="315" y2="170" class="link"  marker-end="url(#gw-arrow)"/>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">CLI Entrypoint (TS)</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite (messages)</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">Window Optimizer</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold &amp; Init</h2>
+                <p>Create a fresh npm project, add TypeScript and SQLite packages, and generate a basic tsconfig.</p>
+<div class="code-block"><pre><code>mkdir context-opt-clone &amp;&amp; cd context-opt-clone
+npm init -y
+npm install typescript better-sqlite3
+npm install --save-dev @types/node
+npx tsc --init --rootDir src --outDir dist --esModuleInterop true --module es2020 --target es2020</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Message Model &amp; DB</h2>
+                <p>Define a simple Message interface and a tiny SQLite helper that loads messages from a JSON file into a temporary table.</p>
+                <p><strong>src/db.ts</strong></p>
+<div class="code-block"><pre><code>import Database from 'better-sqlite3';
+import { readFileSync } from 'fs';
+
+export interface Message {
+  id: number;
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+}
+
+/**
+ * Loads an array of Message objects from a JSON file and stores them in a temporary
+ * in‑memory SQLite table called `messages`. Returns the DB instance for further queries.
+ */
+export function initMessageDb(jsonPath: string): Database {
+  const raw = readFileSync(jsonPath, 'utf-8');
+  const msgs: Message[] = JSON.parse(raw);
+  const db = new Database(':memory:');
+  db.exec(`CREATE TABLE messages (id INTEGER PRIMARY KEY, role TEXT, content TEXT);`);
+  const insert = db.prepare('INSERT INTO messages (id, role, content) VALUES (?, ?, ?)');
+  const insertMany = db.transaction((list: Message[]) =&gt; {
+    for (const m of list) insert.run(m.id, m.role, m.content);
+  });
+  insertMany(msgs);
+  return db;
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Window Optimizer Logic</h2>
+                <p>In this step we add the heart of the clone: a simple greedy trim that respects a word budget. The function walks the message list from newest to oldest, accumulating words until the limit would be exceeded, then stops. By keeping the newest entries we mimic how LLMs usually prioritize recent context. This logic lives in <code>src/optimizer.ts</code> and will be imported by the CLI later.</p>
+                <p><strong>src/optimizer.ts</strong></p>
+<div class="code-block"><pre><code>export interface Message {
+  role: string;
+  content: string;
+}
+
+/**
+ * Trim an array of messages so that the total word count does not exceed `maxWords`.
+ * The newest messages (end of the array) are kept while older ones are dropped.
+ */
+export function trimMessages(messages: Message[], maxWords: number): Message[] {
+  const result: Message[] = [];
+  let wordCount = 0;
+  <span class="code-comment">// iterate from newest to oldest</span>
+  for (let i = messages.length - 1; i &gt;= 0; i--) {
+    const msg = messages[i];
+    const words = msg.content.split(/\s+/).filter(Boolean).length;
+    if (wordCount + words &gt; maxWords) break;
+    result.unshift(msg); // prepend to preserve original order
+    wordCount += words;
+  }
+  return result;
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: CLI Glue</h2>
+                <p>Now we connect the pieces: the CLI reads a JSON payload, feeds it to the optimizer, and prints the trimmed list. The script expects two arguments – the path to the input file and the maximum word budget. It uses Node's <code>fs</code> module for I/O and re‑exports the <code>trimMessages</code> function from the optimizer we just wrote. Running this file will give us immediate feedback on how the algorithm behaves.</p>
+                <p><strong>src/cli.ts</strong></p>
+<div class="code-block"><pre><code>import { readFileSync } from 'fs';
+import { trimMessages, Message } from './optimizer';
+
+function main() {
+  const args = process.argv.slice(2);
+  if (args.length &lt; 2) {
+    console.error('Usage: node cli.js &lt;input.json&gt; &lt;maxWords&gt;');
+    process.exit(1);
+  }
+  const [inputPath, maxWordsStr] = args;
+  const maxWords = parseInt(maxWordsStr, 10);
+  if (isNaN(maxWords) || maxWords &lt;= 0) {
+    console.error('maxWords must be a positive integer');
+    process.exit(1);
+  }
+  const raw = readFileSync(inputPath, 'utf-8');
+  const messages: Message[] = JSON.parse(raw);
+  const trimmed = trimMessages(messages, maxWords);
+  console.log(JSON.stringify(trimmed, null, 2));
+}
+
+main();</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run &amp; Verify</h2>
+                <p>With the code in place we compile the TypeScript sources and execute the CLI against a sample payload. The build step uses the TypeScript compiler (<code>tsc</code>) and outputs JavaScript into the <code>dist</code> folder. Finally we run the compiled CLI, passing a JSON file that contains a series of messages and a word limit, and we should see a trimmed JSON array printed to the console.</p>
+<div class="code-block"><pre><code><span class="code-comment"># install TypeScript locally if not already present</span>
+npm install typescript@latest --save-dev
+<span class="code-comment"># compile the project (tsconfig.json should point to src/**/*.ts)</span>
+npx tsc
+<span class="code-comment"># run the CLI against a sample payload (create sample.json beforehand)</span>
+node dist/cli.js sample.json 50</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Project builds without errors</td><td><code>npx tsc</code> finishes with no output</td></tr>
+            <tr><td>CLI prints a JSON array</td><td>Running the command in Phase 5 shows trimmed messages</td></tr>
+            <tr><td>Word count of output ≤ limit</td><td>Count words in the printed <code>content</code> fields; should not exceed the number passed</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your minimal Context‑Window Optimizer is now ready. Feel free to replace the word‑count heuristic with a real token estimator or persist messages in a real DB. Happy hacking!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

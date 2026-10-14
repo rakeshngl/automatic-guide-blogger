@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-14",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Local Voice Cloning Demo with VoiceStudio (Python)",
+      "source": "github_trending",
+      "url": "https://github.com/debpalash/VoiceStudio",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-14_local-voice-cloning-demo-with-voicestudio-python.html",
+      "tagline": "A 45‑minute beginner guide to a minimal voice‑cloning clone",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "audio",
+        "ml"
+      ]
+    },
+    {
+      "title": "Build a Simple CLI Wrapper with CLI‑Anything (Python)",
+      "source": "github_trending",
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-14_simple-cli-wrapper-with-cli-anything.html",
+      "tagline": "Turn any command‑line tool into an AI‑agent friendly interface in minutes",
+      "navbar_badge": "Python",
+      "est_minutes": 40,
+      "tags": [
+        "python",
+        "cli",
+        "automation"
+      ]
+    },
+    {
+      "title": "Build a Context‑Window Optimizer with context‑mode (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/mksglu/context-mode",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-14_context-window-optimizer-clone-typescript.html",
+      "tagline": "A minimal TypeScript app that trims prompts to fit a token budget",
+      "navbar_badge": "beta",
+      "est_minutes": 50,
+      "tags": [
+        "typescript",
+        "node",
+        "llm"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1559909382790053999",
+    "1559909389006143560",
+    "1559909395133890591"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}
