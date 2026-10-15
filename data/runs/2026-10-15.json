@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-15",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Local Voice Cloning Demo with VoiceStudio (Python)"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Minimal Self‑Hosted Personal Assistant with OpenMuse (Python)",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/AXFB6EEZ5VOPRF?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-15_minimal-self-hosted-personal-assistant-with-openmuse.html",
+      "tagline": "A lightweight Python clone of OpenMuse using Flask and SQLite",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "llm",
+        "self-hosted"
+      ]
+    },
+    {
+      "title": "Build a Simple AI Scientist Bot with scientific‑agent‑skills (Python)",
+      "source": "github_trending",
+      "url": "https://github.com/K-Dense-AI/scientific-agent-skills",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-15_simple-ai-scientist-bot-python.html",
+      "tagline": "A minimal clone of scientific‑agent‑skills for beginners",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "python",
+        "ai",
+        "agents"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1560270898097819749",
+    "1560270904204726324"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

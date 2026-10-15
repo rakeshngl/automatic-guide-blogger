@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Minimal Self‑Hosted Personal Assistant with OpenMuse</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner Friendly</div>
+    </nav>
+
+    <header>
+        <h1>Minimal Self‑Hosted Personal Assistant with OpenMuse</h1>
+        <p>A lightweight Python clone of OpenMuse using Flask and SQLite</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this tutorial we’ll build a tiny personal‑assistant web service inspired by OpenMuse, using only free, open‑source tools you can run on your laptop.</p>
+        <p>In about 45 minutes you’ll have a Flask API that stores tasks in SQLite, a minimal HTML UI, and the ability to add and list notes – the core of a personal assistant.</p>
+
+        <div class="fix-box">
+            <h4>Before You Start</h4>
+            <ul>
+                <li>You need Python 3.9+ and pip installed; older versions may cause syntax errors.</li>
+                <li>The real OpenMuse integrates LLMs and voice; this clone only stores plain text notes – no AI or speech features.</li>
+                <li>Running on Windows may require <code>python -m venv venv</code> then <code>venv\Scripts\activate</code>; on macOS/Linux use <code>source venv/bin/activate</code>.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">reads/writes</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP requests</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Flask App</text>
+<text x="315.0" y="87" class="node-subtext">API + UI</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">HTML UI</text>
+<text x="315.0" y="231" class="node-subtext">Browser</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the Project</h2>
+                <p>Create a virtual environment and install Flask; this gives us an isolated runtime.</p>
+                <p>We also set up a basic folder structure so later files have a predictable place.</p>
+<div class="code-block"><pre><code>mkdir openmuse_clone &amp;&amp; cd openmuse_clone
+python -m venv venv
+<span class="code-comment"># Activate the environment</span>
+<span class="code-comment"># Windows:</span>
+<span class="code-comment">#   venv\Scripts\activate</span>
+<span class="code-comment"># macOS/Linux:</span>
+source venv/bin/activate
+pip install --upgrade pip
+pip install Flask</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the Data Model</h2>
+                <p>We’ll use SQLite via Python’s built‑in <code>sqlite3</code> module; a single table stores notes with timestamps.</p>
+                <p>The script creates the database file and the <code>notes</code> table if they don’t already exist.</p>
+                <p><strong>init_db.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3, os
+DB_PATH = os.path.join(os.path.dirname(__file__), 'notes.db')
+conn = sqlite3.connect(DB_PATH)
+cur = conn.cursor()
+cur.execute('''
+CREATE TABLE IF NOT EXISTS notes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+''')
+conn.commit()
+conn.close()
+print(f'Database initialized at {DB_PATH}')</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the Flask API &amp; UI</h2>
+                <p>In this step we create a single Flask application that both serves a tiny HTML UI and provides JSON endpoints for managing notes. The UI lets you add a note via a form and displays all saved notes, while the API offers CRUD operations for programmatic access. Storing data in SQLite keeps the clone lightweight and requires no external services. By keeping everything in one file we make the project easy to understand and extend.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+from flask import Flask, request, jsonify, render_template_string, g
+
+app = Flask(__name__)
+DB_PATH = 'notes.db'
+
+<span class="code-comment"># ---------- Database helpers ----------</span>
+
+def get_db():
+    if 'db' not in g:
+        g.db = sqlite3.connect(DB_PATH)
+        g.db.row_factory = sqlite3.Row
+    return g.db
+
+@app.teardown_appcontext
+def close_db(exception):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
+
+def init_db():
+    db = get_db()
+    db.execute('''CREATE TABLE IF NOT EXISTS notes (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    content TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )''')
+    db.commit()
+
+<span class="code-comment"># Initialize DB on first request</span>
+@app.before_first_request
+def setup():
+    init_db()
+
+<span class="code-comment"># ---------- API routes ----------</span>
+@app.route('/api/notes', methods=['GET'])
+def list_notes():
+    db = get_db()
+    notes = db.execute('SELECT id, content, created_at FROM notes ORDER BY created_at DESC').fetchall()
+    return jsonify([dict(note) for note in notes])
+
+@app.route('/api/notes', methods=['POST'])
+def add_note():
+    content = request.json.get('content') if request.is_json else request.form.get('content')
+    if not content:
+        return jsonify({'error': 'Content required'}), 400
+    db = get_db()
+    db.execute('INSERT INTO notes (content) VALUES (?)', (content,))
+    db.commit()
+    return jsonify({'status': 'added'}), 201
+
+<span class="code-comment"># ---------- UI route ----------</span>
+HTML_TEMPLATE = '''
+&lt;!doctype html&gt;
+&lt;title&gt;My Notes&lt;/title&gt;
+&lt;h1&gt;My Notes&lt;/h1&gt;
+&lt;form method="post" action="/api/notes"&gt;
+  &lt;input name="content" placeholder="Write a note" required&gt;
+  &lt;button type="submit"&gt;Add&lt;/button&gt;
+&lt;/form&gt;
+&lt;ul&gt;
+{% for note in notes %}
+  &lt;li&gt;{{ note.content }} &lt;small&gt;({{ note.created_at }})&lt;/small&gt;&lt;/li&gt;
+{% else %}
+  &lt;li&gt;No notes yet.&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+'''
+
+@app.route('/')
+def index():
+    db = get_db()
+    notes = db.execute('SELECT content, created_at FROM notes ORDER BY created_at DESC').fetchall()
+    return render_template_string(HTML_TEMPLATE, notes=notes)
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run Locally</h2>
+                <p>Now that the code is in place we need to create the SQLite file and launch the Flask development server. The first request will automatically create the database if it doesn't exist, so simply starting the app is enough. Running with `<code>debug=True</code>` gives helpful error messages while you experiment.</p>
+                <p>Make sure you are inside the virtual environment where Flask is installed before executing the command.</p>
+<div class="code-block"><pre><code>export FLASK_APP=app.py
+flask run</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; Extend</h2>
+                <p>Open your browser at http://127.0.0.1:5000 and you should see the "My Notes" page with an empty list. Use the form to add a note; the page will refresh showing the new entry. To confirm the API, request the JSON endpoint and you’ll see the same data in machine‑readable form.</p>
+                <p>From here you can extend the clone: add tags, implement search, or protect the routes with simple authentication. The structure is intentionally minimal so you can iterate quickly.</p>
+<div class="code-block"><pre><code>curl -s http://127.0.0.1:5000/api/notes | python -m json.tool</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Virtual environment activated and Flask installed</td><td>pip list | grep Flask shows version 2.3.2</td></tr>
+            <tr><td>Database file created</td><td>ls notes.db shows the file after running init_db.py</td></tr>
+            <tr><td>Web UI loads with empty list</td><td>Visit http://127.0.0.1:5000 and see 'My Notes' with no items</td></tr>
+            <tr><td>Adding a note updates UI and API</td><td>Submit form, then curl http://127.0.0.1:5000/api/notes shows JSON with the new entry</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You Did It!</h4>
+            <p>Your minimal OpenMuse‑style personal assistant is up and running. Feel free to experiment – add authentication, integrate a free LLM API, or containerize with Docker for true self‑hosting.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

@@ -467,6 +467,18 @@
       "title": "Build a Context‑Window Optimizer with context‑mode (TypeScript)",
       "source_url": "https://github.com/mksglu/context-mode",
       "slug": "2026-10-14_context-window-optimizer-clone-typescript.html"
+    },
+    {
+      "date": "2026-10-15T12:33:58+00:00",
+      "title": "Build a Minimal Self‑Hosted Personal Assistant with OpenMuse (Python)",
+      "source_url": "https://www.producthunt.com/r/AXFB6EEZ5VOPRF?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-10-15_minimal-self-hosted-personal-assistant-with-openmuse.html"
+    },
+    {
+      "date": "2026-10-15T12:39:29+00:00",
+      "title": "Build a Simple AI Scientist Bot with scientific‑agent‑skills (Python)",
+      "source_url": "https://github.com/K-Dense-AI/scientific-agent-skills",
+      "slug": "2026-10-15_simple-ai-scientist-bot-python.html"
     }
   ]
 }

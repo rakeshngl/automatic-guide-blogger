@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple AI Scientist Bot (Python)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Simple AI Scientist Bot (Python)</h1>
+        <p>A minimal clone of scientific‑agent‑skills for beginners</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In the next 45 minutes you’ll spin up a tiny AI Scientist Bot that can answer basic scientific queries using a local LLM and a tiny SQLite knowledge store, inspired by the K‑Dense scientific‑agent‑skills project.</p>
+        <p>We’ll use plain Python, the free‑tier <code>openai</code> API (or any compatible local model), and SQLite – all running on your laptop. No paid services, no Docker, just a few commands and a bit of code.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>You need Python 3.10+ and pip installed.</li>
+                <li>The real project supports 100+ databases and dozens of LLM providers – our clone only uses a single OpenAI‑compatible endpoint and a tiny SQLite table.</li>
+                <li>If you hit rate‑limit errors, obtain a free API key from https://platform.openai.com/account/api-keys and set it as <code>OPENAI_API_KEY</code> in your environment.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal AI Scientist Bot Architecture</div>
+            <svg width="100%" height="190" viewBox="0 0 420 190" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="142" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">store/query</text>
+<line x1="230" y1="74" x2="190" y2="110" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="210" y="86" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">ask</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Python Bot</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB</text>
+<rect x="20" y="86" width="170" height="48" rx="10" class="node-tech" />
+<text x="105.0" y="115" class="node-text">OpenAI API (free tier)</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh folder for the bot and spin up an isolated Python virtual environment. This keeps our dependencies tidy and avoids polluting your global Python install.</p>
+                <p>Install the tiny libraries we need – the OpenAI client for API calls and nothing else because SQLite is built into Python’s standard library.</p>
+<div class="code-block"><pre><code>mkdir ai_scientist_bot &amp;&amp; cd ai_scientist_bot
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install openai</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model (SQLite)</h2>
+                <p>We’ll create a single SQLite database file named <code>facts.db</code> with a table <code>facts</code> that stores an <code>id</code>, a <code>topic</code>, and the <code>content</code> of each scientific fact. This tiny store will act as the knowledge base the bot can query.</p>
+                <p>The script also pre‑populates the table with a couple of example facts so you can test the bot immediately after the next phase.</p>
+                <p><strong>init_db.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+
+DB_PATH = 'facts.db'
+
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    <span class="code-comment"># Create table</span>
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS facts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            topic TEXT NOT NULL,
+            content TEXT NOT NULL
+        )
+    ''')
+    <span class="code-comment"># Insert example facts</span>
+    examples = [
+        ('gravity', 'Gravity is the force that attracts two bodies toward each other.'),
+        ('photosynthesis', 'Photosynthesis converts light energy into chemical energy in plants.')
+    ]
+    cur.executemany('INSERT INTO facts (topic, content) VALUES (?, ?)', examples)
+    conn.commit()
+    conn.close()
+
+if __name__ == '__main__':
+    init_db()
+    print('Database initialized with example facts.')</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core bot logic – query DB &amp; call LLM</h2>
+                <p>The bot first looks for a matching fact in the SQLite knowledge base; this keeps responses fast and deterministic for known queries. If the database returns nothing, we fall back to an OpenAI LLM call so the bot can still answer novel scientific questions. The script combines both paths into a single <code>answer_question</code> function, making the flow easy to extend later.</p>
+                <p><strong>bot.py</strong></p>
+<div class="code-block"><pre><code>import os
+import sqlite3
+import openai
+
+<span class="code-comment"># Load OpenAI key from environment for safety</span>
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+DB_PATH = "facts.db"
+
+def init_db():
+    """Create a tiny facts table if it doesn't exist."""
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS facts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            question TEXT UNIQUE,
+            answer TEXT
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+def query_fact(question: str) -&gt; str:
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute("SELECT answer FROM facts WHERE question = ?", (question,))
+    row = cur.fetchone()
+    conn.close()
+    return row[0] if row else None
+
+def ask_llm(prompt: str) -&gt; str:
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=150,
+        temperature=0.7,
+    )
+    return response.choices[0].message.content.strip()
+
+def answer_question(question: str) -&gt; str:
+    <span class="code-comment"># 1. Try the local DB first</span>
+    fact = query_fact(question)
+    if fact:
+        return fact
+    <span class="code-comment"># 2. If not found, ask the LLM</span>
+    return ask_llm(question)
+
+if __name__ == "__main__":
+    init_db()
+    print("Simple AI Scientist Bot – type 'exit' to quit.")
+    while True:
+        user_q = input("You: ").strip()
+        if user_q.lower() in ("exit", "quit"):
+            break
+        print("Bot:", answer_question(user_q))</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Initialize the SQLite database once with a couple of example facts, then launch the interactive loop. The first run will create <code>facts.db</code> and seed it if you wish, but the script already ensures the table exists, so you can simply start the bot and begin asking questions.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Ensure you have the OpenAI key exported</span>
+export OPENAI_API_KEY=your_key_here
+
+<span class="code-comment"># Run the bot – it will create the DB on first start</span>
+python bot.py</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; extend</h2>
+                <p>Test the bot with a known fact (e.g., "What is gravity?") to see the database lookup in action. Then ask something the DB doesn't know, like "Explain dark matter," and watch the LLM generate a response. Finally, add your own fact directly into SQLite and confirm the bot now returns it without hitting the LLM.</p>
+<div class="code-block"><pre><code><span class="code-comment"># 1. Add a new fact to the DB (example: gravity)</span>
+sqlite3 facts.db "INSERT OR IGNORE INTO facts (question, answer) VALUES ('What is gravity?', 'Gravity is the force that attracts two bodies toward each other.');"
+
+<span class="code-comment"># 2. Run the bot and test both paths</span>
+python bot.py &lt;&lt;EOF
+What is gravity?
+Explain dark matter
+exit
+EOF
+
+<span class="code-comment"># 3. Add another custom fact</span>
+sqlite3 facts.db "INSERT OR REPLACE INTO facts (question, answer) VALUES ('What is photosynthesis?', 'Photosynthesis is the process plants use to convert sunlight into chemical energy.');"
+
+<span class="code-comment"># 4. Verify the new fact is returned</span>
+python bot.py &lt;&lt;EOF
+What is photosynthesis?
+exit
+EOF"}]]</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Database created with two example facts</td><td>sqlite3 facts.db "SELECT COUNT(*) FROM facts;" should output 2</td></tr>
+            <tr><td>Bot returns a stored fact</td><td>Run <code>python bot.py</code> and ask "What is gravity?" – answer should match the DB entry</td></tr>
+            <tr><td>Bot falls back to LLM</td><td>Ask an unknown topic like "Explain dark matter" – answer should be generated by OpenAI</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your minimal AI Scientist Bot is up and running. Feel free to enrich the SQLite knowledge base, swap the OpenAI model for a local LLM, or wrap the script in a tiny FastAPI server for a web UI. Happy experimenting!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
