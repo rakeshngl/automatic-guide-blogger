@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-16",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Local Voice Cloning Demo with VoiceStudio"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Website‑to‑API Service with Pomerado and FastAPI",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/VN2LP6GB4KYPXX?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-16_simple-website-to-api-service-with-fastapi.html",
+      "tagline": "Turn any website into a JSON API – a minimal clone of Pomerado",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "Python",
+        "FastAPI",
+        "WebScraping"
+      ]
+    },
+    {
+      "title": "Build a Minimal Claude Plugin with the Official Plugin Directory",
+      "source": "github_trending",
+      "url": "https://github.com/anthropics/claude-plugins-official",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-16_minimal-claude-plugin-clone.html",
+      "tagline": "Build a tiny Claude plugin using the official directory structure",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "Python",
+        "Claude",
+        "Plugin"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1560633388744835143",
+    "1560633394885300294"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}
