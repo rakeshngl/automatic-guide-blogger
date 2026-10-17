@@ -491,6 +491,18 @@
       "title": "Build a Minimal Claude Plugin with the Official Plugin Directory",
       "source_url": "https://github.com/anthropics/claude-plugins-official",
       "slug": "2026-10-16_minimal-claude-plugin-clone.html"
+    },
+    {
+      "date": "2026-10-17T12:37:23+00:00",
+      "title": "Build a Claude Plugin Clone with Python and FastAPI",
+      "source_url": "https://github.com/anthropics/claude-plugins-official",
+      "slug": "2026-10-17_claude-plugin-clone-with-fastapi.html"
+    },
+    {
+      "date": "2026-10-17T12:41:47+00:00",
+      "title": "Build a CLI‑Anything Wrapper to Run Any Command via an LLM",
+      "source_url": "https://github.com/HKUDS/CLI-Anything",
+      "slug": "2026-10-17_cli-anything-minimal-clone.html"
     }
   ]
 }

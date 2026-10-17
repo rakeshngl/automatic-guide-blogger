@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-17",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Local Voice‑Cloning Demo with VoiceStudio"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Claude Plugin Clone with Python and FastAPI",
+      "source": "github_trending",
+      "url": "https://github.com/anthropics/claude-plugins-official",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-17_claude-plugin-clone-with-fastapi.html",
+      "tagline": "A minimal Python FastAPI replica of a Claude plugin marketplace",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "fastapi",
+        "ai"
+      ]
+    },
+    {
+      "title": "Build a CLI‑Anything Wrapper to Run Any Command via an LLM",
+      "source": "github_trending",
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-17_cli-anything-minimal-clone.html",
+      "tagline": "Run any shell command via a local LLM in minutes",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "cli",
+        "ai"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1560996255570595952",
+    "1560996274927304815"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}
