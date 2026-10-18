@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple AI‑Powered Job Search CLI (Python)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner Friendly</div>
+    </nav>
+
+    <header>
+        <h1>Simple AI‑Powered Job Search CLI (Python)</h1>
+        <p>A minimal clone that scrapes jobs and uses a local LLM to draft cover letters</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick build you’ll create a tiny command‑line job‑search assistant inspired by the AI‑Job‑Search project. We’ll scrape a public job board, store results in SQLite, and call a free‑tier local LLM (e.g., Ollama) to generate a one‑sentence cover‑letter snippet.</p>
+        <p>The whole thing fits into a single Python file and runs on your laptop in about 45 minutes. No paid APIs, no cloud accounts – just Python, SQLite, and a free LLM container.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Python 3.10+ and <code>git</code> installed; the guide assumes a Unix‑like shell (Linux/macOS or WSL).</li>
+                <li>The real project uses Claude Code (paid). Here we replace it with a local LLM via Ollama – results will be less polished but fully functional.</li>
+                <li>Web‑scraping may be blocked by some sites; we’ll use the public “RemoteOK” JSON endpoint which is openly accessible.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal Job Search Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">store/fetch jobs</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">generate cover text</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">CLI Python Script</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">Ollama LLM (local)</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh directory for the clone and initialise a Python virtual environment so dependencies stay isolated. Then install the tiny set of libraries we need: <code>requests</code> for HTTP calls, <code>rich</code> for pretty CLI output, and <code>ollama</code> client to talk to the local LLM. All of this runs locally – no cloud credentials required.</p>
+<div class="code-block"><pre><code>mkdir -p ai_job_cli &amp;&amp; cd ai_job_cli
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install requests rich ollama</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data model &amp; scraper</h2>
+                <p>We’ll store jobs in a tiny SQLite file called <code>jobs.db</code>. The schema has three columns – an auto‑increment id, a title, and a URL – enough to identify a posting later. Next we write a function that fetches the public RemoteOK JSON feed, extracts each job’s title and URL, and inserts any new entries into the database. This keeps the CLI fast and offline‑friendly.</p>
+                <p><strong>job_cli.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3, json, requests
+from pathlib import Path
+
+DB_PATH = Path('jobs.db')
+
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute('''CREATE TABLE IF NOT EXISTS jobs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        url TEXT NOT NULL UNIQUE
+    )''')
+    conn.commit()
+    conn.close()
+
+def fetch_remoteok():
+    resp = requests.get('https://remoteok.com/api')
+    resp.raise_for_status()
+    return resp.json()
+
+def store_jobs(jobs):
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    for job in jobs:
+        title = job.get('position') or job.get('title')
+        url = job.get('url')
+        if title and url:
+            try:
+                cur.execute('INSERT INTO jobs (title, url) VALUES (?,?)', (title, url))
+            except sqlite3.IntegrityError:
+                pass  # duplicate, ignore
+    conn.commit()
+    conn.close()
+
+if __name__ == '__main__':
+    init_db()
+    data = fetch_remoteok()
+    store_jobs(data)
+    print('✅ Jobs scraped and saved to', DB_PATH)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: LLM integration &amp; CLI UI</h2>
+                <p>In this step we connect the SQLite job list to a tiny command‑line menu and ask a local Ollama model for a one‑sentence cover‑letter snippet. The menu lets the user pick a job by its title, then we send the job description to the model via its REST endpoint. The response is printed so you can copy‑paste it into an application or store it later.</p>
+                <p>We keep everything in a single file, <code>job_cli.py</code>, so the script can be run directly after the scraper phase. The code uses the standard library (<code>sqlite3</code>, <code>json</code>, <code>urllib.request</code>) and a tiny helper function to talk to Ollama, making it easy to swap the model or the API URL later.</p>
+                <p><strong>job_cli.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3, json, urllib.request, sys
+
+DB_PATH = 'jobs.db'
+OLLAMA_URL = 'http://localhost:11434/api/generate'
+MODEL = 'llama2'  # change to any model you have locally
+
+def fetch_jobs():
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute('SELECT id, title, company FROM jobs')
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+def choose_job(jobs):
+    print('Available jobs:')
+    for i, (jid, title, company) in enumerate(jobs, 1):
+        print(f"{i}. {title} @ {company}")
+    choice = input('Select a job number: ')
+    try:
+        idx = int(choice) - 1
+        return jobs[idx]
+    except Exception:
+        sys.exit('Invalid selection')
+
+def generate_cover(job):
+    prompt = f"Write a short, enthusiastic cover‑letter line for the position '{job[1]}' at {job[2]}."
+    payload = json.dumps({"model": MODEL, "prompt": prompt, "stream": False}).encode('utf-8')
+    req = urllib.request.Request(OLLAMA_URL, data=payload, headers={'Content-Type': 'application/json'})
+    with urllib.request.urlopen(req) as resp:
+        data = json.load(resp)
+    return data.get('response', '').strip()
+
+if __name__ == '__main__':
+    jobs = fetch_jobs()
+    if not jobs:
+        sys.exit('No jobs found in the database.')
+    job = choose_job(jobs)
+    line = generate_cover(job)
+    print('\nGenerated cover line:')
+    print(line)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Make sure the Ollama service is up and the model you referenced is available, then simply execute the CLI script. The script will list the scraped jobs, let you pick one, and show the AI‑generated sentence.</p>
+                <p>If you see the list and a short sentence, the integration is working correctly.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Start Ollama (if not already running)</span>
+ollama serve &amp;
+<span class="code-comment"># Give it a moment to start</span>
+sleep 3
+<span class="code-comment"># Run the CLI</span>
+python job_cli.py</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; extend</h2>
+                <p>After a successful run, you can inspect the SQLite file to confirm the jobs were stored and experiment with different LLM models by changing the <code>MODEL</code> constant. Adding a <code>--save</code> flag is a simple way to persist the generated line back into the database for later reference.</p>
+                <p>These small extensions turn the prototype into a more useful personal tool without adding much complexity.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Verify jobs were saved</span>
+sqlite3 jobs.db "SELECT id, title, company FROM jobs LIMIT 5;"
+<span class="code-comment"># Try another model (e.g., phi)</span>
+sed -i '' 's/MODEL = .*/MODEL = "phi"/' job_cli.py
+python job_cli.py
+<span class="code-comment"># Optional: add a flag to store the line (demo only, not implemented yet)</span>
+<span class="code-comment"># python job_cli.py --save</span></code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>SQLite DB contains scraped jobs</td><td>sqlite3 jobs.db "SELECT COUNT(*) FROM jobs;" should output a positive integer</td></tr>
+            <tr><td>Ollama container is running</td><td>curl -s http://localhost:11434/api/version returns JSON with version info</td></tr>
+            <tr><td>CLI prints a cover line</td><td>Running <code>python job_cli.py</code> and selecting a job displays a short sentence</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>You now have a working AI‑powered job‑search CLI. Feel free to swap the RemoteOK endpoint for other boards, enrich the schema, or hook up a better LLM. Happy hunting!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

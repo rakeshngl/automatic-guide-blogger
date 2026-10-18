@@ -503,6 +503,24 @@
       "title": "Build a CLI‑Anything Wrapper to Run Any Command via an LLM",
       "source_url": "https://github.com/HKUDS/CLI-Anything",
       "slug": "2026-10-17_cli-anything-minimal-clone.html"
+    },
+    {
+      "date": "2026-10-18T12:33:39+00:00",
+      "title": "Build a Simple AI‑Powered Job Search CLI with Python",
+      "source_url": "https://github.com/MadsLorentzen/ai-job-search",
+      "slug": "2026-10-18_simple-ai-powered-job-search-cli-python.html"
+    },
+    {
+      "date": "2026-10-18T12:37:22+00:00",
+      "title": "Build a Shim‑CLI Wrapper to Inspect and Mask Coding Agent Traffic",
+      "source_url": "https://www.producthunt.com/r/2E657WIGYUKWTP?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-10-18_shim-cli-wrapper-clone.html"
+    },
+    {
+      "date": "2026-10-18T12:40:32+00:00",
+      "title": "Build a PasteKit‑Style JSON/YAML Formatter with Node.js",
+      "source_url": "https://www.producthunt.com/r/ENGL3FNAAX653R?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-10-18_pastekit-style-json-yaml-formatter.html"
     }
   ]
 }

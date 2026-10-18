@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-18",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple AI‑Powered Job Search CLI with Python",
+      "source": "github_trending",
+      "url": "https://github.com/MadsLorentzen/ai-job-search",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-18_simple-ai-powered-job-search-cli-python.html",
+      "tagline": "A minimal clone that scrapes jobs and uses a local LLM to draft cover letters",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "cli",
+        "ai"
+      ]
+    },
+    {
+      "title": "Build a Shim‑CLI Wrapper to Inspect and Mask Coding Agent Traffic",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/2E657WIGYUKWTP?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-18_shim-cli-wrapper-clone.html",
+      "tagline": "Inspect and mask coding‑agent traffic locally",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 40,
+      "tags": [
+        "typescript",
+        "cli",
+        "privacy"
+      ]
+    },
+    {
+      "title": "Build a PasteKit‑Style JSON/YAML Formatter with Node.js",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/ENGL3FNAAX653R?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-18_pastekit-style-json-yaml-formatter.html",
+      "tagline": "Format JSON, YAML & SQL privately",
+      "navbar_badge": "Node.js",
+      "est_minutes": 35,
+      "tags": [
+        "javascript",
+        "web",
+        "formatter"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1561358313638203493",
+    "1561358319065767946",
+    "1561358323889086576"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}
