@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-19",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Universal CLI Wrapper with CLI‑Anything in Python"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Local AI Job‑Search CLI with Python",
+      "source": "github_trending",
+      "url": "https://github.com/MadsLorentzen/ai-job-search",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-19_local-ai-job-search-cli-python.html",
+      "tagline": "A minimal, free‑tier clone of the AI‑powered job search tool",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "cli",
+        "llm"
+      ]
+    },
+    {
+      "title": "Build a Minimal Open‑Source Coding Agent with Opencode (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/anomalyco/opencode",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-19_minimal-open-source-coding-agent-clone.html",
+      "tagline": "A 45‑minute beginner’s guide to a tiny TypeScript‑based AI coding helper",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "typescript",
+        "agent",
+        "coding"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1561720604128976946",
+    "1561720609199624356"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}
