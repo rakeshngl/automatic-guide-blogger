@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Local AI‑Powered Job Application CLI</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Python + SQLite</div>
+    </nav>
+
+    <header>
+        <h1>Local AI‑Powered Job Application CLI</h1>
+        <p>A minimal clone of ai‑job-search using free‑tier tools</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick‑fire tutorial you’ll build a tiny command‑line job‑search assistant that mimics the core of ai‑job-search, but runs entirely on your laptop with no paid APIs.</p>
+        <p>We’ll use Python, the open‑source <code>requests</code> library for scraping, SQLite for storage, and a free LLM endpoint (e.g., a local llama‑cpp server) to generate cover letters – all in under 45 minutes.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>You need Python 3.10 or newer and <code>git</code> installed.</li>
+                <li>The real project talks to Claude Code – our clone uses a free LLM endpoint, so output quality will differ.</li>
+                <li>Make sure you have at least 2 GB of free RAM for the lightweight Llama‑cpp model.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="334" viewBox="0 0 420 334" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="286" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<line x1="315" y1="98" x2="315" y2="266" class="link"  marker-end="url(#gw-arrow)"/>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">CLI Wrapper</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">Web Scraper (requests)</text>
+<rect x="230" y="266" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="295" class="node-text">Free LLM (llama.cpp)</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh folder for the clone, set up an isolated Python virtual environment, and install the tiny dependencies we need. This gives us a clean workspace and guarantees the same library versions on any machine.</p>
+                <p>We’ll also add a simple <code>run.sh</code> helper so you can start the CLI with one command, keeping the workflow beginner‑friendly.</p>
+<div class="code-block"><pre><code><span class="code-comment">#!/usr/bin/env bash</span>
+<span class="code-comment"># 1. Create project folder</span>
+mkdir -p ai_job_cli &amp;&amp; cd ai_job_cli
+<span class="code-comment"># 2. Initialise virtual environment</span>
+python3 -m venv .venv
+source .venv/bin/activate
+<span class="code-comment"># 3. Upgrade pip and install tiny deps</span>
+pip install --upgrade pip
+pip install requests
+<span class="code-comment"># 4. Optional helper script</span>
+cat &gt; run.sh &lt;&lt;'EOF'
+<span class="code-comment">#!/usr/bin/env bash</span>
+source .venv/bin/activate
+python cli.py "$@"
+EOF
+chmod +x run.sh
+<span class="code-comment"># 5. Verify setup</span>
+python -c "import requests, sqlite3; print('Setup OK')"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model</h2>
+                <p>We’ll store each job posting together with the generated cover letter in a single SQLite table. SQLite lives in a single file, needs no server, and works perfectly for a minimal CLI tool.</p>
+                <p>The <code>model.py</code> module creates the database (if missing) and provides a tiny helper to insert or fetch records, keeping the rest of the code clean.</p>
+                <p><strong>model.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+from pathlib import Path
+
+DB_PATH = Path('jobs.db')
+
+def _connect():
+    """Return a connection with row dict access."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    """Create the jobs table if it doesn't exist."""
+    with _connect() as conn:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS jobs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                company TEXT NOT NULL,
+                url TEXT NOT NULL,
+                cover_letter TEXT,
+                fetched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        conn.commit()
+
+def add_job(title: str, company: str, url: str, cover_letter: str | None = None):
+    """Insert a new job posting; returns the new row id."""
+    with _connect() as conn:
+        cur = conn.execute(
+            'INSERT INTO jobs (title, company, url, cover_letter) VALUES (?,?,?,?)',
+            (title, company, url, cover_letter)
+        )
+        conn.commit()
+        return cur.lastrowid
+
+def get_jobs():
+    """Yield all stored jobs as dictionaries."""
+    with _connect() as conn:
+        for row in conn.execute('SELECT * FROM jobs ORDER BY fetched_at DESC'):
+            yield dict(row)
+
+<span class="code-comment"># Initialise on import so the table is ready for the CLI.</span>
+init_db()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Scrape a simple job board</h2>
+                <p>We’ll pull the first page of RemoteOK using its public JSON endpoint. Each job object contains the title, company, and a URL – exactly what we need for a minimal job board. The script parses the JSON, extracts the fields we care about, and stores them in the SQLite database created in Phase 2. This gives us a persistent list of opportunities to work with later.</p>
+                <p><strong>scrape.py</strong></p>
+<div class="code-block"><pre><code>import json, sqlite3, urllib.request
+
+DB = 'jobs.db'
+REMOTEOK_URL = 'https://remoteok.com/api'
+
+def init_db():
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    cur.execute('''CREATE TABLE IF NOT EXISTS jobs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        company TEXT NOT NULL,
+        url TEXT NOT NULL,
+        cover_letter TEXT)''')
+    conn.commit()
+    conn.close()
+
+def fetch_jobs():
+    with urllib.request.urlopen(REMOTEOK_URL) as resp:
+        data = json.load(resp)
+    <span class="code-comment"># RemoteOK returns a list where the first element is metadata; skip it</span>
+    return [job for job in data[1:] if job.get('title')]
+
+def store_jobs(jobs):
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    for job in jobs:
+        cur.execute('INSERT INTO jobs (title, company, url) VALUES (?,?,?)',
+                    (job['title'], job['company'], job['url']))
+    conn.commit()
+    conn.close()
+
+if __name__ == '__main__':
+    init_db()
+    jobs = fetch_jobs()
+    store_jobs(jobs)
+    print(f'Stored {len(jobs)} jobs into {DB}')</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Generate a cover letter with a free LLM</h2>
+                <p>Now we’ll call a locally‑running llama‑cpp server (or any free LLM that accepts HTTP POST). The prompt is built from the job title and company, plus a short template that asks the model to produce a concise cover letter. The generated text is written back into the same SQLite row, so later steps can retrieve it easily.</p>
+                <p><strong>cover.py</strong></p>
+<div class="code-block"><pre><code>import json, sqlite3, urllib.request
+
+DB = 'jobs.db'
+LLM_ENDPOINT = 'http://127.0.0.1:8000/v1/completions'  # llama-cpp server
+
+PROMPT_TEMPLATE = (
+    "Write a brief cover letter for a {title} role at {company}. "
+    "Highlight relevant remote‑work experience and enthusiasm.")
+
+def get_uncovered_jobs():
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    cur.execute('SELECT id, title, company FROM jobs WHERE cover_letter IS NULL')
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+def generate_letter(title, company):
+    prompt = PROMPT_TEMPLATE.format(title=title, company=company)
+    payload = json.dumps({
+        'model': 'llama',
+        'prompt': prompt,
+        'max_tokens': 150,
+        'temperature': 0.7
+    }).encode('utf-8')
+    req = urllib.request.Request(LLM_ENDPOINT, data=payload,
+                                 headers={'Content-Type': 'application/json'})
+    with urllib.request.urlopen(req) as resp:
+        result = json.load(resp)
+    return result.get('choices',[{'text':''}])[0]['text'].strip()
+
+def store_letter(job_id, letter):
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    cur.execute('UPDATE jobs SET cover_letter = ? WHERE id = ?', (letter, job_id))
+    conn.commit()
+    conn.close()
+
+if __name__ == '__main__':
+    for job_id, title, company in get_uncovered_jobs():
+        letter = generate_letter(title, company)
+        store_letter(job_id, letter)
+        print(f'Generated cover letter for job {job_id}')</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run &amp; verify the CLI</h2>
+                <p>The final script ties everything together: it runs the scraper, calls the LLM to fill missing cover letters, and then prints a readable list of jobs with their generated letters. Running <code>python cli.py</code> should finish without errors and show the stored data, confirming that each phase worked end‑to‑end.</p>
+                <p><strong>cli.py</strong></p>
+<div class="code-block"><pre><code>import subprocess, sqlite3
+
+def run_phase(script):
+    subprocess.run(['python', script], check=True)
+
+def show_jobs():
+    conn = sqlite3.connect('jobs.db')
+    cur = conn.cursor()
+    cur.execute('SELECT title, company, url, cover_letter FROM jobs')
+    for title, company, url, letter in cur.fetchall():
+        print(f'=== {title} @ {company} ===')
+        print(f'URL: {url}')
+        print('Cover Letter:')
+        print(letter if letter else '&lt;&lt; not generated &gt;&gt;')
+        print('-' * 40)
+    conn.close()
+
+if __name__ == '__main__':
+    <span class="code-comment"># Phase 3 – scrape jobs</span>
+    run_phase('scrape.py')
+    <span class="code-comment"># Phase 4 – generate cover letters</span>
+    run_phase('cover.py')
+    <span class="code-comment"># Verify output</span>
+    show_jobs()</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Database file created with job rows</td><td>ls -l jobs.db &amp;&amp; sqlite3 jobs.db "SELECT COUNT(*) FROM jobs;"</td></tr>
+            <tr><td>Cover letters populated</td><td>python cli.py | grep -i 'Cover Letter' -A2</td></tr>
+            <tr><td>Script exits with status 0</td><td>python cli.py; echo $?</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your local AI‑powered job‑application CLI is now functional. Experiment by adding more job sources or swapping the LLM endpoint for another free model. Happy hunting!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

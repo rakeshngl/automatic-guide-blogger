@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Self‑Hosted Markdown Kanban Board with Doska (Node.js)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Self‑Hosted Markdown Kanban Board with Doska (Node.js)</h1>
+        <p>Build a minimal clone of Doska using Node.js, Express, and SQLite</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick‑start you’ll spin up a lightweight Kanban board that stores cards as Markdown files, inspired by the Doska project. We’ll use only free, open‑source tools so you can get a working prototype in under an hour.</p>
+        <p>We’ll scaffold a tiny Express app, define a SQLite schema for boards and cards, expose a simple JSON API, and serve a minimal HTML UI. The result is a functional clone you can run locally and extend as you like.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Node.js ≥ 18 and npm installed; older versions may lack native ES modules support.</li>
+                <li>The clone stores cards in a SQLite file – not the full markdown‑file sync that Doska provides, so persistence is simplified.</li>
+                <li>Running on Windows may require <code>npm install --global windows-build-tools</code> for the <code>better-sqlite3</code> native module.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL queries</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP API calls</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Express Server (Node.js)</text>
+<text x="315.0" y="87" class="node-subtext">API + UI</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite DB</text>
+<text x="315.0" y="159" class="node-subtext">cards.db</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">Static HTML/JS</text>
+<text x="315.0" y="231" class="node-subtext">public/</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh directory for your board and initialise it as an npm project. This gives you a <code>package.json</code> to track dependencies and scripts. Then install Express for the web server and better‑sqlite3 for fast, synchronous SQLite access.</p>
+                <p>We also add a basic folder layout: <code>src/</code> for server code and <code>public/</code> for static assets. This keeps the project tidy and mirrors how many Node.js starters are organised.</p>
+<div class="code-block"><pre><code>mkdir doska-clone &amp;&amp; cd doska-clone
+npm init -y
+npm install express@4 better-sqlite3@8
+mkdir -p src public</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define data model (SQLite)</h2>
+                <p>On the first run the server will create a <code>cards.db</code> file with a single <code>cards</code> table. Each card stores its markdown content, the column it belongs to (e.g., "todo", "doing", "done"), and timestamps for creation and updates. Using SQLite means we avoid a separate database server – everything lives in one file, perfect for a lightweight clone.</p>
+                <p><strong>initDb.js</strong></p>
+<div class="code-block"><pre><code>import Database from 'better-sqlite3';
+
+<span class="code-comment">// Open (or create) the SQLite file in the project root</span>
+const db = new Database('cards.db');
+
+<span class="code-comment">// Create the cards table if it doesn't exist yet</span>
+const createTable = `
+CREATE TABLE IF NOT EXISTS cards (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  markdown TEXT NOT NULL,
+  column TEXT NOT NULL CHECK(column IN ('todo','doing','done')),
+  created_at DATETIME DEFAULT (datetime('now')),
+  updated_at DATETIME DEFAULT (datetime('now'))
+);
+`;
+
+db.exec(createTable);
+
+export default db;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build API &amp; minimal UI</h2>
+                <p>In this step we wire up an Express server that talks to a SQLite database. The server will expose three simple REST endpoints: one to fetch all cards, one to create a new card, and one to move a card between columns. It also serves a tiny static HTML page that uses <code>fetch</code> to call those endpoints, so you can see the board in your browser.</p>
+                <p>We keep the UI minimal: three columns (Todo, In‑Progress, Done) and a form to add a new card. When a card is moved, we send a PATCH request to update its column. This gives you a working Kanban board without any fancy front‑end frameworks.</p>
+                <p><strong>server.js</strong></p>
+<div class="code-block"><pre><code>const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+
+const app = express();
+const db = new sqlite3.Database('kanban.db');
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+<span class="code-comment">// Initialise DB</span>
+db.serialize(() =&gt; {
+  db.run(`CREATE TABLE IF NOT EXISTS cards (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    markdown TEXT,
+    column TEXT NOT NULL DEFAULT 'Todo'
+  )`);
+});
+
+<span class="code-comment">// List all cards</span>
+app.get('/api/cards', (req, res) =&gt; {
+  db.all('SELECT * FROM cards', [], (err, rows) =&gt; {
+    if (err) return res.status(500).json({error: err.message});
+    res.json(rows);
+  });
+});
+
+<span class="code-comment">// Create a new card</span>
+app.post('/api/cards', (req, res) =&gt; {
+  const {title, markdown} = req.body;
+  const stmt = db.prepare('INSERT INTO cards (title, markdown) VALUES (?, ?)');
+  stmt.run(title, markdown || '', function(err) {
+    if (err) return res.status(500).json({error: err.message});
+    res.json({id: this.lastID, title, markdown, column: 'Todo'});
+  });
+});
+
+<span class="code-comment">// Move a card to a different column</span>
+app.patch('/api/cards/:id', (req, res) =&gt; {
+  const {column} = req.body;
+  const stmt = db.prepare('UPDATE cards SET column = ? WHERE id = ?');
+  stmt.run(column, req.params.id, function(err) {
+    if (err) return res.status(500).json({error: err.message});
+    res.json({updated: this.changes});
+  });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () =&gt; console.log(`🚀 http://localhost:${PORT}`));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the server code and UI are in place, start the application with Node. The server will automatically serve the <code>public</code> folder, so opening the root URL loads the board. You can keep the terminal open to watch any runtime errors.</p>
+<div class="code-block"><pre><code>node server.js</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>Open http://localhost:3000 in your browser. You should see three column headings and a form at the top. Create a card, watch it appear in the "Todo" column, then use the move buttons to shift it to "In‑Progress" or "Done". From here you can enhance the UI with markdown rendering (e.g., the <code>marked</code> library) and add drag‑and‑drop using SortableJS, or persist each card as a <code>.md</code> file for true Doska‑style editing.</p>
+                <p><strong>public/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;title&gt;Minimal Kanban&lt;/title&gt;
+  &lt;style&gt;
+    body {font-family: Arial, sans-serif; margin: 20px;}
+    .board {display: flex; gap: 10px;}
+    .column {flex: 1; border: 1px solid #ccc; padding: 10px;}
+    .card {background:#f9f9f9; margin:5px 0; padding:5px; border:1px solid #ddd;}
+    button {margin-left:5px;}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Kanban Board&lt;/h1&gt;
+  &lt;form id="newCardForm"&gt;
+    &lt;input type="text" id="title" placeholder="Card title" required /&gt;
+    &lt;input type="text" id="markdown" placeholder="Markdown (optional)" /&gt;
+    &lt;button type="submit"&gt;Add Card&lt;/button&gt;
+  &lt;/form&gt;
+  &lt;div class="board" id="board"&gt;
+    &lt;div class="column" data-col="Todo"&gt;&lt;h2&gt;Todo&lt;/h2&gt;&lt;/div&gt;
+    &lt;div class="column" data-col="In-Progress"&gt;&lt;h2&gt;In‑Progress&lt;/h2&gt;&lt;/div&gt;
+    &lt;div class="column" data-col="Done"&gt;&lt;h2&gt;Done&lt;/h2&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+    async function loadCards(){
+      const res = await fetch('/api/cards');
+      const cards = await res.json();
+      document.querySelectorAll('.column').forEach(col=&gt;col.innerHTML = `&lt;h2&gt;${col.dataset.col}&lt;/h2&gt;`);
+      cards.forEach(c=&gt;addCardToDOM(c));
+    }
+    function addCardToDOM(card){
+      const colDiv = document.querySelector(`.column[data-col="${card.column}"]`);
+      const cardDiv = document.createElement('div');
+      cardDiv.className='card';
+      cardDiv.textContent = card.title;
+      const moveBtn = document.createElement('button');
+      moveBtn.textContent='→';
+      moveBtn.onclick = async()=&gt;{
+        const next = { 'Todo':'In-Progress','In-Progress':'Done','Done':'Todo' }[card.column];
+        await fetch(`/api/cards/${card.id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({column:next})});
+        loadCards();
+      };
+      cardDiv.appendChild(moveBtn);
+      colDiv.appendChild(cardDiv);
+    }
+    document.getElementById('newCardForm').addEventListener('submit', async e=&gt;{
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const markdown = document.getElementById('markdown').value;
+      await fetch('/api/cards',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,markdown})});
+      document.getElementById('title').value='';
+      document.getElementById('markdown').value='';
+      loadCards();
+    });
+    loadCards();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>node server.js → should log ‘🚀 http://localhost:3000’</td></tr>
+            <tr><td>UI loads in browser</td><td>Open http://localhost:3000 → page with three column headings appears</td></tr>
+            <tr><td>Create a card via API</td><td>curl -X POST -H 'Content-Type: application/json' -d '{"title":"Test","markdown":"# Test"}' http://localhost:3000/api/cards → returns JSON with id</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional markdown‑based Kanban clone. Consider adding a markdown renderer (e.g., marked), drag‑and‑drop with SortableJS, and persisting each card as a .md file for true Doska‑style editing.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

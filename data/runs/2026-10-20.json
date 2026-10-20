@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-20",
+  "status": "partial",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Local AI‑Powered Job Application CLI with ai‑job‑search (Python)",
+      "source": "github_trending",
+      "url": "https://github.com/MadsLorentzen/ai-job-search",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-20_local-ai-powered-job-application-cli.html",
+      "tagline": "A minimal clone of ai‑job-search using free‑tier tools",
+      "navbar_badge": "Python + SQLite",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "cli",
+        "ai"
+      ]
+    },
+    {
+      "title": "Build a Browser‑Only Markdown Converter with MarkItDown AI (JavaScript)",
+      "source": "hn_show",
+      "url": "https://markitdownai.org",
+      "status": "failed: unsafe scheme 'file' in guide content"
+    },
+    {
+      "title": "Build a Self‑Hosted Markdown Kanban Board with Doska (Node.js)",
+      "source": "reddit_selfhosted",
+      "url": "https://www.reddit.com/r/selfhosted/comments/1x99we1/doska_open_source_selfhosted_kanban_with_markdown/",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-20_self-hosted-markdown-kanban-board-with-doska-node-js.html",
+      "tagline": "Build a minimal clone of Doska using Node.js, Express, and SQLite",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "nodejs",
+        "docker",
+        "selfhosted"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1562083710315135058",
+    "1562083717890052107"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}
