@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-21",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Mini Feature‑Flag A/B Testing Dashboard with Flagsmith Experiments",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/HG6UZLGHTKARDU?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-21_mini-feature-flag-a-b-testing-dashboard.html",
+      "tagline": "Open‑source A/B testing built on your feature flags",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "Python",
+        "SQLite",
+        "FeatureFlags"
+      ]
+    },
+    {
+      "title": "Build a Simple Postgres‑Backed CRUD App with Supabase and TypeScript",
+      "source": "github_trending",
+      "url": "https://github.com/supabase/supabase",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-21_simple-postgres-backed-crud-app-with-supabase-typescript.html",
+      "tagline": "A 45‑minute beginner‑friendly clone of Supabase’s core CRUD features",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "TypeScript",
+        "Supabase",
+        "PostgreSQL"
+      ]
+    },
+    {
+      "title": "Build a Basic Open‑Source Job Search Engine with freehire",
+      "source": "github_trending",
+      "url": "https://github.com/strelov1/freehire",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-21_build-a-minimal-open-source-job-search-engine-clone.html",
+      "tagline": "A quick 45‑minute guide to a freehire‑inspired job board using Python & SQLite",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 55,
+      "tags": [
+        "Go",
+        "Web",
+        "JobSearch"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1562446811333927046",
+    "1562446816329343059",
+    "1562446820775428268"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

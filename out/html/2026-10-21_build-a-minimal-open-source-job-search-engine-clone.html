@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Build a Minimal Open‑Source Job Search Engine Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Build a Minimal Open‑Source Job Search Engine Clone</h1>
+        <p>A quick 45‑minute guide to a freehire‑inspired job board using Python &amp; SQLite</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In this tutorial we’ll create a tiny job‑search engine inspired by freehire, pulling static sample data and exposing a tiny API you can run locally.</p>
+        <p>You’ll get a working Flask app with a SQLite store, a single endpoint to list jobs, and a minimal HTML page – all in under an hour and without any paid services.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>You need Python 3.10+ and <code>pip</code>; older versions may miss <code>typing</code> features used here.</li>
+                <li>The real freehire scrapes thousands of sites; our clone uses a static JSON seed – it won’t stay up‑to‑date.</li>
+                <li>SQLite is fine for a demo but not for massive production workloads.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME &amp; DB</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">reads/writes</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">loads on start</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Flask API + UI</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">Static jobs.json</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>First we set up an isolated workspace so our dependencies don’t clash with other Python projects. A virtual environment gives us a clean Python interpreter, and installing Flask and SQLAlchemy provides the web framework and ORM we’ll need to store jobs.</p>
+                <p>Next we create the folder structure that will hold our code, a requirements file for reproducibility, and a tiny <code>jobs.json</code> that will act as our seed data source.</p>
+                <p>All of these steps are one‑liners, but running them in order ensures the rest of the guide works without surprises.</p>
+<div class="code-block"><pre><code>mkdir freehire_clone &amp;&amp; cd freehire_clone
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install Flask SQLAlchemy
+mkdir static templates
+cat &gt; requirements.txt &lt;&lt;'EOF'
+Flask==2.3.2
+SQLAlchemy==2.0.23
+EOF</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the job model &amp; seed data</h2>
+                <p>We now describe the shape of a job posting with SQLAlchemy. The <code>Job</code> class maps to a SQLite table and includes fields like title, company, location, and a short description. After defining the model we load a few sample jobs from a <code>jobs.json</code> file so the API has something to return right away.</p>
+                <p>The seed step runs once at startup: it reads the JSON, creates <code>Job</code> objects, and commits them to the database if the table is empty. This keeps the example stateless and easy to reset by simply deleting the <code>app.db</code> file.</p>
+                <p><strong>models.py</strong></p>
+<div class="code-block"><pre><code>import json
+from pathlib import Path
+from sqlalchemy import Column, Integer, String, create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
+
+Base = declarative_base()
+
+class Job(Base):
+    __tablename__ = "jobs"
+    id = Column(Integer, primary_key=True)
+    title = Column(String, nullable=False)
+    company = Column(String, nullable=False)
+    location = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+
+<span class="code-comment"># SQLite engine – file will be created in the project root</span>
+engine = create_engine('sqlite:///app.db', echo=False, future=True)
+Session = sessionmaker(bind=engine)
+
+def init_db():
+    Base.metadata.create_all(engine)
+    session = Session()
+    <span class="code-comment"># Seed only if table is empty</span>
+    if session.query(Job).first() is None:
+        seed_path = Path(__file__).parent / "static" / "jobs.json"
+        if seed_path.exists():
+            with open(seed_path, "r", encoding="utf-8") as f:
+                jobs_data = json.load(f)
+            for item in jobs_data:
+                job = Job(
+                    title=item.get("title", "Untitled"),
+                    company=item.get("company", "Unknown"),
+                    location=item.get("location", "Remote"),
+                    description=item.get("description", "")
+                )
+                session.add(job)
+            session.commit()
+    session.close()
+
+if __name__ == "__main__":
+    init_db()
+    print("Database initialized and seeded.")</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the API &amp; simple UI</h2>
+                <p>In this step we create a tiny Flask web server that reads a static <code>jobs.json</code> file and serves two routes. The <code>/jobs</code> endpoint returns the raw job data as JSON, which is useful for programmatic access. The root (<code>/</code>) route renders a minimal HTML page that loops over the jobs and displays each title as a list item, giving you a quick visual check of the data.</p>
+                <p>We keep everything in a single <code>app.py</code> file so the project stays lightweight. By loading the JSON once at startup we avoid repeated disk I/O, and Flask’s built‑in templating lets us embed the list without any extra front‑end libraries.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import json
+from flask import Flask, jsonify, render_template_string
+
+app = Flask(__name__)
+
+<span class="code-comment"># Load static job data once when the app starts</span>
+with open('jobs.json', 'r', encoding='utf-8') as f:
+    JOBS = json.load(f)
+
+<span class="code-comment"># Simple HTML template for the home page</span>
+HTML_TEMPLATE = """
+&lt;!doctype html&gt;
+&lt;html lang='en'&gt;
+  &lt;head&gt;&lt;meta charset='utf-8'&gt;&lt;title&gt;Job List&lt;/title&gt;&lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Available Jobs&lt;/h1&gt;
+    &lt;ul&gt;
+      {% for job in jobs %}
+        &lt;li&gt;{{ job['title'] }}&lt;/li&gt;
+      {% endfor %}
+    &lt;/ul&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+"""
+
+@app.route('/')
+def home():
+    return render_template_string(HTML_TEMPLATE, jobs=JOBS)
+
+@app.route('/jobs')
+def get_jobs():
+    return jsonify(JOBS)
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally &amp; test</h2>
+                <p>Now we start the Flask development server and verify both the human‑readable UI and the raw API work as expected. The server runs on <code>http://127.0.0.1:5000/</code> by default. Open that address in a browser to see the list of job titles, and use <code>curl</code> to fetch the JSON payload from the <code>/jobs</code> endpoint.</p>
+                <p>If anything looks off, check the console output for import errors or missing <code>jobs.json</code>. The <code>debug=True</code> flag will also reload the app automatically when you make changes, which is handy during development.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Install dependencies if you haven't already</span>
+pip install flask
+
+<span class="code-comment"># Run the Flask app</span>
+python app.py &amp;
+
+<span class="code-comment"># Give the server a moment, then test the API endpoint</span>
+curl http://127.0.0.1:5000/jobs
+
+<span class="code-comment"># Open the UI in your default browser (Linux/macOS example)</span>
+xdg-open http://127.0.0.1:5000 || open http://127.0.0.1:5000</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Extend (optional)</h2>
+                <p>To make the clone a bit more useful, we add a simple query parameter <code>?q=</code> that filters jobs by title. This keeps the API lightweight while demonstrating how you can grow the service later (e.g., adding pagination or full‑text search). The filter is case‑insensitive and returns all jobs when the parameter is omitted.</p>
+                <p>The change lives in the same <code>app.py</code> file; we just adjust the <code>/jobs</code> route to look for the <code>q</code> argument, apply the filter, and return the matching subset.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import json
+from flask import Flask, jsonify, render_template_string, request
+
+app = Flask(__name__)
+
+with open('jobs.json', 'r', encoding='utf-8') as f:
+    JOBS = json.load(f)
+
+HTML_TEMPLATE = """
+&lt;!doctype html&gt;
+&lt;html lang='en'&gt;
+  &lt;head&gt;&lt;meta charset='utf-8'&gt;&lt;title&gt;Job List&lt;/title&gt;&lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Available Jobs&lt;/h1&gt;
+    &lt;ul&gt;
+      {% for job in jobs %}
+        &lt;li&gt;{{ job['title'] }}&lt;/li&gt;
+      {% endfor %}
+    &lt;/ul&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+"""
+
+@app.route('/')
+def home():
+    return render_template_string(HTML_TEMPLATE, jobs=JOBS)
+
+@app.route('/jobs')
+def get_jobs():
+    query = request.args.get('q', default='', type=str).lower()
+    if query:
+        filtered = [job for job in JOBS if query in job.get('title', '').lower()]
+    else:
+        filtered = JOBS
+    return jsonify(filtered)
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Flask server starts without errors</td><td>python app.py → should display *Running on http://127.0.0.1:5000/*</td></tr>
+            <tr><td>/jobs returns JSON array</td><td>curl http://127.0.0.1:5000/jobs → non‑empty list</td></tr>
+            <tr><td>Browser shows job titles</td><td>Open http://127.0.0.1:5000 → visible list of sample jobs</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your minimal job‑search clone is up and running. Feel free to replace the static <code>jobs.json</code> with a real scraper or deploy the Flask app to a free cloud host for a fuller freehire experience.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple Postgres‑Backed CRUD App with Supabase &amp; TypeScript</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Simple Postgres‑Backed CRUD App with Supabase &amp; TypeScript</h1>
+        <p>A 45‑minute beginner‑friendly clone of Supabase’s core CRUD features</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In this tutorial you’ll spin up a tiny TypeScript‑based CRUD app that talks to a free‑tier Supabase Postgres database – the open‑source Firebase‑like platform that powers countless apps.</p>
+        <p>We’ll keep the stack lean: Node.js, the Supabase client library, and a single table for notes. Follow the five short phases and you’ll have a working API and a tiny UI in under an hour.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>Node.js &gt;= 18 and npm installed locally; the guide uses <code>npx supabase</code> which requires the CLI.</li>
+                <li>The free Supabase project limits you to 500 MB storage and 2 GB bandwidth – more than enough for this demo but not for production.</li>
+                <li>We omit auth and real‑time features; the clone only demonstrates basic table CRUD via the auto‑generated REST endpoint.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="190" viewBox="0 0 630 190" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="142" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">YOUR MACHINE</text>
+<rect x="426" y="60" width="198" height="70" fill="none" stroke="#b91c1c" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="525.0" y="78" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:#b91c1c">SUPABASE CLOUD</text>
+<line x1="315" y1="122" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">fetch API calls</text>
+<line x1="400" y1="74" x2="440" y2="110" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="420" y="86" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP CRUD requests</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Node/TS Server</text>
+<text x="315.0" y="87" class="node-subtext">Express + Supabase client</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Browser UI</text>
+<text x="315.0" y="159" class="node-subtext">HTML + fetch</text>
+<rect x="440" y="86" width="170" height="48" rx="10" class="node-tech" />
+<text x="525.0" y="107" class="node-text">Supabase Postgres</text>
+<text x="525.0" y="123" class="node-subtext">Auto‑generated REST API</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>We start with a clean npm workspace so every dependency is tracked. TypeScript gives us static types, Express will host our tiny API, and the Supabase client lets us talk to the remote database.</p>
+                <p>All commands are run from your terminal in an empty folder where you want the project to live.</p>
+<div class="code-block"><pre><code>mkdir supabase-crud &amp;&amp; cd supabase-crud
+npm init -y
+npm install express @supabase/supabase-js
+npm install -D typescript ts-node-dev @types/express
+npx tsc --init --rootDir src --outDir dist --esModuleInterop true --module commonjs --target es2020</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model in Supabase</h2>
+                <p>Create a free Supabase project at https://app.supabase.com and note the Project URL and anon public key – you’ll store them in a .env file later. Then add a simple <code>notes</code> table with three columns: <code>id</code> (uuid primary key), <code>title</code> (text), and <code>content</code> (text).</p>
+                <p>You can create the table via the Supabase dashboard UI or, if you have the CLI installed, run a single SQL command.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Install the Supabase CLI if you haven't already</span>
+npm install -g supabase
+<span class="code-comment"># Log in to your Supabase account</span>
+supabase login
+<span class="code-comment"># Initialize a local project linked to your remote Supabase instance</span>
+supabase init --project-ref YOUR_PROJECT_REF
+<span class="code-comment"># Create the notes table using a raw SQL file (notes.sql)</span>
+echo "create table notes (id uuid default uuid_generate_v4() primary key, title text not null, content text);" &gt; notes.sql
+supabase db remote set
+supabase db push -f notes.sql</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the CRUD API</h2>
+                <p>We spin up a tiny Express server that simply proxies requests to Supabase’s auto‑generated REST endpoint. This keeps the codebase tiny while still giving us full CRUD power over a "notes" table. The server reads the Supabase URL and anon key from environment variables, creates a Supabase client, and defines routes for create, read, update, and delete. By keeping everything in one file we make it easy to follow for beginners.</p>
+                <p><strong>src/server.ts</strong></p>
+<div class="code-block"><pre><code>import express from 'express';
+import cors from 'cors';
+import { createClient } from '@supabase/supabase-js';
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseKey);
+const TABLE = 'notes';
+
+<span class="code-comment">// Create a note</span>
+app.post('/notes', async (req, res) =&gt; {
+  const { title, content } = req.body;
+  const { data, error } = await supabase.from(TABLE).insert({ title, content });
+  if (error) return res.status(400).json({ error: error.message });
+  res.status(201).json(data);
+});
+
+<span class="code-comment">// Read all notes</span>
+app.get('/notes', async (_req, res) =&gt; {
+  const { data, error } = await supabase.from(TABLE).select('*');
+  if (error) return res.status(400).json({ error: error.message });
+  res.json(data);
+});
+
+<span class="code-comment">// Update a note</span>
+app.put('/notes/:id', async (req, res) =&gt; {
+  const { id } = req.params;
+  const { title, content } = req.body;
+  const { data, error } = await supabase.from(TABLE).update({ title, content }).eq('id', id);
+  if (error) return res.status(400).json({ error: error.message });
+  res.json(data);
+});
+
+<span class="code-comment">// Delete a note</span>
+app.delete('/notes/:id', async (req, res) =&gt; {
+  const { id } = req.params;
+  const { data, error } = await supabase.from(TABLE).delete().eq('id', id);
+  if (error) return res.status(400).json({ error: error.message });
+  res.json(data);
+});
+
+app.listen(3000, () =&gt; console.log('API listening on http://localhost:3000'));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Add a minimal UI</h2>
+                <p>A single HTML page will call our local API to display notes and let you add new ones. The UI uses the Fetch API, so no extra libraries are required, keeping the bundle size at zero. When the page loads it fetches the note list, renders each entry, and provides a tiny form for creating notes. This demonstrates the full round‑trip from UI to Supabase and back.</p>
+                <p><strong>public/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;title&gt;Supabase Notes&lt;/title&gt;
+  &lt;style&gt;body{font-family:sans-serif;padding:20px;}ul{list-style:none;padding:0;}li{margin:5px 0;}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Notes&lt;/h1&gt;
+  &lt;ul id="notes"&gt;&lt;/ul&gt;
+  &lt;h2&gt;Add a note&lt;/h2&gt;
+  &lt;form id="noteForm"&gt;
+    &lt;input type="text" id="title" placeholder="Title" required /&gt;
+    &lt;input type="text" id="content" placeholder="Content" required /&gt;
+    &lt;button type="submit"&gt;Add&lt;/button&gt;
+  &lt;/form&gt;
+  &lt;script&gt;
+    const api = 'http://localhost:3000/notes';
+    const notesEl = document.getElementById('notes');
+    const form = document.getElementById('noteForm');
+
+    async function loadNotes() {
+      const res = await fetch(api);
+      const notes = await res.json();
+      notesEl.innerHTML = notes.map(n =&gt; `&lt;li&gt;${n.title}: ${n.content}&lt;/li&gt;`).join('');
+    }
+
+    form.addEventListener('submit', async e =&gt; {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      await fetch(api, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,content})});
+      form.reset();
+      loadNotes();
+    });
+
+    loadNotes();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run &amp; verify locally</h2>
+                <p>Now we start the Express server and serve the static UI with a lightweight static file server. The API runs on port 3000 while the UI is served on port 4000, so they don’t clash. After launching both, open the UI in a browser, add a note, and watch it appear instantly—proving the full stack works end‑to‑end.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Install dependencies (run once)</span>
+npm install express cors @supabase/supabase-js
+<span class="code-comment"># Compile TypeScript (if using ts-node, you can skip this)</span>
+npx tsc src/server.ts --outDir dist
+<span class="code-comment"># Start the API server</span>
+node dist/server.js &amp;
+<span class="code-comment"># Serve the UI with a simple static server (you can use serve, http-server, or python)</span>
+npx serve public --port 4000
+<span class="code-comment"># The API is now listening on http://localhost:3000 and the UI on http://localhost:4000</span></code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Supabase env vars are set (SUPABASE_URL &amp; SUPABASE_ANON_KEY)</td><td>echo $SUPABASE_URL &amp;&amp; echo $SUPABASE_ANON_KEY</td></tr>
+            <tr><td>GET /notes returns a JSON array (empty at first)</td><td>curl http://localhost:3000/notes</td></tr>
+            <tr><td>UI at http://localhost:4000 shows the note list and can add a note</td><td>Open the URL in a browser, add a note, and see it appear</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your minimal Supabase‑backed CRUD app is now running locally. Extend it with auth, real‑time listeners, or deploy the server to Vercel for a full‑stack demo.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

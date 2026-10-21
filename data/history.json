@@ -545,6 +545,24 @@
       "title": "Build a Self‑Hosted Markdown Kanban Board with Doska (Node.js)",
       "source_url": "https://www.reddit.com/r/selfhosted/comments/1x99we1/doska_open_source_selfhosted_kanban_with_markdown/",
       "slug": "2026-10-20_self-hosted-markdown-kanban-board-with-doska-node-js.html"
+    },
+    {
+      "date": "2026-10-21T12:34:09+00:00",
+      "title": "Build a Mini Feature‑Flag A/B Testing Dashboard with Flagsmith Experiments",
+      "source_url": "https://www.producthunt.com/r/HG6UZLGHTKARDU?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-10-21_mini-feature-flag-a-b-testing-dashboard.html"
+    },
+    {
+      "date": "2026-10-21T12:41:34+00:00",
+      "title": "Build a Simple Postgres‑Backed CRUD App with Supabase and TypeScript",
+      "source_url": "https://github.com/supabase/supabase",
+      "slug": "2026-10-21_simple-postgres-backed-crud-app-with-supabase-typescript.html"
+    },
+    {
+      "date": "2026-10-21T12:45:47+00:00",
+      "title": "Build a Basic Open‑Source Job Search Engine with freehire",
+      "source_url": "https://github.com/strelov1/freehire",
+      "slug": "2026-10-21_build-a-minimal-open-source-job-search-engine-clone.html"
     }
   ]
 }
