@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-22",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Simple Postgres‑Backed CRUD App with Supabase and TypeScript"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a FastAPI‑Powered JSON Todo API in Python",
+      "source": "github_trending",
+      "url": "https://github.com/fastapi/fastapi",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-22_fastapi-powered-json-todo-api.html",
+      "tagline": "A minimal clone of a Todo service using FastAPI and SQLite",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 40,
+      "tags": [
+        "fastapi",
+        "python",
+        "sqlite",
+        "api"
+      ]
+    },
+    {
+      "title": "Build a Free‑Tier Speech‑to‑Text & Text‑to‑Speech Demo with Mistral Voxtral 3",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/5EIBXLSLSKO5BV?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-22_free-tier-speech-to-text-text-to-speech-demo.html",
+      "tagline": "Mistral’s speech models for transcription, TTS and agents",
+      "navbar_badge": "Beginner",
+      "est_minutes": 50,
+      "tags": [
+        "mistral",
+        "tts",
+        "stt",
+        "javascript"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1562807594333114383",
+    "1562807601274552412"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

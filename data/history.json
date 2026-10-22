@@ -563,6 +563,18 @@
       "title": "Build a Basic Open‑Source Job Search Engine with freehire",
       "source_url": "https://github.com/strelov1/freehire",
       "slug": "2026-10-21_build-a-minimal-open-source-job-search-engine-clone.html"
+    },
+    {
+      "date": "2026-10-22T12:36:09+00:00",
+      "title": "Build a FastAPI‑Powered JSON Todo API in Python",
+      "source_url": "https://github.com/fastapi/fastapi",
+      "slug": "2026-10-22_fastapi-powered-json-todo-api.html"
+    },
+    {
+      "date": "2026-10-22T12:39:25+00:00",
+      "title": "Build a Free‑Tier Speech‑to‑Text & Text‑to‑Speech Demo with Mistral Voxtral 3",
+      "source_url": "https://www.producthunt.com/r/5EIBXLSLSKO5BV?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-10-22_free-tier-speech-to-text-text-to-speech-demo.html"
     }
   ]
 }
