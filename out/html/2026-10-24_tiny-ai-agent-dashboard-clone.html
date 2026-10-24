@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Tiny AI Agent Dashboard Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner Friendly</div>
+    </nav>
+
+    <header>
+        <h1>Tiny AI Agent Dashboard Clone</h1>
+        <p>A minimal TypeScript dashboard inspired by Cindy</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide where we demystify cutting‑edge tools. In this build you’ll create a tiny AI‑agent dashboard that mimics the look‑and‑feel of Cindy, but runs entirely on your laptop with no paid services.</p>
+        <p>We’ll use Node 22, TypeScript, Express, and SQLite – all free on the developer tier – to spin up a local web UI that lists agents and lets you trigger a mock “run” action in under 45 minutes.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>Node.js 22.x and pnpm 10 must be installed – older versions may break the TypeScript config.</li>
+                <li>The real Cindy talks to Claude/Codex; our clone uses a stub endpoint that returns static data – no real AI is invoked.</li>
+                <li>SQLite stores data locally; remember to delete the *.db* file if you want a fresh start.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">CRUD</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">fetch agents</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Express + React Dashboard</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite Database</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">Mock AI Service</text>
+<text x="315.0" y="231" class="node-subtext">static JSON</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>We start by creating a monorepo so the backend and frontend can live side‑by‑side while sharing tooling. pnpm makes workspace management painless and keeps node_modules tiny. The script below creates the folder structure, initializes each package, and adds the core dependencies we’ll need for a TypeScript‑based Express server and a React UI.</p>
+                <p>After running these commands you’ll have a <code>backend</code> folder with Express, TypeScript and SQLite support, and a <code>frontend</code> folder ready for Vite with TypeScript. All packages are linked via the pnpm workspace, so you can run scripts from the root.</p>
+<div class="code-block"><pre><code>mkdir -p tiny-agent-dashboard/backend/src
+<span class="code-comment"># Initialize pnpm workspace</span>
+pnpm init -y
+<span class="code-comment"># Add workspace config</span>
+jq '. + {"workspaces": ["backend", "frontend"]}' package.json &gt; tmp.json &amp;&amp; mv tmp.json package.json
+<span class="code-comment"># Backend package</span>
+pnpm init -y --workspace-root=false --dir backend
+pnpm add -w typescript ts-node @types/node express @types/express better-sqlite3 @types/better-sqlite3
+pnpm add -Dw @types/express @types/better-sqlite3
+<span class="code-comment"># Frontend with Vite (React + TS)</span>
+pnpm create vite@latest frontend -- --template react-ts
+cd frontend &amp;&amp; pnpm install &amp;&amp; cd ..
+<span class="code-comment"># Root tsconfig referencing both packages</span>
+cat &gt; tsconfig.json &lt;&lt;'EOF'
+{
+  "files": [],
+  "references": [
+    { "path": "./backend" },
+    { "path": "./frontend" }
+  ]
+}
+EOF
+<span class="code-comment"># Optional initial commit</span>
+git init &amp;&amp; git add . &amp;&amp; git commit -m "Scaffold monorepo"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model</h2>
+                <p>Now we give the backend a tiny SQLite store that holds AI‑agent records. Each agent has an <code>id</code>, a <code>name</code>, a short <code>description</code>, and a boolean <code>enabled</code> flag. The TypeScript type mirrors the table schema so the rest of the code can rely on static typing.</p>
+                <p>The helper functions below open (or create) the database, ensure the table exists, and expose simple CRUD operations. They are deliberately tiny – just enough to list agents and toggle the <code>enabled</code> flag for our mock dashboard.</p>
+                <p><strong>backend/src/db.ts</strong></p>
+<div class="code-block"><pre><code>import Database from 'better-sqlite3';
+
+<span class="code-comment">// SQLite file path (local)</span>
+const db = new Database('agents.db');
+
+<span class="code-comment">// Create agents table if it doesn't exist</span>
+db.exec(`
+  CREATE TABLE IF NOT EXISTS agents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    enabled INTEGER NOT NULL DEFAULT 0
+  )
+`);
+
+<span class="code-comment">// TypeScript representation of an agent</span>
+export type Agent = {
+  id: number;
+  name: string;
+  description?: string;
+  enabled: boolean;
+};
+
+const toAgent = (row: any): Agent =&gt; ({
+  id: row.id,
+  name: row.name,
+  description: row.description,
+  enabled: Boolean(row.enabled),
+});
+
+export const listAgents = (): Agent[] =&gt; {
+  const stmt = db.prepare('SELECT * FROM agents');
+  return stmt.all().map(toAgent);
+};
+
+export const createAgent = (name: string, description = ''): Agent =&gt; {
+  const stmt = db.prepare('INSERT INTO agents (name, description) VALUES (?, ?)');
+  const info = stmt.run(name, description);
+  return { id: Number(info.lastInsertRowid), name, description, enabled: false };
+};
+
+export const toggleAgent = (id: number, enabled: boolean): void =&gt; {
+  const stmt = db.prepare('UPDATE agents SET enabled = ? WHERE id = ?');
+  stmt.run(enabled ? 1 : 0, id);
+};</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the API &amp; UI</h2>
+                <p>We add a tiny Express server that serves a hard‑coded list of agents at <code>/agents</code> and accepts a POST to <code>/run/:id</code> that simply returns a success message. The frontend is a Vite‑powered React app that fetches the list, renders each agent, and calls the run endpoint when the user clicks the button.</p>
+                <p>The API is deliberately minimal – no database, just an in‑memory array – so you can see the data flow end‑to‑end without any extra setup. The React page uses <code>useEffect</code> to load agents once, stores them in state, and maps them to simple cards with a Run button.</p>
+                <p><strong>backend/src/server.ts</strong></p>
+<div class="code-block"><pre><code>import express from 'express';
+import cors from 'cors';
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+<span class="code-comment">// Mock agents – you can extend this later</span>
+const agents = [{ id: '1', name: 'Cindy‑Mock', description: 'Demo AI agent' }];
+
+app.get('/agents', (_req, res) =&gt; {
+  res.json(agents);
+});
+
+app.post('/run/:id', (req, res) =&gt; {
+  const { id } = req.params;
+  const agent = agents.find(a =&gt; a.id === id);
+  if (!agent) return res.status(404).json({ error: 'Agent not found' });
+  <span class="code-comment">// In a real app you would trigger the LLM here</span>
+  res.json({ message: `run ${agent.name}` });
+});
+
+app.listen(3001, () =&gt; console.log('API on :3001'));</code></pre></div>
+                <p><strong>frontend/src/main.tsx</strong></p>
+<div class="code-block"><pre><code>import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+
+interface Agent { id: string; name: string; description: string; }
+
+function Dashboard() {
+  const [agents, setAgents] = useState&lt;Agent[]&gt;([]);
+
+  useEffect(() =&gt; {
+    fetch('http://localhost:3001/agents')
+      .then(r =&gt; r.json())
+      .then(setAgents)
+      .catch(console.error);
+  }, []);
+
+  const runAgent = async (id: string) =&gt; {
+    const res = await fetch(`http://localhost:3001/run/${id}`, { method: 'POST' });
+    const data = await res.json();
+    alert(data.message);
+  };
+
+  return (
+    &lt;div className="p-4"&gt;
+      &lt;h1 className="text-2xl mb-4"&gt;AI Agent Dashboard&lt;/h1&gt;
+      {agents.map(a =&gt; (
+        &lt;div key={a.id} className="border p-2 mb-2 rounded"&gt;
+          &lt;h2 className="font-bold"&gt;{a.name}&lt;/h2&gt;
+          &lt;p&gt;{a.description}&lt;/p&gt;
+          &lt;button
+            className="mt-2 px-3 py-1 bg-blue-500 text-white rounded"
+            onClick={() =&gt; runAgent(a.id)}
+          &gt;Run&lt;/button&gt;
+        &lt;/div&gt;
+      ))}
+    &lt;/div&gt;
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(&lt;Dashboard /&gt;);</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>First start the backend so the API is listening, then fire up the Vite dev server for the React UI. The two processes run independently; Vite proxies are not needed because we call the API directly on localhost:3001.</p>
+<div class="code-block"><pre><code><span class="code-comment"># In one terminal, start the backend</span>
+cd backend &amp;&amp; npm install &amp;&amp; npx ts-node src/server.ts &amp;
+<span class="code-comment"># In another terminal, start the frontend</span>
+cd frontend &amp;&amp; npm install &amp;&amp; npm run dev</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; extend</h2>
+                <p>Open http://localhost:5173 in your browser – you should see a card for "Cindy‑Mock" with a Run button. Clicking the button pops an alert confirming the POST succeeded. To add more agents, simply POST a JSON object to <code>/agents</code> (or edit the in‑memory array) and refresh the page.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Example: add a new agent via curl (requires the server to accept POST – here we just demonstrate the call)</span>
+curl -X POST http://localhost:3001/agents \
+  -H 'Content-Type: application/json' \
+  -d '{"id":"2","name":"New‑Agent","description":"Another demo"}'</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Backend server is listening on port 3001</td><td>Look for console output "API on :3001" after running Phase 4</td></tr>
+            <tr><td>Frontend UI loads at http://localhost:5173</td><td>Browser shows a list with "Cindy‑Mock"</td></tr>
+            <tr><td>Clicking Run shows an alert "run"</td><td>Confirms the POST /run/:id endpoint responded</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your tiny AI‑agent dashboard is up and running. Feel free to swap the stub service for a real LLM endpoint or add persistence features – the foundation is yours.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

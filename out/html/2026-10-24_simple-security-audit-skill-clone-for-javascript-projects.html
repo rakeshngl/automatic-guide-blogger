@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple Security‑Audit Skill Clone for JavaScript Projects</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Simple Security‑Audit Skill Clone for JavaScript Projects</h1>
+        <p>A beginner‑friendly, 45‑minute clone of Cloudflare’s security‑audit skill using Node.js and SQLite</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In this tutorial you’ll create a tiny security‑audit skill that mimics the core flow of Cloudflare’s original repo, but runs entirely on your laptop with free tools.</p>
+        <p>We’ll scaffold a Node.js project, store audit metadata in SQLite, expose a tiny REST API, and generate a JSON findings report – all in under an hour.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>Node.js &gt;=18 and npm must be installed – older versions lack native ES‑modules support.</li>
+                <li>The clone only runs <code>npm audit</code> on the local <code>package.json</code>; it does not perform network‑wide reconnaissance or multi‑agent orchestration.</li>
+                <li>SQLite is used for simplicity; the real skill stores ledger files on disk and validates them with custom scripts.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP request</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">writes/reads findings</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Node.js Express Server</text>
+<text x="315.0" y="87" class="node-subtext">API + audit runner</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite DB</text>
+<text x="315.0" y="159" class="node-subtext">Findings ledger</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">CLI Caller</text>
+<text x="315.0" y="231" class="node-subtext">curl requests</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh npm project and install the minimal dependencies. This gives us a clean workspace and pulls in Express for the HTTP layer and better‑sqlite3 for a fast, native SQLite binding.</p>
+                <p>We’ll also add a tiny start script so you can launch the server with a single command, keeping the workflow simple for beginners.</p>
+<div class="code-block"><pre><code>mkdir security-audit-clone &amp;&amp; cd $_
+npm init -y
+npm install express@4 better-sqlite3@8
+<span class="code-comment"># add a start script to package.json (you can edit manually or run the next line)</span>
+node -e "let p=require('./package.json');p.scripts.start='node index.js';require('fs').writeFileSync('package.json',JSON.stringify(p, null, 2));"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data model – SQLite ledger</h2>
+                <p>Set up a tiny SQLite file with a <code>findings</code> table to store audit results. Using better‑sqlite3 lets us interact with the DB synchronously, which is perfect for a small prototype.</p>
+                <p>The module creates the database file on first run and guarantees the table exists, so later code can simply insert rows without extra checks.</p>
+                <p><strong>db.js</strong></p>
+<div class="code-block"><pre><code>import Database from 'better-sqlite3';
+
+<span class="code-comment">// Open (or create) a local SQLite file named audit.db in the project root</span>
+const db = new Database('audit.db');
+
+<span class="code-comment">// Ensure the findings table exists – id, package, severity, description, timestamp</span>
+const init = `CREATE TABLE IF NOT EXISTS findings (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  package TEXT NOT NULL,
+  severity TEXT NOT NULL,
+  description TEXT,
+  recorded_at TEXT DEFAULT (datetime('now'))
+);`;
+
+db.exec(init);
+
+export function addFinding(pkg, severity, description) {
+  const stmt = db.prepare('INSERT INTO findings (package, severity, description) VALUES (?, ?, ?)');
+  stmt.run(pkg, severity, description);
+}
+
+export function getFindings() {
+  return db.prepare('SELECT * FROM findings ORDER BY recorded_at DESC').all();
+}
+
+export default db;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core feature – run npm audit &amp; store results</h2>
+                <p>We add an <code>/audit</code> endpoint that the client can call to start a security scan. The handler runs <code>npm audit --json</code> as a child process, picks out the vulnerable dependencies, and writes each finding into the SQLite <code>findings</code> table we created earlier. Storing the data lets us query it later and mimics the original Cloudflare skill’s ledger behavior.</p>
+                <p>The code uses Node's <code>child_process.exec</code> to capture the audit output, parses the JSON, and then iterates over the <code>vulnerabilities</code> object. For each vulnerable package we insert a row with the package name, severity, and a short description. This keeps the server lightweight and fully asynchronous.</p>
+                <p><strong>server.js</strong></p>
+<div class="code-block"><pre><code>import express from 'express';
+import { exec } from 'child_process';
+import db from './db.js';
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/audit', (req, res) =&gt; {
+  exec('npm audit --json', (err, stdout) =&gt; {
+    if (err) return res.status(500).json({error:'audit failed'});
+    const audit = JSON.parse(stdout);
+    const vulns = audit.vulnerabilities || {};
+    const stmt = db.prepare('INSERT INTO findings (package, severity, title) VALUES (?,?,?)');
+    db.transaction(() =&gt; {
+      for (const pkg in vulns) {
+        const { severity, title } = vulns[pkg];
+        stmt.run(pkg, severity, title);
+      }
+    })();
+    res.json({status:'audit completed', inserted:Object.keys(vulns).length});
+  });
+});
+
+app.listen(PORT, () =&gt; console.log(`Server listening on ${PORT}`));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally and verify</h2>
+                <p>Now we start the server, hit the new endpoint, and make sure the findings landed in SQLite. The commands below launch the app in the background, call the API with <code>curl</code>, and then query the <code>findings</code> table using the <code>sqlite3</code> CLI. If everything is wired correctly you’ll see a count greater than zero, confirming that the audit data was persisted.</p>
+                <p>You can also inspect a few rows directly to see the stored package name, severity, and description – this mirrors the original skill’s ledger view.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Start the server in the background</span>
+node server.js &amp;
+SERVER_PID=$!
+<span class="code-comment"># Give it a moment to bind</span>
+sleep 2
+<span class="code-comment"># Trigger the audit endpoint</span>
+curl -s http://localhost:3000/audit
+<span class="code-comment"># Query SQLite for stored findings</span>
+sqlite3 audit.db "SELECT COUNT(*) FROM findings;"
+<span class="code-comment"># Optional: view first three rows</span>
+sqlite3 audit.db "SELECT package, severity, title FROM findings LIMIT 3;"
+<span class="code-comment"># Clean up</span>
+kill $SERVER_PID</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Extend – generate JSON report</h2>
+                <p>To finish the clone we expose a <code>/report</code> endpoint that reads every row from the <code>findings</code> table and writes a <code>findings.json</code> file matching the format of the original Cloudflare skill. The endpoint then returns the same JSON payload so callers can immediately consume the report without reading the file.</p>
+                <p>The implementation re‑uses the existing <code>db</code> connection, builds an array of objects, writes it with <code>fs.promises.writeFile</code>, and finally sends the data back to the client.</p>
+                <p><strong>server.js</strong></p>
+<div class="code-block"><pre><code>import fs from 'fs/promises';
+<span class="code-comment">// ... previous imports and /audit route stay unchanged</span>
+
+app.get('/report', async (req, res) =&gt; {
+  try {
+    const rows = db.prepare('SELECT package, severity, title FROM findings').all();
+    const report = { findings: rows.map(r =&gt; ({package:r.package, severity:r.severity, title:r.title})) };
+    await fs.writeFile('findings.json', JSON.stringify(report, null, 2));
+    res.json(report);
+  } catch (e) {
+    res.status(500).json({error:'report generation failed'});
+  }
+});
+
+app.listen(PORT, () =&gt; console.log(`Server listening on ${PORT}`));</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Project scaffolds without errors</td><td>npm install &amp;&amp; node -e "import './db.js'"</td></tr>
+            <tr><td><code>/audit</code> endpoint returns a JSON success message</td><td>curl -s http://localhost:3000/audit | grep status</td></tr>
+            <tr><td>SQLite ledger contains at least one row after audit</td><td>sqlite3 audit.db "SELECT COUNT(*) FROM findings;"</td></tr>
+            <tr><td><code>/report</code> endpoint returns a JSON array of findings</td><td>curl -s http://localhost:3000/report | jq '.findings|length'</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your minimal security‑audit skill is now live. Feel free to add more phases – e.g., write a markdown summary, version the ledger, or plug in a CI step. Happy hunting!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

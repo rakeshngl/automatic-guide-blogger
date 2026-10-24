@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-24",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Gemini CLI AI Agent with TypeScript",
+      "source": "github_trending",
+      "url": "https://github.com/google-gemini/gemini-cli",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-24_build-a-minimal-gemini-cli-clone-with-typescript.html",
+      "tagline": "A beginner‑friendly, free‑tier AI‑agent in your terminal",
+      "navbar_badge": "🚀",
+      "est_minutes": 45,
+      "tags": [
+        "TypeScript",
+        "CLI",
+        "AI"
+      ]
+    },
+    {
+      "title": "Build a Tiny AI Agent Dashboard with Cindy (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/makecindy/cindy",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-24_tiny-ai-agent-dashboard-clone.html",
+      "tagline": "A minimal TypeScript dashboard inspired by Cindy",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 50,
+      "tags": [
+        "TypeScript",
+        "Web",
+        "AI"
+      ]
+    },
+    {
+      "title": "Build a Simple Security‑Audit Skill for JavaScript Projects",
+      "source": "github_trending",
+      "url": "https://github.com/cloudflare/security-audit-skill",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-24_simple-security-audit-skill-clone-for-javascript-projects.html",
+      "tagline": "A beginner‑friendly, 45‑minute clone of Cloudflare’s security‑audit skill using Node.js and SQLite",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 55,
+      "tags": [
+        "JavaScript",
+        "Security",
+        "CLI"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1563533423447122051",
+    "1563533437179011073",
+    "1563533444565172254"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}
