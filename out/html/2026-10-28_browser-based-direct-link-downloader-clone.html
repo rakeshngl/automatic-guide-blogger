@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Browser‑Based Direct‑Link Downloader Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Browser‑Based Direct‑Link Downloader Clone</h1>
+        <p>A minimal LinkSwift‑inspired downloader built with Node.js and SQLite</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In the next 45 minutes you’ll create a tiny browser‑based direct‑link downloader that mimics the core of LinkSwift, using only free, open‑source tools.</p>
+        <p>We’ll scaffold a Node/Express app, store generated links in a local SQLite file, expose a tiny API, and serve a one‑page UI that lets you paste a URL and get a direct download link.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Node ≥ 18 and npm installed – older versions may lack native fetch support.</li>
+                <li>The real LinkSwift handles many host‑specific tricks; our clone only rewrites the URL and stores it, so it works for generic HTTP links.</li>
+                <li>SQLite file is created in the project folder; don’t delete it while the server is running.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP requests</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">CRUD</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Browser UI</text>
+<text x="315.0" y="87" class="node-subtext">HTML/JS</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Node.js Express Server</text>
+<text x="315.0" y="159" class="node-subtext">API + UI</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">SQLite DB</text>
+<text x="315.0" y="231" class="node-subtext">links.db</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh folder for the clone, initialize a new npm project, and pull in the two dependencies we need – Express for the web server and better‑sqlite3 for a simple, synchronous SQLite wrapper. Doing it all in one line keeps the setup tidy and repeatable.</p>
+                <p>After this step you’ll have a <code>package.json</code> and a <code>node_modules</code> directory ready for the next phases.</p>
+<div class="code-block"><pre><code>mkdir linkswift-clone &amp;&amp; cd linkswift-clone &amp;&amp; npm init -y &amp;&amp; npm install express better-sqlite3</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data model – SQLite helper</h2>
+                <p>We create a tiny module (<code>db.js</code>) that opens (or creates) a <code>links.db</code> file in the project root. It ensures a <code>links</code> table exists and exports a <code>saveLink(original, direct)</code> function that inserts a row and returns its numeric id – the primary key we’ll later use to retrieve the link.</p>
+                <p>Using better‑sqlite3 means the API is synchronous, which keeps the code easy to read for beginners while still being performant for a small clone.</p>
+                <p><strong>db.js</strong></p>
+<div class="code-block"><pre><code>const Database = require('better-sqlite3');
+const db = new Database('links.db');
+<span class="code-comment">// Ensure table exists</span>
+db.exec(`CREATE TABLE IF NOT EXISTS links (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  original TEXT NOT NULL,
+  direct TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);`);
+/**
+ * Store a pair of URLs and get the row id.
+ * @param {string} original - The URL the user pasted.
+ * @param {string} direct   - The rewritten direct‑download URL.
+ * @returns {number} The newly inserted row id.
+ */
+function saveLink(original, direct) {
+  const stmt = db.prepare('INSERT INTO links (original, direct) VALUES (?, ?)');
+  const info = stmt.run(original, direct);
+  return info.lastInsertRowid;
+}
+module.exports = { saveLink };</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: API &amp; UI – Express server</h2>
+                <p>In this step we spin up an Express server that will act as the backend for our downloader clone. It will expose a <code>/api/convert</code> endpoint that accepts a JSON body with a <code>url</code> field, pretends to convert the link by appending <code>?download=1</code>, stores the mapping in SQLite, and returns a short <code>/d/:id</code> link. We also add a redirect route <code>/d/:id</code> that looks up the stored direct link and sends the client there. Finally the server will serve static assets from the <code>public</code> folder so our UI can be loaded directly from the same origin.</p>
+                <p><strong>server.js</strong></p>
+<div class="code-block"><pre><code>const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+
+const app = express();
+const db = new sqlite3.Database('links.db');
+
+<span class="code-comment">// Initialise table if not present</span>
+db.run('CREATE TABLE IF NOT EXISTS links(id INTEGER PRIMARY KEY AUTOINCREMENT, original TEXT, direct TEXT)');
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+<span class="code-comment">// API: receive a URL, fake‑convert it, store and return short link</span>
+app.post('/api/convert', (req, res) =&gt; {
+  const {url} = req.body;
+  if (!url) return res.status(400).json({error: 'url required'});
+  const direct = url.includes('?') ? `${url}&amp;download=1` : `${url}?download=1`;
+  db.run('INSERT INTO links(original, direct) VALUES(?,?)', [url, direct], function(err){
+    if (err) return res.status(500).json({error: err.message});
+    const short = `/d/${this.lastID}`;
+    res.json({short, direct});
+  });
+});
+
+<span class="code-comment">// Redirect short link to stored direct URL</span>
+app.get('/d/:id', (req, res) =&gt; {
+  const id = req.params.id;
+  db.get('SELECT direct FROM links WHERE id = ?', [id], (err, row) =&gt; {
+    if (err || !row) return res.status(404).send('Not found');
+    res.redirect(row.direct);
+  });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () =&gt; console.log(`🚀 http://localhost:${PORT}`));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Minimal UI</h2>
+                <p>Now we create a tiny HTML page that lets users paste any URL, hit a button, and see a short link generated by our API. The page lives in <code>public/index.html</code> and uses the Fetch API to POST the URL to <code>/api/convert</code>. When the response arrives we display the short link as a clickable anchor so the user can test the redirect immediately.</p>
+                <p><strong>public/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;title&gt;LinkSwift Clone&lt;/title&gt;
+  &lt;style&gt;
+    body{font-family:sans-serif;margin:2rem}
+    input,button{padding:.5rem;font-size:1rem}
+    #result{margin-top:1rem}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Direct‑Link Downloader&lt;/h1&gt;
+  &lt;input id="urlInput" type="text" placeholder="Enter a URL" size="50" /&gt;
+  &lt;button id="convertBtn"&gt;Get Short Link&lt;/button&gt;
+  &lt;div id="result"&gt;&lt;/div&gt;
+
+  &lt;script&gt;
+    document.getElementById('convertBtn').addEventListener('click', async () =&gt; {
+      const url = document.getElementById('urlInput').value.trim();
+      if (!url) return alert('Please enter a URL');
+      const resp = await fetch('/api/convert', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({url})
+      });
+      const data = await resp.json();
+      const link = document.createElement('a');
+      link.href = data.short;
+      link.textContent = `${window.location.origin}${data.short}`;
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '';
+      resultDiv.appendChild(link);
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run &amp; verify</h2>
+                <p>With the server and UI in place, start the application and open the browser to see everything work together. Run <code>node server.js</code> to launch the Express app; you should see a console line with the local URL. Then navigate to that address, paste any HTTP URL into the input, click the button, and verify that the generated short link appears and redirects to the modified URL with <code>?download=1</code>. This confirms the end‑to‑end flow of our minimal LinkSwift clone.</p>
+<div class="code-block"><pre><code>node server.js</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>node server.js → should log ‘🚀 http://localhost:3000’"</td></tr>
+            <tr><td>UI loads in browser</td><td>Open http://localhost:3000 and see the input form"</td></tr>
+            <tr><td>Short link redirects correctly</td><td>Enter https://example.com, click button, then click generated link; you should be taken to https://example.com?download=1"</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a working clone. Extend it by adding real host‑specific parsers, shorten URLs with a hashids library, or deploy to a free cloud host like Railway.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

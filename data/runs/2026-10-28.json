@@ -3,47 +3,45 @@
   "status": "ok",
   "degraded_selection": true,
   "duplicates_dropped": [
-    "Build a Simple AI Agent CLI with TypeScript & Cindy"
+    "Build a Tiny AI Agent Wrapper with Cindy (TypeScript)"
   ],
-  "failed_sources": [
-    "reddit_selfhosted"
-  ],
+  "failed_sources": [],
   "dry_run": false,
   "guides": [
     {
-      "title": "Build a Minimal AI Desktop Workspace with TypeScript & OpenBot",
-      "source": "github_trending",
-      "url": "https://github.com/nightly-labs/openbot",
+      "title": "Build a Simple Async Task Inbox for AI Agents with ReplySlip",
+      "source": "hn_show",
+      "url": "https://github.com/klahrich/replyslip",
       "status": "ok",
-      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-28_minimal-ai-desktop-workspace-clone.html",
-      "tagline": "A quick‑start TypeScript/Node sandbox inspired by OpenBot",
-      "navbar_badge": "UVF IT",
-      "est_minutes": 45,
-      "tags": [
-        "TypeScript",
-        "Electron",
-        "AI"
-      ]
-    },
-    {
-      "title": "Build a Basic Social Media Scheduler Clone with TypeScript & Postiz‑App",
-      "source": "github_trending",
-      "url": "https://github.com/gitroomhq/postiz-app",
-      "status": "ok",
-      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-28_basic-social-media-scheduler-clone-with-typescript-sqlite.html",
-      "tagline": "A minimal Postiz‑inspired scheduler you can run locally in 45 minutes",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-28_simple-async-task-inbox-clone.html",
+      "tagline": "Build a minimal async task inbox for AI agents using Python and SQLite",
       "navbar_badge": "Beginner Friendly",
       "est_minutes": 45,
       "tags": [
-        "TypeScript",
+        "Python",
+        "FastAPI",
+        "SQLite"
+      ]
+    },
+    {
+      "title": "Build a Browser‑Based Direct‑Link Downloader with LinkSwift",
+      "source": "github_trending",
+      "url": "https://github.com/hmjz100/LinkSwift",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-28_browser-based-direct-link-downloader-clone.html",
+      "tagline": "A minimal LinkSwift‑inspired downloader built with Node.js and SQLite",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 40,
+      "tags": [
+        "JavaScript",
         "Web",
-        "AI"
+        "Node.js"
       ]
     }
   ],
   "delivery_ids": [
-    "1564818203128107128",
-    "1564818209964564622"
+    "1564982912128917678",
+    "1564982920320524308"
   ],
   "delivery_errors": [],
   "catalog_patched": 2

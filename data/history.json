@@ -605,6 +605,18 @@
       "title": "Build a Basic Social Media Scheduler Clone with TypeScript & Postiz‑App",
       "source_url": "https://github.com/gitroomhq/postiz-app",
       "slug": "2026-10-28_basic-social-media-scheduler-clone-with-typescript-sqlite.html"
+    },
+    {
+      "date": "2026-10-28T12:36:56+00:00",
+      "title": "Build a Simple Async Task Inbox for AI Agents with ReplySlip",
+      "source_url": "https://github.com/klahrich/replyslip",
+      "slug": "2026-10-28_simple-async-task-inbox-clone.html"
+    },
+    {
+      "date": "2026-10-28T12:43:21+00:00",
+      "title": "Build a Browser‑Based Direct‑Link Downloader with LinkSwift",
+      "source_url": "https://github.com/hmjz100/LinkSwift",
+      "slug": "2026-10-28_browser-based-direct-link-downloader-clone.html"
     }
   ]
 }
