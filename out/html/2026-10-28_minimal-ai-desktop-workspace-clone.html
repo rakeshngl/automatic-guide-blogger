@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Minimal AI Desktop Workspace Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Minimal AI Desktop Workspace Clone</h1>
+        <p>A quick‑start TypeScript/Node sandbox inspired by OpenBot</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide. In the next 45 minutes you’ll spin up a tiny desktop‑style AI workspace that mimics OpenBot’s core idea: a local server, a SQLite store, and a tiny web UI for chatting with a single AI agent.</p>
+        <p>We’ll use plain TypeScript, Express, and the free OpenAI‑compatible endpoint at https://api.openai.com (you can swap in Ollama later). No paid services, no native binaries – just a browser‑based UI that runs locally.</p>
+
+        <div class="fix-box">
+            <h4>Before you begin…</h4>
+            <ul>
+                <li>Node ≥18 and npm installed – older versions lack ES‑module support.</li>
+                <li>The clone only supports a single agent and a single OpenAI‑compatible model; the real OpenBot handles many providers and complex queues.</li>
+                <li>Running the server opens a local port; firewalls or corporate proxies may block it.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 630 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<rect x="426" y="96" width="198" height="70" fill="none" stroke="#b91c1c" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="525.0" y="114" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:#b91c1c">EXTERNAL SERVICES</text>
+<line x1="315" y1="122" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL</text>
+<line x1="400" y1="74" x2="440" y2="146" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="420" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">REST</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Node/Express Server</text>
+<text x="315.0" y="87" class="node-subtext">TypeScript + SQLite</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Browser UI</text>
+<text x="315.0" y="159" class="node-subtext">HTML/JS</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">SQLite DB</text>
+<rect x="440" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="525.0" y="143" class="node-text">OpenAI‑compatible API</text>
+<text x="525.0" y="159" class="node-subtext">cloud</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Initialize a new npm workspace with TypeScript and install Express and better‑sqlite3. This gives us a clean TypeScript project that can compile to modern ES modules and provides the web server and lightweight SQLite engine we need.</p>
+<div class="code-block"><pre><code>mkdir minimal-ai-clone &amp;&amp; cd minimal-ai-clone
+npm init -y
+npm i express better-sqlite3
+npm i -D typescript @types/express ts-node-dev
+npx tsc --init --rootDir src --outDir dist --esModuleInterop true --module esnext --moduleResolution node --target es2022
+mkdir src &amp;&amp; touch src/index.ts</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data model – SQLite store for messages</h2>
+                <p>Create a tiny DB with a single table to persist chat history between reloads. The helper functions hide raw SQL so the rest of the app can just call <code>addMessage</code> and <code>getMessages</code>.</p>
+                <p><strong>src/db.ts</strong></p>
+<div class="code-block"><pre><code>import Database from 'better-sqlite3';
+
+<span class="code-comment">// Open (or create) a local SQLite file named chat.db</span>
+const db = new Database('chat.db');
+
+<span class="code-comment">// Ensure the messages table exists – id, role (user/assistant), content, timestamp</span>
+db.exec(`
+  CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role TEXT NOT NULL,
+    content TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+`);
+
+/** Return all stored messages ordered by creation time */
+export function getMessages(): {role: string; content: string}[] {
+  const stmt = db.prepare('SELECT role, content FROM messages ORDER BY created_at ASC');
+  return stmt.all();
+}
+
+/** Insert a new message into the DB */
+export function addMessage(role: 'user' | 'assistant', content: string): void {
+  const stmt = db.prepare('INSERT INTO messages (role, content) VALUES (?, ?)');
+  stmt.run(role, content);
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: API &amp; UI – simple chat endpoint and static page</h2>
+                <p>In this step we spin up an Express server that serves a tiny static HTML page and a JSON endpoint for chatting. The <code>/chat</code> route receives a user message, forwards it to the OpenAI Completion API, stores the reply in an in‑memory array, and returns the updated conversation. Keeping the data in memory is enough for a minimal clone and lets us see persistence across page reloads while the server runs.</p>
+                <p><strong>src/server.ts</strong></p>
+<div class="code-block"><pre><code>import express from 'express';
+import cors from 'cors';
+import fetch from 'node-fetch';
+import path from 'path';
+
+const app = express();
+const PORT = 3000;
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '../../public')));
+
+<span class="code-comment">// simple in‑memory store for the conversation</span>
+let conversation: {role: string; content: string}[] = [];
+
+app.post('/chat', async (req, res) =&gt; {
+  const userMsg = req.body.message;
+  if (!userMsg) return res.status(400).json({error: 'Message required'});
+
+  <span class="code-comment">// add user message</span>
+  conversation.push({role: 'user', content: userMsg});
+
+  <span class="code-comment">// call OpenAI API (replace with your key)</span>
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({model: 'gpt-3.5-turbo', messages: conversation}),
+  });
+  const data = await response.json();
+  const aiReply = data.choices[0].message.content.trim();
+
+  conversation.push({role: 'assistant', content: aiReply});
+  res.json({conversation});
+});
+
+app.listen(PORT, () =&gt; console.log(`🚀 http://localhost:${PORT}`));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the server code is ready, we launch it with <code>ts-node</code>. The script compiles the TypeScript on the fly, so no separate build step is required. After the server prints its address, open the same URL in a browser to see the chat UI.</p>
+<div class="code-block"><pre><code><span class="code-comment"># make sure dependencies are installed first</span>
+npm install express cors node-fetch @types/express @types/node-fetch ts-node typescript
+
+<span class="code-comment"># run the server (ensure OPENAI_API_KEY is set in your environment)</span>
+OPENAI_API_KEY=YOUR_KEY npx ts-node src/server.ts</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; extend</h2>
+                <p>With the UI loaded, type a message and hit Send – the server will call OpenAI, store both sides of the exchange, and render the full conversation. Refresh the page; because the conversation lives in the server’s memory, it will still be displayed. To experiment further, duplicate the <code>conversation</code> array logic into a second variable (e.g., <code>agent2</code>) and expose another <code>/chat2</code> endpoint, giving you a simple multi‑agent prototype.</p>
+                <p><strong>public/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;title&gt;Mini AI Chat&lt;/title&gt;
+  &lt;style&gt;
+    body {font-family:Arial, sans-serif; margin:20px;}
+    #log {border:1px solid #ccc; padding:10px; height:300px; overflow:auto;}
+    #msg {width:80%;}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;🗨️ Minimal AI Desktop Workspace&lt;/h2&gt;
+  &lt;div id="log"&gt;&lt;/div&gt;
+  &lt;input id="msg" placeholder="Type a message..." /&gt;
+  &lt;button onclick="send()"&gt;Send&lt;/button&gt;
+
+  &lt;script&gt;
+    async function loadLog() {
+      const res = await fetch('/chat', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message:''})});
+      const data = await res.json();
+      render(data.conversation || []);
+    }
+    function render(conv) {
+      const log = document.getElementById('log');
+      log.innerHTML = conv.map(m=&gt;`&lt;b&gt;${m.role}:&lt;/b&gt; ${m.content}`).join('&lt;br/&gt;');
+    }
+    async function send() {
+      const input = document.getElementById('msg');
+      const msg = input.value.trim();
+      if (!msg) return;
+      const res = await fetch('/chat', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message:msg})});
+      const data = await res.json();
+      render(data.conversation);
+      input.value='';
+    }
+    loadLog();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>OPENAI_API_KEY=YOUR_KEY npx ts-node src/server.ts → should print ‘🚀 http://localhost:3000’</td></tr>
+            <tr><td>Chat UI loads in browser</td><td>Open http://localhost:3000 in a web browser – the page with input box appears</td></tr>
+            <tr><td>Message persists after refresh</td><td>Send a message, refresh the page, and the same conversation remains displayed</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional local AI workspace. Experiment by swapping the OpenAI endpoint for a local Ollama server, add multiple agents with separate tables, or integrate file‑upload routes to approach the full OpenBot feature set.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

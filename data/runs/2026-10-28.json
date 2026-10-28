@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-28",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Simple AI Agent CLI with TypeScript & Cindy"
+  ],
+  "failed_sources": [
+    "reddit_selfhosted"
+  ],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Minimal AI Desktop Workspace with TypeScript & OpenBot",
+      "source": "github_trending",
+      "url": "https://github.com/nightly-labs/openbot",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-28_minimal-ai-desktop-workspace-clone.html",
+      "tagline": "A quick‑start TypeScript/Node sandbox inspired by OpenBot",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "TypeScript",
+        "Electron",
+        "AI"
+      ]
+    },
+    {
+      "title": "Build a Basic Social Media Scheduler Clone with TypeScript & Postiz‑App",
+      "source": "github_trending",
+      "url": "https://github.com/gitroomhq/postiz-app",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-28_basic-social-media-scheduler-clone-with-typescript-sqlite.html",
+      "tagline": "A minimal Postiz‑inspired scheduler you can run locally in 45 minutes",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "TypeScript",
+        "Web",
+        "AI"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1564818203128107128",
+    "1564818209964564622"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

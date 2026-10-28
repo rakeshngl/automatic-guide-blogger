@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Basic Social Media Scheduler Clone with TypeScript &amp; SQLite</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner Friendly</div>
+    </nav>
+
+    <header>
+        <h1>Basic Social Media Scheduler Clone with TypeScript &amp; SQLite</h1>
+        <p>A minimal Postiz‑inspired scheduler you can run locally in 45 minutes</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this tutorial we’ll build a tiny clone of Postiz – a social media scheduler – using TypeScript, Express, and SQLite. The real Postiz talks to dozens of platforms; our version stores scheduled posts locally and pretends to publish them on demand.</p>
+        <p>You’ll get a working REST API and a tiny HTML UI in under an hour, all on free‑tier tools. No paid APIs, no cloud accounts – just Node.js and a local database.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>Node.js &gt;=18 and npm are required; older versions may break ES‑module imports.</li>
+                <li>We replace real social‑network APIs with a mock “publish” endpoint – no actual posting will occur.</li>
+                <li>SQLite is used for simplicity; it lacks the scaling features of Postiz’s cloud DB.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP API</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL queries</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Express + TS Server</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">Static HTML UI</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold Project</h2>
+                <p>We start by creating a fresh npm workspace that uses TypeScript and Express. This gives us a clean folder structure, type‑checking, and a lightweight web server to expose our API.</p>
+                <p>The commands below initialize the repo, add the necessary runtime and dev dependencies, and generate a minimal tsconfig.json so TypeScript knows how to compile our code.</p>
+<div class="code-block"><pre><code>mkdir postiz-clone &amp;&amp; cd postiz-clone
+npm init -y
+npm install express
+npm install -D typescript @types/node @types/express ts-node-dev
+npx tsc --init --rootDir src --outDir dist --esModuleInterop true --module commonjs --target es2022
+mkdir src &amp;&amp; touch src/index.ts</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data Model &amp; SQLite Setup</h2>
+                <p>Next we add a tiny SQLite wrapper that creates a <code>posts</code> table and provides helper functions to insert and fetch scheduled posts. SQLite runs in‑process, so there’s no external service to start – perfect for a quick prototype.</p>
+                <p>The file <code>src/db.ts</code> will be imported by our Express routes later, keeping all database logic in one place and making future extensions straightforward.</p>
+                <p><strong>src/db.ts</strong></p>
+<div class="code-block"><pre><code>import Database from 'better-sqlite3';
+
+<span class="code-comment">// Open (or create) a local SQLite file</span>
+const db = new Database('scheduler.db');
+
+<span class="code-comment">// Ensure the posts table exists</span>
+const init = `
+CREATE TABLE IF NOT EXISTS posts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  content TEXT NOT NULL,
+  scheduled_at TEXT NOT NULL,
+  posted INTEGER DEFAULT 0
+);
+`;
+db.exec(init);
+
+export interface Post {
+  id?: number;
+  content: string;
+  scheduled_at: string; // ISO string
+  posted?: number;
+}
+
+export function addPost(post: Post): number {
+  const stmt = db.prepare('INSERT INTO posts (content, scheduled_at, posted) VALUES (?, ?, ?)');
+  const info = stmt.run(post.content, post.scheduled_at, post.posted ?? 0);
+  return info.lastInsertRowid as number;
+}
+
+export function getPendingPosts(): Post[] {
+  const stmt = db.prepare('SELECT * FROM posts WHERE posted = 0 ORDER BY scheduled_at ASC');
+  return stmt.all() as Post[];
+}
+
+export function markAsPosted(id: number): void {
+  const stmt = db.prepare('UPDATE posts SET posted = 1 WHERE id = ?');
+  stmt.run(id);
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: API Endpoints &amp; Mock Publish</h2>
+                <p>In this step we expose a tiny REST API that the UI can talk to. The <code>/posts</code> endpoint lets us read all scheduled items and add new ones, while <code>/publish/:id</code> pretends to push a post to a social network by just logging a message. We store the schedule in an in‑memory SQLite database so the data survives for the life of the process, keeping the clone simple yet realistic.</p>
+                <p>We use Express for routing and the <code>sqlite3</code> package for a lightweight SQL store. All routes return JSON so the front‑end can update itself without a page reload. The mock publish simply updates the <code>published</code> flag and prints a console line, which you’ll see when you run the app.</p>
+                <p><strong>src/server.ts</strong></p>
+<div class="code-block"><pre><code>import express from 'express';
+import bodyParser from 'body-parser';
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
+
+const app = express();
+app.use(bodyParser.json());
+app.use(express.static('public'));
+
+<span class="code-comment">// Initialise an in‑memory SQLite DB with a simple table</span>
+async function initDb() {
+  const db = await open({ filename: ':memory:', driver: sqlite3.Database });
+  await db.exec(`CREATE TABLE posts (id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT NOT NULL, schedule TEXT NOT NULL, published INTEGER NOT NULL DEFAULT 0);`);
+  return db;
+}
+
+(async () =&gt; {
+  const db = await initDb();
+
+  <span class="code-comment">// List all scheduled posts</span>
+  app.get('/posts', async (req, res) =&gt; {
+    const rows = await db.all('SELECT * FROM posts ORDER BY id DESC');
+    res.json(rows);
+  });
+
+  <span class="code-comment">// Create a new schedule</span>
+  app.post('/posts', async (req, res) =&gt; {
+    const { content, schedule } = req.body;
+    if (!content || !schedule) return res.status(400).json({error:'Missing fields'});
+    const result = await db.run('INSERT INTO posts (content, schedule) VALUES (?, ?)', content, schedule);
+    const newPost = await db.get('SELECT * FROM posts WHERE id = ?', result.lastID);
+    res.status(201).json(newPost);
+  });
+
+  <span class="code-comment">// Mock publish a post</span>
+  app.post('/publish/:id', async (req, res) =&gt; {
+    const { id } = req.params;
+    const post = await db.get('SELECT * FROM posts WHERE id = ?', id);
+    if (!post) return res.status(404).json({error:'Not found'});
+    await db.run('UPDATE posts SET published = 1 WHERE id = ?', id);
+    console.log(`🔔 Mock publish: "${post.content}" scheduled for ${post.schedule}`);
+    res.json({message:'Published', post: {...post, published:1}});
+  });
+
+  const PORT = 3000;
+  app.listen(PORT, () =&gt; console.log(`Server running on http://localhost:${PORT}`));
+})();</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Tiny UI to Schedule Posts</h2>
+                <p>Now we build a single HTML page that talks to the API we just created. The page contains a small form for the post content and a datetime picker, plus a list that shows all scheduled items. When you click “Schedule” the form data is POSTed to <code>/posts</code>; each item in the list gets a “Publish” button that triggers the mock publish endpoint.</p>
+                <p>All interactions use the native <code>fetch</code> API, keeping the front‑end framework‑free. After any change we refresh the list so you can see the updated state immediately, which is perfect for a quick proof‑of‑concept.</p>
+                <p><strong>public/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;title&gt;UVF IT Scheduler Clone&lt;/title&gt;
+  &lt;style&gt;
+    body{font-family:sans-serif;margin:2rem;}
+    .post{border:1px solid #ccc;padding:0.5rem;margin:0.5rem 0;}
+    button{margin-left:0.5rem;}
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Schedule a Post&lt;/h1&gt;
+  &lt;form id="scheduleForm"&gt;
+    &lt;textarea id="content" rows="3" placeholder="Post content" required&gt;&lt;/textarea&gt;&lt;br/&gt;
+    &lt;input type="datetime-local" id="schedule" required /&gt;
+    &lt;button type="submit"&gt;Schedule&lt;/button&gt;
+  &lt;/form&gt;
+  &lt;h2&gt;Scheduled Items&lt;/h2&gt;
+  &lt;div id="posts"&gt;&lt;/div&gt;
+
+  &lt;script&gt;
+    async function loadPosts(){
+      const res = await fetch('/posts');
+      const posts = await res.json();
+      const container = document.getElementById('posts');
+      container.innerHTML = '';
+      posts.forEach(p=&gt;{
+        const div = document.createElement('div');
+        div.className='post';
+        div.innerHTML = `&lt;strong&gt;${p.content}&lt;/strong&gt;&lt;br/&gt;When: ${p.schedule}&lt;br/&gt;Status: ${p.published?"✅ Published":"⏳ Pending`}
+          + `&lt;button data-id="${p.id}" ${p.published?'disabled':''}&gt;Publish&lt;/button&gt;`;
+        container.appendChild(div);
+        div.querySelector('button').addEventListener('click', async()=&gt;{
+          await fetch(`/publish/${p.id}`,{method:'POST'});
+          loadPosts();
+        });
+      });
+    }
+
+    document.getElementById('scheduleForm').addEventListener('submit', async e=&gt;{
+      e.preventDefault();
+      const content = document.getElementById('content').value;
+      const schedule = document.getElementById('schedule').value;
+      await fetch('/posts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content,schedule})});
+      e.target.reset();
+      loadPosts();
+    });
+
+    loadPosts();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run &amp; Verify Locally</h2>
+                <p>With the server and UI in place, it’s time to launch the clone. We use <code>ts-node</code> so you don’t need a separate compile step—just run the TypeScript file directly. Once the server is listening, open a browser to <code>http://localhost:3000</code> and you’ll see the scheduling form.</p>
+                <p>Create a post, hit “Schedule”, and the list should update. Then click the “Publish” button next to the entry; the server will log a mock‑publish line and the UI will mark the item as published. This confirms the full round‑trip from front‑end to back‑end works.</p>
+<div class="code-block"><pre><code>npm install express body-parser sqlite3 sqlite ts-node @types/express @types/node
+npm install -D typescript @types/body-parser
+npx ts-node src/server.ts</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>Run <code>npx ts-node src/server.ts</code> and see "Server running on http://localhost:3000" in the console.</td></tr>
+            <tr><td>UI loads in browser</td><td>Open http://localhost:3000 in Chrome; the page shows the form and an empty list.</td></tr>
+            <tr><td>Can schedule and publish a post</td><td>Enter content &amp; datetime, click Schedule, then click Publish; the list updates and console shows mock publish message.</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s Next?</h4>
+            <p>You now have a functional scheduler core. Extend it by adding user auth, persisting SQLite to a file, or integrating real social‑network APIs using OAuth tokens.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
