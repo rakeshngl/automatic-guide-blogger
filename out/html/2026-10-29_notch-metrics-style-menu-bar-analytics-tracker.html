@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Notch‑Metrics‑style Menu Bar Analytics Tracker</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner</div>
+    </nav>
+
+    <header>
+        <h1>Notch‑Metrics‑style Menu Bar Analytics Tracker</h1>
+        <p>Put your revenue and product analytics metrics in the notch</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In the next 45 minutes you’ll spin up a tiny menu‑bar app that records page‑views and revenue events, mimicking the core of Notch Metrics. We’ll use Node.js, Express, and SQLite – all free and runnable on your laptop.</p>
+        <p>The clone focuses on three things: a lightweight data model, a tiny HTTP API to receive events, and a simple HTML UI that could be embedded in a menu bar. Real Notch Metrics has dashboards, auth, and cloud storage – we’ll skip those for simplicity.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Node ≥ 18 and npm installed; older versions may lack native ES modules support.</li>
+                <li>The UI runs on localhost only – no external API calls, so you won’t see real‑time sync across devices.</li>
+                <li>SQLite stores data in a file; if you delete <code>data.db</code> you lose all recorded events.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Architecture Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">reads/writes</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP requests</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Node.js Express Server</text>
+<text x="315.0" y="87" class="node-subtext">API + UI</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite DB</text>
+<text x="315.0" y="159" class="node-subtext">data.db file</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">Browser UI</text>
+<text x="315.0" y="231" class="node-subtext">http://localhost:3000</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh directory for the clone, initialize it as an npm project, and pull in the minimal libraries we need. This gives us a clean workspace and ensures all required modules are version‑locked.</p>
+                <p>We’ll use Express for the HTTP server and SQLite3 for a zero‑config embedded database – both run locally without extra services.</p>
+<div class="code-block"><pre><code>mkdir notch-metrics-clone
+cd notch-metrics-clone
+npm init -y
+npm install express sqlite3</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model</h2>
+                <p>We need a tiny SQLite schema that can store two event types: <code>page_view</code> and <code>revenue</code>. Each row records when the event happened and a few key fields so we can later aggregate counts and totals.</p>
+                <p>The <code>db.js</code> module will create the <code>data.db</code> file if it doesn’t exist, run the schema creation statements, and expose a simple query helper for the rest of the app.</p>
+                <p><strong>db.js</strong></p>
+<div class="code-block"><pre><code>import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
+
+<span class="code-comment">// Open (or create) the SQLite database file</span>
+export const db = await open({
+  filename: './data.db',
+  driver: sqlite3.Database
+});
+
+<span class="code-comment">// Create tables if they don't exist yet</span>
+await db.exec(`
+  CREATE TABLE IF NOT EXISTS page_view (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    url TEXT NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+  CREATE TABLE IF NOT EXISTS revenue (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    amount REAL NOT NULL,
+    currency TEXT NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+`);
+
+<span class="code-comment">// Simple helper for inserting rows</span>
+export async function insert(table, data) {
+  const cols = Object.keys(data).join(',');
+  const placeholders = Object.keys(data).map(() =&gt; '?').join(',');
+  const values = Object.values(data);
+  await db.run(`INSERT INTO ${table} (${cols}) VALUES (${placeholders})`, values);
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the API &amp; UI</h2>
+                <p>In this step we create a tiny Express server that can receive analytics events and display them in a simple HTML page. The <code>/track</code> endpoint accepts a JSON payload, stores it in memory, and replies with <code>ok</code> so the client knows the event was recorded. The root route (<code>/</code>) renders a list of the most recent events so you can see data instantly in the browser. Keeping everything in one file makes it easy to extend later.</p>
+                <p><strong>index.js</strong></p>
+<div class="code-block"><pre><code>const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+<span class="code-comment">// In‑memory store for events (reset on restart)</span>
+const events = [];
+
+app.use(bodyParser.json());
+
+<span class="code-comment">// POST /track – receive an event</span>
+app.post('/track', (req, res) =&gt; {
+  const event = req.body;
+  if (!event || !event.type) {
+    return res.status(400).send('missing type');
+  }
+  events.unshift(event); // newest first
+  <span class="code-comment">// Keep only the last 20 events to stay lightweight</span>
+  if (events.length &gt; 20) events.pop();
+  res.send('ok');
+});
+
+<span class="code-comment">// GET / – simple UI showing recent events</span>
+app.get('/', (req, res) =&gt; {
+  const listItems = events.map(e =&gt; `&lt;li&gt;${e.type} – ${new Date(e.timestamp || Date.now()).toLocaleTimeString()}&lt;/li&gt;`).join('');
+  const html = `
+    &lt;!DOCTYPE html&gt;
+    &lt;html lang="en"&gt;
+    &lt;head&gt;&lt;meta charset="UTF-8"&gt;&lt;title&gt;Notch Metrics&lt;/title&gt;&lt;/head&gt;
+    &lt;body&gt;
+      &lt;h1&gt;Recent Events&lt;/h1&gt;
+      &lt;ul&gt;${listItems}&lt;/ul&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;`;
+  res.send(html);
+});
+
+app.listen(PORT, () =&gt; console.log(`🚀 http://localhost:${PORT}`));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the server code exists, we use <code>nodemon</code> to watch the file and restart automatically whenever you edit it. This speeds up development because you don’t have to manually stop and start the process after each change. The command below installs nodemon locally (if you haven’t already) and launches the app in watch mode.</p>
+                <p>Running the server will print a friendly URL to the console; open that URL in a browser to see the UI.</p>
+<div class="code-block"><pre><code>npm install nodemon --save-dev
+npx nodemon index.js</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>With the server running, send a sample event using <code>curl</code> to make sure the <code>/track</code> endpoint works. After the request, refresh the root page – you should see the new event appear in the list. From here you can add more event types, enrich the UI with a tiny chart library like Chart.js, or persist events to a file or database for longer‑term storage.</p>
+<div class="code-block"><pre><code>curl -X POST http://localhost:3000/track \
+  -H "Content-Type: application/json" \
+  -d '{"type":"page_view","timestamp":'$(date +%s%3N)'}'</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>Run <code>npx nodemon index.js</code> and see the console log <code>🚀 http://localhost:3000</code></td></tr>
+            <tr><td>POST request returns <code>ok</code></td><td>Execute the curl command above; response should be exactly <code>ok</code></td></tr>
+            <tr><td>UI shows the recorded event</td><td>Open a browser to http://localhost:3000 and see a list item with type <code>page_view</code></td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional Notch‑Metrics core. Experiment by adding a tiny chart (e.g., Chart.js) or persisting user IDs. When you’re ready, wrap the UI in an Electron menubar or macOS SwiftUI menu bar to get a true “notch” experience.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

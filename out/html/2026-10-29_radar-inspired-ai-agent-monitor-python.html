@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Radar‑inspired AI Agent Monitor (Python)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Radar‑inspired AI Agent Monitor (Python)</h1>
+        <p>A minimal clone to track your AI agents locally</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide. In the next 45 minutes you’ll spin up a tiny dashboard that logs and displays health pings from any AI agent, echoing the spirit of Radar without any paid services.</p>
+        <p>We’ll use Python, FastAPI, and SQLite – all free‑tier, open‑source tools – to build a working prototype you can run on your laptop and extend as you wish.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Python 3.9+ and <code>pip</code> installed; older versions may cause dependency errors.</li>
+                <li>The clone stores data in a local SQLite file – it does not include authentication, rate‑limiting, or multi‑tenant isolation that the real Radar product provides.</li>
+                <li>Running the server on port 8000 may conflict with other local services; adjust the port if needed.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal Radar Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">CRUD</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP API</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">FastAPI Server</text>
+<text x="315.0" y="87" class="node-subtext">Python + SQLite</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">Simple HTML UI</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>First we isolate our dependencies so the guide never interferes with your global Python install. A virtual environment gives us a clean sandbox, and installing FastAPI plus an ASGI server (uvicorn) gives us a lightweight web stack ready to serve JSON and HTML.</p>
+                <p>Once the environment is active, a single <code>pip install</code> line pulls in everything we need. This step is the foundation; later code will run inside this isolated context.</p>
+<div class="code-block"><pre><code>python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install fastapi uvicorn</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model</h2>
+                <p>We keep persistence simple by using the standard library <code>sqlite3</code> module – no external ORM required. The model file creates the database file if it doesn't exist, defines a <code>pings</code> table, and provides two helper functions: one to record a ping and another to fetch the latest entries for the UI.</p>
+                <p>These helpers will be imported by the FastAPI routes later, keeping the API layer thin and focused on request handling.</p>
+                <p><strong>model.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+from pathlib import Path
+
+DB_PATH = Path('radar_clone.db')
+
+def _get_conn():
+    return sqlite3.connect(DB_PATH)
+
+def init_db():
+    with _get_conn() as conn:
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS pings (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                agent_name TEXT NOT NULL,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                status TEXT NOT NULL
+            )
+        ''')
+        conn.commit()
+
+def add_ping(agent_name: str, status: str):
+    with _get_conn() as conn:
+        conn.execute('INSERT INTO pings (agent_name, status) VALUES (?, ?)', (agent_name, status))
+        conn.commit()
+
+def list_pings(limit: int = 20):
+    with _get_conn() as conn:
+        cur = conn.execute('SELECT id, agent_name, timestamp, status FROM pings ORDER BY timestamp DESC LIMIT ?', (limit,))
+        return [dict(id=row[0], agent_name=row[1], timestamp=row[2], status=row[3]) for row in cur]
+
+<span class="code-comment"># Initialize DB on import so later modules can assume the table exists</span>
+init_db()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the API and UI</h2>
+                <p>We’ll create a tiny FastAPI service that accepts a POST from any AI agent reporting its status. Each ping is stored in a simple in‑memory list so we can show recent activity without a database. The same app also serves a GET route that renders an HTML table, giving you a quick dashboard you can open in a browser.</p>
+                <p>The code below defines two endpoints: <code>/ping</code> receives JSON like <code>{"agent":"name","status":"ok"}</code> and returns a confirmation, while <code>/</code> builds an HTML page listing the last 20 pings. Keeping everything in one file makes the clone easy to understand and run.</p>
+                <p><strong>main.py</strong></p>
+<div class="code-block"><pre><code>from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse, JSONResponse
+from pydantic import BaseModel
+from typing import List
+import uvicorn
+
+app = FastAPI()
+
+<span class="code-comment"># In‑memory store for recent pings (max 20)</span>
+ping_log: List[dict] = []
+
+class Ping(BaseModel):
+    agent: str
+    status: str
+
+@app.post("/ping")
+async def receive_ping(ping: Ping):
+    <span class="code-comment"># Record the ping with a timestamp</span>
+    entry = {"agent": ping.agent, "status": ping.status, "time": __import__('datetime').datetime.utcnow().isoformat()}
+    ping_log.append(entry)
+    if len(ping_log) &gt; 20:
+        ping_log.pop(0)
+    return JSONResponse({"msg": "recorded", "entry": entry})
+
+@app.get("/", response_class=HTMLResponse)
+async def dashboard(request: Request):
+    rows = "".join(
+        f"&lt;tr&gt;&lt;td&gt;{e['time'][:19].replace('T',' ')}&lt;/td&gt;&lt;td&gt;{e['agent']}&lt;/td&gt;&lt;td&gt;{e['status']}&lt;/td&gt;&lt;/tr&gt;"
+        for e in reversed(ping_log)
+    )
+    html = f"""
+    &lt;html&gt;&lt;head&gt;&lt;title&gt;Radar Dashboard&lt;/title&gt;&lt;/head&gt;
+    &lt;body&gt;&lt;h2&gt;Recent Agent Pings&lt;/h2&gt;
+    &lt;table border='1' cellpadding='5'&gt;
+    &lt;tr&gt;&lt;th&gt;Time (UTC)&lt;/th&gt;&lt;th&gt;Agent&lt;/th&gt;&lt;th&gt;Status&lt;/th&gt;&lt;/tr&gt;
+    {rows or '&lt;tr&gt;&lt;td colspan=3&gt;No pings yet&lt;/td&gt;&lt;/tr&gt;'}
+    &lt;/table&gt;&lt;/body&gt;&lt;/html&gt;
+    """
+    return HTMLResponse(content=html)
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the FastAPI app is ready, start it with Uvicorn. The <code>--reload</code> flag watches for file changes, which is handy while you experiment. Once the server is up, it will listen on <code>http://127.0.0.1:8000</code> – the same address you’ll use for testing and viewing the dashboard.</p>
+<div class="code-block"><pre><code>uvicorn main:app --reload</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>With the server running, send a test ping using <code>curl</code>. The endpoint should reply with a JSON confirming the record was saved. Then open your browser to <code>http://127.0.0.1:8000</code> – you should see a table showing the ping you just sent. From here you can iterate: add simple token‑based auth, store data in SQLite, or hook the endpoint into Grafana for richer visualisation.</p>
+<div class="code-block"><pre><code>curl -X POST http://127.0.0.1:8000/ping -H 'Content-Type: application/json' -d '{"agent":"demo-agent","status":"ok"}'</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>uvicorn main:app --reload shows 'Uvicorn running on http://127.0.0.1:8000'</td></tr>
+            <tr><td>Test ping returns JSON with msg='recorded'</td><td>curl -X POST http://127.0.0.1:8000/ping -H 'Content-Type: application/json' -d '{"agent":"demo-agent","status":"ok"}' prints a JSON response containing msg='recorded'</td></tr>
+            <tr><td>Dashboard displays a table with the submitted ping</td><td>Opening http://127.0.0.1:8000 in a browser shows an HTML table row for the ping just sent</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your minimal Radar clone is up and running. Feel free to iterate – add charts, switch to Postgres, or containerize with Docker for production use.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple OpenMausBot‑style Chatbot Playground with TypeScript</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner</div>
+    </nav>
+
+    <header>
+        <h1>Simple OpenMausBot‑style Chatbot Playground with TypeScript</h1>
+        <p>A minimal TypeScript/Node clone you can build in 45 minutes</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this tutorial we’ll craft a tiny chatbot playground inspired by OpenMausBot, using only Node.js, TypeScript, and SQLite – all free and open‑source.</p>
+        <p>The result is a local web UI where you can type a message, the server echoes it back with a fake “AI” response, and the conversation is persisted. It’s a stripped‑down version of the real product, perfect for learning.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Node ≥ 18 and npm ≥ 9 installed; older versions may miss ES‑module support.</li>
+                <li>The real OpenMausBot runs actual LLMs; our clone uses a placeholder function that returns a canned reply – no external AI APIs are called.</li>
+                <li>Running the Electron UI is omitted; we serve a plain HTML page via Express for simplicity.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">fetch /messages</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">store/retrieve</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">HTML + Vanilla JS UI</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">Node / Express API</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">SQLite DB</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh npm workspace with TypeScript and Express dependencies.</p>
+<div class="code-block"><pre><code>mkdir openmausbot-clone &amp;&amp; cd openmausbot-clone
+npm init -y
+npm install express sqlite3
+npm install -D typescript @types/express @types/node ts-node-dev
+npx tsc --init --rootDir src --outDir dist --esModuleInterop true --module commonjs --target es2022
+mkdir src &amp;&amp; echo "" &gt; src/index.ts</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model</h2>
+                <p>We store each chat message (author, text, timestamp) in a SQLite table.</p>
+                <p><strong>src/db.ts</strong></p>
+<div class="code-block"><pre><code>import sqlite3 from 'sqlite3';
+import { open, Database } from 'sqlite';
+
+let db: Database&lt;sqlite3.Database, sqlite3.Statement&gt;;
+
+export async function initDb() {
+  db = await open({
+    filename: './chat.db',
+    driver: sqlite3.Database,
+  });
+  await db.exec(`CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    author TEXT NOT NULL,
+    text TEXT NOT NULL,
+    ts INTEGER NOT NULL
+  );`);
+}
+
+export async function addMessage(author: string, text: string) {
+  const ts = Date.now();
+  await db.run('INSERT INTO messages (author, text, ts) VALUES (?,?,?)', author, text, ts);
+}
+
+export async function getMessages() {
+  return db.all&lt;any[]&gt;('SELECT author, text, ts FROM messages ORDER BY ts ASC');
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the API &amp; fake AI</h2>
+                <p>In this step we spin up a tiny Express server that keeps chat history in memory. Two routes are enough: a GET <code>/messages</code> endpoint that returns the whole conversation array, and a POST <code>/chat</code> endpoint that receives the user's text, pushes it onto the history, and replies with a dummy AI message. The dummy reply simply echoes the user's input prefixed with an emoji, letting us verify the round‑trip without any external model.</p>
+                <p>Having the server in TypeScript gives us type safety while staying lightweight. All data lives in a plain JavaScript array, so you can see the flow of messages directly in the console or via the UI you’ll add next.</p>
+                <p><strong>src/server.ts</strong></p>
+<div class="code-block"><pre><code>import express, { Request, Response } from 'express';
+import cors from 'cors';
+
+<span class="code-comment">// In‑memory conversation store</span>
+interface Message { role: 'user' | 'bot'; content: string; }
+const history: Message[] = [];
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(express.static('public'));
+
+<span class="code-comment">// Return full chat history</span>
+app.get('/messages', (req: Request, res: Response) =&gt; {
+  res.json(history);
+});
+
+<span class="code-comment">// Accept user message and return a fake AI reply</span>
+app.post('/chat', (req: Request, res: Response) =&gt; {
+  const userText: string = req.body.text ?? '';
+  if (!userText) return res.status(400).json({ error: 'No text provided' });
+
+  <span class="code-comment">// Record user message</span>
+  history.push({ role: 'user', content: userText });
+
+  <span class="code-comment">// Generate dummy bot reply</span>
+  const botReply = `🤖 Echo: ${userText}`;
+  history.push({ role: 'bot', content: botReply });
+
+  res.json({ reply: botReply });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () =&gt; console.log(`Server running on http://localhost:${PORT}`));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Quick UI to test</h2>
+                <p>Now we add a single HTML page that talks to the API we just created. The page contains a textarea for the user, a button to send, and a simple list that shows each message as it arrives. All the logic lives in a tiny inline script that uses the Fetch API – no bundlers, no React, just plain browser JavaScript.</p>
+                <p>When you click <strong>Send</strong>, the script POSTs the text to <code>/chat</code>, appends the returned bot line, and then refreshes the conversation by GETting <code>/messages</code>. This gives you an instant, interactive playground to confirm the server works.</p>
+                <p><strong>public/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;title&gt;OpenMausBot Playground&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    #log { border: 1px solid #ccc; padding: 1rem; height: 300px; overflow-y: auto; }
+    .msg { margin: 0.3rem 0; }
+    .user { color: blue; }
+    .bot { color: green; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Chat Playground&lt;/h1&gt;
+  &lt;div id="log"&gt;&lt;/div&gt;
+  &lt;textarea id="input" rows="3" style="width:100%"&gt;&lt;/textarea&gt;&lt;br/&gt;
+  &lt;button id="send"&gt;Send&lt;/button&gt;
+
+  &lt;script&gt;
+    const log = document.getElementById('log');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('send');
+
+    async function refresh() {
+      const res = await fetch('/messages');
+      const msgs = await res.json();
+      log.innerHTML = '';
+      msgs.forEach(m =&gt; {
+        const div = document.createElement('div');
+        div.className = 'msg ' + (m.role === 'user' ? 'user' : 'bot');
+        div.textContent = `${m.role === 'user' ? 'You' : 'Bot'}: ${m.content}`;
+        log.appendChild(div);
+      });
+      log.scrollTop = log.scrollHeight;
+    }
+
+    sendBtn.onclick = async () =&gt; {
+      const text = input.value.trim();
+      if (!text) return;
+      await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      input.value = '';
+      await refresh();
+    };
+
+    // Initial load
+    refresh();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run &amp; verify locally</h2>
+                <p>With the server and UI in place, start the TypeScript runtime using <code>ts-node-dev</code>. This watches for changes, recompiles on the fly, and serves the static <code>public</code> folder so the HTML page loads at <code>http://localhost:3000</code>. Open that address in a browser, type a message, and watch the echo reply appear.</p>
+                <p>If you prefer a separate port for the UI you can run a simple static file server, but serving it from Express keeps the setup minimal and requires only one terminal command.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Install dev dependencies if you haven't yet</span>
+npm install express cors ts-node-dev @types/express @types/cors
+
+<span class="code-comment"># Start the server in watch mode</span>
+npx ts-node-dev src/server.ts</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>You see <code>Server running on http://localhost:3000</code> in the terminal after running the launch command</td></tr>
+            <tr><td>UI loads at http://localhost:3000</td><td>Browser displays the chat playground page with a textarea and Send button</td></tr>
+            <tr><td>Sending a message displays both User and Bot lines</td><td>After typing and clicking Send, the conversation log shows <code>You: &lt;your text&gt;</code> followed by <code>Bot: 🤖 Echo: &lt;your text&gt;</code></td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>Swap the placeholder echo with a real LLM (e.g., Ollama or a local HuggingFace model) by calling its HTTP API in the /chat route. You can also persist the SQLite file instead of :memory: and add multiple agents for a richer experience.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-29",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Notch‑Metrics‑style Menu Bar Analytics Tracker with Node.js + SQLite",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/BJSV7OQQ7BMSV6?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-29_notch-metrics-style-menu-bar-analytics-tracker.html",
+      "tagline": "Put your revenue and product analytics metrics in the notch",
+      "navbar_badge": "Beginner",
+      "est_minutes": 45,
+      "tags": [
+        "Node.js",
+        "SQLite",
+        "Electron"
+      ]
+    },
+    {
+      "title": "Build a Radar‑inspired Open‑Source AI Agent Monitor in Python",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/OPRQGVDZ6RGUVJ?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-29_radar-inspired-ai-agent-monitor-python.html",
+      "tagline": "A minimal clone to track your AI agents locally",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "Python",
+        "AI",
+        "Logging"
+      ]
+    },
+    {
+      "title": "Build a Simple OpenMausBot‑style Chatbot Playground with TypeScript",
+      "source": "github_trending",
+      "url": "https://github.com/milind-soni/OpenMausBot",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-29_simple-openmausbot-style-chatbot-playground-with-typescript.html",
+      "tagline": "A minimal TypeScript/Node clone you can build in 45 minutes",
+      "navbar_badge": "Beginner",
+      "est_minutes": 45,
+      "tags": [
+        "TypeScript",
+        "Node.js",
+        "Web"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1565345027310362746",
+    "1565345034151399616",
+    "1565345040019230821"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}
