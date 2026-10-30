@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-30",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Minimal Fastbrowse‑style Open‑Source Browser Agent with Node.js",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/6XWF3PRT2W3QVO?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-30_minimal-fastbrowse-style-browser-agent.html",
+      "tagline": "Fast open‑source web scraper in 45 minutes",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "nodejs",
+        "typescript",
+        "llm"
+      ]
+    },
+    {
+      "title": "Build a Claude‑Mem‑Inspired Persistent Context Store for AI Agents in TypeScript",
+      "source": "github_trending",
+      "url": "https://github.com/thedotmack/claude-mem",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-30_claude-mem-inspired-persistent-context-store-typescript.html",
+      "tagline": "A minimal clone you can build in 45 minutes with Node, TypeScript, and SQLite",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "typescript",
+        "nodejs",
+        "ai"
+      ]
+    },
+    {
+      "title": "Build a Simple Ziwei‑Doushu Astrology Engine API with Express and SQLite",
+      "source": "github_trending",
+      "url": "https://github.com/Renhuai123/ziwei-doushu",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-30_simple-ziwei-doushu-astrology-engine-api-with-express-sqlite.html",
+      "tagline": "A beginner-friendly clone of the open‑source Ziwei‑Doushu engine",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "typescript",
+        "express",
+        "sqlite"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1565708348412665976",
+    "1565708354557444228",
+    "1565708361314340936"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

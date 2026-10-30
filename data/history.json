@@ -635,6 +635,24 @@
       "title": "Build a Simple OpenMausBot‑style Chatbot Playground with TypeScript",
       "source_url": "https://github.com/milind-soni/OpenMausBot",
       "slug": "2026-10-29_simple-openmausbot-style-chatbot-playground-with-typescript.html"
+    },
+    {
+      "date": "2026-10-30T12:33:52+00:00",
+      "title": "Build a Minimal Fastbrowse‑style Open‑Source Browser Agent with Node.js",
+      "source_url": "https://www.producthunt.com/r/6XWF3PRT2W3QVO?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-10-30_minimal-fastbrowse-style-browser-agent.html"
+    },
+    {
+      "date": "2026-10-30T12:40:29+00:00",
+      "title": "Build a Claude‑Mem‑Inspired Persistent Context Store for AI Agents in TypeScript",
+      "source_url": "https://github.com/thedotmack/claude-mem",
+      "slug": "2026-10-30_claude-mem-inspired-persistent-context-store-typescript.html"
+    },
+    {
+      "date": "2026-10-30T12:45:59+00:00",
+      "title": "Build a Simple Ziwei‑Doushu Astrology Engine API with Express and SQLite",
+      "source_url": "https://github.com/Renhuai123/ziwei-doushu",
+      "slug": "2026-10-30_simple-ziwei-doushu-astrology-engine-api-with-express-sqlite.html"
     }
   ]
 }
