@@ -653,6 +653,18 @@
       "title": "Build a Simple Ziwei‑Doushu Astrology Engine API with Express and SQLite",
       "source_url": "https://github.com/Renhuai123/ziwei-doushu",
       "slug": "2026-10-30_simple-ziwei-doushu-astrology-engine-api-with-express-sqlite.html"
+    },
+    {
+      "date": "2026-10-31T12:33:54+00:00",
+      "title": "Build a Simple LLM Observability Dashboard with telemetry.dev and Node.js",
+      "source_url": "https://www.producthunt.com/r/DROUHCHKOTIAJV?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-10-31_simple-llm-observability-dashboard-clone.html"
+    },
+    {
+      "date": "2026-10-31T12:41:15+00:00",
+      "title": "Build a Persistent Context Store for AI Agents with claude-mem (TypeScript)",
+      "source_url": "https://github.com/thedotmack/claude-mem",
+      "slug": "2026-10-31_persistent-context-store-with-claude-mem-typescript.html"
     }
   ]
 }

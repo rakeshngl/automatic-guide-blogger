@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-31",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Minimal Open‑Source Chatbot with OpenMausBot (TypeScript)"
+  ],
+  "failed_sources": [
+    "gmail_digest"
+  ],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple LLM Observability Dashboard with telemetry.dev and Node.js",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/DROUHCHKOTIAJV?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-31_simple-llm-observability-dashboard-clone.html",
+      "tagline": "A minimal Node.js + SQLite dashboard inspired by telemetry.dev",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "Node.js",
+        "LLM",
+        "Observability"
+      ]
+    },
+    {
+      "title": "Build a Persistent Context Store for AI Agents with claude-mem (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/thedotmack/claude-mem",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-10-31_persistent-context-store-with-claude-mem-typescript.html",
+      "tagline": "A minimal clone you can spin up in 45 minutes using Node.js and SQLite",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 50,
+      "tags": [
+        "TypeScript",
+        "AI",
+        "Persistence"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1566069545180078141",
+    "1566069554835095633"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}
