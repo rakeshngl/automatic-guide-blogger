@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple Public API Directory with FastAPI</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner Friendly</div>
+    </nav>
+
+    <header>
+        <h1>Simple Public API Directory with FastAPI</h1>
+        <p>A minimal clone of the public‑apis list using Python, FastAPI, and SQLite</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick build you’ll create a tiny web service that serves a curated list of public APIs, inspired by the massive public‑apis repository. We’ll use FastAPI for the HTTP layer and SQLite for storage – all free and runnable on your laptop in under an hour.</p>
+        <p>The end result is a searchable JSON endpoint (<code>/apis</code>) that mimics the core experience of the original directory without any paid keys or external services. Perfect for learning REST basics, ORMs, and rapid prototyping.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>You need Python 3.9+ and <code>git</code> installed; older versions may miss type hints used by FastAPI.</li>
+                <li>The clone stores only a static subset of entries – no admin UI, pagination, or live updates from the real repo.</li>
+                <li>Running on Windows may require <code>uvicorn</code> extra flags for reloading; the commands below work on macOS/Linux as shown.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">reads/writes</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP GET /apis</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">FastAPI App</text>
+<text x="315.0" y="87" class="node-subtext">Python + Uvicorn</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite DB</text>
+<text x="315.0" y="159" class="node-subtext">stores API list</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">Browser / curl</text>
+<text x="315.0" y="231" class="node-subtext">requests JSON</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh directory for the clone, spin up an isolated Python virtual environment, and pull in the three core libraries: FastAPI for routing, Uvicorn as the ASGI server, and SQLModel to talk to SQLite. This gives us a clean, reproducible starting point.</p>
+                <p>All commands are written for Unix‑like shells; Windows users can run them in PowerShell with minor path tweaks.</p>
+<div class="code-block"><pre><code>mkdir public_api_clone &amp;&amp; cd public_api_clone
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install fastapi uvicorn sqlmodel</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define data model &amp; seed DB</h2>
+                <p>We declare an <code>API</code> table using SQLModel, which blends Pydantic validation with SQLAlchemy ORM features. The model captures the fields we care about: name, description, auth method, HTTPS support, and a link.</p>
+                <p>After defining the table we create the SQLite file (if it doesn’t exist) and insert a handful of sample entries so the <code>/apis</code> endpoint has data to return immediately.</p>
+                <p><strong>models.py</strong></p>
+<div class="code-block"><pre><code>from sqlmodel import SQLModel, Field, create_engine, Session
+
+class API(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    name: str
+    description: str
+    auth: str | None = None
+    https: bool = False
+    link: str
+
+engine = create_engine("sqlite:///apis.db")
+SQLModel.metadata.create_all(engine)
+
+def seed_db():
+    sample = [
+        API(name="Cat Facts", description="Random cat facts", auth=None, https=True, link="https://catfact.ninja"),
+        API(name="Dog CEO", description="Random dog images", auth=None, https=True, link="https://dog.ceo/api/breeds/image/random"),
+        API(name="OpenWeather", description="Weather data", auth="apiKey", https=True, link="https://api.openweathermap.org")
+    ]
+    with Session(engine) as session:
+        for api in sample:
+            session.add(api)
+        session.commit()
+
+if __name__ == "__main__":
+    seed_db()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the FastAPI endpoints</h2>
+                <p>In this step we wire up the HTTP layer that will serve our stored API entries. We'll create a single GET endpoint that returns every record, and optionally narrows the list when a <code>category</code> query parameter is supplied. FastAPI makes request parsing and response serialization effortless, so the code stays tiny and readable.</p>
+                <p>The endpoint pulls data from the SQLite database using SQLModel's session helpers. If a category is provided we add a simple filter clause; otherwise we fetch all rows. The result is automatically turned into JSON thanks to FastAPI's built‑in Pydantic models.</p>
+                <p><strong>main.py</strong></p>
+<div class="code-block"><pre><code>from fastapi import FastAPI, Query
+from sqlmodel import Field, Session, SQLModel, create_engine, select
+
+class ApiEntry(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    name: str
+    description: str
+    auth: str | None = None
+    https: bool = False
+    cors: str | None = None
+    link: str
+    category: str
+
+engine = create_engine("sqlite:///apis.db")
+SQLModel.metadata.create_all(engine)
+
+app = FastAPI(title="Simple Public API Directory")
+
+@app.get("/apis")
+def read_apis(category: str | None = Query(default=None, description="Filter by category")):
+    with Session(engine) as session:
+        stmt = select(ApiEntry)
+        if category:
+            stmt = stmt.where(ApiEntry.category == category)
+        results = session.exec(stmt).all()
+        return results</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally and test</h2>
+                <p>Now that the API code is ready, we launch the development server so we can interact with it in a browser or via curl. Uvicorn is the recommended ASGI server for FastAPI and provides hot‑reload, which is handy while we iterate.</p>
+                <p>After the server starts, visiting <code>http://127.0.0.1:8000/apis</code> should return a JSON array of the seed entries we inserted earlier. If everything looks good, we can move on to verifying the optional filter.</p>
+<div class="code-block"><pre><code>uvicorn main:app --reload</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>With the server running, we confirm that the endpoint returns the expected data. A quick curl request (or opening the URL in a browser) should display a JSON list containing the two sample APIs we seeded.</p>
+                <p>Next, we test the <code>category</code> filter by adding <code>?category=Weather</code> to the query string. Only entries whose <code>category</code> matches the supplied value should appear, proving that our filtering logic works. From here you can add more records, expand the schema, or create POST/PUT endpoints for full CRUD support.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Verify all entries</span>
+curl http://127.0.0.1:8000/apis
+
+<span class="code-comment"># Verify category filter (example: Weather)</span>
+curl "http://127.0.0.1:8000/apis?category=Weather"</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Dependencies install without errors</td><td>pip install fastapi uvicorn[standard] sqlmodel → no traceback</td></tr>
+            <tr><td>Server starts</td><td>uvicorn main:app --reload → prints Uvicorn running on http://127.0.0.1:8000</td></tr>
+            <tr><td>/apis returns JSON array</td><td>curl http://127.0.0.1:8000/apis → shows two objects</td></tr>
+            <tr><td>Category filter works</td><td>curl 'http://127.0.0.1:8000/apis?category=Weather' → only OpenWeather entry</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your tiny public‑API directory is live locally. Push the folder to GitHub, share the URL, or deploy to a free host like Railway or Render for the world to explore.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

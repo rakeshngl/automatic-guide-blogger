@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-01",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [
+    "gmail_digest"
+  ],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Public API Directory with Python & FastAPI",
+      "source": "github_trending",
+      "url": "https://github.com/public-apis/public-apis",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-01_simple-public-api-directory-with-fastapi.html",
+      "tagline": "A minimal clone of the public‑apis list using Python, FastAPI, and SQLite",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "Python",
+        "FastAPI",
+        "SQLite"
+      ]
+    },
+    {
+      "title": "Build a Nested Diagram Explorer with TypeScript (tld)",
+      "source": "hn_show",
+      "url": "https://github.com/Mertcikla/tld",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-01_nested-diagram-explorer-clone.html",
+      "tagline": "A minimal TypeScript‑Node.js sketch of tld’s diagram explorer",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 40,
+      "tags": [
+        "TypeScript",
+        "D3",
+        "Node.js"
+      ]
+    },
+    {
+      "title": "Build a Local HTTP Tunnel with Portr in Node.js",
+      "source": "hn_show",
+      "url": "https://github.com/amalshaji/portr",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-01_local-http-tunnel-with-node-js.html",
+      "tagline": "Expose your localhost to the internet using a free‑tier tunnel service",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "Node.js",
+        "Express",
+        "Networking"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1566435307883339879",
+    "1566435317446090815",
+    "1566435322877837365"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

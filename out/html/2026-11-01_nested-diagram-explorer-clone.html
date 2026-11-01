@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Nested Diagram Explorer Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Nested Diagram Explorer Clone</h1>
+        <p>A minimal TypeScript‑Node.js sketch of tld’s diagram explorer</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide. In the next 45 minutes you’ll spin up a tiny diagram explorer inspired by tld – a tool that lets you create and navigate nested maps of nodes and edges.</p>
+        <p>We’ll use Node 18, Express, SQLite, and plain TypeScript for the frontend. No paid services, just a local dev loop that you can extend into a full‑stack app.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Node &gt;= 18 and npm &gt;= 9 installed; older versions may miss ES‑module support used below.</li>
+                <li>The clone stores data in a local SQLite file – unlike tld’s cloud‑backed storage, persistence is limited to your machine.</li>
+                <li>The UI is a single page without authentication; security and scaling are intentionally omitted for brevity.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Frontend (TS/HTML)</text>
+<text x="315.0" y="87" class="node-subtext">fetches API</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Backend (Express)</text>
+<text x="315.0" y="159" class="node-subtext">CRUD API</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">SQLite DB</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>We start by creating a fresh Node project and wiring up TypeScript so we can write modern code with type safety. Express will serve our API, while better‑sqlite3 gives us a fast, synchronous SQLite driver that works well for a tiny prototype.</p>
+                <p>All dependencies are installed locally; no global packages are required, keeping the clone self‑contained and easy to clean up later.</p>
+<div class="code-block"><pre><code>mkdir tld-clone &amp;&amp; cd tld-clone
+npm init -y
+npm i express better-sqlite3
+npm i -D typescript @types/express ts-node-dev
+npx tsc --init --rootDir src --outDir dist --module commonjs --target es2022 --esModuleInterop true
+mkdir src</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model</h2>
+                <p>Next we create a tiny SQLite schema that can store diagram nodes and the edges that connect them. The helper in src/db.ts abstracts opening the database and running parameterised queries, so later code can stay clean and focused on business logic.</p>
+                <p>Because better‑sqlite3 works synchronously, the wrapper can be straightforward – perfect for a minimal clone where performance isn’t a bottleneck.</p>
+                <p><strong>src/db.ts</strong></p>
+<div class="code-block"><pre><code>import Database from 'better-sqlite3';
+
+<span class="code-comment">// Initialise (or create) the local SQLite file</span>
+const db = new Database('diagram.db');
+
+<span class="code-comment">// Simple schema – run once at startup</span>
+const init = () =&gt; {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS nodes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      label TEXT NOT NULL,
+      sublabel TEXT
+    );
+    CREATE TABLE IF NOT EXISTS edges (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      from_node INTEGER NOT NULL,
+      to_node INTEGER NOT NULL,
+      label TEXT,
+      FOREIGN KEY(from_node) REFERENCES nodes(id),
+      FOREIGN KEY(to_node)   REFERENCES nodes(id)
+    );
+  `);
+};
+
+init();
+
+<span class="code-comment">// Helper to run a query and return rows (SELECT) or info (INSERT/UPDATE/DELETE)</span>
+export const run = (sql: string, params: any[] = []): any =&gt; {
+  const stmt = db.prepare(sql);
+  if (/^\s*select/i.test(sql)) {
+    return stmt.all(...params);
+  }
+  const info = stmt.run(...params);
+  return info;
+};
+
+export default db;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the API</h2>
+                <p>In this step we spin up a tiny Express server that will store diagram data in memory. The server offers CRUD‑style routes for nodes and edges, but for the minimal clone we only need read (GET) endpoints that return JSON arrays. Keeping the data in a plain JavaScript object makes the code easy to understand and avoids any external database setup.</p>
+                <p>We expose <code>/nodes</code> and <code>/edges</code> routes that respond with the current collections. Later phases can add POST/PUT/DELETE handlers, but the current read‑only API is enough to feed the UI and prove the clone works.</p>
+                <p><strong>src/server.ts</strong></p>
+<div class="code-block"><pre><code>import express from 'express';
+import cors from 'cors';
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+<span class="code-comment">// In‑memory store – starts empty</span>
+const store = {
+  nodes: [] as Array&lt;{id:string; label:string}&gt;,
+  edges: [] as Array&lt;{from:string; to:string}&gt;
+};
+
+<span class="code-comment">// GET all nodes</span>
+app.get('/nodes', (req, res) =&gt; {
+  res.json(store.nodes);
+});
+
+<span class="code-comment">// GET all edges</span>
+app.get('/edges', (req, res) =&gt; {
+  res.json(store.edges);
+});
+
+<span class="code-comment">// Simple health check</span>
+app.get('/ping', (req, res) =&gt; res.send('pong'));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () =&gt; {
+  console.log(`API listening on http://localhost:${PORT}`);
+});</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Simple UI</h2>
+                <p>Now we create a single HTML page that pulls the node and edge lists from the API and displays them as plain lists. The UI script lives in <code>src/ui.ts</code>; it runs in the browser, fetches JSON, and injects <code>&lt;li&gt;</code> elements into two <code>&lt;ul&gt;</code> containers.</p>
+                <p>The page is intentionally minimal – just headings and empty lists that get populated once the fetch promises resolve. This keeps the focus on wiring the front‑end to the back‑end without any heavy frameworks.</p>
+                <p><strong>src/ui.ts</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">// UI logic – runs in the browser</span>
+async function loadList(url: string, ulId: string) {
+  const resp = await fetch(url);
+  const data = await resp.json();
+  const ul = document.getElementById(ulId) as HTMLUListElement;
+  ul.innerHTML = '';
+  data.forEach((item: any) =&gt; {
+    const li = document.createElement('li');
+    li.textContent = JSON.stringify(item);
+    ul.appendChild(li);
+  });
+}
+
+<span class="code-comment">// When the page loads, fetch nodes and edges</span>
+window.addEventListener('DOMContentLoaded', () =&gt; {
+  const apiBase = 'http://localhost:3000';
+  loadList(`${apiBase}/nodes`, 'nodes-list');
+  loadList(`${apiBase}/edges`, 'edges-list');
+});</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run &amp; verify</h2>
+                <p>With the API and UI ready, we start the TypeScript server using <code>ts-node</code> and serve the static HTML page with a tiny <code>http-server</code>. The API runs on port 3000, while the static server runs on 8080, matching the URLs used in the checklist.</p>
+                <p>After both processes are up, open the UI page in a browser; you should see two sections titled “Nodes” and “Edges” with empty lists, confirming the end‑to‑end connection works.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Install dev dependencies if not already present</span>
+npm install express cors ts-node typescript @types/express @types/node
+
+<span class="code-comment"># Start the API in the background</span>
+npx ts-node src/server.ts &amp;
+API_PID=$!
+
+<span class="code-comment"># Serve the UI folder (contains ui.html and compiled ui.js)</span>
+npx http-server . -p 8080 &amp;
+UI_PID=$!
+
+<span class="code-comment"># Give servers a moment to start</span>
+sleep 2
+
+<span class="code-comment"># Show the URLs for the user</span>
+echo "API running at http://localhost:3000"
+echo "UI available at http://localhost:8080/ui.html"
+
+<span class="code-comment"># Clean up on exit</span>
+trap "kill $API_PID $UI_PID" EXIT</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>API returns empty node list</td><td>curl http://localhost:3000/nodes | jq '.'</td></tr>
+            <tr><td>API returns empty edge list</td><td>curl http://localhost:3000/edges | jq '.'</td></tr>
+            <tr><td>UI shows two sections titled 'Nodes' and 'Edges'</td><td>Open http://localhost:8080/ui.html in a browser and verify the lists are present</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a working local diagram explorer. Add drag‑and‑drop, hierarchical nesting, or swap SQLite for Postgres to approach the full tld feature set.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
