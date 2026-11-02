@@ -683,6 +683,18 @@
       "title": "Build a Local HTTP Tunnel with Portr in Node.js",
       "source_url": "https://github.com/amalshaji/portr",
       "slug": "2026-11-01_local-http-tunnel-with-node-js.html"
+    },
+    {
+      "date": "2026-11-02T12:37:47+00:00",
+      "title": "Build a Simple Web Scraper with Scrapling (Python)",
+      "source_url": "https://github.com/D4Vinci/Scrapling",
+      "slug": "2026-11-02_simple-web-scraper-clone-with-python.html"
+    },
+    {
+      "date": "2026-11-02T12:43:01+00:00",
+      "title": "Build a NanoChat‑style ChatGPT Clone in Python",
+      "source_url": "https://github.com/karpathy/nanochat",
+      "slug": "2026-11-02_nanochat-style-chatgpt-clone-in-python.html"
     }
   ]
 }

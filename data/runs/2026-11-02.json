@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-02",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Claude‑Mem‑Inspired Persistent Context Store (TypeScript)"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Web Scraper with Scrapling (Python)",
+      "source": "github_trending",
+      "url": "https://github.com/D4Vinci/Scrapling",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-02_simple-web-scraper-clone-with-python.html",
+      "tagline": "A beginner-friendly guide to build a minimal scraper inspired by Scrapling",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 40,
+      "tags": [
+        "python",
+        "web-scraping",
+        "sqlite"
+      ]
+    },
+    {
+      "title": "Build a NanoChat‑style ChatGPT Clone in Python",
+      "source": "github_trending",
+      "url": "https://github.com/karpathy/nanochat",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-02_nanochat-style-chatgpt-clone-in-python.html",
+      "tagline": "A beginner‑friendly mini‑LLM chat service using Flask and SQLite",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 55,
+      "tags": [
+        "python",
+        "llm",
+        "flask"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1566794771916394699",
+    "1566794780577497240"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

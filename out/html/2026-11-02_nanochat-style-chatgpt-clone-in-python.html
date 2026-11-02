@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: NanoChat‑style ChatGPT Clone in Python</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>NanoChat‑style ChatGPT Clone in Python</h1>
+        <p>A beginner‑friendly mini‑LLM chat service using Flask and SQLite</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick‑fire tutorial we’ll build a tiny ChatGPT‑style web app inspired by Karpathy’s nanochat, but stripped down to the absolute essentials so you can have a working clone in under an hour.</p>
+        <p>We’ll use Python, Flask for the API, and SQLite for persisting conversation history – all free‑tier, no external AI APIs required. By the end you’ll have a local server you can query with curl or a browser and see chat responses stored on disk.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>You need Python 3.10+ and pip installed; older versions will fail to import <code>typing</code> features used in the snippets.</li>
+                <li>The real nanochat trains a transformer on GPUs – our clone skips training and returns a hard‑coded placeholder reply, so it’s <strong>not</strong> an actual LLM.</li>
+                <li>Running the Flask dev server on port 5000 may conflict with other local services; stop any process using that port first.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal NanoChat Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP request</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL INSERT/SELECT</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Flask API</text>
+<text x="315.0" y="87" class="node-subtext">Python + Flask</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite DB</text>
+<text x="315.0" y="159" class="node-subtext">Conversation store</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">Browser / curl</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a virtual environment and install Flask; set up the folder structure.</p>
+<div class="code-block"><pre><code>python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install Flask
+mkdir -p nanochat
+cd nanochat
+cat &gt; app.py &lt;&lt;'PY'
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+
+@app.route('/')
+def health():
+    return jsonify({'status':'ok'})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+PY</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model (SQLite)</h2>
+                <p>A single table stores each message with role (user/assistant) and timestamp.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3, os
+from datetime import datetime
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+DB_PATH = os.path.join(os.path.dirname(__file__), 'chat.db')
+
+<span class="code-comment"># ---------------------------------------------------------------------</span>
+<span class="code-comment"># Database helpers – create table if missing and simple insert/select</span>
+<span class="code-comment"># ---------------------------------------------------------------------</span>
+
+def get_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    with get_db() as db:
+        db.execute('''
+            CREATE TABLE IF NOT EXISTS messages (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                role TEXT NOT NULL,
+                content TEXT NOT NULL,
+                ts TEXT NOT NULL
+            )
+        ''')
+        db.commit()
+
+init_db()
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    data = request.get_json()
+    user_msg = data.get('message', '')
+    <span class="code-comment"># store user message</span>
+    with get_db() as db:
+        db.execute('INSERT INTO messages (role, content, ts) VALUES (?,?,?)',
+                   ('user', user_msg, datetime.utcnow().isoformat()))
+        db.commit()
+    <span class="code-comment"># placeholder assistant reply</span>
+    reply = 'I am a minimal clone; replace this with real LLM output.'
+    with get_db() as db:
+        db.execute('INSERT INTO messages (role, content, ts) VALUES (?,?,?)',
+                   ('assistant', reply, datetime.utcnow().isoformat()))
+        db.commit()
+    return jsonify({'reply': reply})
+
+@app.route('/')
+def health():
+    return jsonify({'status':'ok'})
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the chat endpoint (API/UI)</h2>
+                <p>In this step we expose a Flask route that accepts a JSON payload containing the user's message. The endpoint stores the message in the SQLite database we created earlier and immediately returns a simple canned reply so you can see the whole request‑response loop in action. Keeping the reply static makes debugging easy while we later swap it for a real model. The code also returns a 200 status and a JSON body that the front‑end can consume.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import json
+from flask import Flask, request, jsonify
+import sqlite3
+
+app = Flask(__name__)
+DB_PATH = 'chat.db'
+
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY AUTOINCREMENT, role TEXT, content TEXT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)''')
+    conn.commit()
+    conn.close()
+
+init_db()
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    data = request.get_json(force=True)
+    user_msg = data.get('message', '')
+    <span class="code-comment"># Persist user message</span>
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('INSERT INTO messages (role, content) VALUES (?, ?)', ('user', user_msg))
+    conn.commit()
+    conn.close()
+    <span class="code-comment"># Dummy assistant reply</span>
+    reply = "I am a placeholder assistant. Your message was: " + user_msg
+    <span class="code-comment"># Persist assistant reply</span>
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('INSERT INTO messages (role, content) VALUES (?, ?)', ('assistant', reply))
+    conn.commit()
+    conn.close()
+    return jsonify({'reply': reply})
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally and test</h2>
+                <p>Now that the endpoint is wired up, start the Flask development server. Flask will listen on http://127.0.0.1:5000 by default, and you can interact with the /chat route using curl, Postman, or a browser extension that sends JSON. Watching the console output will confirm that the request hits the server and that the SQLite inserts succeed.</p>
+<div class="code-block"><pre><code>export FLASK_APP=app.py
+export FLASK_ENV=development
+flask run</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>After sending a request, open the SQLite file to make sure both the user message and the dummy reply are stored. You can also serve a very small HTML page that posts to /chat, giving you a quick UI without leaving the browser. This phase shows the full stack: front‑end → API → database → response.</p>
+<div class="code-block"><pre><code>sqlite3 chat.db "SELECT id, role, content FROM messages ORDER BY id;"</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>flask run → should show *Running on http://127.0.0.1:5000/*</td></tr>
+            <tr><td>POST request returns a reply</td><td>curl -X POST -H "Content-Type: application/json" -d '{"message":"hello"}' http://127.0.0.1:5000/chat → JSON with 'reply' field</td></tr>
+            <tr><td>Message persisted in SQLite</td><td>sqlite3 chat.db "SELECT role,content FROM messages WHERE role='user';" → should show 'hello'</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional local chat service. To move closer to the real nanochat, replace the placeholder reply with a call to a small open‑source model (e.g., GPT‑NeoX via HuggingFace) or expose the endpoint to the internet with ngrok for remote testing.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
