@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple Webhook Tester with Node.js &amp; Hookdeck Inspect API</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Simple Webhook Tester with Node.js &amp; Hookdeck Inspect API</h1>
+        <p>Free webhook tester for you and your agent</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide where we roll up our sleeves and build a tiny clone of Hookdeck Inspect – a free webhook tester you can run locally in minutes.</p>
+        <p>In this tutorial you’ll scaffold a Node.js app, store incoming webhook payloads in SQLite, expose a minimal API to list them, and call the real Hookdeck Inspect endpoint for comparison – all using free‑tier tools.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>Node.js &gt;= 18 and npm installed; older versions may lack native fetch support.</li>
+                <li>The real Hookdeck service requires an API token – we’ll store it in a <code>.env</code> file; without it the external inspect call will fail.</li>
+                <li>Our clone only saves raw JSON and lists it; features like replay, filtering, or authentication are omitted.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="190" viewBox="0 0 420 190" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="142" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">store payloads</text>
+<line x1="230" y1="74" x2="190" y2="110" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="210" y="86" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">optional inspect call</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Node.js Express App</text>
+<text x="315.0" y="87" class="node-subtext">SQLite DB, API routes</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite Database</text>
+<rect x="20" y="86" width="170" height="48" rx="10" class="node-tech" />
+<text x="105.0" y="107" class="node-text">Hookdeck Inspect API</text>
+<text x="105.0" y="123" class="node-subtext">External service</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>We start by creating a fresh npm project so we have a package.json to track dependencies. Express will serve our HTTP endpoints, better‑sqlite3 gives us a fast embedded DB, dotenv loads secret keys, and nodemon keeps the server alive while we code.</p>
+                <p>Installing everything locally means the clone runs on any machine without extra services – just Node and npm.</p>
+<div class="code-block"><pre><code>mkdir webhook-tester &amp;&amp; cd webhook-tester
+npm init -y
+npm install express better-sqlite3 dotenv
+npm install --save-dev nodemon
+<span class="code-comment"># Add a dev script for live reload</span>
+npx json -I -f package.json -e "this.scripts={...this.scripts,dev:'nodemon index.js'}"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the SQLite model</h2>
+                <p>Next we create a tiny SQLite database that stores each incoming webhook as raw JSON together with the time it arrived. This keeps the implementation simple yet gives us persistent storage without a separate server.</p>
+                <p>The db.js module will be required by our Express routes so they can insert and query payloads.</p>
+                <p><strong>db.js</strong></p>
+<div class="code-block"><pre><code>const Database = require('better-sqlite3');
+const path = require('path');
+<span class="code-comment">// SQLite file lives in the project root</span>
+const db = new Database(path.resolve(__dirname, 'webhooks.db'));
+<span class="code-comment">// Ensure the table exists</span>
+const init = `CREATE TABLE IF NOT EXISTS payloads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  received_at TEXT NOT NULL,
+  body TEXT NOT NULL
+);`;
+db.exec(init);
+module.exports = db;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build Express API (receive &amp; list)</h2>
+                <p>In this step we create two core endpoints: a POST /webhook that accepts any JSON payload and stores it locally, and a GET /events that returns all stored entries as a JSON array. The storage uses a tiny low‑db JSON file so the data survives across restarts without any external database. If you provide a Hookdeck token in the .env file, each incoming payload is also forwarded to Hookdeck’s Inspect API for remote inspection, but the feature is optional and harmless when omitted.</p>
+                <p>We keep the code small and readable: Express handles routing, body‑parser parses JSON, and low‑db provides a simple <code>db.get('events').push(...).write()</code> API. Errors are caught and reported with a 500 status, ensuring the server never crashes on malformed input.</p>
+                <p><strong>index.js</strong></p>
+<div class="code-block"><pre><code>require('dotenv').config();
+const express = require('express');
+const fetch = require('node-fetch');
+const { Low, JSONFile } = require('lowdb');
+const path = require('path');
+
+const app = express();
+app.use(express.json());
+
+<span class="code-comment">// Initialize lowdb</span>
+const file = path.join(__dirname, 'db.json');
+const adapter = new JSONFile(file);
+const db = new Low(adapter);
+(async () =&gt; { await db.read(); db.data ||= { events: [] }; await db.write(); })();
+
+<span class="code-comment">// POST /webhook – capture payload</span>
+app.post('/webhook', async (req, res) =&gt; {
+  try {
+    const payload = req.body;
+    const event = { id: Date.now(), payload, received_at: new Date().toISOString() };
+    db.data.events.push(event);
+    await db.write();
+    <span class="code-comment">// Optional Hookdeck forward</span>
+    if (process.env.HOOKDECK_TOKEN) {
+      await fetch('https://api.hookdeck.com/v1/inspect', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.HOOKDECK_TOKEN}`,
+        },
+        body: JSON.stringify(payload),
+      });
+    }
+    res.status(200).json({ status: 'captured', id: event.id });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'internal server error' });
+  }
+});
+
+<span class="code-comment">// GET /events – list stored entries</span>
+app.get('/events', async (req, res) =&gt; {
+  await db.read();
+  res.json(db.data.events);
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () =&gt; console.log(`Server running on http://localhost:${PORT}`));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>We use nodemon so the server restarts automatically whenever you change a file – perfect for rapid iteration. Make sure you have a .env file at the project root; at minimum it can be empty, but you may add <code>HOOKDECK_TOKEN=your_token</code> to enable remote inspection.</p>
+                <p>Start the app with the provided command; you should see a console message confirming the server is listening on port 3000. If any dependency is missing, npm will install it automatically when you run the install step earlier in the guide.</p>
+<div class="code-block"><pre><code>npm install express lowdb node-fetch dotenv
+npm install -D nodemon
+npx nodemon index.js</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>Now that the server is running, send a sample webhook using curl. The POST request should return a JSON confirmation and the payload will be saved to db.json. Then retrieve the stored events with a simple GET request – you should see an array containing the payload you just sent.</p>
+                <p>From here you can extend the tester: add pagination parameters to /events, build a tiny React UI to display events in real time, or protect the endpoints with an API‑key header. Each extension builds on the same low‑db foundation, keeping the project lightweight and easy to understand.</p>
+<div class="code-block"><pre><code>curl -X POST http://localhost:3000/webhook \
+  -H "Content-Type: application/json" \
+  -d '{"test":"value","count":42}'
+
+curl http://localhost:3000/events</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td><code>npx nodemon index.js</code> shows "Server running on http://localhost:3000"</td></tr>
+            <tr><td>POST request returns 200</td><td><code>curl -X POST http://localhost:3000/webhook -H "Content-Type: application/json" -d '{"a":1}'</code> exits with status 0 and prints a JSON response</td></tr>
+            <tr><td>GET /events shows JSON array with your payload</td><td><code>curl http://localhost:3000/events</code> prints [{"id":...,"payload":{"a":1},"received_at":"..."}]</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional webhook tester. Add features like pagination, a React UI, or secure the endpoints with a simple API key to get closer to the full Hookdeck experience.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

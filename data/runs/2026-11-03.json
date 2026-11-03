@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-03",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Basic Web Scraper with Python & Scrapling",
+    "Build a Persistent Context Store for AI Agents with Claude‑mem (TypeScript)"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Webhook Tester with Node.js & Hookdeck Inspect API",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/ONA6KQJZWUEX2Z?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-03_simple-webhook-tester-with-node-js-hookdeck-inspect-api.html",
+      "tagline": "Free webhook tester for you and your agent",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 40,
+      "tags": [
+        "Node.js",
+        "Express",
+        "Webhooks"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1567154848003006474"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 1
+}
