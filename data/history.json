@@ -743,6 +743,24 @@
       "title": "Build a Local Home‑Automation Bridge for Samsung Appliances (localthings‑style)",
       "source_url": "https://github.com/mbillow/localthings",
       "slug": "2026-11-07_local-home-automation-bridge-for-samsung-appliances-mini-clo.html"
+    },
+    {
+      "date": "2026-11-08T12:51:40+00:00",
+      "title": "Build a Sherlock‑style Username Search CLI in Python",
+      "source_url": "https://github.com/sherlock-project/sherlock",
+      "slug": "2026-11-08_sherlock-style-username-search-cli-python.html"
+    },
+    {
+      "date": "2026-11-08T12:55:57+00:00",
+      "title": "Build an Agent‑Browser Automation CLI with Rust",
+      "source_url": "https://github.com/vercel-labs/agent-browser",
+      "slug": "2026-11-08_agent-browser-automation-cli-clone-in-rust.html"
+    },
+    {
+      "date": "2026-11-08T13:00:21+00:00",
+      "title": "Build a Billion‑Context Text Compression Demo in TypeScript",
+      "source_url": "https://github.com/ranxianglei/billion-context",
+      "slug": "2026-11-08_billion-context-text-compression-demo-in-typescript.html"
     }
   ]
 }

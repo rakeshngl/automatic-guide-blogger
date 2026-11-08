@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-08",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Sherlock‑style Username Search CLI in Python",
+      "source": "github_trending",
+      "url": "https://github.com/sherlock-project/sherlock",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-08_sherlock-style-username-search-cli-python.html",
+      "tagline": "A minimal clone that checks usernames on a few social sites",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 40,
+      "tags": [
+        "python",
+        "cli",
+        "web-scraping"
+      ]
+    },
+    {
+      "title": "Build an Agent‑Browser Automation CLI with Rust",
+      "source": "github_trending",
+      "url": "https://github.com/vercel-labs/agent-browser",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-08_agent-browser-automation-cli-clone-in-rust.html",
+      "tagline": "A minimal Rust CLI that opens a page, snapshots text, and clicks elements",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 55,
+      "tags": [
+        "rust",
+        "cli",
+        "browser-automation"
+      ]
+    },
+    {
+      "title": "Build a Billion‑Context Text Compression Demo in TypeScript",
+      "source": "github_trending",
+      "url": "https://github.com/ranxianglei/billion-context",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-08_billion-context-text-compression-demo-in-typescript.html",
+      "tagline": "A minimal TypeScript clone that compresses large text streams locally",
+      "navbar_badge": "Beginner",
+      "est_minutes": 45,
+      "tags": [
+        "typescript",
+        "web",
+        "nlp"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1568973458304405734",
+    "1568973473236262924",
+    "1568973479947141131"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

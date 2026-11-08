@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Sherlock‑style Username Search CLI (Python)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner Friendly</div>
+    </nav>
+
+    <header>
+        <h1>Sherlock‑style Username Search CLI (Python)</h1>
+        <p>A minimal clone that checks usernames on a few social sites</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick build you’ll create a lightweight command‑line tool that mimics Sherlock’s core idea: probing a handful of social networks for the existence of a given username.</p>
+        <p>We’ll use plain Python 3, the standard library and the free‑tier <code>requests</code> package – no paid APIs, no Docker, just a few minutes of coding and you’ll have a working clone you can extend.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>You need Python 3.9+ and <code>pip install requests</code>. The real Sherlock supports 400+ sites; our clone checks only three to keep it simple.</li>
+                <li>Network errors are ignored – the script only reports a 200 OK response as “found”.</li>
+                <li>Running many usernames quickly may hit rate limits on the target sites.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal Sherlock Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 630 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="96" width="198" height="70" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="114" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<rect x="426" y="24" width="198" height="214" fill="none" stroke="#b91c1c" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="525.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:#b91c1c">EXTERNAL SITES</text>
+<line x1="400" y1="146" x2="440" y2="74" class="link"  marker-end="url(#gw-arrow)"/>
+<line x1="400" y1="146" x2="440" y2="146" class="link"  marker-end="url(#gw-arrow)"/>
+<line x1="400" y1="146" x2="440" y2="218" class="link"  marker-end="url(#gw-arrow)"/>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">CLI Python Script</text>
+<rect x="440" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="525.0" y="79" class="node-text">Twitter.com</text>
+<rect x="440" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="525.0" y="151" class="node-text">GitHub.com</text>
+<rect x="440" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="525.0" y="223" class="node-text">Reddit.com</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a new folder and a virtual environment; install the only dependency.</p>
+<div class="code-block"><pre><code>mkdir sherlock_clone &amp;&amp; cd sherlock_clone
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install requests</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the site list and URL builder</h2>
+                <p>We store a tiny mapping of site name → URL pattern where <code>{}</code> will be replaced by the username.</p>
+                <p><strong>sites.py</strong></p>
+<div class="code-block"><pre><code><span class="code-comment"># sites.py – minimal site map for the clone</span>
+<span class="code-comment"># The key is a friendly name, the value is a format string where `{}` becomes the username.</span>
+SITE_URLS = {
+    "Twitter": "https://twitter.com/{}",
+    "GitHub": "https://github.com/{}",
+    "Reddit": "https://www.reddit.com/user/{}",
+}
+
+def build_url(site, username):
+    """Return the full URL for *site* with *username* inserted.
+    Raises KeyError if the site is unknown.
+    """
+    pattern = SITE_URLS[site]
+    return pattern.format(username)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core lookup logic (API)</h2>
+                <p>In this step we create the heart of the clone: a function that walks through each social‑media site we support, builds the profile URL for the target username, and sends a simple GET request. If the response returns HTTP 200 we treat the username as found on that platform; any other status means the name is likely unavailable. The function returns a dictionary mapping site names to the full URL for successful hits, which the CLI will later display and store.</p>
+                <p>The implementation relies on the popular <code>requests</code> library because it handles redirects and timeouts gracefully out of the box. Keeping the logic isolated in its own module makes testing easy and lets the CLI stay focused on user interaction.</p>
+                <p><strong>lookup.py</strong></p>
+<div class="code-block"><pre><code>import requests
+from urllib.parse import quote
+
+<span class="code-comment"># Simple site map – keys are readable names, values are URL patterns where {username} will be inserted.</span>
+SITES = {
+    "GitHub": "https://github.com/{username}",
+    "Twitter": "https://twitter.com/{username}",
+    "Reddit": "https://www.reddit.com/user/{username}",
+    "Instagram": "https://www.instagram.com/{username}/",
+}
+
+def check_username(username: str, timeout: float = 5.0) -&gt; dict:
+    """Return a dict of sites where *username* exists.
+
+    The function iterates over :data:`SITES`, formats each URL, performs a GET request,
+    and records the URL when the response status code is 200.
+    """
+    found = {}
+    encoded = quote(username)  # ensure special characters are URL‑safe
+    for site, pattern in SITES.items():
+        url = pattern.format(username=encoded)
+        try:
+            resp = requests.get(url, timeout=timeout, allow_redirects=True)
+            if resp.status_code == 200:
+                found[site] = url
+        except requests.RequestException:
+            <span class="code-comment"># Network hiccups or DNS failures are ignored – treat as not found.</span>
+            continue
+    return found</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: CLI entry point (UI)</h2>
+                <p>Now we expose the lookup functionality to the command line. Using Python's built‑in <code>argparse</code> we accept a single required argument – the username to search – and an optional <code>--output-dir</code> to control where result files are written. After calling <code>check_username</code>, we print a friendly summary to the console and also dump each successful URL into a text file named <code>&lt;username&gt;.txt</code> for later reference.</p>
+                <p>The script is deliberately lightweight: it imports only what it needs, handles missing results gracefully, and creates the output directory if it doesn't exist. This mirrors the minimal‑clone philosophy while still providing a useful user experience.</p>
+                <p>Running the script directly (e.g., <code>python sherlock_clone.py alice</code>) will trigger the full flow without any extra setup.</p>
+                <p><strong>sherlock_clone.py</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/usr/bin/env python3</span>
+import argparse
+import os
+from pathlib import Path
+from lookup import check_username
+
+def main() -&gt; None:
+    parser = argparse.ArgumentParser(
+        description="Minimal Sherlock‑style username search across a few platforms"
+    )
+    parser.add_argument("username", help="The username to look up")
+    parser.add_argument(
+        "--output-dir",
+        default=".",
+        help="Directory where the result .txt file will be saved",
+    )
+    args = parser.parse_args()
+
+    results = check_username(args.username)
+    print(f"Results for '{args.username}':")
+    if results:
+        for site, url in results.items():
+            print(f"  {site}: {url}")
+    else:
+        print("  No profiles found.")
+
+    <span class="code-comment"># Write results to a per‑user text file</span>
+    out_path = Path(args.output_dir) / f"{args.username}.txt"
+    os.makedirs(out_path.parent, exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as f:
+        if results:
+            for url in results.values():
+                f.write(url + "\n")
+        else:
+            f.write("No profiles found.\n")
+    print(f"\nSaved results to {out_path}")
+
+if __name__ == "__main__":
+    main()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run locally and verify</h2>
+                <p>With the code in place, it's time to see it work. First, ensure the script is executable (or invoke it via the Python interpreter) and run it with a sample username such as <code>python</code>. The console should list any discovered profiles and confirm the path of the generated text file.</p>
+                <p>Next, open the created <code>&lt;username&gt;.txt</code> file to verify that it contains the URLs reported on the screen. If the file exists and includes at least one URL, the minimal clone is functioning correctly.</p>
+<div class="code-block"><pre><code>chmod +x sherlock_clone.py  # make it executable (optional)
+./sherlock_clone.py python   # run the clone for the username "python"
+cat python.txt               # view the saved results</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Python 3.9+ is active</td><td>python --version</td></tr>
+            <tr><td><code>requests</code> package installed without errors</td><td>pip show requests</td></tr>
+            <tr><td>Running the CLI prints a line starting with "Results for"</td><td>./sherlock_clone.py python</td></tr>
+            <tr><td>A file named "python.txt" appears containing at least one URL</td><td>cat python.txt</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional prototype. Extend it by adding more sites to the SITES dict, handling redirects, or outputting CSV/JSON. Happy hunting!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
