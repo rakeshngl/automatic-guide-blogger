@@ -278,26 +278,35 @@ class GuideWriter:
         outline = self._client.chat_json(base_messages, schema=GuideOutline, temperature=0.4, max_tokens=OUTLINE_MAX_TOKENS)
         self._pause(22)
         problems = _rubric_violations(outline)
-        if not problems:
-            return outline
-
-        logger.warning("outline_rubric_retry problems=%s", problems)
-        repair_messages = base_messages + [
-            {"role": "assistant", "content": outline.model_dump_json(exclude_none=True)},
-            {
-                "role": "user",
-                "content": (
-                    "Your outline violated these rules:\n- "
-                    + "\n- ".join(problems)
-                    + "\n\nReturn the corrected full outline JSON only."
-                ),
-            },
-        ]
-        outline = self._client.chat_json(repair_messages, schema=GuideOutline, temperature=0.4, max_tokens=OUTLINE_MAX_TOKENS)
-        self._pause(22)
-        remaining = _rubric_violations(outline)
-        if remaining:
-            raise WriterError(f"outline failed rubric after retry: {remaining}")
+        best_problems = problems
+        attempt = 0
+        while problems and attempt < 2:
+            attempt += 1
+            logger.warning("outline_rubric_retry attempt=%d problems=%s", attempt, problems)
+            repair_messages = base_messages + [
+                {"role": "assistant", "content": outline.model_dump_json(exclude_none=True)},
+                {
+                    "role": "user",
+                    "content": (
+                        "Your outline violated these rules:\n- "
+                        + "\n- ".join(problems)
+                        + "\n\nHard requirements: at least 4 phases, each with at least one "
+                        "code_block; at least 3 checklist_rows; at least 2 warning_bullets; "
+                        "the diagram must have at least 3 nodes. "
+                        "Return the corrected full outline JSON only."
+                    ),
+                },
+            ]
+            outline = self._client.chat_json(
+                repair_messages, schema=GuideOutline, temperature=0.4,
+                max_tokens=OUTLINE_MAX_TOKENS,
+            )
+            self._pause(22)
+            problems = _rubric_violations(outline)
+            if len(problems) < len(best_problems):
+                best_problems = problems
+        if problems:
+            raise WriterError(f"outline failed rubric after retry: {best_problems}")
         return outline
 
     def write_guide(self, pick: CandidateItem, context: str) -> Guide:

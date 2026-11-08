@@ -257,14 +257,20 @@ def _run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
     catalog_patched = 0
     if not settings.dry_run and any(r.get("status") == "ok" for r in results):
         try:
-            from guides_writer.render.catalog import patch_catalog
+            from guides_writer.render.catalog import backfill_catalog, patch_catalog
             catalog_path = (out_dir.parent / "index.html") if out_dir.name == "html" else (out_dir / "index.html")
             if not catalog_path.exists():
                 catalog_path = BASE_DIR / "out" / "index.html"
+            today_label = _local_date_label(getattr(settings, "tz_label", "Asia/Kolkata"))
             catalog_patched = patch_catalog(
                 catalog_path,
                 results,
-                today=_local_date_label(getattr(settings, "tz_label", "Asia/Kolkata")),
+                today=today_label,
+            )
+            catalog_patched += backfill_catalog(
+                catalog_path,
+                runs_dir or (BASE_DIR / "data" / "runs"),
+                today=today_label,
             )
         except Exception as exc:
             logger.warning("catalog_patch_failed err=%s", exc)

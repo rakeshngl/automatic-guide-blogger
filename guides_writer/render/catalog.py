@@ -1,10 +1,26 @@
+import json
 import logging
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
 from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
+
+
+def _atomic_write(path: Path, text: str) -> None:
+    """Write via a temp file so a crash/ENOSPC cannot truncate the catalog."""
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def _format_day_label(day: str) -> str:
+    try:
+        return datetime.strptime(day, "%Y-%m-%d").strftime("%b %d, %Y")
+    except ValueError:
+        return day
 
 
 CARD_TEMPLATE = """        <article class="post-card" data-href="html/{href}" tabindex="0" role="link" aria-label="{title}">
@@ -86,6 +102,7 @@ def patch_catalog(index_path: Path, results: list[dict], today: str | None = Non
         desc = (result.get("tagline") or result.get("title", ""))[:180]
         est = result.get("est_minutes") or 40
         stack = _stack_from_result(result)
+        card_date = result.get("_catalog_date") or today
 
         card_html = CARD_TEMPLATE.format(
             eyebrow=eyebrow,
@@ -94,7 +111,7 @@ def patch_catalog(index_path: Path, results: list[dict], today: str | None = Non
             desc=desc,
             est=est,
             stack=stack,
-            date=today,
+            date=card_date,
         )
         card_soup = BeautifulSoup(card_html, "lxml")
         article = card_soup.select_one("article.post-card")
@@ -104,10 +121,40 @@ def patch_catalog(index_path: Path, results: list[dict], today: str | None = Non
             inserted += 1
 
     if inserted:
-        index_path.write_text(str(soup), encoding="utf-8")
+        _atomic_write(index_path, str(soup))
         logger.info("catalog_patched inserted=%d path=%s", inserted, index_path)
     elif purged:
-        index_path.write_text(str(soup), encoding="utf-8")
+        _atomic_write(index_path, str(soup))
         logger.info("catalog_patched purged_only purged=%d path=%s", purged, index_path)
 
+    return inserted
+
+
+def backfill_catalog(index_path: Path, runs_dir: Path, today: str | None = None) -> int:
+    """Add guides present in historical run logs but missing from the catalog.
+
+    Self-heals a catalog that lost entries (e.g. an interrupted write) and
+    keeps ``out/index.html`` in sync with ``data/runs``.
+    """
+    if not runs_dir.exists():
+        return 0
+
+    results: list[dict] = []
+    for run_file in sorted(runs_dir.glob("*.json")):
+        try:
+            data = json.loads(run_file.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            logger.warning("catalog_backfill_skip file=%s", run_file)
+            continue
+        day = str(data.get("date") or run_file.stem)
+        for result in data.get("guides") or []:
+            if result.get("status") != "ok":
+                continue
+            results.append({**result, "_catalog_date": _format_day_label(day)})
+
+    if not results:
+        return 0
+    inserted = patch_catalog(index_path, results, today=today)
+    if inserted:
+        logger.info("catalog_backfilled inserted=%d path=%s", inserted, index_path)
     return inserted

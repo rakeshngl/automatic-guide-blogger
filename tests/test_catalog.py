@@ -84,3 +84,39 @@ def test_skips_existing_and_duplicate_hrefs(site):
     (site / "html" / "old-real.html").write_text("<html></html>", encoding="utf-8")
     assert patch_catalog(index, [_result("old-real.html")]) == 0
     assert _card_hrefs(index).count("html/old-real.html") == 1
+
+
+def test_write_is_atomic_and_leaves_no_temp(site):
+    index = site / "index.html"
+    (site / "html" / "fresh.html").write_text("<html></html>", encoding="utf-8")
+    assert patch_catalog(index, [_result("fresh.html")]) == 1
+    assert not (site / "index.html.tmp").exists()
+    assert "html/fresh.html" in _card_hrefs(index)
+
+
+def test_backfill_adds_missing_guides_newest_first(site):
+    import json
+
+    from guides_writer.render.catalog import backfill_catalog
+
+    index = site / "index.html"
+    runs = site / "runs"
+    runs.mkdir()
+    for name in ("fresh-a.html", "fresh-b.html"):
+        (site / "html" / name).write_text("<html></html>", encoding="utf-8")
+    (runs / "2026-11-01.json").write_text(json.dumps({
+        "date": "2026-11-01",
+        "guides": [_result("fresh-a.html", "A")],
+    }), encoding="utf-8")
+    (runs / "2026-11-02.json").write_text(json.dumps({
+        "date": "2026-11-02",
+        "guides": [_result("fresh-b.html", "B")],
+    }), encoding="utf-8")
+
+    assert backfill_catalog(index, runs) == 2
+    hrefs = _card_hrefs(index)
+    assert "html/fresh-a.html" in hrefs
+    assert "html/fresh-b.html" in hrefs
+    assert hrefs.index("html/fresh-b.html") < hrefs.index("html/fresh-a.html")
+    assert "Nov 01, 2026" in index.read_text(encoding="utf-8")
+    assert backfill_catalog(index, runs) == 0

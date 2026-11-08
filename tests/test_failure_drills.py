@@ -134,7 +134,7 @@ class TestScraperIsolation:
 class TestBadLLMJson:
     def test_outline_always_invalid_all_guides_fail(self, tmp_path):
         bad = ValueError("schema mismatch: missing phases")
-        fake = FakeLLM({"GuideOutline": [bad] * 6})
+        fake = FakeLLM({"GuideOutline": [bad] * 9})
         summary = run_pipeline(
             SettingsLite(), adapters=[GoodAdapter(3)],
             llm_client=fake, out_dir=tmp_path, runs_dir=tmp_path / "runs", history_path=tmp_path / "history.json",
@@ -143,7 +143,7 @@ class TestBadLLMJson:
         assert all("failed" in g["status"] for g in summary["guides"])
 
     def test_garbage_structure_triggers_repair_then_fails(self, tmp_path):
-        fake = FakeLLM({"GuideOutline": [ValueError("invalid JSON")] * 6})
+        fake = FakeLLM({"GuideOutline": [ValueError("invalid JSON")] * 9})
         summary = run_pipeline(
             SettingsLite(), adapters=[GoodAdapter(3)],
             llm_client=fake, out_dir=tmp_path, runs_dir=tmp_path / "runs", history_path=tmp_path / "history.json",

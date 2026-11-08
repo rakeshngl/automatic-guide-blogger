@@ -73,7 +73,11 @@ if ($shouldPublish) {
     }
 }
 
-if ($publishDone) {
+if ($shouldPublish) {
+    $indexFile = Join-Path (Get-Location) "out\index.html"
+    if (-not (Test-Path $indexFile) -or (Get-Item $indexFile).Length -lt 1024) {
+        Write-Host "[WARN] Skipping git sync: out\index.html missing or empty"
+    } else {
     Write-Host ""
     Write-Host "Syncing site snapshot to git (origin/main)..."
     git add out data
@@ -93,6 +97,7 @@ if ($publishDone) {
         }
     } else {
         Write-Host "[INFO] No site changes to commit"
+    }
     }
 }
 

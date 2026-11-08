@@ -192,9 +192,18 @@ class TestWriterRubric:
         assert len(outline_calls) == 2
 
     def test_rubric_fail_raises(self):
-        fake = FakeLLM({"GuideOutline": [_invalid_outline(), _invalid_outline()]})
+        fake = FakeLLM({"GuideOutline": [_invalid_outline(), _invalid_outline(), _invalid_outline()]})
         with pytest.raises(WriterError):
             GuideWriter(fake).write_guide(_cand(1), "context")
+
+    def test_rubric_retries_twice_then_pass(self):
+        fake = FakeLLM({"GuideOutline": [
+            _invalid_outline(), _invalid_outline(), _valid_outline(),
+        ]})
+        writer = GuideWriter(fake)
+        guide = writer.write_guide(_cand(1), "context text")
+        assert guide.meta.title == SAMPLE_GUIDE.meta.title
+        assert [c for c in fake.calls if c == "GuideOutline"] == ["GuideOutline"] * 3
 
     def test_enrich_github_uses_readme(self, monkeypatch):
         import guides_writer.agents.writer as w
