@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple Git Worktree Manager in Rust</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Rust</div>
+    </nav>
+
+    <header>
+        <h1>Simple Git Worktree Manager in Rust</h1>
+        <p>A minimal clone of Worktrunk for beginners</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this short tutorial we’ll build a tiny Git worktree manager inspired by the Worktrunk CLI, using only Rust’s standard library and the free <code>git2</code> crate. The goal is a working prototype you can run locally in about 45 minutes.</p>
+        <p>You’ll learn how to scaffold a Cargo project, model worktree data, expose a tiny HTTP API with <code>warp</code>, and test the basic commands on your own repository.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Rust 1.70+ and <code>git</code> installed on your machine; the guide uses the <code>git2</code> crate which wraps libgit2 – ensure libgit2 is available (most OSes ship it).</li>
+                <li>The clone implements only three commands: list worktrees, add a new worktree, and remove one – the real Worktrunk has many more features and a richer UI.</li>
+                <li>Running the HTTP server on port 3030 may conflict with other services; choose a free port if needed.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL ENVIRONMENT</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">git2 calls</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">stores state</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Rust CLI + HTTP Server</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">Git Repository</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">In‑memory worktree list</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a new Cargo binary and add the required dependencies. This gives us a clean project layout and pulls in <code>git2</code> for talking to Git and <code>warp</code> for a tiny HTTP API, both of which are essential later on.</p>
+<div class="code-block"><pre><code>cargo new worktrunk_clone --bin
+cd worktrunk_clone
+<span class="code-comment"># Add dependencies to Cargo.toml</span>
+cat &gt;&gt; Cargo.toml &lt;&lt;'EOF'
+[dependencies]
+git2 = "0.18"
+warp = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+EOF</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Model worktree data</h2>
+                <p>Define a simple <code>Worktree</code> struct and an in‑memory vector to hold them. This mirrors the minimal state the real tool tracks – a name, its path on disk, and the branch it checks out. Keeping the data in a <code>Vec</code> lets us focus on the core logic without a database.</p>
+                <p><strong>src/main.rs</strong></p>
+<div class="code-block"><pre><code>use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct Worktree {
+    name: String,
+    path: String,
+    branch: String,
+}
+
+impl Worktree {
+    fn new(name: &amp;str, path: &amp;str, branch: &amp;str) -&gt; Self {
+        Self {
+            name: name.to_string(),
+            path: path.to_string(),
+            branch: branch.to_string(),
+        }
+    }
+}
+
+<span class="code-comment">// In‑memory store – a simple Vec wrapped in a mutex for thread safety.</span>
+use std::sync::{Arc, Mutex};
+type Store = Arc&lt;Mutex&lt;Vec&lt;Worktree&gt;&gt;&gt;;
+
+fn init_store() -&gt; Store {
+    Arc::new(Mutex::new(Vec::new()))
+}
+
+#[tokio::main]
+async fn main() {
+    let _store = init_store();
+    println!("Worktree manager scaffold ready – next phase will add HTTP routes.");
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core Git operations</h2>
+                <p>In this step we wrap the low‑level <code>git2</code> library so our program can talk to Git without spawning external commands. We'll expose three tiny helpers: one to list existing worktrees, one to add a new worktree, and one to remove a worktree. Errors are caught and printed to the console, keeping the UX simple for beginners. These helpers will be called later by our HTTP layer, so they return plain <code>Result</code> values that the server can translate into HTTP responses.</p>
+                <p><strong>src/main.rs</strong></p>
+<div class="code-block"><pre><code>use git2::{Repository, Worktree, Error};
+use std::path::Path;
+
+pub fn list_worktrees(repo_path: &amp;str) -&gt; Result&lt;Vec&lt;String&gt;, Error&gt; {
+    let repo = Repository::open(repo_path)?;
+    let mut names = Vec::new();
+    for wt in repo.worktrees()? {
+        names.push(wt.path().to_string_lossy().into_owned());
+    }
+    Ok(names)
+}
+
+pub fn add_worktree(repo_path: &amp;str, path: &amp;str, branch: &amp;str) -&gt; Result&lt;(), Error&gt; {
+    let repo = Repository::open(repo_path)?;
+    let mut wt = repo.worktree(path, branch, None)?;
+    wt.lock()?; // ensure the worktree is usable
+    Ok(())
+}
+
+pub fn remove_worktree(repo_path: &amp;str, path: &amp;str) -&gt; Result&lt;(), Error&gt; {
+    let repo = Repository::open(repo_path)?;
+    let mut wt = repo.worktree(path, "", None)?; // empty branch just to get handle
+    wt.unlock()?;
+    wt.remove()?;
+    Ok(())
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Tiny HTTP API</h2>
+                <p>Now we expose the Git helpers through a minimal HTTP API built with <code>warp</code>. Three routes are provided: <code>/list</code> returns a JSON array of worktree paths, <code>/add</code> creates a new worktree from query parameters <code>path</code> and <code>branch</code>, and <code>/remove</code> deletes a worktree identified by <code>path</code>. Each handler forwards to the functions from Phase 3 and maps success or failure to appropriate HTTP status codes.</p>
+                <p><strong>src/main.rs</strong></p>
+<div class="code-block"><pre><code>use warp::Filter;
+use serde_json::json;
+
+mod git_helpers; // assumes the functions above are in this module
+
+#[tokio::main]
+async fn main() {
+    let repo_path = std::env::var("REPO_PATH").unwrap_or_else(|_| ".".into());
+
+    let list = warp::path("list")
+        .and(warp::get())
+        .and_then(move || {
+            let rp = repo_path.clone();
+            async move {
+                match git_helpers::list_worktrees(&amp;rp) {
+                    Ok(wts) =&gt; Ok(warp::reply::json(&amp;wts)),
+                    Err(e) =&gt; Ok(warp::reply::with_status(
+                        json!({"error": e.to_string()}),
+                        warp::http::StatusCode::INTERNAL_SERVER_ERROR,
+                    )),
+                }
+            }
+        });
+
+    let add = warp::path("add")
+        .and(warp::get())
+        .and(warp::query::&lt;std::collections::HashMap&lt;String, String&gt;&gt;())
+        .and_then(move |q| {
+            let rp = repo_path.clone();
+            async move {
+                let path = q.get("path").map(|s| s.as_str()).unwrap_or("");
+                let branch = q.get("branch").map(|s| s.as_str()).unwrap_or("master");
+                match git_helpers::add_worktree(&amp;rp, path, branch) {
+                    Ok(_) =&gt; Ok(warp::reply::with_status("added", warp::http::StatusCode::OK)),
+                    Err(e) =&gt; Ok(warp::reply::with_status(e.to_string(), warp::http::StatusCode::BAD_REQUEST)),
+                }
+            }
+        });
+
+    let remove = warp::path("remove")
+        .and(warp::get())
+        .and(warp::query::&lt;std::collections::HashMap&lt;String, String&gt;&gt;())
+        .and_then(move |q| {
+            let rp = repo_path.clone();
+            async move {
+                let path = q.get("path").map(|s| s.as_str()).unwrap_or("");
+                match git_helpers::remove_worktree(&amp;rp, path) {
+                    Ok(_) =&gt; Ok(warp::reply::with_status("removed", warp::http::StatusCode::OK)),
+                    Err(e) =&gt; Ok(warp::reply::with_status(e.to_string(), warp::http::StatusCode::BAD_REQUEST)),
+                }
+            }
+        });
+
+    let routes = list.or(add).or(remove);
+    println!("Server listening on http://0.0.0.0:3030");
+    warp::serve(routes).run(([0, 0, 0, 0], 3030)).await;
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run and verify</h2>
+                <p>With the code compiled, start the server and point it at a real Git repository using the <code>REPO_PATH</code> environment variable. Then use <code>curl</code> to hit each endpoint: list the current worktrees, add a new one, and finally remove it. Watching the repository's <code>.git/worktrees</code> directory confirms that the operations really happened on disk.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Build the project (once)</span>
+cargo build --release
+
+<span class="code-comment"># Run the server, pointing at the current repo (or set REPO_PATH to another path)</span>
+REPO_PATH=$(pwd) cargo run --release &amp;
+SERVER_PID=$!
+
+<span class="code-comment"># Give the server a moment to start</span>
+sleep 2
+
+<span class="code-comment"># 1️⃣ List worktrees (should be empty initially)</span>
+curl http://localhost:3030/list
+
+<span class="code-comment"># 2️⃣ Add a new worktree named "feature-wt" on branch "feature"</span>
+curl "http://localhost:3030/add?path=feature-wt&amp;branch=feature"
+
+<span class="code-comment"># 3️⃣ Verify it appears in the list</span>
+curl http://localhost:3030/list
+
+<span class="code-comment"># 4️⃣ Remove the worktree again</span>
+curl "http://localhost:3030/remove?path=feature-wt"
+
+<span class="code-comment"># 5️⃣ Clean up the server process</span>
+kill $SERVER_PID</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Project builds without errors</td><td>cargo build</td></tr>
+            <tr><td>Server starts and listens on port 3030</td><td>curl -I http://localhost:3030</td></tr>
+            <tr><td><code>/list</code> returns a JSON array (empty or with entries)</td><td>curl http://localhost:3030/list</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>Try persisting worktrees to a tiny SQLite file with <code>rusqlite</code>, add authentication to the API, or expand the CLI with subcommands using <code>clap</code>. Happy hacking!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

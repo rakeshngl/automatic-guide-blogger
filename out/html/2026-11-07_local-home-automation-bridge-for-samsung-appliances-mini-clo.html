@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Local Home‑Automation Bridge for Samsung Appliances (Mini‑Clone)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Local Home‑Automation Bridge for Samsung Appliances (Mini‑Clone)</h1>
+        <p>A 45‑minute beginner guide to a local‑only Samsung appliance bridge</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In this tutorial you’ll create a tiny, self‑hosted service that mimics the core of the LocalThings integration – a simple HTTP API that discovers a Samsung appliance by IP and exposes its power state.</p>
+        <p>We’ll use Python 3, FastAPI, and SQLite (all free‑tier) to spin up a local bridge you can run on any laptop or Raspberry Pi. No cloud keys, no paid SDKs – just pure local networking.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>You need Python 3.9+ and <code>pip</code>. The guide assumes a Unix‑like shell (Linux/macOS or WSL on Windows).</li>
+                <li>The clone only supports power on/off for a single appliance; the real LocalThings handles dozens of clusters, encryption, and push updates – those are out of scope here.</li>
+                <li>Make sure the target Samsung appliance is on the same LAN and its IP is reachable (ping it first).</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Mini‑Clone Architecture</div>
+            <svg width="100%" height="190" viewBox="0 0 420 190" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="142" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link" marker-start="url(#gw-arrow)" marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">reads/writes</text>
+<line x1="230" y1="74" x2="190" y2="110" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="210" y="86" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP/TCP commands</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">FastAPI Bridge</text>
+<text x="315.0" y="87" class="node-subtext">Python code</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite DB</text>
+<text x="315.0" y="159" class="node-subtext">State store</text>
+<rect x="20" y="86" width="170" height="48" rx="10" class="node-tech" />
+<text x="105.0" y="107" class="node-text">Samsung Appliance</text>
+<text x="105.0" y="123" class="node-subtext">Local network device</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>First we create an isolated Python environment so our dependencies don’t clash with any other projects on the machine. Then we install FastAPI – the web framework that will expose our tiny API – and Uvicorn, the ASGI server that runs it. Finally we create an empty SQLite file; FastAPI will use it later to persist the appliance’s power state.</p>
+                <p>All of these steps are one‑liners, but keeping them together in a script makes the clone reproducible on any system you later move to, such as a Raspberry Pi.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Create and activate a virtual environment</span>
+python3 -m venv .venv
+source .venv/bin/activate
+
+<span class="code-comment"># Upgrade pip and install core dependencies</span>
+pip install --upgrade pip
+pip install fastapi uvicorn[standard]
+
+<span class="code-comment"># Initialise an empty SQLite database file</span>
+sqlite3 appliance.db "VACUUM;"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Model – store appliance info</h2>
+                <p>We need a clear contract for the data we’ll receive and store. A Pydantic model gives us type‑checked validation for incoming JSON payloads, while a tiny helper function abstracts the SQLite upsert logic – inserting a new row or updating the existing one based on the appliance’s unique IP address.</p>
+                <p>Keeping the model and DB helper in a dedicated <code>models.py</code> file isolates the data layer from the API routes, which makes the code easier to test and extend later (for example, adding temperature readings).</p>
+                <p><strong>models.py</strong></p>
+<div class="code-block"><pre><code>from pydantic import BaseModel, Field
+import sqlite3
+from typing import Optional
+
+<span class="code-comment"># -------------------------------------------------------------------</span>
+<span class="code-comment"># Pydantic schema – describes the JSON body the API expects</span>
+<span class="code-comment"># -------------------------------------------------------------------</span>
+class Device(BaseModel):
+    ip: str = Field(..., description="Local IP address of the Samsung appliance")
+    name: Optional[str] = Field(None, description="Friendly name for the device")
+    power: bool = Field(..., description="Current power state; True=on, False=off")
+
+<span class="code-comment"># -------------------------------------------------------------------</span>
+<span class="code-comment"># SQLite helper – creates table if missing and upserts a device record</span>
+<span class="code-comment"># -------------------------------------------------------------------</span>
+_DB_PATH = "appliance.db"
+
+def _ensure_table():
+    with sqlite3.connect(_DB_PATH) as conn:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS devices (
+                ip TEXT PRIMARY KEY,
+                name TEXT,
+                power INTEGER NOT NULL
+            );
+            """
+        )
+        conn.commit()
+
+def upsert_device(device: Device):
+    """Insert a new device or update the existing row identified by IP."""
+    _ensure_table()
+    with sqlite3.connect(_DB_PATH) as conn:
+        conn.execute(
+            """
+            INSERT INTO devices (ip, name, power) VALUES (?, ?, ?)
+            ON CONFLICT(ip) DO UPDATE SET name=excluded.name, power=excluded.power;
+            """,
+            (device.ip, device.name, int(device.power)),
+        )
+        conn.commit()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: API – discover &amp; control</h2>
+                <p>In this step we turn our tiny SQLite store into a real HTTP API using FastAPI. The <code>/discover</code> endpoint accepts a JSON body with an <code>ip</code> field and writes it to the <code>device</code> table – no authentication is needed because this clone runs only on your local network. The <code>/power</code> endpoint reads the stored IP, pretends to send a TCP command, flips a simulated power flag, and returns the new state as JSON. Keeping the logic tiny makes it easy to see how the real LocalThings bridge talks to Samsung appliances without the complexity of encryption.</p>
+                <p><strong>main.py</strong></p>
+<div class="code-block"><pre><code>import json
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+import aiosqlite
+import asyncio
+
+app = FastAPI()
+DB = 'appliances.db'
+
+class Device(BaseModel):
+    ip: str
+
+async def init_db():
+    async with aiosqlite.connect(DB) as db:
+        await db.execute('CREATE TABLE IF NOT EXISTS device (ip TEXT PRIMARY KEY, power INTEGER DEFAULT 0)')
+        await db.commit()
+
+@app.on_event('startup')
+async def startup():
+    await init_db()
+
+@app.post('/discover')
+async def discover(dev: Device):
+    async with aiosqlite.connect(DB) as db:
+        try:
+            await db.execute('INSERT INTO device (ip) VALUES (?)', (dev.ip,))
+            await db.commit()
+        except aiosqlite.IntegrityError:
+            raise HTTPException(status_code=400, detail='Device already registered')
+    return {'status': 'registered', 'ip': dev.ip}
+
+@app.post('/power')
+async def power(dev: Device):
+    async with aiosqlite.connect(DB) as db:
+        cur = await db.execute('SELECT power FROM device WHERE ip = ?', (dev.ip,))
+        row = await cur.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail='Device not found')
+        new_state = 0 if row[0] else 1  # toggle
+        await db.execute('UPDATE device SET power = ? WHERE ip = ?', (new_state, dev.ip))
+        await db.commit()
+    <span class="code-comment"># Simulate TCP command (no real network traffic)</span>
+    await asyncio.sleep(0.1)
+    return {'ip': dev.ip, 'power': new_state}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the API code is ready, we launch it with Uvicorn. Running the server in the background lets you keep using the same terminal for the next steps, while the virtual environment stays active so imports resolve correctly.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Ensure the virtualenv is active</span>
+source venv/bin/activate
+<span class="code-comment"># Start FastAPI with Uvicorn in the background, listening on port 8000</span>
+nohup uvicorn main:app --host 0.0.0.0 --port 8000 &gt; server.log 2&gt;&amp;1 &amp;
+<span class="code-comment"># Print the PID so you can stop it later</span>
+echo "Server PID: $!"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; extend</h2>
+                <p>With the server running we can interact using <code>curl</code>. First we register a fake appliance IP, then we toggle its power state and watch the JSON response. Once the basic flow works you can easily add more fields (temperature, mode) to the SQLite schema or swap the database for PostgreSQL by changing the <code>init_db</code> and query sections.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Register a dummy device (replace 192.168.1.42 with your appliance IP)</span>
+curl -s -X POST http://localhost:8000/discover -H 'Content-Type: application/json' -d '{"ip":"192.168.1.42"}'
+
+<span class="code-comment"># Toggle power – first call turns it ON, second call turns it OFF</span>
+curl -s -X POST http://localhost:8000/power -H 'Content-Type: application/json' -d '{"ip":"192.168.1.42"}'
+curl -s -X POST http://localhost:8000/power -H 'Content-Type: application/json' -d '{"ip":"192.168.1.42"}'
+
+<span class="code-comment"># Optional: view the SQLite file directly</span>
+sqlite3 appliances.db "SELECT ip, power FROM device;"</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Virtualenv activated and dependencies installed</td><td>pip list | grep -E 'fastapi|uvicorn|aiosqlite'</td></tr>
+            <tr><td>SQLite file contains a row after discovery</td><td>sqlite3 appliances.db "SELECT * FROM device;"</td></tr>
+            <tr><td>API returns JSON on power toggle</td><td>curl -s -X POST http://localhost:8000/power -H 'Content-Type: application/json' -d '{"ip":"192.168.1.42"}' | jq .</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional local bridge. To approach the full LocalThings feature set, add encrypted SmartThings protocol handling, periodic polling, and Home Assistant MQTT discovery. Happy hacking!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

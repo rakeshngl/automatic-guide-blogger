@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-04",
+  "status": "partial",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Git Worktree Manager with Rust (worktrunk clone)",
+      "source": "github_trending",
+      "url": "https://github.com/max-sixty/worktrunk",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-04_simple-git-worktree-manager-in-rust.html",
+      "tagline": "A minimal clone of Worktrunk for beginners",
+      "navbar_badge": "Rust",
+      "est_minutes": 45,
+      "tags": [
+        "rust",
+        "cli",
+        "git"
+      ]
+    },
+    {
+      "title": "Build a Basic PR Review Bot in Python (pr‑agent style)",
+      "source": "github_trending",
+      "url": "https://github.com/The-PR-Agent/pr-agent",
+      "status": "failed: [Errno 28] No space left on device"
+    },
+    {
+      "title": "Build a Local AWS S3 Emulator in Java (floci‑style)",
+      "source": "github_trending",
+      "url": "https://github.com/floci-io/floci",
+      "status": "failed: [Errno 28] No space left on device"
+    }
+  ],
+  "delivery_ids": [
+    "1567522718721511596"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 0
+}

@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-07",
+  "status": "partial",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Username‑Search CLI Clone with Python (Sherlock‑style)",
+      "source": "github_trending",
+      "url": "https://github.com/sherlock-project/sherlock",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-07_username-search-cli-clone-python.html",
+      "tagline": "A minimal Sherlock‑style tool in 45 minutes",
+      "navbar_badge": "Beginner",
+      "est_minutes": 40,
+      "tags": [
+        "python",
+        "cli",
+        "http"
+      ]
+    },
+    {
+      "title": "Build a Simple Browser‑Automation CLI for AI Agents with Rust (agent‑browser clone)",
+      "source": "github_trending",
+      "url": "https://github.com/vercel-labs/agent-browser",
+      "status": "failed: outline failed rubric after retry: ['only 1 phases, need >= 4']"
+    },
+    {
+      "title": "Build a Local Home‑Automation Bridge for Samsung Appliances (localthings‑style)",
+      "source": "github_trending",
+      "url": "https://github.com/mbillow/localthings",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-07_local-home-automation-bridge-for-samsung-appliances-mini-clo.html",
+      "tagline": "A 45‑minute beginner guide to a local‑only Samsung appliance bridge",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "iot",
+        "home‑automation"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1568606710862581850",
+    "1568606715803607040"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 0
+}

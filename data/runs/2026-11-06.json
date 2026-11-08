@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-06",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a 69‑Byte Million Dollar Homepage Clone (Black Pixel) with HTML & JavaScript",
+      "source": "hn_show",
+      "url": "https://black-pixel-1x1.vercel.app",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-06_69-byte-black-pixel-clone.html",
+      "tagline": "A tiny HTML/JS replica of the inverse Million Dollar Homepage",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 30,
+      "tags": [
+        "HTML",
+        "JavaScript",
+        "Web"
+      ]
+    },
+    {
+      "title": "Build a Simple Reddit‑Free Reader (Ueddit) with Node.js and Express",
+      "source": "hn_show",
+      "url": "https://ueddit.com/",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-06_simple-reddit-free-reader-ueddit-clone.html",
+      "tagline": "A minimal Node.js/Express app that fetches public Reddit posts without login",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "Node.js",
+        "Express",
+        "API"
+      ]
+    },
+    {
+      "title": "Build a Basic Website Change Detector with Python & Flask (changedetection.io inspired)",
+      "source": "reddit_selfhosted",
+      "url": "https://www.reddit.com/r/selfhosted/comments/1xoh9mu/changedetectionio_yearly_update/",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-06_basic-website-change-detector-with-flask.html",
+      "tagline": "A minimal clone of changedetection.io using Python & SQLite",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "Python",
+        "Flask",
+        "Web Scraping"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1568244363199254618",
+    "1568244368010387488",
+    "1568244374079537233"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 0
+}

@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-05",
+  "status": "partial",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Simple Web Scraper with Scrapling in Python"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Browser Automation CLI for AI Agents with agent-browser (Rust)",
+      "source": "github_trending",
+      "url": "https://github.com/vercel-labs/agent-browser",
+      "status": "failed: LLM JSON generation failed (400 json_validate_failed): {\"error\":{\"message\":\"Failed to generate JSON. Please adjust your prompt. See 'failed_generation' for more details.\",\"type\":\"invalid_request_error\",\"code\":\"json_validate_failed\",\"failed_generation\":\"{\\\"phases\\\":[{\\\"title\\\":\\\"Phase 3: Core – click a stored ref\\\",\\\"prose\\\":[\\\"The `click` sub‑command reads the reference you saw from `open` (e.g. `@e1`), looks up the stored href, navigates the browser to that link, and then prints the new page URL. This lets you hop from one discovered link to the next without manually copying URLs.\\\",\\\"We keep a tiny in‑memory dictionary called `refs` that maps each `@eN` to its href. When `click` runs we fetch the target, tell Playwright to go there, wait for the load, and finally echo the current URL so you can see where you ended up.\\\"],\\\"code_blocks\\\":[{\\\"lang\\\":\\\"python\\\",\\\"filename\\\":\\\"cli.py\\\",\\\"code\\\":\\\"import sys, json, argparse\\\\nfrom pathlib import Path\\\\nfrom playwright.sync_api import sync_playwright\\\\n\\\\nSTORE_PATH = Path('.refs.json')\\\\nrefs = json.loads(STORE_PATH.read_text()) if STORE_PATH.exists() else {}\\\\n\\\\nparser = argparse.ArgumentParser(prog='cli.py')\\\\nsub = parser.add_subparsers(dest='cmd')\\\\nopen_cmd = sub.add_parser('open')\\\\nopen_cmd.add_argument('url')\\\\nclick_cmd = sub.add_parser('click')\\\\nclick_cmd.add_argument('ref')\\\\nargs = parser.parse_args()\\\\n\\\\nwith sync_playwright() as p:\\\\n    browser = p.chromium.launch(headless=True)\\\\n    page = browser.new_page()\\\\n    if args.cmd == 'open':\\\\n        page.goto(args.url)\\\\n        page.wait_for_load_state('domcontentloaded')\\\\n        links = page.query_selector_all('a[href]')\\\\n        for i, link in enumerate(links, start=1):\\\\n            href = link.get_attribute('href')\\\\n            ref_id = f'@e{i}'\\\\n            refs[ref_id] = href\\\\n            print(f'{ref_id}: {href}')\\\\n        STORE_PATH.write_text(json.dumps(refs))\\\\n    elif args.cmd == 'click':\\\\n        target = refs.get(args.ref)\\\\n        if not target:\\\\n            sys.exit(f'Unknown ref"
+    },
+    {
+      "title": "Build a Git Worktree Manager CLI with worktrunk in Rust",
+      "source": "github_trending",
+      "url": "https://github.com/max-sixty/worktrunk",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-05_git-worktree-manager-cli-clone-in-rust.html",
+      "tagline": "A minimal 45‑minute clone of Worktrunk using only Rust stdlib",
+      "navbar_badge": "Rust",
+      "est_minutes": 35,
+      "tags": [
+        "rust",
+        "git",
+        "cli"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1567887992679563384"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 0
+}

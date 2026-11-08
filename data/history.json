@@ -701,6 +701,48 @@
       "title": "Build a Simple Webhook Tester with Node.js & Hookdeck Inspect API",
       "source_url": "https://www.producthunt.com/r/ONA6KQJZWUEX2Z?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
       "slug": "2026-11-03_simple-webhook-tester-with-node-js-hookdeck-inspect-api.html"
+    },
+    {
+      "date": "2026-11-04T12:47:54+00:00",
+      "title": "Build a Simple Git Worktree Manager with Rust (worktrunk clone)",
+      "source_url": "https://github.com/max-sixty/worktrunk",
+      "slug": "2026-11-04_simple-git-worktree-manager-in-rust.html"
+    },
+    {
+      "date": "2026-11-05T13:07:06+00:00",
+      "title": "Build a Git Worktree Manager CLI with worktrunk in Rust",
+      "source_url": "https://github.com/max-sixty/worktrunk",
+      "slug": "2026-11-05_git-worktree-manager-cli-clone-in-rust.html"
+    },
+    {
+      "date": "2026-11-06T12:35:12+00:00",
+      "title": "Build a 69‑Byte Million Dollar Homepage Clone (Black Pixel) with HTML & JavaScript",
+      "source_url": "https://black-pixel-1x1.vercel.app",
+      "slug": "2026-11-06_69-byte-black-pixel-clone.html"
+    },
+    {
+      "date": "2026-11-06T12:40:30+00:00",
+      "title": "Build a Simple Reddit‑Free Reader (Ueddit) with Node.js and Express",
+      "source_url": "https://ueddit.com/",
+      "slug": "2026-11-06_simple-reddit-free-reader-ueddit-clone.html"
+    },
+    {
+      "date": "2026-11-06T12:43:12+00:00",
+      "title": "Build a Basic Website Change Detector with Python & Flask (changedetection.io inspired)",
+      "source_url": "https://www.reddit.com/r/selfhosted/comments/1xoh9mu/changedetectionio_yearly_update/",
+      "slug": "2026-11-06_basic-website-change-detector-with-flask.html"
+    },
+    {
+      "date": "2026-11-07T12:35:06+00:00",
+      "title": "Build a Username‑Search CLI Clone with Python (Sherlock‑style)",
+      "source_url": "https://github.com/sherlock-project/sherlock",
+      "slug": "2026-11-07_username-search-cli-clone-python.html"
+    },
+    {
+      "date": "2026-11-07T12:43:03+00:00",
+      "title": "Build a Local Home‑Automation Bridge for Samsung Appliances (localthings‑style)",
+      "source_url": "https://github.com/mbillow/localthings",
+      "slug": "2026-11-07_local-home-automation-bridge-for-samsung-appliances-mini-clo.html"
     }
   ]
 }
