@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-09",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Sherlock‑style Username Search CLI in Python"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Databox‑like Terminal Analytics Tracker with Node.js",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/BTKDEK3DQ7EK3M?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-09_terminal-analytics-tracker-clone.html",
+      "tagline": "A minimal Node.js CLI that logs and queries events locally",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "nodejs",
+        "sqlite",
+        "cli"
+      ]
+    },
+    {
+      "title": "Build a Sortaballs‑style Ball‑Sort Puzzle Game in JavaScript",
+      "source": "hn_show",
+      "url": "https://sortaballs.vercel.app",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-09_sortaballs-style-ball-sort-puzzle-game-clone.html",
+      "tagline": "A minimal JavaScript clone of the Sortaballs puzzle in ~45 minutes",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 50,
+      "tags": [
+        "javascript",
+        "html",
+        "css"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1569331363570778234",
+    "1569331368729514004"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}
