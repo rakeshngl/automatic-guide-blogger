@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-10",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Sherlock‑style Username Search CLI in Python",
+    "Build an Agent‑Browser Automation CLI in Rust"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Claude‑quickstart Chatbot Clone in Python",
+      "source": "github_trending",
+      "url": "https://github.com/anthropics/claude-quickstarts",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-10_claude-quickstart-chatbot-clone-python.html",
+      "tagline": "A minimal, runnable Python chat UI that mimics the Claude quickstart demo using a local mock LLM",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "flask",
+        "api"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1569694821596012649"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 1
+}
