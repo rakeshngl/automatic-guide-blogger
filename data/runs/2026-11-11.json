@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-11",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a CALL‑E‑style AI Phone Bot with Twilio Free Trial and OpenAI",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/Z5CBMYNIDVYDRO?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-11_build-a-call-e-style-ai-phone-bot-with-twilio-and-openai.html",
+      "tagline": "The phone line for AI agents – a minimal clone using free‑tier Twilio and OpenAI APIs",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "twilio",
+        "openai",
+        "nodejs"
+      ]
+    },
+    {
+      "title": "Build an Agent‑Skills‑inspired AI Coding Assistant CLI in JavaScript",
+      "source": "github_trending",
+      "url": "https://github.com/addyosmani/agent-skills",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-11_agent-skills-inspired-cli-coding-assistant.html",
+      "tagline": "A minimal Node.js CLI that mimics the slash‑command workflow of Agent Skills",
+      "navbar_badge": "beta",
+      "est_minutes": 35,
+      "tags": [
+        "nodejs",
+        "openai",
+        "cli"
+      ]
+    },
+    {
+      "title": "Build a Nod‑by‑n8n Personal AI Agent with Node‑RED‑style Workflows",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/BVJTK5BATUSE7H?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-11_personal-ai-agent-clone-with-node-js-sqlite.html",
+      "tagline": "A minimal nod‑by‑n8n‑style workflow engine",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "nodejs",
+        "sqlite",
+        "workflow"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1570055690897334357",
+    "1570055696739864669",
+    "1570055702796570756"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

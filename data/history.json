@@ -779,6 +779,24 @@
       "title": "Build a Claude‑quickstart Chatbot Clone in Python",
       "source_url": "https://github.com/anthropics/claude-quickstarts",
       "slug": "2026-11-10_claude-quickstart-chatbot-clone-python.html"
+    },
+    {
+      "date": "2026-11-11T12:34:07+00:00",
+      "title": "Build a CALL‑E‑style AI Phone Bot with Twilio Free Trial and OpenAI",
+      "source_url": "https://www.producthunt.com/r/Z5CBMYNIDVYDRO?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-11-11_build-a-call-e-style-ai-phone-bot-with-twilio-and-openai.html"
+    },
+    {
+      "date": "2026-11-11T12:38:35+00:00",
+      "title": "Build an Agent‑Skills‑inspired AI Coding Assistant CLI in JavaScript",
+      "source_url": "https://github.com/addyosmani/agent-skills",
+      "slug": "2026-11-11_agent-skills-inspired-cli-coding-assistant.html"
+    },
+    {
+      "date": "2026-11-11T12:40:46+00:00",
+      "title": "Build a Nod‑by‑n8n Personal AI Agent with Node‑RED‑style Workflows",
+      "source_url": "https://www.producthunt.com/r/BVJTK5BATUSE7H?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-11-11_personal-ai-agent-clone-with-node-js-sqlite.html"
     }
   ]
 }

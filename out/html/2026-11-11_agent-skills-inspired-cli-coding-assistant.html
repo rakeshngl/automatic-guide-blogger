@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Agent‑Skills‑inspired CLI Coding Assistant</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">beta</div>
+    </nav>
+
+    <header>
+        <h1>Agent‑Skills‑inspired CLI Coding Assistant</h1>
+        <p>A minimal Node.js CLI that mimics the slash‑command workflow of Agent Skills</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide. In the next 45 minutes you’ll spin up a tiny JavaScript CLI that understands slash‑style commands like <code>/spec</code>, <code>/plan</code>, and <code>/build</code> – a stripped‑down clone of Addy Osmani’s Agent Skills.</p>
+        <p>We’ll use plain Node.js (v18+), the built‑in <code>readline</code> module and a local SQLite database (via <code>better-sqlite3</code>) – all free, no external APIs. By the end you’ll have a working prototype you can extend with real AI or CI tools.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>Node 18+ and npm must be installed; older versions lack native ES‑modules support.</li>
+                <li>The clone stores data locally in SQLite – it does <strong>not</strong> integrate with GitHub, CI or real LLMs, so many advanced checks are simplified.</li>
+                <li>Running the CLI twice without resetting the DB will retain previous tasks; delete <code>assistant.db</code> to start fresh.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal Agent‑Skills CLI Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME &amp; DB</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">parse</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">store/retrieve</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">CLI Entry (index.js)</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">Command Dispatcher</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">SQLite DB (assistant.db)</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh folder for the assistant, initialise it as an npm package, and pull in the SQLite driver we’ll use for persistence. This gives us a clean workspace and the only external dependency we need right now.</p>
+                <p>All commands are run from your terminal; once they finish you’ll have a <code>package.json</code> and a <code>node_modules</code> folder ready for the next step.</p>
+<div class="code-block"><pre><code>mkdir agent-cli &amp;&amp; cd agent-cli
+npm init -y
+npm install better-sqlite3</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Initialise SQLite and define the task model</h2>
+                <p>We now create a tiny module that opens (or creates) a local SQLite file called <code>assistant.db</code>. It ensures a <code>tasks</code> table exists and exports helper functions to add a new task and fetch all tasks. Keeping this logic separate makes the CLI code tidy and testable.</p>
+                <p><strong>db.js</strong></p>
+<div class="code-block"><pre><code>import Database from 'better-sqlite3';
+
+<span class="code-comment">// Open (or create) the SQLite file in the project root</span>
+const db = new Database('assistant.db');
+
+<span class="code-comment">// Ensure the tasks table exists</span>
+const init = `CREATE TABLE IF NOT EXISTS tasks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  command TEXT NOT NULL,
+  payload TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);`;
+db.exec(init);
+
+export function addTask(command, payload = null) {
+  const stmt = db.prepare('INSERT INTO tasks (command, payload) VALUES (?, ?)');
+  const info = stmt.run(command, payload);
+  return info.lastInsertRowid;
+}
+
+export function getAllTasks() {
+  const stmt = db.prepare('SELECT * FROM tasks ORDER BY created_at DESC');
+  return stmt.all();
+}
+
+export default { addTask, getAllTasks };</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Command dispatcher &amp; simple handlers</h2>
+                <p>In this step we create a tiny command router that maps slash‑style commands to functions. Each handler will log what it received and push a simple record into an in‑memory task list so we can verify later that the command was processed.</p>
+                <p>Keeping the logic isolated in its own file makes the CLI core clean and lets you swap out real implementations without touching the loop code.</p>
+                <p><strong>commands.js</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">// commands.js – tiny dispatcher for slash commands</span>
+<span class="code-comment">// A shared in‑memory store for demo purposes</span>
+const tasks = [];
+
+<span class="code-comment">// Helper to record a task</span>
+function recordTask(command, args) {
+  const task = { id: tasks.length + 1, command, args, timestamp: new Date() };
+  tasks.push(task);
+  console.log(`✅ Recorded task #${task.id}: ${command}`);
+}
+
+<span class="code-comment">// Handlers for each supported slash command</span>
+function handleSpec(args) { console.log('🔧 Spec received:', args.join(' ')); recordTask('/spec', args); }
+function handlePlan(args) { console.log('🗺️ Plan received:', args.join(' ')); recordTask('/plan', args); }
+function handleBuild(args) { console.log('🏗️ Build received:', args.join(' ')); recordTask('/build', args); }
+function handleTest(args) { console.log('✅ Test received:', args.join(' ')); recordTask('/test', args); }
+function handleReview(args) { console.log('🔍 Review received:', args.join(' ')); recordTask('/review', args); }
+
+<span class="code-comment">// Dispatcher maps command strings to handler functions</span>
+function dispatch(input) {
+  const parts = input.trim().split(/\s+/);
+  const cmd = parts[0];
+  const args = parts.slice(1);
+  switch (cmd) {
+    case '/spec':   handleSpec(args); break;
+    case '/plan':   handlePlan(args); break;
+    case '/build':  handleBuild(args); break;
+    case '/test':   handleTest(args); break;
+    case '/review': handleReview(args); break;
+    default:
+      console.log(`❓ Unknown command: ${cmd}`);
+  }
+}
+
+<span class="code-comment">// Export both dispatcher and the task list for later inspection</span>
+module.exports = { dispatch, tasks };</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Interactive CLI loop</h2>
+                <p>Now we wire up Node's <code>readline</code> module to present a friendly <code>agent&gt;</code> prompt. Every line the user types is sent to our dispatcher, and the loop continues until the user types <code>exit</code> or hits <code>Ctrl‑C</code>.</p>
+                <p>At the end we print a summary table of all recorded tasks so you can see that the commands were stored correctly.</p>
+                <p><strong>index.js</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">// index.js – interactive CLI entry point</span>
+const readline = require('readline');
+const { dispatch, tasks } = require('./commands');
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  prompt: 'agent&gt; '
+});
+
+console.log('🤖 Welcome to the Agent‑Skills‑inspired CLI');
+rl.prompt();
+
+rl.on('line', (line) =&gt; {
+  const trimmed = line.trim();
+  if (trimmed === '' ) { rl.prompt(); return; }
+  if (trimmed.toLowerCase() === 'exit') {
+    rl.close();
+    return;
+  }
+  dispatch(trimmed);
+  rl.prompt();
+}).on('close', () =&gt; {
+  console.log('\n📋 Recorded tasks:');
+  console.table(tasks);
+  console.log('👋 Bye!');
+  process.exit(0);
+});</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run, verify and extend</h2>
+                <p>With the dispatcher and interactive loop in place, start the program using Node. You should see the <code>agent&gt;</code> prompt, type a few slash commands, then type <code>exit</code> to view the task table.</p>
+                <p>From here you can replace the placeholder handlers with real code generation, test execution, or even call an LLM via OpenAI's API. The scaffold is ready for any extension you imagine.</p>
+<div class="code-block"><pre><code>node index.js</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>CLI starts without errors</td><td>node index.js → should show <code>agent&gt;</code> prompt</td></tr>
+            <tr><td>A <code>/spec</code> command is recorded</td><td>type <code>/spec build a todo app</code> then <code>exit</code>; console.table should list a row with command '/spec'</td></tr>
+            <tr><td>All defined commands respond</td><td>run <code>/plan sprint</code>, <code>/build slice1</code>, <code>/test</code>, <code>/review</code>; each prints a line and adds a DB row</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional skeleton of Agent Skills. Replace the placeholder handlers with real code generation, test runners, or CI hooks, and connect to an LLM API for AI‑driven specs. Happy hacking!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
