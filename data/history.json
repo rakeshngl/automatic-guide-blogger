@@ -797,6 +797,24 @@
       "title": "Build a Nod‑by‑n8n Personal AI Agent with Node‑RED‑style Workflows",
       "source_url": "https://www.producthunt.com/r/BVJTK5BATUSE7H?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
       "slug": "2026-11-11_personal-ai-agent-clone-with-node-js-sqlite.html"
+    },
+    {
+      "date": "2026-11-12T12:37:06+00:00",
+      "title": "Build a Simple 2D Game with Pite Engine in Python",
+      "source_url": "https://github.com/piteengine/pite",
+      "slug": "2026-11-12_build-a-simple-2d-game-with-pite-engine.html"
+    },
+    {
+      "date": "2026-11-12T12:43:41+00:00",
+      "title": "Build a No‑Server Daily Word Game Clone (Wordout) with HTML + JavaScript",
+      "source_url": "https://dilippanicker.github.io/wordout/play/",
+      "slug": "2026-11-12_no-server-daily-word-game-clone-wordout.html"
+    },
+    {
+      "date": "2026-11-12T12:47:05+00:00",
+      "title": "Build an Encrypted Clipboard Sync Tool (Panosync) in Node.js",
+      "source_url": "https://github.com/msbayindir/panosync",
+      "slug": "2026-11-12_encrypted-clipboard-sync-tool-panosync-clone.html"
     }
   ]
 }

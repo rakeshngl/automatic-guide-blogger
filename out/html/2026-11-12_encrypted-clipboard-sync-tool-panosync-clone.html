@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Encrypted Clipboard Sync Tool (Panosync) Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Encrypted Clipboard Sync Tool (Panosync) Clone</h1>
+        <p>Build a minimal end‑to‑end encrypted clipboard sync using Node.js and SQLite</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide. In the next 45 minutes you’ll create a lightweight clone of Panosync – a self‑hosted relay that syncs clipboard data across devices with end‑to‑end encryption.</p>
+        <p>We’ll use Node.js, Express, and SQLite on the free tier – no external paid APIs. The result is a local server you can run on any machine and a tiny client script to push/pull encrypted clipboard snippets.</p>
+
+        <div class="fix-box">
+            <h4>Prerequisites &amp; Gotchas</h4>
+            <ul>
+                <li>Node ≥ 18 and npm must be installed; older versions lack native Web Crypto support.</li>
+                <li>The clone stores encrypted blobs in SQLite – fine for a demo but not production‑grade. Real Panosync uses a Rust relay for performance.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link" marker-start="url(#gw-arrow)" marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">POST /push &amp; GET /pull</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">CRUD encrypted blobs</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Clipboard Client</text>
+<text x="315.0" y="87" class="node-subtext">clipboardy + crypto</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Express Relay</text>
+<text x="315.0" y="159" class="node-subtext">SQLite store</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">SQLite DB</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold Project</h2>
+                <p>Initialize a new npm project and install the required packages. This gives us a clean workspace and pulls in Express for the HTTP relay, better‑sqlite3 for a tiny SQLite wrapper, and clipboardy for a quick client demo.</p>
+                <p>We also add nodemon as a dev dependency so the server restarts automatically while you iterate.</p>
+                <p>All files will live under a single folder, keeping the clone minimal and easy to understand.</p>
+<div class="code-block"><pre><code>mkdir panosync-clone &amp;&amp; cd panosync-clone
+npm init -y
+npm install express better-sqlite3 clipboardy
+npm install --save-dev nodemon
+<span class="code-comment"># Add a start script to package.json for convenience</span>
+npx json -I -f package.json -e 'this.scripts={"start":"node server.js","dev":"nodemon server.js"}'</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data Model – SQLite Store</h2>
+                <p>Create a tiny SQLite database with a table for encrypted clipboard entries. Each row stores a UUID, the encrypted blob, and a timestamp so we can prune old entries later.</p>
+                <p>We wrap the raw SQL in a small helper module (db.js) that exposes <code>addEntry</code>, <code>getLatest</code>, and <code>clearOld</code> functions – enough for the relay to push and pull data safely.</p>
+                <p><strong>db.js</strong></p>
+<div class="code-block"><pre><code>const Database = require('better-sqlite3');
+const path = require('path');
+
+<span class="code-comment">// Open (or create) a local SQLite file in the project root</span>
+const db = new Database(path.resolve(__dirname, 'clipboard.db'));
+
+<span class="code-comment">// Initialise the table if it doesn't exist yet</span>
+const init = db.prepare(`
+  CREATE TABLE IF NOT EXISTS entries (
+    id TEXT PRIMARY KEY,
+    payload BLOB NOT NULL,
+    created_at INTEGER NOT NULL
+  )
+`);
+init.run();
+
+<span class="code-comment">// Insert a new encrypted clipboard entry</span>
+function addEntry(id, payload) {
+  const stmt = db.prepare('INSERT INTO entries (id, payload, created_at) VALUES (?, ?, ?)');
+  stmt.run(id, payload, Date.now());
+}
+
+<span class="code-comment">// Retrieve the most recent entry (by creation time)</span>
+function getLatest() {
+  const row = db.prepare('SELECT payload FROM entries ORDER BY created_at DESC LIMIT 1').get();
+  return row ? row.payload : null;
+}
+
+<span class="code-comment">// Optional: delete entries older than a given age (ms)</span>
+function clearOld(maxAgeMs) {
+  const cutoff = Date.now() - maxAgeMs;
+  db.prepare('DELETE FROM entries WHERE created_at &lt; ?').run(cutoff);
+}
+
+module.exports = {addEntry, getLatest, clearOld};</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: API – Push &amp; Pull End‑to‑End Encrypted Data</h2>
+                <p>In this phase we expose two tiny HTTP endpoints that act as a relay for encrypted clipboard blobs. The server never sees the plaintext – it just stores the ciphertext that the client sends. A POST to <code>/push</code> writes a new row, while a GET to <code>/pull</code> returns the most recent blob so any other client can retrieve it.</p>
+                <p>We keep the implementation lightweight: Express handles routing, SQLite stores the blobs, and we log basic activity so you can see when data moves through the relay. This sets the foundation for end‑to‑end encryption without any complex auth for the minimal clone.</p>
+                <p><strong>server.js</strong></p>
+<div class="code-block"><pre><code>const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
+const bodyParser = require('body-parser');
+
+const app = express();
+app.use(bodyParser.json({limit:'1mb'}));
+
+<span class="code-comment">// Initialise SQLite DB and table</span>
+const db = new sqlite3.Database('relay.db');
+db.run('CREATE TABLE IF NOT EXISTS blobs(id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT NOT NULL, ts DATETIME DEFAULT CURRENT_TIMESTAMP)');
+
+<span class="code-comment">// POST /push – store encrypted blob</span>
+app.post('/push', (req, res) =&gt; {
+  const {blob} = req.body;
+  if (!blob) return res.status(400).json({error:'Missing blob'});
+  db.run('INSERT INTO blobs(data) VALUES(?)', blob, function(err){
+    if (err) return res.status(500).json({error:err.message});
+    console.log(`Stored blob id ${this.lastID}`);
+    res.json({status:'ok', id:this.lastID});
+  });
+});
+
+<span class="code-comment">// GET /pull – retrieve newest blob</span>
+app.get('/pull', (req, res) =&gt; {
+  db.get('SELECT data FROM blobs ORDER BY ts DESC LIMIT 1', (err,row)=&gt;{
+    if (err) return res.status(500).json({error:err.message});
+    if (!row) return res.json({blob:null});
+    res.json({blob:row.data});
+  });
+});
+
+const PORT = 3000;
+app.listen(PORT,()=&gt;console.log(`Relay listening on http://localhost:${PORT}`));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Client – Encrypt, Sync, and Clipboard</h2>
+                <p>Now we build the client that talks to the relay, encrypts the clipboard, and writes decrypted data back. We use the same shared secret on every machine – in a real app you’d generate per‑user keys, but a constant keeps the example simple.</p>
+                <p>The script reads the current clipboard, encrypts it with AES‑256‑GCM, pushes the ciphertext, then pulls the latest blob, decrypts it, and finally overwrites the local clipboard. This round‑trip demonstrates true end‑to‑end encryption: the server only sees the opaque <code>blob</code> field.</p>
+                <p><strong>client.js</strong></p>
+<div class="code-block"><pre><code>const fetch = require('node-fetch');
+const clipboardy = require('clipboardy');
+const crypto = require('crypto');
+
+<span class="code-comment">// Shared secret – replace with a strong random string in production</span>
+const SECRET = 'super-secret-shared-key-32bytes!!'; // 32 chars = 256 bits
+const ALGO = 'aes-256-gcm';
+const RELAY = 'http://localhost:3000';
+
+function encrypt(plain){
+  const iv = crypto.randomBytes(12);
+  const key = crypto.createHash('sha256').update(SECRET).digest();
+  const cipher = crypto.createCipheriv(ALGO, key, iv);
+  const enc = Buffer.concat([cipher.update(plain,'utf8'), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  return Buffer.concat([iv, tag, enc]).toString('base64');
+}
+
+function decrypt(blob){
+  const data = Buffer.from(blob,'base64');
+  const iv = data.slice(0,12);
+  const tag = data.slice(12,28);
+  const enc = data.slice(28);
+  const key = crypto.createHash('sha256').update(SECRET).digest();
+  const decipher = crypto.createDecipheriv(ALGO, key, iv);
+  decipher.setAuthTag(tag);
+  const dec = Buffer.concat([decipher.update(enc), decipher.final()]);
+  return dec.toString('utf8');
+}
+
+async function push(blob){
+  await fetch(`${RELAY}/push`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({blob})});
+}
+
+async function pull(){
+  const res = await fetch(`${RELAY}/pull`);
+  const json = await res.json();
+  return json.blob;
+}
+
+(async()=&gt;{
+  const raw = await clipboardy.read();
+  const encrypted = encrypt(raw);
+  await push(encrypted);
+  console.log('Pushed encrypted clipboard');
+  const latest = await pull();
+  if (latest){
+    const decrypted = decrypt(latest);
+    await clipboardy.write(decrypted);
+    console.log('Pulled and updated local clipboard');
+  } else {
+    console.log('No blob available on server');
+  }
+})();</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run &amp; Verify</h2>
+                <p>With the relay and client ready, it’s time to see the sync in action. Start the server in one terminal, then run the client on two separate terminals – each will push its clipboard and pull the newest entry from the other side.</p>
+                <p>If everything works, copying text on one machine will cause the other terminal’s clipboard to update after the client runs. This demonstrates a functional, end‑to‑end encrypted clipboard sync built from scratch.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Terminal 1 – start the relay server</span>
+node server.js &amp;
+<span class="code-comment"># Note the PID if you need to stop it later</span>
+
+<span class="code-comment"># Terminal 2 – first client (pushes your current clipboard)</span>
+node client.js
+
+<span class="code-comment"># Terminal 3 – second client (pulls and writes the remote clipboard)</span>
+node client.js</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without error</td><td>node server.js → should log ‘Relay listening on http://localhost:3000’</td></tr>
+            <tr><td>Client pushes encrypted data</td><td>Copy text, run node client.js → server console shows ‘Stored blob id …’ and DB row appears</td></tr>
+            <tr><td>Clipboard updates on second run</td><td>Run client.js in another terminal → clipboard content matches the original text copied in the first terminal</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>Next Steps</h4>
+            <p>Swap the static SECRET for per‑user keys, enable HTTPS (self‑signed cert) and consider moving to PostgreSQL for scaling. Enjoy building!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-12",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple 2D Game with Pite Engine in Python",
+      "source": "hn_show",
+      "url": "https://github.com/piteengine/pite",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-12_build-a-simple-2d-game-with-pite-engine.html",
+      "tagline": "A beginner‑friendly clone of a classic 2D arcade game using the free‑tier Pite engine",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "game-dev",
+        "cli"
+      ]
+    },
+    {
+      "title": "Build a No‑Server Daily Word Game Clone (Wordout) with HTML + JavaScript",
+      "source": "hn_show",
+      "url": "https://dilippanicker.github.io/wordout/play/",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-12_no-server-daily-word-game-clone-wordout.html",
+      "tagline": "Build a simple daily word puzzle with only HTML, CSS, and JavaScript",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 40,
+      "tags": [
+        "javascript",
+        "html",
+        "game"
+      ]
+    },
+    {
+      "title": "Build an Encrypted Clipboard Sync Tool (Panosync) in Node.js",
+      "source": "hn_show",
+      "url": "https://github.com/msbayindir/panosync",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-12_encrypted-clipboard-sync-tool-panosync-clone.html",
+      "tagline": "Build a minimal end‑to‑end encrypted clipboard sync using Node.js and SQLite",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "nodejs",
+        "encryption",
+        "cli"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1570419662955483217",
+    "1570419667825070224",
+    "1570419673168740352"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}
