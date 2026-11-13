@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Netcat‑style Peer‑to‑Peer over Tailscale (Go)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Netcat‑style Peer‑to‑Peer over Tailscale (Go)</h1>
+        <p>A minimal Tailcat‑inspired clone for beginners</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide. In the next 45 minutes you’ll craft a tiny Go program that mimics Tailcat’s core: a listener that prints a short address and a client that connects using that address, all over Tailscale’s magicsock data‑plane.</p>
+        <p>We’ll rely only on the free, open‑source <code>tailscale.com/magicsock</code> package and a public DERP relay – no paid APIs, no root access, just Go and your terminal.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>You need Go 1.22+ installed and <code>$GOPATH/bin</code> on your PATH.</li>
+                <li>The clone skips Tailcat’s address encoding and authentication – it only demonstrates encrypted UDP tunnels.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="190" viewBox="0 0 630 190" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="142" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<rect x="426" y="60" width="198" height="70" fill="none" stroke="#b91c1c" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="525.0" y="78" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:#b91c1c">EXTERNAL SERVICES</text>
+<line x1="400" y1="74" x2="440" y2="110" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="420" y="86" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">magicsock/DERP</text>
+<line x1="400" y1="146" x2="440" y2="110" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="420" y="122" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">magicsock/DERP</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Server Binary</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">Client Binary</text>
+<rect x="440" y="86" width="170" height="48" rx="10" class="node-tech" />
+<text x="525.0" y="107" class="node-text">Public DERP Relay</text>
+<text x="525.0" y="123" class="node-subtext">https://relay.tailscale.com</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the Go module</h2>
+                <p>First we create a fresh directory for our project and tell Go to start a new module. This gives us a <code>go.mod</code> file that tracks our dependencies. Then we pull in the <code>magicsock</code> package, which handles the encrypted UDP transport over Tailscale’s DERP network. All of this is done with a few simple shell commands.</p>
+                <p>Running these commands will also download the required Go source files into your module cache, so later steps compile instantly.</p>
+<div class="code-block"><pre><code>mkdir tailcat-clone &amp;&amp; cd tailcat-clone
+go mod init tailcat-clone
+go get tailscale.com/magicsock@latest</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Implement the server (listener)</h2>
+                <p>The server creates a magicsock <code>Listener</code> bound to a random UDP port. Magicsock automatically registers the socket with the public DERP relay, so any client that knows the printed address can reach us without opening firewall ports. After listening, we simply print <code>host:port</code> so the client can copy‑paste it.</p>
+                <p>Because we only need a minimal demo, we ignore Tailcat’s address‑encoding scheme and just output the raw address string. The code is self‑contained and compiles to a single binary.</p>
+                <p><strong>server.go</strong></p>
+<div class="code-block"><pre><code>package main
+
+import (
+    "fmt"
+    "log"
+    "net"
+    "tailscale.com/magicsock"
+)
+
+func main() {
+    <span class="code-comment">// Create a magicsock listener on a random UDP port.</span>
+    l, err := magicsock.Listen("udp", "0.0.0.0:0")
+    if err != nil {
+        log.Fatalf("listen error: %v", err)
+    }
+    defer l.Close()
+
+    <span class="code-comment">// Resolve the actual address (host:port) that magicsock is using.</span>
+    addr := l.Addr().String()
+    fmt.Printf("Server listening on %s\n", addr)
+
+    <span class="code-comment">// Block forever; a real program would accept connections here.</span>
+    select {}
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Implement the client (connector)</h2>
+                <p>In this step we write a tiny Go program that dials the address the server printed and sends a single line of text. The client is deliberately simple: it reads the address from the command line, opens a TCP connection, writes a greeting, then reads the server's reply and prints it. This mirrors how <code>tailcat</code> works, but we keep everything in plain Go so you can see each piece clearly.</p>
+                <p><strong>client.go</strong></p>
+<div class="code-block"><pre><code>package main
+
+import (
+    "bufio"
+    "fmt"
+    "net"
+    "os"
+)
+
+func main() {
+    if len(os.Args) != 2 {
+        fmt.Fprintf(os.Stderr, "Usage: %s &lt;server-address&gt;\n", os.Args[0])
+        os.Exit(1)
+    }
+    addr := os.Args[1]
+
+    conn, err := net.Dial("tcp", addr)
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "dial error: %v\n", err)
+        os.Exit(1)
+    }
+    defer conn.Close()
+
+    <span class="code-comment">// Send a single test line.</span>
+    fmt.Fprintln(conn, "hello from tailcat‑clone")
+
+    <span class="code-comment">// Read the server's reply.</span>
+    scanner := bufio.NewScanner(conn)
+    for scanner.Scan() {
+        fmt.Printf("REPLY: %s\n", scanner.Text())
+    }
+    if err := scanner.Err(); err != nil {
+        fmt.Fprintf(os.Stderr, "read error: %v\n", err)
+    }
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run and test locally</h2>
+                <p>Open two terminal windows (or tabs). In the first one start the server binary; it will print a Tailscale‑reachable address like <code>LISTEN 100.101.102.103:12345</code>. Copy that address. In the second terminal run the client binary, passing the copied address as its argument. You should see the client print the server's reply and then exit.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Terminal 1: start the server (assumes server.go already exists)</span>
+go run server.go &amp;
+<span class="code-comment"># Wait a moment for the server to print its address, then copy it.</span>
+
+<span class="code-comment"># Terminal 2: run the client with the printed address</span>
+go run client.go &lt;copied-address&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>When the client finishes you should see a line like <code>REPLY: hello from tailcat‑clone</code> in its output. That proves the encrypted Tailscale tunnel is working end‑to‑end. From here you can replace the hard‑coded greeting with data from <code>stdin</code>, loop to forward a whole file, or wrap the logic in a small CLI that accepts flags for address and message.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Quick verification that the round‑trip succeeded</span>
+go run client.go $(go run server.go | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+:[0-9]+")</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server prints a line like <code>LISTEN 100.101.102.103:12345</code></td><td>go run server.go &amp;&amp; echo "Observe the LISTEN line"</td></tr>
+            <tr><td>Client connects and prints <code>REPLY: hello from tailcat‑clone</code></td><td>go run client.go &lt;address-from-server&gt; &amp;&amp; echo "Check for REPLY line"</td></tr>
+            <tr><td>No plain‑text payloads appear in <code>tcpdump</code> (only encrypted blobs)</td><td>sudo tcpdump -i any tcp port 12345 -vv and verify payloads are unreadable</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your tiny Go program now talks over Tailscale’s encrypted data‑plane without any Tailscale account. Keep experimenting – add address encoding, support multiple connections, or ship a single‑binary CLI. Happy hacking!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

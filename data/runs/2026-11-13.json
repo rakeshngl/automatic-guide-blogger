@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-13",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Self‑Hosted Monitoring Dashboard with Node.js & SQLite (inspired by uptime‑kuma)",
+      "source": "github_trending",
+      "url": "https://github.com/louislam/uptime-kuma",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-13_simple-self-hosted-monitoring-dashboard-node-js-sqlite.html",
+      "tagline": "A minimal clone of Uptime‑Kuma for beginners",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "Node.js",
+        "SQLite",
+        "Express"
+      ]
+    },
+    {
+      "title": "Build a Tailcat‑style Netcat over Tailscale in Go",
+      "source": "github_trending",
+      "url": "https://github.com/tailscale/tailcat",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-13_netcat-style-peer-to-peer-over-tailscale-go.html",
+      "tagline": "A minimal Tailcat‑inspired clone for beginners",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 40,
+      "tags": [
+        "Go",
+        "Tailscale",
+        "CLI"
+      ]
+    },
+    {
+      "title": "Build a Hive‑Mind Chat Platform with Rust (inspired by buzz)",
+      "source": "github_trending",
+      "url": "https://github.com/block/buzz",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-13_hive-mind-chat-platform-clone-in-rust.html",
+      "tagline": "A minimal Buzz‑inspired workspace built in 45 minutes",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "Rust",
+        "WebSocket",
+        "Async"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1570782340333047841",
+    "1570782346003746898",
+    "1570782350852362381"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

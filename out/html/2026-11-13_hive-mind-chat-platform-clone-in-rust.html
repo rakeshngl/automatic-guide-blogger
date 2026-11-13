@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Hive‑Mind Chat Platform Clone in Rust</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Hive‑Mind Chat Platform Clone in Rust</h1>
+        <p>A minimal Buzz‑inspired workspace built in 45 minutes</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In this tutorial we’ll spin up a tiny Rust‑based Hive‑Mind chat platform that mimics the core of Buzz – a shared room where humans and simple AI agents exchange messages.</p>
+        <p>You’ll get a working HTTP server, a SQLite‑backed event log, and a tiny web UI. All tools are free‑tier and open‑source, so you can run everything locally and extend it later.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Rust 1.70+ and Cargo installed; older versions will fail to compile the async‑tokio stack.</li>
+                <li>The clone only stores plain text messages – no cryptographic signatures, reactions, or real AI agents (those are left as exercises).</li>
+                <li>Running on Windows may require the <code>sqlite3</code> development library; Linux/macOS work out‑of‑the‑box.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal Hive‑Mind Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP requests</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL queries</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Rust HTTP Server (warp)</text>
+<text x="315.0" y="87" class="node-subtext">handles API &amp; UI</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite DB</text>
+<text x="315.0" y="159" class="node-subtext">event log</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">Static HTML/JS UI</text>
+<text x="315.0" y="231" class="node-subtext">chat client</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a new Cargo binary project and pull in the async web framework, SQLite driver, and a tiny templating crate in one command. This gives us a clean starting point and ensures all required crates are listed in <code>Cargo.toml</code> before we write any code.</p>
+                <p>We’ll also enable the <code>tokio</code> runtime feature so the server can run asynchronously without extra boilerplate.</p>
+<div class="code-block"><pre><code>cargo new hive_mind --bin
+cd hive_mind
+cat &gt;&gt; Cargo.toml &lt;&lt;'EOF'
+[dependencies]
+warp = "0.3"
+tokio = { version = "1", features = ["full"] }
+rusqlite = { version = "0.29", features = ["bundled"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+askama = "0.12"
+EOF</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data model &amp; SQLite init</h2>
+                <p>Define a <code>Message</code> struct that mirrors the columns we need in the database – an auto‑increment id, a timestamp, a username, and the text body. Then open (or create) a SQLite file and run a <code>CREATE TABLE IF NOT EXISTS</code> statement so the first run always has a place to store messages.</p>
+                <p>The code lives in <code>src/main.rs</code> and will be the foundation for both the HTTP API and the UI rendering later.</p>
+                <p><strong>src/main.rs</strong></p>
+<div class="code-block"><pre><code>use rusqlite::{params, Connection, Result};
+use serde::{Deserialize, Serialize};
+use std::time::{SystemTime, UNIX_EPOCH};
+
+#[derive(Debug, Serialize, Deserialize)]
+struct Message {
+    id: i64,
+    timestamp: i64,
+    user: String,
+    body: String,
+}
+
+fn init_db() -&gt; Result&lt;Connection&gt; {
+    let conn = Connection::open("hive_mind.db")?;
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp INTEGER NOT NULL,
+            user TEXT NOT NULL,
+            body TEXT NOT NULL
+        )",
+        [],
+    )?;
+    Ok(conn)
+}
+
+fn current_ts() -&gt; i64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs() as i64
+}
+
+fn main() -&gt; Result&lt;()&gt; {
+    let _db = init_db()?;
+    println!("Database initialized – ready for the server phase.");
+    Ok(())
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: API routes (GET/POST)</h2>
+                <p>In this step we expose two HTTP endpoints using Warp. The <code>GET /messages</code> route returns the in‑memory log as JSON, while <code>POST /send</code> accepts a JSON payload with <code>author</code> and <code>content</code> and pushes it onto the log. Keeping the data in a <code>Mutex&lt;Vec&lt;Message&gt;&gt;</code> lets us share state safely across async handlers. These routes form the tiny backend API our UI will talk to.</p>
+                <p><strong>src/main.rs</strong></p>
+<div class="code-block"><pre><code>use std::sync::{Arc, Mutex};
+use warp::Filter;
+
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
+struct Message {
+    author: String,
+    content: String,
+}
+
+type Db = Arc&lt;Mutex&lt;Vec&lt;Message&gt;&gt;&gt;;
+
+#[tokio::main]
+async fn main() {
+    let db: Db = Arc::new(Mutex::new(Vec::new()));
+
+    let db_filter = warp::any().map(move || db.clone());
+
+    <span class="code-comment">// GET /messages -&gt; returns all messages</span>
+    let list = warp::path("messages")
+        .and(warp::get())
+        .and(db_filter.clone())
+        .map(|db: Db| warp::reply::json(&amp;*db.lock().unwrap()));
+
+    <span class="code-comment">// POST /send -&gt; adds a new message</span>
+    let send = warp::path("send")
+        .and(warp::post())
+        .and(warp::body::json())
+        .and(db_filter.clone())
+        .map(|msg: Message, db: Db| {
+            db.lock().unwrap().push(msg);
+            warp::reply::with_status("ok", warp::http::StatusCode::OK)
+        });
+
+    let routes = list.or(send);
+    warp::serve(routes).run(([127,0,0,1], 3030)).await;
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Tiny UI</h2>
+                <p>Now we serve a minimal HTML page that polls the <code>/messages</code> endpoint every second and displays each chat line. A simple form lets the user type an author name and a message, then POSTs the JSON payload to <code>/send</code>. All the logic lives in a few lines of vanilla JavaScript, keeping the UI lightweight and easy to understand.</p>
+                <p><strong>static/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Hive‑Mind Mini Chat&lt;/title&gt;
+  &lt;style&gt;body{font-family:sans-serif;margin:2rem;}#log{border:1px solid #ccc;padding:1rem;height:300px;overflow:auto;}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hive‑Mind&lt;/h1&gt;
+  &lt;div id="log"&gt;&lt;/div&gt;
+  &lt;form id="chatForm"&gt;
+    &lt;input id="author" placeholder="Your name" required /&gt;
+    &lt;input id="content" placeholder="Message" required /&gt;
+    &lt;button type="submit"&gt;Send&lt;/button&gt;
+  &lt;/form&gt;
+  &lt;script&gt;
+    async function fetchLog(){
+      const res = await fetch('/messages');
+      const msgs = await res.json();
+      const log = document.getElementById('log');
+      log.innerHTML = msgs.map(m=&gt;`&lt;b&gt;${m.author}:&lt;/b&gt; ${m.content}`).join('&lt;br&gt;');
+    }
+    setInterval(fetchLog, 1000);
+    document.getElementById('chatForm').onsubmit = async e=&gt;{
+      e.preventDefault();
+      const author=document.getElementById('author').value;
+      const content=document.getElementById('content').value;
+      await fetch('/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({author,content})});
+      document.getElementById('content').value='';
+      fetchLog();
+    };
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run &amp; verify</h2>
+                <p>We now combine the API routes with static file serving so the browser can load the UI directly from the same server. Warp’s <code>fs::dir</code> filter points at the <code>static</code> folder, and we mount it under the root path. Running <code>cargo run</code> starts the service on port 3030; opening <code>http://localhost:3030/</code> should show the chat UI and let you send messages that appear instantly.</p>
+                <p><strong>src/main.rs</strong></p>
+<div class="code-block"><pre><code>use std::sync::{Arc, Mutex};
+use warp::Filter;
+
+#[derive(Clone, serde::Serialize, serde::Deserialize)]
+struct Message { author: String, content: String }
+
+type Db = Arc&lt;Mutex&lt;Vec&lt;Message&gt;&gt;&gt;;
+
+#[tokio::main]
+async fn main() {
+    let db: Db = Arc::new(Mutex::new(Vec::new()));
+    let db_filter = warp::any().map(move || db.clone());
+
+    let list = warp::path("messages")
+        .and(warp::get())
+        .and(db_filter.clone())
+        .map(|db: Db| warp::reply::json(&amp;*db.lock().unwrap()));
+
+    let send = warp::path("send")
+        .and(warp::post())
+        .and(warp::body::json())
+        .and(db_filter.clone())
+        .map(|msg: Message, db: Db| {
+            db.lock().unwrap().push(msg);
+            warp::reply::with_status("ok", warp::http::StatusCode::OK)
+        });
+
+    <span class="code-comment">// Serve static files from ./static at the root</span>
+    let static_files = warp::fs::dir("static");
+
+    let routes = list.or(send).or(static_files);
+    warp::serve(routes).run(([127,0,0,1], 3030)).await;
+}</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Cargo builds without errors</td><td>cargo run --quiet</td></tr>
+            <tr><td><code>http://localhost:3030/</code> shows the chat UI</td><td>Open in browser; UI loads and shows empty log</td></tr>
+            <tr><td>Posting a message updates the log</td><td>Enter author/message, click Send, and see the new line appear</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional Hive‑Mind clone. Try adding a simple bot that echoes messages, enable WebSocket live updates, or plug in real Nostr‑style signatures for full Buzz fidelity.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

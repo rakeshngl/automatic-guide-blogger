@@ -815,6 +815,24 @@
       "title": "Build an Encrypted Clipboard Sync Tool (Panosync) in Node.js",
       "source_url": "https://github.com/msbayindir/panosync",
       "slug": "2026-11-12_encrypted-clipboard-sync-tool-panosync-clone.html"
+    },
+    {
+      "date": "2026-11-13T12:36:54+00:00",
+      "title": "Build a Simple Self‑Hosted Monitoring Dashboard with Node.js & SQLite (inspired by uptime‑kuma)",
+      "source_url": "https://github.com/louislam/uptime-kuma",
+      "slug": "2026-11-13_simple-self-hosted-monitoring-dashboard-node-js-sqlite.html"
+    },
+    {
+      "date": "2026-11-13T12:45:00+00:00",
+      "title": "Build a Tailcat‑style Netcat over Tailscale in Go",
+      "source_url": "https://github.com/tailscale/tailcat",
+      "slug": "2026-11-13_netcat-style-peer-to-peer-over-tailscale-go.html"
+    },
+    {
+      "date": "2026-11-13T12:48:13+00:00",
+      "title": "Build a Hive‑Mind Chat Platform with Rust (inspired by buzz)",
+      "source_url": "https://github.com/block/buzz",
+      "slug": "2026-11-13_hive-mind-chat-platform-clone-in-rust.html"
     }
   ]
 }

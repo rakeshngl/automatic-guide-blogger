@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple Self‑Hosted Monitoring Dashboard (Node.js + SQLite)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Simple Self‑Hosted Monitoring Dashboard (Node.js + SQLite)</h1>
+        <p>A minimal clone of Uptime‑Kuma for beginners</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In this tutorial we’ll create a tiny monitoring dashboard inspired by Uptime‑Kuma, using only Node.js, Express, and SQLite – all free on your local machine.</p>
+        <p>You’ll have a working web UI that lets you add a URL, stores it in SQLite, and pings it every 30 seconds, displaying “UP” or “DOWN”. All in ~45 minutes!</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>Node.js &gt;= 18 and npm must be installed – older versions may lack native fetch support.</li>
+                <li>The clone only supports HTTP(s) GET checks; advanced probes (TCP, DNS, notifications) are omitted for simplicity.</li>
+                <li>SQLite file is created in the project folder; ensure you have write permission.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP requests</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL queries</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Browser UI</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">Node.js Express Server</text>
+<text x="315.0" y="159" class="node-subtext">API + UI</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">SQLite Database</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>First we create a fresh folder for our dashboard and tell npm to manage dependencies. Express will serve the UI and API, while better‑sqlite3 gives us a fast, zero‑config SQLite wrapper. The folder layout keeps source code tidy: a <code>src</code> directory for JavaScript, a <code>public</code> folder for static HTML/CSS, and a root <code>package.json</code> to track everything.</p>
+<div class="code-block"><pre><code>mkdir uptime-clone &amp;&amp; cd uptime-clone
+npm init -y
+npm install express better-sqlite3
+mkdir -p src public
+cat &gt; src/index.js &lt;&lt;'EOF'
+const express = require('express');
+const app = express();
+app.use(express.static('public'));
+app.use(express.json());
+app.listen(3000,()=&gt;console.log('Server running on http://localhost:3000'));
+EOF
+cat &gt; public/index.html &lt;&lt;'EOF'
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;head&gt;&lt;title&gt;Uptime Clone&lt;/title&gt;&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Uptime Clone Dashboard&lt;/h1&gt;
+&lt;div id="app"&gt;&lt;/div&gt;
+&lt;script src="/app.js"&gt;&lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;
+EOF
+cat &gt; public/app.js &lt;&lt;'EOF'
+console.log('UI loaded');
+EOF</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data model (SQLite)</h2>
+                <p>Now we add persistence. A single SQLite table called <code>monitors</code> will hold each URL we want to watch, the last known HTTP status, and a timestamp of the last check. Using better‑sqlite3 means we can run synchronous queries during startup without callbacks, keeping the code easy to read for beginners.</p>
+                <p><strong>src/db.js</strong></p>
+<div class="code-block"><pre><code>const Database = require('better-sqlite3');
+const path = require('path');
+<span class="code-comment">// SQLite file lives next to package.json</span>
+const dbPath = path.resolve(__dirname, '../monitor.db');
+const db = new Database(dbPath);
+<span class="code-comment">// Create table if it doesn't exist</span>
+const createStmt = `
+CREATE TABLE IF NOT EXISTS monitors (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  url TEXT NOT NULL,
+  last_status TEXT,
+  last_checked INTEGER
+);
+`;
+db.exec(createStmt);
+<span class="code-comment">// Helper functions</span>
+function addMonitor(url) {
+  const stmt = db.prepare('INSERT INTO monitors (url) VALUES (?)');
+  return stmt.run(url);
+}
+function getAllMonitors() {
+  return db.prepare('SELECT * FROM monitors').all();
+}
+module.exports = {addMonitor, getAllMonitors, db};</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core API &amp; UI logic</h2>
+                <p>In this phase we wire up a tiny Express server that talks to a SQLite database. The server will expose three REST endpoints: one to list all monitored sites, one to add a new site, and one to fetch the latest status of a site. We also serve a minimal HTML page that polls the list endpoint every few seconds so you can see live status updates.</p>
+                <p>The code below creates the database schema if it doesn't exist, defines the routes, and serves static files from a 'public' folder. Keeping everything in one file makes the clone easy to understand and modify for beginners.</p>
+                <p><strong>server.js</strong></p>
+<div class="code-block"><pre><code>const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
+const fetch = require('node-fetch');
+
+const app = express();
+const DB_FILE = 'data.db';
+const db = new sqlite3.Database(DB_FILE);
+
+<span class="code-comment">// Initialise DB</span>
+db.serialize(() =&gt; {
+  db.run(`CREATE TABLE IF NOT EXISTS sites (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    url TEXT NOT NULL,
+    status TEXT DEFAULT 'UNKNOWN',
+    last_check INTEGER`
+  );`);
+});
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+<span class="code-comment">// Helper to ping a site</span>
+async function pingSite(url) {
+  try {
+    const res = await fetch(url, { method: 'GET', timeout: 5000 });
+    return res.ok ? 'UP' : 'DOWN';
+  } catch (_) { return 'DOWN'; }
+}
+
+<span class="code-comment">// List all sites</span>
+app.get('/api/sites', (req, res) =&gt; {
+  db.all('SELECT * FROM sites', [], (err, rows) =&gt; {
+    if (err) return res.status(500).json({error: err.message});
+    res.json(rows);
+  });
+});
+
+<span class="code-comment">// Add a new site</span>
+app.post('/api/sites', async (req, res) =&gt; {
+  const {url} = req.body;
+  if (!url) return res.status(400).json({error: 'url required'});
+  const status = await pingSite(url);
+  const now = Date.now();
+  db.run('INSERT INTO sites (url, status, last_check) VALUES (?,?,?)', [url, status, now], function(err) {
+    if (err) return res.status(500).json({error: err.message});
+    res.json({id: this.lastID, url, status, last_check: now});
+  });
+});
+
+<span class="code-comment">// Get status of a single site (optional)</span>
+app.get('/api/sites/:id', (req, res) =&gt; {
+  db.get('SELECT * FROM sites WHERE id = ?', [req.params.id], (err, row) =&gt; {
+    if (err) return res.status(500).json({error: err.message});
+    if (!row) return res.status(404).json({error: 'Not found'});
+    res.json(row);
+  });
+});
+
+<span class="code-comment">// Simple background pinger (runs every 30s)</span>
+setInterval(() =&gt; {
+  db.all('SELECT id, url FROM sites', [], async (err, rows) =&gt; {
+    if (err) return console.error(err);
+    for (const {id, url} of rows) {
+      const status = await pingSite(url);
+      db.run('UPDATE sites SET status = ?, last_check = ? WHERE id = ?', [status, Date.now(), id]);
+    }
+  });
+}, 30000);
+
+const PORT = 3000;
+app.listen(PORT, () =&gt; console.log(`🚀 http://localhost:${PORT}`));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the server code and a tiny front‑end live in the repository, you just need to install dependencies and start the app. The command installs Express, SQLite3, and node‑fetch, then launches the server. Once running, open your browser to the printed address to see the dashboard UI.</p>
+<div class="code-block"><pre><code>npm init -y
+npm install express sqlite3 node-fetch
+node server.js</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; extend</h2>
+                <p>With the server up, you can add a site using curl or the UI form. After a short moment the background pinger updates the status, which the UI reflects automatically because it polls the list endpoint every few seconds. As a next step, try adding a simple webhook notification: when a site goes DOWN, POST a JSON payload to a URL you control.</p>
+<div class="code-block"><pre><code>curl -X POST http://localhost:3000/api/sites -H "Content-Type: application/json" -d '{"url":"https://example.com"}'</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>node server.js → should log '🚀 http://localhost:3000'</td></tr>
+            <tr><td>UI loads in browser</td><td>Open http://localhost:3000 → see 'Uptime Dashboard' heading</td></tr>
+            <tr><td>Added site appears with status</td><td>After curl POST, refresh UI → URL listed with UP/DOWN</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional clone. Try adding a simple email alert (nodemailer), persist ping timestamps, or containerize with Docker for easy deployment.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
