@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Daily Stock Analysis Dashboard (Python Clone)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Daily Stock Analysis Dashboard (Python Clone)</h1>
+        <p>A beginner-friendly, free‑tier clone of an AI‑powered stock insight tool</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In the next 45 minutes you’ll spin up a tiny Python dashboard that fetches daily stock prices, runs a simple prompt‑based analysis with an open‑source LLM, and displays the result in a web UI – inspired by the full‑featured Daily Stock Analysis system.</p>
+        <p>We’ll use Flask for the web layer, SQLite for persistence, and the free HuggingFace inference API for LLM calls, so you won’t need any paid keys.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Python 3.10+ and <code>git</code> installed; the guide assumes a Unix‑like shell.</li>
+                <li>The real product uses paid LLM endpoints and multi‑channel push notifications – our clone only does a local text analysis.</li>
+                <li>Network calls to HuggingFace may be rate‑limited; if you hit a 429, wait a minute and retry.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="190" viewBox="0 0 420 190" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="142" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">CRUD</text>
+<line x1="230" y1="74" x2="190" y2="110" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="210" y="86" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">POST prompt</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Flask App</text>
+<text x="315.0" y="87" class="node-subtext">Python + SQLite</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB</text>
+<rect x="20" y="86" width="170" height="48" rx="10" class="node-tech" />
+<text x="105.0" y="107" class="node-text">HuggingFace Inference API</text>
+<text x="105.0" y="123" class="node-subtext">Free model</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh folder, initialise a virtual environment, and install Flask and requests. This gives us an isolated Python environment and the two libraries we’ll need for the web server and for pulling market data.</p>
+                <p>All commands are Unix‑style; Windows users can run them in PowerShell or WSL.</p>
+                <p>After this step you should have a <code>venv</code> directory and a <code>requirements.txt</code> ready for later commits.</p>
+<div class="code-block"><pre><code>mkdir daily_stock_dashboard &amp;&amp; cd daily_stock_dashboard
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install Flask requests
+pip freeze &gt; requirements.txt</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model</h2>
+                <p>A tiny SQLite table stores the ticker symbol and the latest price fetched from a free market API. SQLite lives in a single file, perfect for a lightweight clone, and Flask can access it with the built‑in <code>sqlite3</code> module.</p>
+                <p>We also provide two helper functions: <code>init_db()</code> creates the table if it doesn’t exist, and <code>save_price(symbol, price)</code> upserts a row for the latest quote.</p>
+                <p><strong>model.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+from pathlib import Path
+
+DB_PATH = Path(__file__).with_name('stocks.db')
+
+def get_connection():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    """Create the stocks table if it doesn't exist."""
+    with get_connection() as conn:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS stocks (
+                symbol TEXT PRIMARY KEY,
+                price REAL NOT NULL,
+                fetched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+        conn.commit()
+
+def save_price(symbol: str, price: float):
+    """Insert or update the latest price for a ticker."""
+    with get_connection() as conn:
+        conn.execute(
+            "INSERT INTO stocks (symbol, price) VALUES (?, ?) "
+            "ON CONFLICT(symbol) DO UPDATE SET price=excluded.price, fetched_at=CURRENT_TIMESTAMP",
+            (symbol.upper(), price),
+        )
+        conn.commit()
+
+def get_price(symbol: str):
+    """Retrieve the most recent price for a ticker, or None if missing."""
+    with get_connection() as conn:
+        cur = conn.execute("SELECT price FROM stocks WHERE symbol = ?", (symbol.upper(),))
+        row = cur.fetchone()
+        return row["price"] if row else None
+
+if __name__ == "__main__":
+    init_db()
+    <span class="code-comment"># Quick sanity check</span>
+    save_price('AAPL', 172.34)
+    print('Saved AAPL price:', get_price('AAPL'))</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core API &amp; simple UI</h2>
+                <p>In this step we wire up a tiny Flask server that does three things: fetch a live price, ask a placeholder LLM for a short insight, and store everything in a local SQLite database. The endpoint will then read the stored rows and render them in a very basic HTML table so you can see the data instantly in your browser. Keeping everything in one file makes it easy to follow and modify as you add more features later.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3, requests, datetime
+from flask import Flask, g, render_template_string
+
+app = Flask(__name__)
+DB_PATH = 'stocks.db'
+
+<span class="code-comment"># ---------- SQLite helpers ----------</span>
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DB_PATH)
+        db.row_factory = sqlite3.Row
+    return db
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
+
+def init_db():
+    with app.app_context():
+        db = get_db()
+        db.execute('''CREATE TABLE IF NOT EXISTS price (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        symbol TEXT,
+                        price REAL,
+                        insight TEXT,
+                        ts TEXT)''')
+        db.commit()
+
+<span class="code-comment"># ---------- Simple LLM placeholder ----------</span>
+def get_insight(symbol, price):
+    <span class="code-comment"># In a real clone you would call an LLM here. We'll just return a static string.</span>
+    return f"{symbol} is currently at ${price:.2f}. Keep an eye on market trends."
+
+<span class="code-comment"># ---------- Price fetcher ----------</span>
+def fetch_price(symbol):
+    <span class="code-comment"># Using a free public API (Yahoo Finance) for demo purposes.</span>
+    url = f"https://query1.finance.yahoo.com/v7/finance/quote?symbols={symbol}"
+    resp = requests.get(url).json()
+    return float(resp['quoteResponse']['result'][0]['regularMarketPrice'])
+
+<span class="code-comment"># ---------- Main route ----------</span>
+@app.route('/')
+def index():
+    symbols = ['AAPL', 'TSLA']  # you can add more symbols here
+    db = get_db()
+    for sym in symbols:
+        price = fetch_price(sym)
+        insight = get_insight(sym, price)
+        ts = datetime.datetime.utcnow().isoformat()
+        db.execute('INSERT INTO price (symbol, price, insight, ts) VALUES (?,?,?,?)',
+                   (sym, price, insight, ts))
+    db.commit()
+    rows = db.execute('SELECT * FROM price ORDER BY ts DESC').fetchall()
+    html = '''&lt;h1&gt;Daily Stock Analysis&lt;/h1&gt;
+              &lt;table border="1" cellpadding="5"&gt;&lt;tr&gt;&lt;th&gt;Symbol&lt;/th&gt;&lt;th&gt;Price&lt;/th&gt;&lt;th&gt;Insight&lt;/th&gt;&lt;th&gt;Timestamp&lt;/th&gt;&lt;/tr&gt;
+              {% for r in rows %}&lt;tr&gt;&lt;td&gt;{{r.symbol}}&lt;/td&gt;&lt;td&gt;{{"$%.2f"|format(r.price)}}&lt;/td&gt;&lt;td&gt;{{r.insight}}&lt;/td&gt;&lt;td&gt;{{r.ts}}&lt;/td&gt;&lt;/tr&gt;{% endfor %}
+              &lt;/table&gt;'''
+    return render_template_string(html, rows=rows)
+
+if __name__ == '__main__':
+    init_db()
+    app.run(debug=True)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the Flask app is ready, start it with a single command. The server will listen on the default port 5000 and automatically reload when you edit the file, which is handy while you experiment. Open your browser to the shown address and you should see a table populated with the two ticker symbols.</p>
+<div class="code-block"><pre><code>python app.py</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; extend</h2>
+                <p>Confirm the dashboard loads and shows rows for AAPL and TSLA, each with a price, a short insight, and a UTC timestamp. Look at the generated <code>stocks.db</code> file with SQLite to see the raw records—this proves the persistence layer works. To experiment, add another ticker to the <code>symbols</code> list or replace <code>get_insight</code> with a real LLM call; the rest of the pipeline will handle the new data automatically.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Quick verification commands</span>
+sqlite3 stocks.db "SELECT symbol, price, insight, ts FROM price ORDER BY ts DESC LIMIT 5;"
+<span class="code-comment"># Or curl the endpoint</span>
+curl http://127.0.0.1:5000/ | grep '&lt;table'</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Flask server starts without error</td><td>python app.py → should show *Running on http://127.0.0.1:5000/*</td></tr>
+            <tr><td>Dashboard displays ticker rows</td><td>Open http://127.0.0.1:5000 in a browser – you should see AAPL and TSLA entries</td></tr>
+            <tr><td>SQLite file contains data</td><td>sqlite3 stocks.db "SELECT * FROM price;" → rows returned</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your minimal AI‑powered stock dashboard is up and running. From here you can swap the free HuggingFace model for any local LLM, add charting with Chart.js, or hook the results into Slack/Telegram using their free webhooks.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

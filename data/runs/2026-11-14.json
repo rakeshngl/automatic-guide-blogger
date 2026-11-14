@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-14",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Mini Self‑Hosted Monitoring Dashboard with Node.js & SQLite (Uptime‑Kuma clone)"
+  ],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Code Security Scanner with TypeScript (Codex‑Security mini‑CLI)",
+      "source": "github_trending",
+      "url": "https://github.com/openai/codex-security",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-14_simple-code-security-scanner-typescript-cli.html",
+      "tagline": "A minimal clone of Codex‑Security for scanning JavaScript/TypeScript files for insecure patterns",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "typescript",
+        "cli",
+        "security"
+      ]
+    },
+    {
+      "title": "Build a Daily Stock Analysis Dashboard in Python (LLM‑powered clone)",
+      "source": "github_trending",
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-14_daily-stock-analysis-dashboard-python-clone.html",
+      "tagline": "A beginner-friendly, free‑tier clone of an AI‑powered stock insight tool",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 55,
+      "tags": [
+        "python",
+        "flask",
+        "llm"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1571142545566597223",
+    "1571142550948024334"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

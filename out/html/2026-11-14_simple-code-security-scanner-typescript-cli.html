@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple Code Security Scanner (TypeScript CLI)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Simple Code Security Scanner (TypeScript CLI)</h1>
+        <p>A minimal clone of Codex‑Security for scanning JavaScript/TypeScript files for insecure patterns</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In this tutorial we’ll craft a tiny command‑line scanner that looks for common insecure code snippets – think hard‑coded secrets, eval usage, and unsafe imports – inspired by OpenAI’s Codex‑Security CLI.</p>
+        <p>We’ll keep everything on your laptop using Node.js, TypeScript, and SQLite (via better‑sqlite3) – no paid APIs, no cloud services. In ~45 minutes you’ll have a runnable <code>scan</code> command that outputs a JSON report of findings.</p>
+
+        <div class="fix-box">
+            <h4>Prerequisites &amp; Gotchas</h4>
+            <ul>
+                <li>You need Node.js 22+ (the real tool requires 22.x, 24.x or 26.x). Older versions will fail to run the TypeScript compiler used here.</li>
+                <li>The clone only searches for three hard‑coded patterns; it is <strong>not</strong> a full security analysis like the original product.</li>
+                <li>SQLite file is created in the project root; delete <code>scanner.db</code> to reset the history.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal Scanner Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME &amp; DB</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">reads</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">stores findings</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">CLI (ts-node)</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite (better-sqlite3)</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">Target Repo (files)</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold Project</h2>
+                <p>We start by creating a fresh folder for the scanner and turning it into a Node.js project. The <code>npm init -y</code> command writes a basic <code>package.json</code> so we can later add scripts and dependencies. Then we install TypeScript, ts-node for on‑the‑fly execution, a glob library to locate source files, and better‑sqlite3 for a tiny embedded database.</p>
+                <p>All of these packages are lightweight and work offline, which keeps the clone simple and reproducible. Finally we generate a <code>tsconfig.json</code> that tells the TypeScript compiler to target modern JavaScript and to place compiled files in a <code>dist</code> folder.</p>
+<div class="code-block"><pre><code>mkdir simple-scanner &amp;&amp; cd simple-scanner
+npm init -y
+npm install typescript ts-node @types/node glob better-sqlite3
+npx tsc --init --rootDir src --outDir dist --esModuleInterop true --resolveJsonModule true --target ES2022 --module commonjs</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data Model &amp; DB Init</h2>
+                <p>The scanner needs a place to store each finding so we can query or export later. We use SQLite because it’s a single file, requires no server, and the <code>better-sqlite3</code> driver gives us synchronous, easy‑to‑read code – perfect for a small CLI tool.</p>
+                <p>The <code>src/db.ts</code> module opens (or creates) <code>scanner.db</code> in the project root and ensures a <code>findings</code> table exists. The table records the file path, line number, rule identifier, and a short code snippet that triggered the alert. Exported helper functions let other parts of the app insert a finding and retrieve all stored records.</p>
+                <p><strong>src/db.ts</strong></p>
+<div class="code-block"><pre><code>import Database from 'better-sqlite3';
+
+<span class="code-comment">// Open (or create) the SQLite file in the project root</span>
+const db = new Database('scanner.db');
+
+<span class="code-comment">// Ensure the findings table exists – runs on first import</span>
+const init = db.prepare(`
+  CREATE TABLE IF NOT EXISTS findings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    file TEXT NOT NULL,
+    line INTEGER NOT NULL,
+    rule TEXT NOT NULL,
+    snippet TEXT NOT NULL,
+    scanned_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+init.run();
+
+/** Insert a new finding into the database */
+export function addFinding(params: {
+  file: string;
+  line: number;
+  rule: string;
+  snippet: string;
+}) {
+  const stmt = db.prepare(
+    'INSERT INTO findings (file, line, rule, snippet) VALUES (?, ?, ?, ?)'
+  );
+  stmt.run(params.file, params.line, params.rule, params.snippet);
+}
+
+/** Retrieve all findings – useful for the CLI report */
+export function getAllFindings() {
+  const stmt = db.prepare('SELECT * FROM findings ORDER BY scanned_at DESC');
+  return stmt.all();
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core Scanning Logic (API/UI)</h2>
+                <p>In this phase we build the heart of the scanner: a tiny rule engine that walks a directory, reads JavaScript/TypeScript files, and looks for insecure patterns. When a pattern matches we persist a record in SQLite for later queries and also keep it in memory so the CLI can emit a JSON report. The three starter rules catch obvious red flags – use of <code>eval</code>, assignment to <code>innerHTML</code>, and hard‑coded passwords – which are easy to extend later.</p>
+                <p>We use the <code>glob</code> package to recursively locate <code>*.js</code> and <code>*.ts</code> files, then apply each rule’s regular expression to the file contents. Findings are stored with file path, line number, rule identifier, and a short snippet. All database interactions are wrapped in a tiny helper that creates the <code>findings</code> table on first run.</p>
+                <p><strong>src/scanner.ts</strong></p>
+<div class="code-block"><pre><code>import * as fs from 'fs';
+import * as path from 'path';
+import glob from 'glob';
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
+
+interface Rule {
+  id: string;
+  description: string;
+  regex: RegExp;
+}
+
+const rules: Rule[] = [
+  { id: 'eval-usage', description: 'Use of eval()', regex: /eval\s*\(/ },
+  { id: 'innerhtml-assignment', description: 'Assignment to innerHTML', regex: /\.innerHTML\s*=/ },
+  { id: 'hardcoded-password', description: 'Hard‑coded password string', regex: /['"](?:pwd|password)['"]\s*[:=]\s*['"][^'"\n]+['"]/i }
+];
+
+async function getDb() {
+  const db = await open({ filename: 'scanner.db', driver: sqlite3.Database });
+  await db.exec('CREATE TABLE IF NOT EXISTS findings (id INTEGER PRIMARY KEY AUTOINCREMENT, file TEXT, line INTEGER, rule TEXT, snippet TEXT)');
+  return db;
+}
+
+export async function runScan(rootDir: string) {
+  const db = await getDb();
+  const pattern = '**/*.{js,ts}';
+  const files = glob.sync(pattern, { cwd: rootDir, absolute: true, nodir: true });
+  const findings: any[] = [];
+  for (const file of files) {
+    const content = fs.readFileSync(file, 'utf8');
+    const lines = content.split(/\r?\n/);
+    lines.forEach((line, idx) =&gt; {
+      for (const rule of rules) {
+        if (rule.regex.test(line)) {
+          const record = { file: path.relative(rootDir, file), line: idx + 1, rule: rule.id, snippet: line.trim() };
+          findings.push(record);
+          db.run('INSERT INTO findings (file, line, rule, snippet) VALUES (?,?,?,?)', [record.file, record.line, record.rule, record.snippet]);
+        }
+      }
+    });
+  }
+  await db.close();
+  return findings;
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: CLI Entrypoint &amp; Run Locally</h2>
+                <p>Now we expose a friendly command‑line interface so developers can scan any folder with a single command. Using <code>commander</code> we define a <code>scan</code> sub‑command that accepts a directory path, invokes the scanner, and prints a nicely formatted JSON payload to stdout. This makes the tool scriptable and easy to integrate into CI pipelines.</p>
+                <p>The CLI simply forwards the directory argument to <code>runScan</code> and awaits the result. Errors are caught and displayed, ensuring the user always gets a clear exit status.</p>
+                <p><strong>src/cli.ts</strong></p>
+<div class="code-block"><pre><code>#!/usr/bin/env node
+import { Command } from 'commander';
+import { runScan } from './scanner';
+
+const program = new Command();
+program
+  .name('uvf-scanner')
+  .description('Minimal security scanner for JS/TS projects')
+  .version('0.1.0');
+
+program
+  .command('scan &lt;dir&gt;')
+  .description('Scan a directory for insecure patterns')
+  .action(async (dir: string) =&gt; {
+    try {
+      const findings = await runScan(dir);
+      console.log(JSON.stringify({ findings }, null, 2));
+    } catch (err) {
+      console.error('Scan failed:', err);
+      process.exit(1);
+    }
+  });
+
+program.parse(process.argv);</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; Extend</h2>
+                <p>With the scanner wired up, we can now test it against a tiny sample repository. We'll create a folder containing a file that deliberately uses <code>eval</code> so we can see a finding appear in the JSON output. Once the basic flow works, you can extend the rule set by adding more regex objects to <code>rules</code> or output the data in SARIF or CSV formats for tooling compatibility.</p>
+                <p>Running the CLI is as simple as invoking <code>npx ts-node src/cli.ts scan ./sample-repo</code>. The pipe to <code>jq</code> helps you inspect a particular finding, confirming that the SQLite table was also populated on the first run.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Create a sample repo with a vulnerable file</span>
+mkdir -p sample-repo &amp;&amp; cat &gt; sample-repo/vuln.ts &lt;&lt;'EOF'
+// Sample vulnerable code
+const userInput = "alert('hi')";
+eval(userInput);
+const el = document.getElementById('root');
+el.innerHTML = '&lt;p&gt;hello&lt;/p&gt;';
+const password = "secretPwd";
+EOF
+
+<span class="code-comment"># Run the scanner and pretty‑print the JSON report</span>
+npx ts-node src/cli.ts scan ./sample-repo | jq '.'</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Project initializes without errors</td><td>npm install &amp;&amp; npx tsc --noEmit</td></tr>
+            <tr><td>SQLite table created on first run</td><td>node -e "require('./dist/db').init(); console.log('ok')"</td></tr>
+            <tr><td>CLI prints a JSON report with at least one finding for a test file containing <code>eval(</code></td><td>npx ts-node src/cli.ts scan ./sample-repo | jq '.findings[] | select(.rule=="eval-usage")'</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You’re Ready to Scan!</h4>
+            <p>You now have a functional, open‑source security scanner that runs locally. Feel free to enrich the rule set, add SARIF export, or hook it into a CI pipeline. Happy hacking!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
