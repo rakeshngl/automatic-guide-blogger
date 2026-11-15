@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple Personal Finance Tracker Clone in Ruby</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Ruby | Sinatra | SQLite</div>
+    </nav>
+
+    <header>
+        <h1>Simple Personal Finance Tracker Clone in Ruby</h1>
+        <p>A beginner-friendly clone of Sure using Sinatra and SQLite</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick‑fire tutorial we’ll build a tiny personal finance tracker inspired by Sure, using only free, open‑source tools you can run on your laptop.</p>
+        <p>In about 45 minutes you’ll have a working web app that lets you add transactions and view a running balance – perfect for learning Ruby web development without any paid services.</p>
+
+        <div class="fix-box">
+            <h4>Before You Start</h4>
+            <ul>
+                <li>You need Ruby 3.1+ and the <code>bundler</code> gem installed; older versions may cause syntax errors.</li>
+                <li>The real Sure app includes AI assistants, multi‑currency support, and charts – our clone skips those for simplicity.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP request</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL queries</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Sinatra Web App</text>
+<text x="315.0" y="87" class="node-subtext">Ruby + SQLite</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite Database</text>
+<text x="315.0" y="159" class="node-subtext">finance.db</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">Web Browser</text>
+<text x="315.0" y="231" class="node-subtext">http://localhost:4567</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the Project</h2>
+                <p>First we create a clean folder for our clone and tell Ruby's package manager Bundler to manage dependencies. This gives us an isolated environment so the gems we install won’t clash with other projects on your machine.</p>
+                <p>Next we add the Sinatra web framework and the SQLite3 driver to the Gemfile. Bundler will fetch the correct versions and lock them, making the setup reproducible for anyone who follows the guide.</p>
+                <p><strong>setup.sh</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/usr/bin/env bash</span>
+set -e
+<span class="code-comment"># Create project directory</span>
+mkdir -p finance_tracker &amp;&amp; cd finance_tracker
+<span class="code-comment"># Initialise Bundler and create a Gemfile</span>
+bundle init &gt; /dev/null
+<span class="code-comment"># Add required gems</span>
+cat &lt;&lt;'GEMS' &gt;&gt; Gemfile
+gem 'sinatra', '~&gt; 2.2'
+gem 'sqlite3', '~&gt; 1.6'
+GEMS
+<span class="code-comment"># Install gems</span>
+bundle install
+<span class="code-comment"># Create a basic app file</span>
+cat &lt;&lt;'RUBY' &gt; app.rb
+require 'sinatra'
+require 'sqlite3'
+set :bind, '0.0.0.0'
+RUBY
+echo "Scaffold complete. Run 'ruby app.rb' after initializing the database."</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the Data Model</h2>
+                <p>Now we set up a tiny SQLite database that will store each financial transaction. A single table called <code>transactions</code> is enough for a basic tracker – it holds an amount, a description, and a timestamp.</p>
+                <p>The script below creates the <code>finance.db</code> file (if it doesn’t exist) and ensures the table schema is present. Running it once is all you need before starting the web server.</p>
+                <p><strong>init_db.sh</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/usr/bin/env bash</span>
+set -e
+DB_FILE=finance.db
+<span class="code-comment"># Create database and transactions table if they don't exist</span>
+sqlite3 $DB_FILE &lt;&lt;'SQL'
+CREATE TABLE IF NOT EXISTS transactions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  amount REAL NOT NULL,
+  description TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+SQL
+echo "Database initialized at $DB_FILE with 'transactions' table."</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the API &amp; UI</h2>
+                <p>In this phase we create a single Sinatra application that serves both the HTML UI and the backend logic. The UI consists of a simple form for entering a transaction (date, description, amount) and a table that lists all stored transactions with a running balance. We use SQLite3 for persistence, which was set up in the scaffolding phase, and we keep the code tiny so beginners can follow each line.</p>
+                <p>We expose three routes: <code>GET /</code> renders the form and the table, <code>POST /transactions</code> saves a new entry, and a helper method calculates the current balance. All HTML is embedded directly in Ruby strings to avoid extra template files, keeping the clone self‑contained.</p>
+                <p><strong>app.rb</strong></p>
+<div class="code-block"><pre><code>require 'sinatra'
+require 'sqlite3'
+require 'json'
+
+DB = SQLite3::Database.new('finance.db')
+DB.results_as_hash = true
+
+<span class="code-comment"># Ensure the transactions table exists</span>
+DB.execute &lt;&lt;-SQL
+  CREATE TABLE IF NOT EXISTS transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT NOT NULL,
+    description TEXT NOT NULL,
+    amount REAL NOT NULL
+  );
+SQL
+
+helpers do
+  def all_transactions
+    DB.execute('SELECT * FROM transactions ORDER BY date DESC')
+  end
+
+  def current_balance
+    DB.execute('SELECT SUM(amount) FROM transactions').first[0] || 0.0
+  end
+end
+
+get '/' do
+  @transactions = all_transactions
+  @balance = current_balance
+  erb :index
+end
+
+post '/transactions' do
+  DB.execute('INSERT INTO transactions (date, description, amount) VALUES (?, ?, ?)',
+             params['date'], params['description'], params['amount'].to_f)
+  redirect '/'
+end
+
+__END__
+@@ index
+&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Finance Tracker&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Simple Finance Tracker&lt;/h1&gt;
+  &lt;form action="/transactions" method="post"&gt;
+    &lt;input type="date" name="date" required&gt;
+    &lt;input type="text" name="description" placeholder="Description" required&gt;
+    &lt;input type="number" step="0.01" name="amount" placeholder="Amount" required&gt;
+    &lt;button type="submit"&gt;Add&lt;/button&gt;
+  &lt;/form&gt;
+  &lt;h2&gt;Balance: $&lt;%= sprintf('%.2f', @balance) %&gt;&lt;/h2&gt;
+  &lt;table border="1" cellpadding="5"&gt;
+    &lt;tr&gt;&lt;th&gt;Date&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;th&gt;Amount&lt;/th&gt;&lt;/tr&gt;
+    &lt;% @transactions.each do |t| %&gt;
+      &lt;tr&gt;
+        &lt;td&gt;&lt;%= t['date'] %&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;%= t['description'] %&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;%= sprintf('%.2f', t['amount']) %&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;% end %&gt;
+  &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run Locally</h2>
+                <p>Now we start the Sinatra server so you can interact with the tracker in your browser. The helper script sets the appropriate environment variables and launches the app on the default port 4567. Running it from the command line gives you live reloads on code changes, which is handy while you experiment.</p>
+                <p>Make sure you have the <code>sinatra</code> gem installed (it was added in the scaffold phase). If you see the familiar "Sinatra has taken the stage" message, the server is ready for you to open http://localhost:4567.</p>
+                <p><strong>run.sh</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/usr/bin/env bash</span>
+<span class="code-comment"># Ensure bundler uses the local Gemfile</span>
+export BUNDLE_GEMFILE=$(pwd)/Gemfile
+<span class="code-comment"># Install missing gems quietly</span>
+bundle check || bundle install --quiet
+<span class="code-comment"># Start the Sinatra app</span>
+ruby app.rb -o 0.0.0.0 -p 4567</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; Extend</h2>
+                <p>With the server running, open your browser to http://localhost:4567. You should see the empty form and a table with no rows, plus a balance of $0.00. Add a transaction using the form; after submission the page reloads, showing the new row and an updated balance – that confirms the API and UI are wired correctly.</p>
+                <p>As a next step, you can export all transactions to a CSV file. The optional script below queries the SQLite database and writes a simple CSV, giving you a foundation for reporting or backups. Feel free to tweak the UI, add categories, or integrate Chart.js for visual balance trends.</p>
+                <p><strong>export.sh</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/usr/bin/env bash</span>
+<span class="code-comment"># Export all transactions to finance.csv in the current directory</span>
+sqlite3 finance.db -header -csv "SELECT date, description, amount FROM transactions ORDER BY date;" &gt; finance.csv
+if [ -s finance.csv ]; then
+  echo "Exported $(wc -l &lt; finance.csv) lines to finance.csv"
+else
+  echo "No data exported; the table may be empty."
+fi</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>bash run.sh &amp;&amp; grep -q "Sinatra has taken the stage" &lt;&lt;&lt;$(ruby app.rb -o 0.0.0.0 -p 4567 2&gt;&amp;1)</td></tr>
+            <tr><td>Browser shows a form and empty table at http://localhost:4567</td><td>curl -s http://localhost:4567 | grep -q "&lt;form" &amp;&amp; grep -q "&lt;table"</td></tr>
+            <tr><td>After adding a transaction, the balance updates and the row appears in the table</td><td>curl -s -X POST -d 'date=2024-01-01&amp;description=Test&amp;amount=10.00' http://localhost:4567/transactions &amp;&amp; curl -s http://localhost:4567 | grep -q "10.00"</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You Did It!</h4>
+            <p>Your minimal Sure‑inspired finance tracker is up and running. Feel free to experiment – add categories, chart balances with Chart.js, or switch to PostgreSQL for more robustness.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-15",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Mini Uptime‑Kuma‑style Monitoring Dashboard with Node.js & SQLite",
+      "source": "github_trending",
+      "url": "https://github.com/louislam/uptime-kuma",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-15_mini-uptime-kuma-monitoring-dashboard.html",
+      "tagline": "A lightweight Node.js + SQLite clone you can build in 45 minutes",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "Node.js",
+        "SQLite",
+        "monitoring"
+      ]
+    },
+    {
+      "title": "Build a Simple Personal Finance Tracker Clone of Sure in Ruby",
+      "source": "github_trending",
+      "url": "https://github.com/we-promise/sure",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-15_simple-personal-finance-tracker-clone-in-ruby.html",
+      "tagline": "A beginner-friendly clone of Sure using Sinatra and SQLite",
+      "navbar_badge": "Ruby | Sinatra | SQLite",
+      "est_minutes": 40,
+      "tags": [
+        "Ruby",
+        "SQLite",
+        "finance"
+      ]
+    },
+    {
+      "title": "Build a Qwen‑Code‑style AI Coding Assistant for the Terminal with TypeScript",
+      "source": "github_trending",
+      "url": "https://github.com/QwenLM/qwen-code",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-15_terminal-ai-coding-assistant-clone.html",
+      "tagline": "A lightweight TypeScript‑Node starter inspired by Qwen‑Code",
+      "navbar_badge": "beta",
+      "est_minutes": 50,
+      "tags": [
+        "TypeScript",
+        "CLI",
+        "LLM"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1571505586502238249",
+    "1571505591111655486",
+    "1571505595050102925"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

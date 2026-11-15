@@ -845,6 +845,24 @@
       "title": "Build a Daily Stock Analysis Dashboard in Python (LLM‑powered clone)",
       "source_url": "https://github.com/ZhuLinsen/daily_stock_analysis",
       "slug": "2026-11-14_daily-stock-analysis-dashboard-python-clone.html"
+    },
+    {
+      "date": "2026-11-15T12:33:43+00:00",
+      "title": "Build a Mini Uptime‑Kuma‑style Monitoring Dashboard with Node.js & SQLite",
+      "source_url": "https://github.com/louislam/uptime-kuma",
+      "slug": "2026-11-15_mini-uptime-kuma-monitoring-dashboard.html"
+    },
+    {
+      "date": "2026-11-15T12:37:56+00:00",
+      "title": "Build a Simple Personal Finance Tracker Clone of Sure in Ruby",
+      "source_url": "https://github.com/we-promise/sure",
+      "slug": "2026-11-15_simple-personal-finance-tracker-clone-in-ruby.html"
+    },
+    {
+      "date": "2026-11-15T12:42:08+00:00",
+      "title": "Build a Qwen‑Code‑style AI Coding Assistant for the Terminal with TypeScript",
+      "source_url": "https://github.com/QwenLM/qwen-code",
+      "slug": "2026-11-15_terminal-ai-coding-assistant-clone.html"
     }
   ]
 }
