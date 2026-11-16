@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-16",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Hosts File Switcher Web UI with Node.js & Electron",
+      "source": "hn_show",
+      "url": "https://github.com/maxmart/hoststray",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-16_hosts-file-switcher-web-ui-with-node-js-electron.html",
+      "tagline": "A minimal clone of Hosts Tray – switch hosts groups from a desktop UI",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "Node.js",
+        "Electron",
+        "DevOps"
+      ]
+    },
+    {
+      "title": "Build a Multi‑Source Topic Summarizer Skill for Claude with Python",
+      "source": "github_trending",
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-16_multi-source-topic-summarizer-skill-claude-style.html",
+      "tagline": "A minimal Python clone that fetches recent posts from Reddit and Hacker News, then summarizes with a local LLM",
+      "navbar_badge": "Beginner",
+      "est_minutes": 50,
+      "tags": [
+        "Python",
+        "Claude",
+        "API"
+      ]
+    },
+    {
+      "title": "Build a Cookie‑Blocker Chrome Extension (Cookie Away Clone)",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/4O7VFD3VX5PIIG?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-16_cookie-away-clone-chrome-extension.html",
+      "tagline": "Reject cookie banners automatically",
+      "navbar_badge": "Beginner",
+      "est_minutes": 40,
+      "tags": [
+        "JavaScript",
+        "ChromeExtension",
+        "Privacy"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1571873252895236152",
+    "1571873259660513393",
+    "1571873265637392505"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}
