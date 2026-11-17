@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-17",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Multi‑Source Research Agent with Python (Clone last30days‑skill)",
+      "source": "github_trending",
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-17_simple-multi-source-research-agent-python-clone.html",
+      "tagline": "A minimal AI‑free research aggregator using Reddit, Hacker News, and Wikipedia",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "api",
+        "llm"
+      ]
+    },
+    {
+      "title": "Build an Agent‑User Interaction Widget with TypeScript (Clone ag‑ui)",
+      "source": "github_trending",
+      "url": "https://github.com/ag-ui-protocol/ag-ui",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-17_agent-user-interaction-widget-clone.html",
+      "tagline": "A minimal TypeScript/Node.js AG‑UI‑inspired widget",
+      "navbar_badge": "beta",
+      "est_minutes": 50,
+      "tags": [
+        "typescript",
+        "frontend",
+        "ai"
+      ]
+    },
+    {
+      "title": "Build a Simple Agentic Skills Framework in Shell (Clone superpowers)",
+      "source": "github_trending",
+      "url": "https://github.com/obra/superpowers",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-17_simple-agentic-skills-framework-in-shell-clone-of-superpower.html",
+      "tagline": "A minimal, 45‑minute clone using Bash and SQLite",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 40,
+      "tags": [
+        "shell",
+        "agents",
+        "automation"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1572232770837807278",
+    "1572232775426248825",
+    "1572232779695923260"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}

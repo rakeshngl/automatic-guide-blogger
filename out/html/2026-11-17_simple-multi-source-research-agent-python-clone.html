@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple Multi‑Source Research Agent (Python Clone)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner Friendly</div>
+    </nav>
+
+    <header>
+        <h1>Simple Multi‑Source Research Agent (Python Clone)</h1>
+        <p>A minimal AI‑free research aggregator using Reddit, Hacker News, and Wikipedia</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this build you’ll create a lightweight research agent that pulls recent posts from Reddit, top stories from Hacker News, and summaries from Wikipedia – a stripped‑down version of the last30days‑skill.</p>
+        <p>We’ll use Python, FastAPI, and SQLite on the free tier, so you can have a working prototype in about 45 minutes without any paid APIs.</p>
+
+        <div class="fix-box">
+            <h4>Prerequisites &amp; Gotchas</h4>
+            <ul>
+                <li>You need Python 3.10+ and <code>git</code> installed; the script uses public JSON endpoints – no API keys required.</li>
+                <li>The clone skips AI ranking and paid data sources; results are raw and un‑filtered.</li>
+                <li>Rate limits may pause requests if you hammer Reddit or HN – the demo fetches only the latest 5 items each.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP API</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">FastAPI Service</text>
+<text x="315.0" y="87" class="node-subtext">Python + SQLite</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">Browser UI</text>
+<text x="315.0" y="231" class="node-subtext">HTML/JS</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a fresh virtual environment so our dependencies stay isolated from any system Python. Then install FastAPI for the web service and a lightweight SQLite driver. Finally, lay out a minimal folder structure that will hold our API code, database helpers, and static UI files.</p>
+                <p>The scaffold gives us a reproducible starting point – you can delete the folder and rerun the commands without worrying about leftover packages or stray files.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Clone the repo skeleton (or create an empty folder)</span>
+mkdir research-agent &amp;&amp; cd research-agent
+
+<span class="code-comment"># Initialise a clean Python venv</span>
+python3 -m venv .venv
+source .venv/bin/activate
+
+<span class="code-comment"># Upgrade pip and install core libs</span>
+pip install --upgrade pip
+pip install fastapi[all] aiosqlite
+
+<span class="code-comment"># Create the basic layout</span>
+mkdir -p app/static app/templates
+touch app/main.py app/db.py app/fetchers.py</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Data model &amp; fetchers</h2>
+                <p>We need a tiny SQLite schema to store fetched items – an <code>id</code>, a <code>source</code> tag, a <code>title</code>, a <code>url</code>, and a JSON <code>payload</code> for any extra fields. The helper below opens the DB, ensures the table exists, and provides an async <code>save_item</code> function that the fetchers will call.</p>
+                <p>Next, we sketch async fetcher stubs for Reddit, Hacker News, and Wikipedia. They each return a list of dicts matching the schema; later phases will wire them into the API endpoint.</p>
+                <p><strong>app/db.py</strong></p>
+<div class="code-block"><pre><code>import aiosqlite
+import json
+from pathlib import Path
+
+DB_PATH = Path(__file__).parent.parent / "research.db"
+
+async def init_db() -&gt; aiosqlite.Connection:
+    """Create the SQLite file and the `items` table if they don't exist."""
+    conn = await aiosqlite.connect(DB_PATH)
+    await conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS items (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            source TEXT NOT NULL,
+            title TEXT NOT NULL,
+            url TEXT NOT NULL,
+            payload TEXT NOT NULL,
+            fetched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+    await conn.commit()
+    return conn
+
+async def save_item(conn: aiosqlite.Connection, source: str, title: str, url: str, payload: dict) -&gt; None:
+    """Insert a single fetched record into the DB.
+    `payload` is stored as JSON text so we can keep extra fields without schema changes.
+    """
+    await conn.execute(
+        "INSERT INTO items (source, title, url, payload) VALUES (?, ?, ?, ?)",
+        (source, title, url, json.dumps(payload)),
+    )
+    await conn.commit()</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: API endpoints &amp; startup</h2>
+                <p>In this step we expose the data‑gathering logic through a tiny web API. The <code>/collect</code> POST endpoint will call each source‑fetcher, store the results in an in‑memory list, and report how many items were added. A second GET endpoint <code>/articles</code> simply returns the stored rows so the front‑end can display them.</p>
+                <p>We keep everything lightweight: FastAPI runs in a single process, the article list lives in a global variable, and we avoid a database for this minimal clone. This design lets you see the whole flow—from raw HTTP request to populated JSON—without any extra infrastructure.</p>
+                <p><strong>app/main.py</strong></p>
+<div class="code-block"><pre><code>from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List
+import asyncio
+
+<span class="code-comment"># Import the three fetcher functions you built earlier.</span>
+<span class="code-comment"># They must be async and return a list of dicts with at least 'title' and 'url'.</span>
+from fetchers.reddit import fetch_reddit
+from fetchers.hackernews import fetch_hackernews
+from fetchers.wikipedia import fetch_wikipedia
+
+app = FastAPI(title="Simple Multi‑Source Research Agent")
+
+<span class="code-comment"># In‑memory storage for collected articles</span>
+articles: List[dict] = []
+
+class Article(BaseModel):
+    title: str
+    url: str
+    source: str
+
+@app.post("/collect")
+async def collect():
+    """Trigger all fetchers, de‑duplicate, and store results.
+    Returns the number of new articles added.
+    """
+    <span class="code-comment"># Run fetchers concurrently</span>
+    results = await asyncio.gather(
+        fetch_reddit(),
+        fetch_hackernews(),
+        fetch_wikipedia()
+    )
+    new_items = []
+    for source_name, items in zip(["reddit", "hackernews", "wikipedia"], results):
+        for item in items:
+            <span class="code-comment"># Normalise each item to our Article model</span>
+            article = Article(title=item["title"], url=item["url"], source=source_name)
+            <span class="code-comment"># Simple deduplication by URL</span>
+            if not any(a["url"] == article.url for a in articles):
+                new_items.append(article.dict())
+    articles.extend(new_items)
+    return {"added": len(new_items), "total": len(articles)}
+
+@app.get("/articles", response_model=List[Article])
+async def get_articles():
+    """Return the current list of stored articles."""
+    if not articles:
+        raise HTTPException(status_code=404, detail="No articles collected yet.")
+    return articles</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally &amp; test UI</h2>
+                <p>Now we spin up the FastAPI server and make sure the endpoints are reachable. The <code>uvicorn</code> command watches your code, so any change you make to a fetcher or the API will reload automatically—perfect for rapid iteration.</p>
+                <p>After the server is running, open the tiny HTML page provided in the next phase; it will call <code>/collect</code> to pull fresh data and then display the titles from <code>/articles</code>. This gives you an end‑to‑end test without any heavy front‑end tooling.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Install dependencies if you haven't yet</span>
+pip install fastapi uvicorn aiohttp
+
+<span class="code-comment"># Run the API server (reload enabled for development)</span>
+uvicorn app.main:app --reload</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>With the server alive, use <code>curl</code> or a browser to hit the endpoints and confirm JSON payloads appear. The provided <code>index.html</code> makes these calls for you and renders a simple list of article titles.</p>
+                <p>If you want to go further, add a query parameter to <code>/articles?source=reddit</code> to filter, or replace the static page with a React component that offers search and pagination. The scaffold is deliberately tiny so you can experiment freely.</p>
+                <p><strong>index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;title&gt;Research Agent UI&lt;/title&gt;
+    &lt;style&gt;
+        body {font-family:Arial, sans-serif; margin:20px;}
+        button {margin-bottom:10px;}
+        li {margin:5px 0;}
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Latest Articles&lt;/h1&gt;
+    &lt;button id="refresh"&gt;Refresh&lt;/button&gt;
+    &lt;ul id="list"&gt;&lt;/ul&gt;
+
+    &lt;script&gt;
+        async function collect() {
+            await fetch('http://127.0.0.1:8000/collect', {method:'POST'});
+        }
+        async function loadArticles() {
+            const resp = await fetch('http://127.0.0.1:8000/articles');
+            if (!resp.ok) { document.getElementById('list').innerHTML = '&lt;li&gt;No data yet.&lt;/li&gt;'; return; }
+            const data = await resp.json();
+            const ul = document.getElementById('list');
+            ul.innerHTML = '';
+            data.forEach(a =&gt; {
+                const li = document.createElement('li');
+                const aTag = document.createElement('a');
+                aTag.href = a.url; aTag.textContent = a.title; aTag.target = '_blank';
+                li.appendChild(aTag);
+                li.append(' ['+a.source+']');
+                ul.appendChild(li);
+            });
+        }
+        document.getElementById('refresh').addEventListener('click', async () =&gt; {
+            await collect();
+            await loadArticles();
+        });
+        // Auto‑load on page open
+        loadArticles();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>uvicorn app.main:app --reload → shows 'Uvicorn running on http://127.0.0.1:8000'</td></tr>
+            <tr><td>/collect returns status</td><td>curl -X POST http://127.0.0.1:8000/collect</td></tr>
+            <tr><td>/articles returns JSON array</td><td>curl http://127.0.0.1:8000/articles | jq '.'</td></tr>
+            <tr><td>Browser UI shows list after refresh</td><td>Open index.html in Chrome and click Refresh; see titles appear</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s Next?</h4>
+            <p>You now have a functional multi‑source research agent. Experiment by adding more sources (Twitter API, arXiv), caching, or a tiny ranking model. Happy hacking!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

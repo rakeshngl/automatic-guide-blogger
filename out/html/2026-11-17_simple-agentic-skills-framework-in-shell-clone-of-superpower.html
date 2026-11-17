@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Simple Agentic Skills Framework in Shell (Clone of Superpowers)</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner Friendly</div>
+    </nav>
+
+    <header>
+        <h1>Simple Agentic Skills Framework in Shell (Clone of Superpowers)</h1>
+        <p>A minimal, 45‑minute clone using Bash and SQLite</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick build you’ll create a tiny agentic‑skills framework that runs entirely in your terminal, inspired by the Superpowers project. We’ll wire up a Bash script that stores skill definitions in SQLite and lets you invoke them with simple commands.</p>
+        <p>We’ll keep the stack ultra‑light: Bash for the runtime, SQLite (bundled with most OSes) for persistence, and no external APIs. In ~45 minutes you’ll have a working prototype you can extend with your own skills.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Bash 4+ and SQLite 3 installed (most Linux/macOS machines have them out‑of‑the‑box).</li>
+                <li>The clone only supports plain‑text skills and a single‑user workflow – the real Superpowers platform includes multi‑agent orchestration and cloud AI services which are omitted here.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Architecture Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">store/retrieve</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">executes</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Bash CLI</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">Skill Scripts</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold project</h2>
+                <p>Create a directory and initialise an empty SQLite database with a simple schema. This gives us a predictable place to store skill metadata and a clean starting point for the rest of the guide.</p>
+                <p>The script is idempotent – you can run it again without harming existing data, which is handy while you experiment.</p>
+                <p><strong>init.sh</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/usr/bin/env bash</span>
+set -euo pipefail
+
+<span class="code-comment"># Project root (relative to script location)</span>
+PROJECT_ROOT="$(dirname "${BASH_SOURCE[0]}")/superpowers_clone"
+
+<span class="code-comment"># Create folder if it doesn't exist</span>
+mkdir -p "$PROJECT_ROOT"
+
+<span class="code-comment"># Path to the SQLite DB file</span>
+DB_PATH="$PROJECT_ROOT/skills.db"
+
+<span class="code-comment"># Initialise DB with a simple schema if not present</span>
+if ! sqlite3 "$DB_PATH" "SELECT name FROM sqlite_master WHERE type='table' AND name='skills';" | grep -q skills; then
+  sqlite3 "$DB_PATH" &lt;&lt;SQL
+CREATE TABLE skills (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  description TEXT,
+  command TEXT NOT NULL
+);
+SQL
+  echo "Database initialized at $DB_PATH"
+else
+  echo "Database already exists – schema is present."
+fi</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Core feature – Add a skill</h2>
+                <p>A helper script inserts a new skill record into the DB. Each skill is a name, a short description, and the shell command that implements it – the minimal equivalent of Superpowers' skill objects.</p>
+                <p>Running the script with arguments adds the skill, and you can later query the DB to see what you stored.</p>
+                <p><strong>add_skill.sh</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/usr/bin/env bash</span>
+set -euo pipefail
+
+if [[ $# -lt 3 ]]; then
+  echo "Usage: $0 &lt;skill_name&gt; &lt;description&gt; &lt;command&gt;"
+  exit 1
+fi
+
+SKILL_NAME="$1"
+DESCRIPTION="$2"
+COMMAND="$3"
+
+<span class="code-comment"># Locate the DB (same folder as init.sh)</span>
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
+DB_PATH="$SCRIPT_DIR/superpowers_clone/skills.db"
+
+<span class="code-comment"># Insert the new skill – ignore if it already exists</span>
+sqlite3 "$DB_PATH" &lt;&lt;SQL
+INSERT OR IGNORE INTO skills (name, description, command)
+VALUES ('$SKILL_NAME', '$DESCRIPTION', '$COMMAND');
+SQL
+
+echo "Skill '$SKILL_NAME' added (or already existed)."</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core feature – List &amp; run skills</h2>
+                <p>We now add a tiny helper that reads the SQLite catalog and prints every registered skill. The script shows the skill ID, name, and a short description so users can pick what to run. It uses the same <code>sqlite3</code> binary we relied on earlier, keeping the whole stack pure Bash.</p>
+                <p>Next we create a companion script that will later execute a chosen skill. By separating listing from execution we keep each utility focused and easy to test, which is perfect for a minimal clone.</p>
+                <p><strong>list_skills.sh</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/usr/bin/env bash</span>
+<span class="code-comment"># list_skills.sh – display all registered skills</span>
+DB_DIR="superpowers_clone"
+DB_PATH="$DB_DIR/skills.db"
+if [[ ! -f $DB_PATH ]]; then
+  echo "Database not found at $DB_PATH"
+  exit 1
+fi
+printf "%4s | %-15s | %s\n" "ID" "NAME" "DESCRIPTION"
+printf "----+-----------------+---------------------------\n"
+sqlite3 "$DB_PATH" "SELECT id, name, description FROM skill ORDER BY id;" |
+while IFS='|' read -r id name desc; do
+  printf "%4s | %-15s | %s\n" "$id" "$name" "$desc"
+done</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run a skill</h2>
+                <p>The runner script receives a skill ID, looks up the stored command, and executes it in a controlled subshell. We deliberately avoid <code>eval</code> on raw input; instead we pass the command string to <code>bash -c</code> which respects quoting and reduces injection risk.</p>
+                <p>After the command runs we echo a separator line so the user can clearly see the skill output. This tiny utility completes the core loop: list → pick → run, giving you a functional agentic‑skills framework in pure Bash.</p>
+                <p><strong>run_skill.sh</strong></p>
+<div class="code-block"><pre><code><span class="code-comment">#!/usr/bin/env bash</span>
+<span class="code-comment"># run_skill.sh – fetch and execute a skill by its ID</span>
+DB_DIR="superpowers_clone"
+DB_PATH="$DB_DIR/skills.db"
+if [[ -z $1 ]]; then
+  echo "Usage: $0 &lt;skill_id&gt;"
+  exit 1
+fi
+SKILL_ID="$1"
+if [[ ! -f $DB_PATH ]]; then
+  echo "Database not found at $DB_PATH"
+  exit 1
+fi
+<span class="code-comment"># Retrieve the command for the given ID</span>
+CMD=$(sqlite3 "$DB_PATH" "SELECT command FROM skill WHERE id=$SKILL_ID;")
+if [[ -z $CMD ]]; then
+  echo "No skill found with ID $SKILL_ID"
+  exit 1
+fi
+echo "--- Executing skill #$SKILL_ID ---"
+<span class="code-comment"># Execute in a subshell to isolate environment</span>
+bash -c "$CMD"
+echo "--- Done ---"</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Project folder and DB created</td><td>ls superpowers_clone &amp;&amp; sqlite3 superpowers_clone/skills.db ".schema skill"</td></tr>
+            <tr><td>Skill registration works</td><td>./add_skill.sh hello "Print hello" "echo Hello, world!" &amp;&amp; sqlite3 superpowers_clone/skills.db "SELECT name FROM skill WHERE name='hello';"</td></tr>
+            <tr><td>Runner executes skill and prints output</td><td>ID=$(sqlite3 superpowers_clone/skills.db "SELECT id FROM skill WHERE name='hello';"); ./run_skill.sh $ID &amp;&amp; echo "Output should be 'Hello, world!'"</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional, shell‑based agentic skills framework. Extend it by adding JSON metadata, chaining skills, or wrapping the CLI in a tiny web UI. Happy hacking!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Agent‑User Interaction Widget Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">beta</div>
+    </nav>
+
+    <header>
+        <h1>Agent‑User Interaction Widget Clone</h1>
+        <p>A minimal TypeScript/Node.js AG‑UI‑inspired widget</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide. In the next 45 minutes you’ll spin up a tiny TypeScript widget that mimics the core of ag‑ui: a bi‑directional event stream between a mock AI agent and a web UI.</p>
+        <p>We’ll use plain Node.js, Express, and SQLite (all free‑tier) to keep the clone lightweight yet functional – perfect for beginners eager to see agents talk to apps.</p>
+
+        <div class="fix-box">
+            <h4>Before you start…</h4>
+            <ul>
+                <li>Node &gt;=18 and npm installed – older versions miss native ES‑module support.</li>
+                <li>The real ag‑ui handles token streaming, tool calls and authentication; our clone only sends plain JSON events over HTTP.</li>
+                <li>SQLite stores messages locally; in production you’d replace it with a proper DB or cloud store.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link" marker-start="url(#gw-arrow)" marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP / WS</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">SQL</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">Express Server (TS)</text>
+<text x="315.0" y="87" class="node-subtext">API + Web UI</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">SQLite DB</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="215" class="node-text">Browser UI</text>
+<text x="315.0" y="231" class="node-subtext">HTML + TS</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>We start by creating a fresh folder and turning it into an npm workspace that understands TypeScript. Express will serve our API and static UI, while better‑sqlite3 gives us a tiny, zero‑config database. All dependencies are free and install in seconds.</p>
+                <p>The dev dependencies include TypeScript itself and ts-node-dev so we can run the code without a separate compile step, keeping the workflow simple for newcomers.</p>
+<div class="code-block"><pre><code>mkdir agui-clone &amp;&amp; cd agui-clone
+npm init -y
+npm i express better-sqlite3
+npm i -D typescript @types/express ts-node-dev
+npx tsc --init --rootDir src --outDir dist --esModuleInterop true --module commonjs --target es2022</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model</h2>
+                <p>Our widget only needs to remember a stream of events – who sent them, what the payload was, and when they happened. We model this with a single SQLite table called <code>events</code>. The helper below opens the database, ensures the table exists, and exports simple CRUD functions that the rest of the app will call.</p>
+                <p>Using better‑sqlite3 means the API is synchronous, which is perfect for a small demo and avoids callback noise. The code lives in <code>src/db.ts</code> and will be imported by the server later.</p>
+                <p><strong>src/db.ts</strong></p>
+<div class="code-block"><pre><code>import Database from 'better-sqlite3';
+
+<span class="code-comment">// Open (or create) a local SQLite file</span>
+const db = new Database('events.db');
+
+<span class="code-comment">// Ensure the events table exists</span>
+db.exec(`
+  CREATE TABLE IF NOT EXISTS events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    direction TEXT NOT NULL,   -- 'agent' or 'user'
+    payload TEXT NOT NULL,    -- JSON string
+    timestamp INTEGER NOT NULL DEFAULT (strftime('%s','now'))
+  );
+`);
+
+export interface Event {
+  id?: number;
+  direction: 'agent' | 'user';
+  payload: any;
+  timestamp?: number;
+}
+
+export function insertEvent(ev: Event): number {
+  const stmt = db.prepare('INSERT INTO events (direction, payload) VALUES (?, ?)');
+  const info = stmt.run(ev.direction, JSON.stringify(ev.payload));
+  return Number(info.lastInsertRowid);
+}
+
+export function getAllEvents(): Event[] {
+  const rows = db.prepare('SELECT * FROM events ORDER BY timestamp ASC').all();
+  return rows.map(r =&gt; ({
+    id: r.id,
+    direction: r.direction,
+    payload: JSON.parse(r.payload),
+    timestamp: r.timestamp
+  }));
+}</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build API + mock agent</h2>
+                <p>In this step we spin up an Express server that will serve our static UI files, accept user messages, and stream back agent responses using Server‑Sent Events (SSE). The server keeps an in‑memory array of events so new clients can catch up on past messages, and a tiny mock agent simply echoes whatever the user sent prefixed with "Echo:". By exposing a POST <code>/message</code> endpoint and a GET <code>/events</code> SSE stream we create the minimal back‑end contract required by the UI.</p>
+                <p><strong>src/server.ts</strong></p>
+<div class="code-block"><pre><code>import express from 'express';
+import cors from 'cors';
+import { json } from 'body-parser';
+import { createServer } from 'http';
+
+<span class="code-comment">// Simple event type</span>
+type Event = { id: number; data: string };
+
+const app = express();
+app.use(cors());
+app.use(json());
+app.use(express.static('public'));
+
+let nextId = 1;
+const events: Event[] = [];
+
+<span class="code-comment">// POST endpoint receives user text, creates a mock agent reply, stores both as events</span>
+app.post('/message', (req, res) =&gt; {
+  const userMsg = req.body.message?.trim();
+  if (!userMsg) return res.status(400).json({ error: 'Message required' });
+  const userEvent: Event = { id: nextId++, data: `User: ${userMsg}` };
+  events.push(userEvent);
+  const agentEvent: Event = { id: nextId++, data: `Echo: ${userMsg}` };
+  events.push(agentEvent);
+  res.json({ status: 'ok' });
+});
+
+<span class="code-comment">// SSE endpoint streams all events and keeps the connection open for new ones</span>
+app.get('/events', (req, res) =&gt; {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.flushHeaders();
+  <span class="code-comment">// Send past events</span>
+  events.forEach(ev =&gt; res.write(`id: ${ev.id}\n data: ${ev.data}\n\n`));
+  <span class="code-comment">// Listener for new events</span>
+  const interval = setInterval(() =&gt; {
+    const newEvents = events.filter(ev =&gt; ev.id &gt; (req as any).lastSentId || 0);
+    newEvents.forEach(ev =&gt; res.write(`id: ${ev.id}\n data: ${ev.data}\n\n`));
+    (req as any).lastSentId = events[events.length - 1]?.id;
+  }, 500);
+  req.on('close', () =&gt; clearInterval(interval));
+});
+
+const server = createServer(app);
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () =&gt; console.log(`🚀 http://localhost:${PORT}`));</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Minimal UI</h2>
+                <p>Now we create a tiny HTML page that lets a user type a message, send it to the back‑end, and display a running conversation. The page posts to <code>/message</code> and opens an EventSource on <code>/events</code> to receive both user and agent messages in real time. All styling is kept inline for simplicity, so you can focus on the data flow rather than CSS.</p>
+                <p><strong>public/index.html</strong></p>
+<div class="code-block"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8" /&gt;
+  &lt;title&gt;AG‑UI Minimal Clone&lt;/title&gt;
+  &lt;style&gt;
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #log { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; }
+    #msg { width: 80%; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;Chat with Mock Agent&lt;/h2&gt;
+  &lt;div id="log"&gt;&lt;/div&gt;
+  &lt;input id="msg" placeholder="Type a message" /&gt;
+  &lt;button id="send"&gt;Send&lt;/button&gt;
+
+  &lt;script&gt;
+    const log = document.getElementById('log');
+    const sendBtn = document.getElementById('send');
+    const msgInput = document.getElementById('msg');
+
+    // Open SSE stream
+    const source = new EventSource('/events');
+    source.onmessage = e =&gt; {
+      const p = document.createElement('p');
+      p.textContent = e.data;
+      log.appendChild(p);
+      log.scrollTop = log.scrollHeight;
+    };
+
+    // Send user message
+    sendBtn.onclick = () =&gt; {
+      const text = msgInput.value.trim();
+      if (!text) return;
+      fetch('/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      }).then(() =&gt; msgInput.value = '');
+    };
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Run &amp; verify</h2>
+                <p>With the server and UI in place, start the development server using ts-node-dev so changes reload automatically. Then open the page in your browser, type a message, and watch the echo reply appear instantly thanks to the SSE stream. This confirms the full round‑trip: client → POST → mock agent → SSE → client.</p>
+<div class="code-block"><pre><code>npm install express cors body-parser ts-node-dev @types/express @types/node
+npx ts-node-dev src/server.ts</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td>Run <code>npx ts-node-dev src/server.ts</code> – you should see <code>🚀 http://localhost:3000</code> in console.</td></tr>
+            <tr><td>UI loads in browser</td><td>Open http://localhost:3000 – a blank page with input appears.</td></tr>
+            <tr><td>Message round‑trip works</td><td>Type a message, click Send – the text and an "Echo:" reply appear below.</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>You did it!</h4>
+            <p>Your minimal AG‑UI clone is now streaming events between a mock agent and a web UI. Feel free to replace the echo logic with a real LLM call or add tool‑call handling to get closer to the full spec.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
