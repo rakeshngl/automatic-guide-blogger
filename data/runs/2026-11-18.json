@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-18",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [
+    "reddit_selfhosted"
+  ],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Zapier‑like Workflow Automation with n8n",
+      "source": "github_trending",
+      "url": "https://github.com/n8n-io/n8n",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-18_simple-zapier-like-workflow-automation-clone.html",
+      "tagline": "A beginner‑friendly Node.js & SQLite mini‑n8n",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "nodejs",
+        "workflow",
+        "automation"
+      ]
+    },
+    {
+      "title": "Build a Minimal CLI‑Anything Wrapper to Run Any Command as an AI‑Agent",
+      "source": "github_trending",
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-18_minimal-cli-anything-wrapper.html",
+      "tagline": "Run any shell command via a tiny AI‑agent style CLI",
+      "navbar_badge": "Beginner",
+      "est_minutes": 40,
+      "tags": [
+        "python",
+        "cli",
+        "agent"
+      ]
+    },
+    {
+      "title": "Build a Tiny Agentic Skills Demo with Superpowers Framework",
+      "source": "github_trending",
+      "url": "https://github.com/obra/superpowers",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-18_tiny-agentic-skills-demo-with-superpowers.html",
+      "tagline": "A beginner-friendly clone of a coding‑agent workflow using the open‑source Superpowers framework",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "shell",
+        "agent",
+        "api"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1572596711812239381",
+    "1572596717159841943",
+    "1572596721140375584"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}
