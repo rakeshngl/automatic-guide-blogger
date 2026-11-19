@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-19",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a CLI‑Anything Wrapper to Run Any Command as an AI‑Agent (Python)"
+  ],
+  "failed_sources": [
+    "reddit_selfhosted"
+  ],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Simple Web‑Scrape‑and‑Summarize Tool with Firecrawl (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/firecrawl/firecrawl",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-19_simple-web-scrape-and-summarize-tool-typescript.html",
+      "tagline": "A beginner‑friendly clone of Firecrawl’s core scrape‑and‑summarize flow using only free Node.js libraries",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "TypeScript",
+        "Node.js",
+        "OpenAI"
+      ]
+    },
+    {
+      "title": "Build a Privacy‑First Web‑Search Proxy with Tabstack (Python)",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/FM63R7JHAJZXNE?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-19_privacy-first-web-search-proxy-clone.html",
+      "tagline": "A minimal FastAPI proxy that forwards queries to DuckDuckGo without logging IPs",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 40,
+      "tags": [
+        "Python",
+        "Flask",
+        "API"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1572954403306999879",
+    "1572954409833603087"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

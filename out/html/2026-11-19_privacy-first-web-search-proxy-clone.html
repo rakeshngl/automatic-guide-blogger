@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Privacy‑First Web‑Search Proxy Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">Beginner Friendly</div>
+    </nav>
+
+    <header>
+        <h1>Privacy‑First Web‑Search Proxy Clone</h1>
+        <p>A minimal FastAPI proxy that forwards queries to DuckDuckGo without logging IPs</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide! In this quick‑fire tutorial we’ll build a tiny privacy‑first search proxy inspired by Tabstack, letting you query the web without exposing your own IP address to the search engine.</p>
+        <p>You’ll have a working FastAPI service in under 45 minutes, using only Python, FastAPI and SQLite – all free and open‑source.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Python 3.9+ and <code>git</code> installed; older versions may cause dependency issues.</li>
+                <li>The clone only forwards GET requests to DuckDuckGo’s HTML endpoint – no JavaScript rendering, so results are plain text snippets.</li>
+                <li>Running on localhost means your own IP is still visible to the upstream search engine; true privacy requires a cloud host or VPN.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL STACK</text>
+<line x1="315" y1="194" x2="315" y2="98" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">HTTP request</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">store query</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="71" class="node-text">FastAPI Proxy</text>
+<text x="315.0" y="87" class="node-subtext">Python</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="143" class="node-text">SQLite DB</text>
+<text x="315.0" y="159" class="node-subtext">Search logs</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">Browser / Curl</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a virtual environment and install FastAPI, Uvicorn and a tiny SQLite ORM (SQLModel). This gives us an isolated Python runtime and the libraries we need to serve HTTP and persist logs.</p>
+                <p>Initialize a Git repo to keep things tidy, so you can track changes and share the project later.</p>
+<div class="code-block"><pre><code>python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install --upgrade pip
+pip install fastapi uvicorn sqlmodel
+git init
+git add .
+git commit -m "Initial scaffold"</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the data model</h2>
+                <p>A single <code>SearchLog</code> table records the query string and timestamp – useful for demo analytics and showing that we can store data without persisting any personal identifiers.</p>
+                <p>SQLModel lets us declare the model with standard Python type hints, and it will create the SQLite schema automatically when we first use it.</p>
+                <p><strong>models.py</strong></p>
+<div class="code-block"><pre><code>from datetime import datetime
+from sqlmodel import Field, SQLModel
+
+class SearchLog(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    query: str = Field(index=True, max_length=255)
+    timestamp: datetime = Field(default_factory=datetime.utcnow)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Core proxy endpoint (API &amp; UI)</h2>
+                <p>In this step we create the heart of the clone: a FastAPI route that receives a search term, stores it for audit, forwards the request to DuckDuckGo’s HTML endpoint, and streams the raw HTML back to the client. Storing the query in SQLite gives us a simple audit log without any external services, keeping the app lightweight and privacy‑focused. The endpoint also serves a minimal HTML page when accessed without a query, offering a tiny UI for manual testing.</p>
+                <p>We use the <code>httpx</code> library for async HTTP calls because it integrates nicely with FastAPI’s async nature. The response from DuckDuckGo is returned unchanged, so users see the familiar search results while our server never logs their IP address—only the query string we deliberately store.</p>
+                <p><strong>main.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import HTMLResponse, Response
+import httpx
+
+app = FastAPI()
+
+<span class="code-comment"># Initialise SQLite DB (creates file if missing)</span>
+conn = sqlite3.connect('queries.db')
+cur = conn.cursor()
+cur.execute('CREATE TABLE IF NOT EXISTS searches(id INTEGER PRIMARY KEY AUTOINCREMENT, query TEXT, ts DATETIME DEFAULT CURRENT_TIMESTAMP)')
+conn.commit()
+
+DUCKDUCKGO_URL = 'https://html.duckduckgo.com/html/'
+
+@app.get('/search', response_class=Response)
+async def search(q: str = None):
+    if not q:
+        <span class="code-comment"># Simple UI when no query is provided</span>
+        return HTMLResponse('&lt;form action="/search" method="get"&gt;&lt;input name="q" placeholder="search..."&gt;&lt;button type="submit"&gt;Search&lt;/button&gt;&lt;/form&gt;')
+    <span class="code-comment"># Log the query (no IP stored)</span>
+    cur.execute('INSERT INTO searches (query) VALUES (?)', (q,))
+    conn.commit()
+    <span class="code-comment"># Forward request to DuckDuckGo</span>
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(DUCKDUCKGO_URL, params={'q': q})
+        if resp.status_code != 200:
+            raise HTTPException(status_code=502, detail='Upstream error')
+        return Response(content=resp.content, media_type='text/html')</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the API is ready, we launch it with Uvicorn, FastAPI’s recommended ASGI server. The <code>--reload</code> flag watches source files and restarts automatically, which is handy during development. Once the server is up, you can test the endpoint directly in a browser or via <code>curl</code>.</p>
+                <p>If you prefer a virtual environment, activate it before running the command to ensure the correct dependencies are used.</p>
+<div class="code-block"><pre><code>uvicorn main:app --reload</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>After sending a few queries, confirm that they are persisted in the SQLite database. The simple <code>sqlite3</code> CLI lets you inspect the <code>searches</code> table and see timestamps for each request. From here you can expand the project: add a nicer front‑end, implement rate‑limiting, or deploy to a cloud provider with HTTPS termination for full production readiness.</p>
+<div class="code-block"><pre><code>sqlite3 queries.db "SELECT id, query, ts FROM searches ORDER BY ts DESC LIMIT 5;"</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Start server without errors</td><td><code>uvicorn main:app --reload</code> should show "Uvicorn running on http://127.0.0.1:8000"</td></tr>
+            <tr><td>GET request returns DuckDuckGo results</td><td><code>curl 'http://127.0.0.1:8000/search?q=uvf+it'</code> should output HTML containing "UVF IT"</td></tr>
+            <tr><td>Latest query logged in SQLite</td><td>Run the sqlite3 command above and see your query string</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional privacy‑first proxy. Deploy it to a cloud VM or serverless platform, add HTTPS, and consider rate‑limiting or caching to further protect user privacy.</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

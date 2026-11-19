@@ -917,6 +917,18 @@
       "title": "Build a Tiny Agentic Skills Demo with Superpowers Framework",
       "source_url": "https://github.com/obra/superpowers",
       "slug": "2026-11-18_tiny-agentic-skills-demo-with-superpowers.html"
+    },
+    {
+      "date": "2026-11-19T12:36:05+00:00",
+      "title": "Build a Simple Web‑Scrape‑and‑Summarize Tool with Firecrawl (TypeScript)",
+      "source_url": "https://github.com/firecrawl/firecrawl",
+      "slug": "2026-11-19_simple-web-scrape-and-summarize-tool-typescript.html"
+    },
+    {
+      "date": "2026-11-19T12:39:13+00:00",
+      "title": "Build a Privacy‑First Web‑Search Proxy with Tabstack (Python)",
+      "source_url": "https://www.producthunt.com/r/FM63R7JHAJZXNE?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-11-19_privacy-first-web-search-proxy-clone.html"
     }
   ]
 }
