@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-20",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Simple Web‑Scrape‑and‑Summarize App with Firecrawl (TypeScript)"
+  ],
+  "failed_sources": [
+    "reddit_selfhosted"
+  ],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Minimal Agentic Skill with Superpowers (Shell)",
+      "source": "github_trending",
+      "url": "https://github.com/obra/superpowers",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-20_minimal-agentic-skill-with-superpowers-shell.html",
+      "tagline": "A 45‑minute clone using Python & SQLite",
+      "navbar_badge": "Beginner",
+      "est_minutes": 40,
+      "tags": [
+        "Shell",
+        "Agentic",
+        "CLI"
+      ]
+    },
+    {
+      "title": "Build a PyTorch Model Visualizer with tensorViz (Python)",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/GGVBUX3ATW7EJK?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-20_pytorch-model-visualizer-clone.html",
+      "tagline": "A minimal web app to inspect PyTorch model layers",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "Python",
+        "PyTorch",
+        "Visualization"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1573316595432824986",
+    "1573316600008933438"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}

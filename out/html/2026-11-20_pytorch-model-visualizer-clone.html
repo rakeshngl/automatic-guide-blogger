@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: PyTorch Model Visualizer Clone</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>PyTorch Model Visualizer Clone</h1>
+        <p>A minimal web app to inspect PyTorch model layers</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> guide. In the next 45 minutes you’ll spin up a tiny web‑based visualizer that mirrors the core idea of tensorViz – showing the inner structure of a PyTorch model without any paid services.</p>
+        <p>We’ll use Python, Flask, and plain HTML, store nothing in a database, and keep the code under 100 lines total – perfect for a beginner looking to understand model introspection.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Python 3.9+ and pip installed; older versions may miss <code>torch</code> wheels.</li>
+                <li>The clone only lists layer names and types – no interactive graph or weight visualizations that the real product offers.</li>
+                <li>Running on Windows may require the Visual C++ Build Tools for the <code>torch</code> wheel; Linux/macOS are smoother.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Component Overview</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">loads</text>
+<line x1="315" y1="98" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="140" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">serves</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Flask Web Server</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">Sample PyTorch Model</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">HTML UI (layer list)</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>Create a virtual environment and install Flask and torch.</p>
+                <p>Initialize a minimal folder structure.</p>
+<div class="code-block"><pre><code>python3 -m venv venv
+source venv/bin/activate  # on Windows use venv\Scripts\activate
+pip install --upgrade pip
+pip install flask torch
+mkdir -p app/templates app/static
+touch app/__init__.py app/routes.py</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define a simple model (core data)</h2>
+                <p>We’ll use a tiny CNN so the visualizer has something to show.</p>
+                <p><strong>model.py</strong></p>
+<div class="code-block"><pre><code>import torch
+import torch.nn as nn
+
+class TinyCNN(nn.Module):
+    def __init__(self):
+        super(TinyCNN, self).__init__()
+        self.conv1 = nn.Conv2d(1, 8, kernel_size=3, stride=1, padding=1)
+        self.relu = nn.ReLU()
+        self.pool = nn.MaxPool2d(2, 2)
+        self.fc = nn.Linear(8 * 14 * 14, 10)  # assuming 28x28 input
+
+    def forward(self, x):
+        x = self.pool(self.relu(self.conv1(x)))
+        x = x.view(x.size(0), -1)
+        x = self.fc(x)
+        return x
+
+<span class="code-comment"># Instantiate for later import</span>
+model = TinyCNN()
+print("Model layers:")
+for name, layer in model.named_children():
+    print(f"{name}: {layer.__class__.__name__}")</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the Flask API &amp; UI</h2>
+                <p>We’ll spin up a tiny Flask server that loads a simple PyTorch model and exposes its architecture via an endpoint. The <code>/layers</code> route will walk through the model’s named modules and return a JSON array of objects containing each layer’s name and type. The root route (<code>/</code>) will serve a minimal HTML page that fetches this JSON and renders the layer list as <code>&lt;li&gt;</code> items, giving you a live view of the model structure.</p>
+                <p>The UI is intentionally tiny: a single <code>&lt;ul&gt;</code> element that gets populated by JavaScript once the data arrives. This keeps the clone lightweight while still demonstrating the core idea of visualising model layers in the browser.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import json
+from flask import Flask, jsonify, render_template_string
+import torch.nn as nn
+
+app = Flask(__name__)
+
+<span class="code-comment"># Simple example model – replace with any loaded .pt model later</span>
+model = nn.Sequential(
+    nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1),
+    nn.ReLU(),
+    nn.MaxPool2d(2),
+    nn.Flatten(),
+    nn.Linear(16 * 16 * 16, 10),
+    nn.Softmax(dim=1)
+)
+
+@app.route('/')
+def index():
+    <span class="code-comment"># Inline HTML for brevity; in a real app use templates/static files</span>
+    html = """
+    &lt;!doctype html&gt;
+    &lt;html lang='en'&gt;
+    &lt;head&gt;&lt;meta charset='utf-8'&gt;&lt;title&gt;Model Layers&lt;/title&gt;&lt;/head&gt;
+    &lt;body&gt;
+      &lt;h1&gt;Model Layers&lt;/h1&gt;
+      &lt;ul id='layer-list'&gt;&lt;/ul&gt;
+      &lt;script&gt;
+        fetch('/layers')
+          .then(r =&gt; r.json())
+          .then(data =&gt; {
+            const ul = document.getElementById('layer-list');
+            data.forEach(l =&gt; {
+              const li = document.createElement('li');
+              li.textContent = `${l.name}: ${l.type}`;
+              ul.appendChild(li);
+            });
+          });
+      &lt;/script&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+    """
+    return render_template_string(html)
+
+@app.route('/layers')
+def layers():
+    layer_info = []
+    for name, module in model.named_modules():
+        <span class="code-comment"># Skip the top-level container itself</span>
+        if name == "":
+            continue
+        layer_info.append({"name": name, "type": module.__class__.__name__})
+    return jsonify(layer_info)
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the Flask app is ready, start the development server with a single command. The server will listen on http://127.0.0.1:5000 by default, and you can open that URL in any browser to see the UI rendering the layer list.</p>
+                <p>If you make changes to <code>app.py</code>, simply stop the process (Ctrl‑C) and rerun the command – Flask’s debug mode will also reload automatically on file changes.</p>
+<div class="code-block"><pre><code>python app.py</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify &amp; extend</h2>
+                <p>Confirm the clone works by visiting the root page and checking that each layer appears as a list item. You can also hit the <code>/layers</code> endpoint directly with <code>curl</code> to see the raw JSON payload, which is useful for debugging or integration with other tools.</p>
+                <p>As an optional next step, you could add a file‑upload form that accepts a <code>.pt</code> checkpoint, loads it with <code>torch.load</code>, and replaces the example model on the fly. This turns the minimal clone into a flexible visualizer for any PyTorch model you own.</p>
+<div class="code-block"><pre><code>curl http://127.0.0.1:5000/layers</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>Server starts without errors</td><td><code>python app.py</code> shows *Running on http://127.0.0.1:5000/*</td></tr>
+            <tr><td>Browser displays a list of layer names</td><td>Open http://127.0.0.1:5000/ and see &lt;li&gt; entries</td></tr>
+            <tr><td><code>/layers</code> returns valid JSON</td><td><code>curl http://127.0.0.1:5000/layers</code> prints an array of objects</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a functional clone of tensorViz’s core idea. Experiment by adding a D3.js graph, supporting model upload, or styling the UI – the sky’s the limit!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>
