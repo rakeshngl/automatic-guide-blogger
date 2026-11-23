@@ -941,6 +941,12 @@
       "title": "Build a PyTorch Model Visualizer with tensorViz (Python)",
       "source_url": "https://www.producthunt.com/r/GGVBUX3ATW7EJK?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
       "slug": "2026-11-20_pytorch-model-visualizer-clone.html"
+    },
+    {
+      "date": "2026-11-23T12:35:06+00:00",
+      "title": "Build a CLI‑Anything Wrapper: Turn Any Command into an AI‑Friendly Tool (Python)",
+      "source_url": "https://github.com/HKUDS/CLI-Anything",
+      "slug": "2026-11-23_cli-anything-minimal-clone.html"
     }
   ]
 }

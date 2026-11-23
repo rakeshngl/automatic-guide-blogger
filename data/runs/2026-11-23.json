@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-23",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a Simple Web‑Scrape‑and‑Summarize Tool with Firecrawl (TypeScript)",
+    "Build a Tiny Agentic Skills Demo with Superpowers (Shell)"
+  ],
+  "failed_sources": [
+    "reddit_selfhosted"
+  ],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a CLI‑Anything Wrapper: Turn Any Command into an AI‑Friendly Tool (Python)",
+      "source": "github_trending",
+      "url": "https://github.com/HKUDS/CLI-Anything",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-23_cli-anything-minimal-clone.html",
+      "tagline": "Turn any shell command into an AI‑friendly HTTP endpoint",
+      "navbar_badge": "Python 3.10+",
+      "est_minutes": 50,
+      "tags": [
+        "python",
+        "cli",
+        "subprocess"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1574402922270163006"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 1
+}
