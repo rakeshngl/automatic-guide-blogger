@@ -947,6 +947,18 @@
       "title": "Build a CLI‑Anything Wrapper: Turn Any Command into an AI‑Friendly Tool (Python)",
       "source_url": "https://github.com/HKUDS/CLI-Anything",
       "slug": "2026-11-23_cli-anything-minimal-clone.html"
+    },
+    {
+      "date": "2026-11-24T12:43:40+00:00",
+      "title": "Build a Superpowers‑Based Agentic Skill Framework from Scratch",
+      "source_url": "https://github.com/obra/superpowers",
+      "slug": "2026-11-24_build-a-minimal-superpowers-inspired-agentic-skill-framework.html"
+    },
+    {
+      "date": "2026-11-24T12:52:51+00:00",
+      "title": "Build a Firecrawl‑Powered Web‑Scrape‑and‑Summarize Mini‑App",
+      "source_url": "https://github.com/firecrawl/firecrawl",
+      "slug": "2026-11-24_firecrawl-powered-web-scrape-summarize-mini-app.html"
     }
   ]
 }

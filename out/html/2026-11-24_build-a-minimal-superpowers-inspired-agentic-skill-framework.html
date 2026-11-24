@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UVF IT: Build a Minimal Superpowers‑Inspired Agentic Skill Framework</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7707820592878194" crossorigin="anonymous"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+    --primary: #1e3a1e;
+    --accent: #2e7d32;
+    --tech-green: #4caf50;
+    --dark-earth: #111827;
+    --bg-light: #f4f7f4;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --fix-bg: #fff8e6;
+    --fix-border: #d97706;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.7;
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: var(--primary);
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--accent);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand span { color: var(--tech-green); }
+
+.navbar-badge {
+    color: #d1d5db;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 999px;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, #0c1a0c 100%);
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.2; }
+header p { font-size: 1.25rem; font-weight: 400; max-width: 700px; margin: 0 auto; color: #d1d5db; }
+
+.container {
+    max-width: 960px;
+    margin: -50px auto 40px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    padding: 60px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2 {
+    color: var(--primary);
+    font-size: 2.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #e8f5e9;
+    padding-bottom: 12px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+h3 { color: var(--dark-earth); font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px; }
+p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 20px; }
+ul, ol { margin-bottom: 20px; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; }
+li { margin-bottom: 10px; }
+
+.diagram-container {
+    background: #f7f9f7;
+    border-radius: 14px;
+    padding: 40px;
+    margin: 40px 0;
+    text-align: center;
+    border: 1px solid #e1e8e1;
+    overflow-x: auto;
+}
+
+.diagram-title {
+    font-size: 0.85rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.node { fill: #ffffff; stroke: var(--primary); stroke-width: 2.5px; rx: 10px; }
+.node-tech { fill: #f0fdf4; stroke: var(--accent); stroke-width: 2.5px; rx: 10px; }
+.node-text { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; fill: var(--dark-earth); text-anchor: middle; }
+.node-subtext { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 500; fill: var(--text-muted); text-anchor: middle; }
+.link { fill: none; stroke: #a3b8a3; stroke-width: 2px; }
+.link-arrow { fill: #a3b8a3; }
+
+.code-block {
+    background: #111c11;
+    color: #e8f5e9;
+    padding: 24px;
+    border-radius: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    margin: 25px 0;
+    border-left: 4px solid var(--tech-green);
+}
+
+.code-block pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+.code-comment { color: #6a9955; font-style: italic; }
+
+.step-box { display: flex; align-items: flex-start; margin-top: 35px; margin-bottom: 20px; }
+
+.step-box > div { min-width: 0; }
+
+.step-number {
+    background: var(--accent);
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2);
+}
+
+.alert-box {
+    background: #e8f5e9;
+    border-left: 5px solid var(--accent);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 40px 0;
+}
+
+.alert-box h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1.2rem; font-weight: 700; }
+
+.fix-box {
+    background: var(--fix-bg);
+    border-left: 5px solid var(--fix-border);
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.fix-box h4 { margin: 0 0 10px 0; color: #92400e; font-size: 1.1rem; font-weight: 700; }
+.fix-box ul { margin: 10px 0 0 0; }
+.fix-box li { font-size: 1rem; margin-bottom: 8px; }
+.fix-box li strong { color: var(--dark-earth); }
+
+table.checklist { width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 0.98rem; }
+table.checklist th, table.checklist td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+table.checklist th { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+table.checklist td { color: var(--text-muted); }
+
+footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; }
+
+@media (max-width: 720px) {
+    .navbar { padding: 12px 20px; }
+    header h1 { font-size: 2.2rem; }
+    .container { padding: 28px 22px; }
+    .step-box { flex-direction: column; gap: 14px; }
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">UVF <span>IT</span></div>
+        <div class="navbar-badge">UVF IT</div>
+    </nav>
+
+    <header>
+        <h1>Build a Minimal Superpowers‑Inspired Agentic Skill Framework</h1>
+        <p>A 45‑minute beginner’s clone using Python and SQLite</p>
+    </header>
+
+    <div style="max-width:960px;margin:20px auto;padding:0 20px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7707820592878194" data-ad-slot="5778428487" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <div class="container">
+        <p>Welcome to another official <strong>UVF IT</strong> build guide! In this tutorial you’ll create a tiny, working version of the Superpowers agentic skill framework – a lightweight system that lets a simple Python “agent” load, execute, and chain tiny “skills” stored in a SQLite database.</p>
+        <p>We’ll use only free‑tier tools (Python 3.11, SQLite, and Flask for a tiny UI) so you can finish the whole thing in under an hour and then experiment further.</p>
+
+        <div class="fix-box">
+            <h4>Before you start</h4>
+            <ul>
+                <li>You need Python 3.10+ and <code>pip</code> installed – older versions may miss <code>sqlite3</code> improvements.</li>
+                <li>The real Superpowers project ships dozens of skills and a sophisticated orchestration engine; this clone only supports a single‑step skill lookup and execution.</li>
+            </ul>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-title">Minimal Superpowers Clone Architecture</div>
+            <svg width="100%" height="262" viewBox="0 0 420 262" xmlns="http://www.w3.org/2000/svg" role="img">
+<defs><marker id="gw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" class="link-arrow"/></marker></defs>
+<rect x="216" y="24" width="198" height="214" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="10" stroke-dasharray="6,6"/>
+<text x="315.0" y="42" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.5px;fill:var(--accent)">LOCAL RUNTIME &amp; DB</text>
+<line x1="315" y1="98" x2="315" y2="122" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="104" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">calls via HTTP</text>
+<line x1="315" y1="170" x2="315" y2="194" class="link"  marker-end="url(#gw-arrow)"/>
+<text x="315" y="176" text-anchor="middle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;fill:#6b7280">queries</text>
+<rect x="230" y="50" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="79" class="node-text">Simple Python Agent</text>
+<rect x="230" y="122" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="151" class="node-text">Flask API + UI</text>
+<rect x="230" y="194" width="170" height="48" rx="10" class="node-tech" />
+<text x="315.0" y="223" class="node-text">SQLite Skills Store</text>
+</svg>
+        </div>
+
+        <div class="step-box">
+            <div class="step-number">1</div>
+            <div>
+                <h2>Phase 1: Scaffold the project</h2>
+                <p>First we create a clean directory to keep everything tidy and avoid polluting your global Python installation. Inside that folder we spin up a virtual environment – this isolates dependencies so the guide works on any machine. Finally we install Flask, the only external library we need for the tiny web UI and API layer.</p>
+                <p>With the environment active you can run the later steps without worrying about version conflicts. All subsequent commands assume you are still inside the project folder and the virtual environment is activated.</p>
+<div class="code-block"><pre><code>mkdir superpowers_clone &amp;&amp; cd superpowers_clone
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install Flask</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">2</div>
+            <div>
+                <h2>Phase 2: Define the skill model (SQLite)</h2>
+                <p>Now we set up a minimal SQLite database that will store our skills. The table <code>skills</code> holds an auto‑increment id, a human‑readable name, and a <code>code</code> column that contains a raw Python function body as text – this mimics the way Superpowers stores executable snippets.</p>
+                <p>The helper script <code>init_db.py</code> creates the database file, builds the table, and seeds it with a single example skill called "greet". Running the script will give you a ready‑to‑query <code>skills.db</code> that the Flask API can later read from.</p>
+                <p><strong>init_db.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3
+
+DB_PATH = 'skills.db'
+
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    <span class="code-comment"># Create the skills table</span>
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS skills (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE,
+            code TEXT NOT NULL
+        )
+    ''')
+    <span class="code-comment"># Seed with a simple greeting skill</span>
+    greet_code = "def run():\n    return 'Hello from the greet skill!'"
+    cur.execute('INSERT OR REPLACE INTO skills (name, code) VALUES (?, ?)', ('greet', greet_code))
+    conn.commit()
+    conn.close()
+
+if __name__ == '__main__':
+    init_db()
+    print('Database initialized with sample skill.')</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">3</div>
+            <div>
+                <h2>Phase 3: Build the API &amp; UI</h2>
+                <p>In this step we spin up a tiny Flask server that talks to the SQLite skill store we created earlier. The root route (<code>/</code>) renders a minimal HTML form so you can pick a skill name and supply an argument, while the <code>/run</code> endpoint receives the form data, looks up the Python snippet, executes it safely, and returns the result as JSON. Keeping the UI tiny lets you focus on the core idea: a skill is just a row in the DB that contains executable code.</p>
+                <p>We deliberately avoid heavy templating or authentication – the goal is a clear, readable example you can run in minutes. The Flask app also handles basic error cases, such as a missing skill or a runtime exception, and reports them back to the UI so you can see what went wrong without digging into logs.</p>
+                <p><strong>app.py</strong></p>
+<div class="code-block"><pre><code>import sqlite3, json, traceback
+from flask import Flask, request, jsonify, render_template_string
+
+app = Flask(__name__)
+DB_PATH = 'skills.db'
+
+HTML_FORM = '''
+&lt;!doctype html&gt;
+&lt;title&gt;Skill Runner&lt;/title&gt;
+&lt;h2&gt;Run a Skill&lt;/h2&gt;
+&lt;form action="/run" method="post"&gt;
+  Skill name: &lt;input name="name" placeholder="echo"&gt;&lt;br&gt;
+  Argument: &lt;input name="arg" placeholder="hello"&gt;&lt;br&gt;
+  &lt;input type="submit" value="Run"&gt;
+&lt;/form&gt;
+{% if result %}&lt;h3&gt;Result&lt;/h3&gt;&lt;pre&gt;{{ result }}&lt;/pre&gt;{% endif %}
+''' 
+
+def get_skill_code(name):
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute('SELECT code FROM skills WHERE name=?', (name,))
+    row = cur.fetchone()
+    conn.close()
+    return row[0] if row else None
+
+def exec_skill(code, arg):
+    <span class="code-comment"># Very limited sandbox: only expose `arg` and capture `result`</span>
+    local_vars = {'arg': arg, 'result': None}
+    try:
+        exec(code, {}, local_vars)
+        return local_vars.get('result')
+    except Exception:
+        return {'error': traceback.format_exc()}
+
+@app.route('/', methods=['GET'])
+def index():
+    return render_template_string(HTML_FORM)
+
+@app.route('/run', methods=['POST'])
+def run_skill():
+    name = request.form.get('name')
+    arg = request.form.get('arg')
+    code = get_skill_code(name)
+    if not code:
+        return jsonify({'error': f'Skill "{name}" not found'}), 404
+    outcome = exec_skill(code, arg)
+    if isinstance(outcome, dict) and 'error' in outcome:
+        return jsonify(outcome), 500
+    return jsonify({'result': outcome})
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">4</div>
+            <div>
+                <h2>Phase 4: Run locally</h2>
+                <p>Now that the Flask app is ready, we first make sure the SQLite database is seeded with at least one skill (the <code>echo</code> skill). Then we launch the server with a single command. When the server starts, open your browser to <code>http://localhost:5000</code> – you’ll see the tiny form we defined earlier. Submit <code>echo</code> as the skill name and any text as the argument; the page will display the JSON result returned by the API.</p>
+                <p>If you prefer the command line, you can also POST directly with <code>curl</code>. This phase shows both interactive UI usage and a quick CLI test, confirming the whole stack – DB, Flask, and execution logic – works together.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Seed the database (run once)</span>
+python - &lt;&lt;'PY'
+import sqlite3, json
+conn = sqlite3.connect('skills.db')
+cur = conn.cursor()
+cur.execute('CREATE TABLE IF NOT EXISTS skills (name TEXT PRIMARY KEY, code TEXT)')
+<span class="code-comment"># Simple echo skill: returns "Echo: &lt;arg&gt;"</span>
+code = "result = f'Echo: {arg}'"
+cur.execute('INSERT OR REPLACE INTO skills (name, code) VALUES (?,?)', ('echo', code))
+conn.commit()
+conn.close()
+PY
+
+<span class="code-comment"># Start the Flask server</span>
+export FLASK_APP=app.py
+flask run</code></pre></div>
+            </div>
+        </div>
+        <div class="step-box">
+            <div class="step-number">5</div>
+            <div>
+                <h2>Phase 5: Verify and extend</h2>
+                <p>With the server running, verify the endpoint works either via the browser form or a <code>curl</code> call. You should receive a JSON payload like <code>{"result":"Echo: your text"}</code>. This confirms the skill was fetched from SQLite, executed, and serialized back to the client.</p>
+                <p>To grow the framework, simply add more rows to the <code>skills</code> table. Each row stores a Python snippet that can use the provided <code>arg</code> variable and must assign its output to <code>result</code>. Experiment by adding a <code>reverse</code> skill that returns the reversed string, or a <code>len</code> skill that returns the length of the argument. No code changes are needed – the API automatically picks up new skills.</p>
+<div class="code-block"><pre><code><span class="code-comment"># Quick test with curl</span>
+curl -X POST -d "name=echo&amp;arg=hello world" http://localhost:5000/run
+
+<span class="code-comment"># Add a new skill (reverse) directly via sqlite3</span>
+sqlite3 skills.db "INSERT OR REPLACE INTO skills (name, code) VALUES ('reverse', 'result = arg[::-1]');"
+<span class="code-comment"># Test the new skill</span>
+curl -X POST -d "name=reverse&amp;arg=hello" http://localhost:5000/run</code></pre></div>
+            </div>
+        </div>
+
+        <h2>Verifying the Stack</h2>
+        <table class="checklist">
+            <tr><th>Check</th><th>Command / Why it matters</th></tr>
+            <tr><td>SQLite DB <code>skills.db</code> exists with at least one row</td><td>ls -l skills.db &amp;&amp; sqlite3 skills.db "SELECT name FROM skills;"</td></tr>
+            <tr><td>Flask server is listening on port 5000</td><td>netstat -tlnp | grep 5000 || curl -s http://localhost:5000 | grep 'Run a Skill'"</td></tr>
+            <tr><td><code>curl</code> request returns JSON with the echoed argument</td><td>curl -s -X POST -d "name=echo&amp;arg=test" http://localhost:5000/run | grep '"result":"Echo: test"'</td></tr>
+        </table>
+
+        <div class="alert-box">
+            <h4>What’s next?</h4>
+            <p>You now have a bare‑bones agentic skill runner. Try adding a JSON‑based plan step, chaining multiple skills, or swapping Flask for FastAPI. The sky’s the limit – happy hacking!</p>
+        </div>
+
+    </div>
+
+    <footer>&copy; 2026 UVF IT. <a href="https://www.uvfarms.in" target="_blank" rel="noopener" style="color: inherit;">www.uvfarms.in</a>. All rights reserved.</footer>
+
+</body>
+</html>

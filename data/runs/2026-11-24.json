@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-24",
+  "status": "ok",
+  "degraded_selection": true,
+  "duplicates_dropped": [
+    "Build a CLI‑Anything Wrapper: Turn Any Command into an AI‑Friendly Tool"
+  ],
+  "failed_sources": [
+    "reddit_selfhosted"
+  ],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Superpowers‑Based Agentic Skill Framework from Scratch",
+      "source": "github_trending",
+      "url": "https://github.com/obra/superpowers",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-24_build-a-minimal-superpowers-inspired-agentic-skill-framework.html",
+      "tagline": "A 45‑minute beginner’s clone using Python and SQLite",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 50,
+      "tags": [
+        "shell",
+        "agentic",
+        "framework"
+      ]
+    },
+    {
+      "title": "Build a Firecrawl‑Powered Web‑Scrape‑and‑Summarize Mini‑App",
+      "source": "github_trending",
+      "url": "https://github.com/firecrawl/firecrawl",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-24_firecrawl-powered-web-scrape-summarize-mini-app.html",
+      "tagline": "Build a minimal scraper‑summarizer in 45 minutes using the free Firecrawl Cloud API",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 45,
+      "tags": [
+        "typescript",
+        "web-scraping",
+        "llm"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1574769774238498866",
+    "1574769779284377622"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 2
+}
