@@ -959,6 +959,24 @@
       "title": "Build a Firecrawl‑Powered Web‑Scrape‑and‑Summarize Mini‑App",
       "source_url": "https://github.com/firecrawl/firecrawl",
       "slug": "2026-11-24_firecrawl-powered-web-scrape-summarize-mini-app.html"
+    },
+    {
+      "date": "2026-11-27T04:19:48+00:00",
+      "title": "Build a Custom Cursor Plugin that Generates Markdown Summaries",
+      "source_url": "https://github.com/cursor/plugins",
+      "slug": "2026-11-27_build-a-minimal-markdown-summary-cursor-plugin.html"
+    },
+    {
+      "date": "2026-11-27T04:23:59+00:00",
+      "title": "Build a Simple Agent Skill with Stitch Skills (TypeScript)",
+      "source_url": "https://github.com/google-labs-code/stitch-skills",
+      "slug": "2026-11-27_build-a-simple-stitch-design-skill-typescript.html"
+    },
+    {
+      "date": "2026-11-27T04:29:16+00:00",
+      "title": "Build a Self‑Contained HTML Diagram Viewer (Claude‑Code Style)",
+      "source_url": "https://github.com/cathrynlavery/diagram-design",
+      "slug": "2026-11-27_self-contained-html-diagram-viewer-clone.html"
     }
   ]
 }

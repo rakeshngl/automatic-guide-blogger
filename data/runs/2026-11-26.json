@@ -1,0 +1,7 @@
+{
+  "date": "2026-11-26",
+  "status": "selection_failed",
+  "failed_sources": [
+    "reddit_selfhosted"
+  ]
+}

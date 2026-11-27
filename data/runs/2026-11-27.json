@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-27",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Custom Cursor Plugin that Generates Markdown Summaries",
+      "source": "github_trending",
+      "url": "https://github.com/cursor/plugins",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-27_build-a-minimal-markdown-summary-cursor-plugin.html",
+      "tagline": "A quick 45‑minute clone using Node.js and SQLite",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 45,
+      "tags": [
+        "typescript",
+        "cursor",
+        "plugin"
+      ]
+    },
+    {
+      "title": "Build a Simple Agent Skill with Stitch Skills (TypeScript)",
+      "source": "github_trending",
+      "url": "https://github.com/google-labs-code/stitch-skills",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-27_build-a-simple-stitch-design-skill-typescript.html",
+      "tagline": "Clone a minimal agent skill using Stitch Skills on your local machine",
+      "navbar_badge": "UVF IT",
+      "est_minutes": 40,
+      "tags": [
+        "typescript",
+        "agent",
+        "skill"
+      ]
+    },
+    {
+      "title": "Build a Self‑Contained HTML Diagram Viewer (Claude‑Code Style)",
+      "source": "github_trending",
+      "url": "https://github.com/cathrynlavery/diagram-design",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-27_self-contained-html-diagram-viewer-clone.html",
+      "tagline": "A minimal Node.js + SQLite app that renders SVG diagrams from JSON",
+      "navbar_badge": "Beginner",
+      "est_minutes": 35,
+      "tags": [
+        "html",
+        "javascript",
+        "visualization"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1575730205354492015",
+    "1575730211146694788",
+    "1575730216129531957"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}
