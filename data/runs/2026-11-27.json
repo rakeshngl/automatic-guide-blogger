@@ -7,55 +7,55 @@
   "dry_run": false,
   "guides": [
     {
-      "title": "Build a Custom Cursor Plugin that Generates Markdown Summaries",
-      "source": "github_trending",
-      "url": "https://github.com/cursor/plugins",
+      "title": "Build a Simple AI Coding Assistant with Contral",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/O345273IOJN5AK?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
       "status": "ok",
-      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-27_build-a-minimal-markdown-summary-cursor-plugin.html",
-      "tagline": "A quick 45‑minute clone using Node.js and SQLite",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-27_simple-ai-coding-assistant-clone.html",
+      "tagline": "A minimal local web app that accepts code prompts and returns mock AI suggestions",
       "navbar_badge": "Beginner Friendly",
       "est_minutes": 45,
       "tags": [
-        "typescript",
-        "cursor",
-        "plugin"
+        "python",
+        "openai",
+        "cli"
       ]
     },
     {
-      "title": "Build a Simple Agent Skill with Stitch Skills (TypeScript)",
-      "source": "github_trending",
-      "url": "https://github.com/google-labs-code/stitch-skills",
+      "title": "Build a \"Turn Any Work into an API\" Mini‑Tool Inspired by Periscope",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/MKDWAD6MXFEF3A?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
       "status": "ok",
-      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-27_build-a-simple-stitch-design-skill-typescript.html",
-      "tagline": "Clone a minimal agent skill using Stitch Skills on your local machine",
-      "navbar_badge": "UVF IT",
-      "est_minutes": 40,
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-27_turn-any-work-into-an-api-mini-tool.html",
+      "tagline": "A tiny Flask‑SQLite clone of Periscope",
+      "navbar_badge": "Beta",
+      "est_minutes": 50,
       "tags": [
-        "typescript",
-        "agent",
-        "skill"
+        "python",
+        "fastapi",
+        "sqlite"
       ]
     },
     {
-      "title": "Build a Self‑Contained HTML Diagram Viewer (Claude‑Code Style)",
+      "title": "Build a Basic CI/CD Reliability Tracker with opensre",
       "source": "github_trending",
-      "url": "https://github.com/cathrynlavery/diagram-design",
+      "url": "https://github.com/Tracer-Cloud/opensre",
       "status": "ok",
-      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-27_self-contained-html-diagram-viewer-clone.html",
-      "tagline": "A minimal Node.js + SQLite app that renders SVG diagrams from JSON",
-      "navbar_badge": "Beginner",
-      "est_minutes": 35,
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-27_build-a-minimal-ci-cd-reliability-tracker-clone.html",
+      "tagline": "A beginner-friendly guide to a lightweight OpenSRE-inspired app",
+      "navbar_badge": "Beta",
+      "est_minutes": 55,
       "tags": [
-        "html",
-        "javascript",
-        "visualization"
+        "python",
+        "github",
+        "ci"
       ]
     }
   ],
   "delivery_ids": [
-    "1575730205354492015",
-    "1575730211146694788",
-    "1575730216129531957"
+    "1575854009804136614",
+    "1575854014367535208",
+    "1575854018901573715"
   ],
   "delivery_errors": [],
   "catalog_patched": 3

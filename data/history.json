@@ -977,6 +977,24 @@
       "title": "Build a Self‑Contained HTML Diagram Viewer (Claude‑Code Style)",
       "source_url": "https://github.com/cathrynlavery/diagram-design",
       "slug": "2026-11-27_self-contained-html-diagram-viewer-clone.html"
+    },
+    {
+      "date": "2026-11-27T12:33:53+00:00",
+      "title": "Build a Simple AI Coding Assistant with Contral",
+      "source_url": "https://www.producthunt.com/r/O345273IOJN5AK?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-11-27_simple-ai-coding-assistant-clone.html"
+    },
+    {
+      "date": "2026-11-27T12:38:04+00:00",
+      "title": "Build a \"Turn Any Work into an API\" Mini‑Tool Inspired by Periscope",
+      "source_url": "https://www.producthunt.com/r/MKDWAD6MXFEF3A?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-11-27_turn-any-work-into-an-api-mini-tool.html"
+    },
+    {
+      "date": "2026-11-27T12:41:13+00:00",
+      "title": "Build a Basic CI/CD Reliability Tracker with opensre",
+      "source_url": "https://github.com/Tracer-Cloud/opensre",
+      "slug": "2026-11-27_build-a-minimal-ci-cd-reliability-tracker-clone.html"
     }
   ]
 }
