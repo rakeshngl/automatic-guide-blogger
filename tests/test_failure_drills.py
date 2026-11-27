@@ -85,12 +85,17 @@ def _selection():
 class FakeLLM:
     def __init__(self, script=None):
         self.script = script or {}
+        self.calls: list[str] = []
+        self.prompts: list[str] = []
 
     def chat(self, *a, **kw):
         raise LLMError("should not be called in this drill")
 
     def chat_json(self, messages, schema, **kw):
         name = schema.__name__
+        self.calls.append(name)
+        if name == "RawSelection":
+            self.prompts.append(str(messages[-1].get("content", "")))
         queue = self.script.get(name)
         if queue is not None and queue:
             item = queue.pop(0)
@@ -129,6 +134,71 @@ class TestScraperIsolation:
         )
         assert summary["status"] == "no_candidates"
         assert summary["failed_sources"] == ["boom", "boom"]
+        # failure summaries carry the full key set so the run report and
+        # run-file consumers never print None for these fields
+        assert summary["dry_run"] is True
+        assert summary["guides"] == []
+        assert summary["delivery_ids"] == []
+        assert summary["delivery_errors"] == []
+        assert summary["catalog_patched"] == 0
+
+
+class TestSelectionStarvation:
+    """2026-11-25/26 production failure: every pick the LLM proposed was
+    already covered, dedupe dropped all of them, and the run died with
+    status=selection_failed and zero guides (exit 3)."""
+
+    def _seed_history(self, tmp_path) -> None:
+        import json
+        from datetime import datetime, timedelta, timezone
+
+        seeded = (datetime.now(timezone.utc) - timedelta(days=1)).isoformat(timespec="seconds")
+        titles = ["PostHog Self-Host", "n8n Automation", "Coolify Deploy"]
+        history = {
+            "guides": [
+                {"date": seeded, "title": t, "source_url": f"https://example.com/{i}"}
+                for i, t in enumerate(titles, 1)
+            ]
+        }
+        tmp_path.joinpath("history.json").write_text(json.dumps(history), encoding="utf-8")
+
+    def test_all_picks_covered_recovers_on_feedback_round(self, tmp_path):
+        self._seed_history(tmp_path)
+        # FakeLLM returns the default 3 picks every call: round 1 is fully
+        # rejected (title AND url match history), the feedback round gets the
+        # same answer again -> still starved -> selection_failed, but with
+        # the complete summary shape.
+        fake = FakeLLM()
+        summary = run_pipeline(
+            SettingsLite(), adapters=[GoodAdapter(5)],
+            llm_client=fake, out_dir=tmp_path, runs_dir=tmp_path / "runs",
+            history_path=tmp_path / "history.json",
+        )
+        selection_calls = [c for c in fake.calls if c == "RawSelection"]
+        assert len(selection_calls) == 2  # original + feedback retry
+        assert summary["status"] == "selection_failed"
+        assert summary["guides"] == []
+        assert summary["dry_run"] is True
+        assert summary["degraded_selection"] is False
+        assert summary["delivery_errors"] == []
+        run_file = tmp_path / "runs" / f"{summary['date']}.json"
+        assert run_file.exists()
+
+    def test_covered_candidates_removed_from_prompt(self, tmp_path):
+        self._seed_history(tmp_path)
+        fake = FakeLLM()
+        run_pipeline(
+            SettingsLite(), adapters=[GoodAdapter(5)],
+            llm_client=fake, out_dir=tmp_path, runs_dir=tmp_path / "runs",
+            history_path=tmp_path / "history.json",
+        )
+        assert fake.prompts, "selector never prompted"
+        # candidates whose URL was already written about (example.com/1..3)
+        # are pre-filtered from the pool; the fresh ones remain
+        for covered in (1, 2, 3):
+            assert f"https://example.com/{covered}" not in fake.prompts[0]
+        assert "https://example.com/4" in fake.prompts[0]
+        assert "https://example.com/5" in fake.prompts[0]
 
 
 class TestBadLLMJson:

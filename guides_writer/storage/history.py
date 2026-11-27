@@ -43,6 +43,25 @@ class HistoryStore:
                 titles.append(guide["title"])
         return titles
 
+    def recent_source_urls(self, days: int = 40) -> list[str]:
+        """Source URLs covered in the window - an exact duplicate signal.
+
+        The selector re-picks the same trending URL for days (dev.to top=7,
+        repos that stay on trending); fuzzy title matching alone lets those
+        through when the LLM rewords the title.
+        """
+        cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+        urls = []
+        for guide in self._load():
+            try:
+                recorded = datetime.fromisoformat(guide["date"])
+            except (KeyError, ValueError):
+                continue
+            url = (guide.get("source_url") or "").strip()
+            if recorded >= cutoff and url:
+                urls.append(url)
+        return urls
+
     def append(
         self,
         title: str,

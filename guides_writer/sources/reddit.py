@@ -8,6 +8,12 @@ from guides_writer.sources.base import CandidateItem, SourceError
 logger = logging.getLogger(__name__)
 
 # Atom feed (browser UA required; Reddit blocks the .json API and plain UA's)
+#
+# RETIRED (2026-11-17): Reddit shut down public RSS entirely - every .rss
+# path now answers 404 "Not Found" with no replacement for non-moderators.
+# This adapter is no longer wired into build_adapters (see runtime.py);
+# Reddit ideas flow in through the Gmail digest adapter instead. Kept for
+# the fixture parser tests and a possible future Data-API revival.
 REDDIT_URL = "https://www.reddit.com/r/selfhosted/top/.rss?t=week"
 
 BROWSER_HEADERS = {

@@ -12,7 +12,6 @@ from guides_writer.sources.github_trending import GitHubTrendingAdapter
 from guides_writer.sources.gmail_digest import GmailDigestAdapter
 from guides_writer.sources.hn_show import HNShowAdapter
 from guides_writer.sources.producthunt import ProductHuntAdapter
-from guides_writer.sources.reddit import RedditSelfHostedAdapter
 
 logger = logging.getLogger(__name__)
 
@@ -89,7 +88,10 @@ def build_adapters(settings) -> list:
     adapters.append(GitHubTrendingAdapter())
     adapters.append(HNShowAdapter())
     adapters.append(DevToAdapter(limit=10))
-    adapters.append(RedditSelfHostedAdapter())
+    # NOTE: Reddit removed public RSS on 2026-11-17 ("no replacement" for
+    # non-moderators), so sources/reddit.py permanently 404s and is no longer
+    # wired in. Reddit threads still arrive via the Gmail digest adapter
+    # below, which parses the daily r/selfhosted digest emails.
     if settings.gmail_user and settings.gmail_app_password:
         email_llm = None
         if settings.email_llm_api_key:

@@ -82,6 +82,7 @@ def cmd_select(count: int | None = None, record: bool = False) -> int:
         candidates=candidates,
         count=count or settings.guides_per_run,
         exclude_titles=history.recent_titles(days=settings.history_days),
+        exclude_urls=history.recent_source_urls(days=settings.history_days),
     )
     print(json.dumps(result.model_dump(), indent=2, ensure_ascii=False))
     if record:

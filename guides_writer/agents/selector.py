@@ -13,6 +13,10 @@ FUZZY_DUPE_THRESHOLD = 82
 # 72 candidates ~ 3k tokens of pool + history + system stays well inside.
 MAX_POOL_CANDIDATES = 72
 MAX_EXCLUDE_TITLES = 30
+# Ask the LLM for more picks than we need so post-hoc dedupe (history
+# repeats) still leaves enough. A run that drops picks it cannot replace
+# ends as selection_failed with zero guides, so headroom matters.
+OVER_ASK = 2
 
 SYSTEM_PROMPT_TEMPLATE = """You are the topic editor for "UVF IT", a catalog of beginner-level "build your own X" development guides (see style: step-by-step blueprints like "Build a RAG Chat Bot from Scratch" or "Build an AI Recruitment Agent in 4 Steps").
 
@@ -141,37 +145,97 @@ def _format_pool(candidates: list[CandidateItem]) -> str:
     return "\n".join(lines)
 
 
+def _norm_url(url: str) -> str:
+    """Normalize a URL for exact-history matching (trailing slash, case)."""
+    return (url or "").strip().rstrip("/").lower()
+
+
+def _prefilter(
+    candidates: list[CandidateItem],
+    exclude_titles: list[str],
+    exclude_urls: set[str],
+) -> tuple[list[CandidateItem], int, int]:
+    """Drop candidates already covered by history before prompting.
+
+    Covers repeats the LLM would happily re-pick: e.g. a dev.to article in
+    ``top=7`` or a GitHub repo that trends for a week straight reappears in
+    the pool with the exact URL that was already written about. Two exact
+    signals - URL equality and the same fuzzy title match used on picks -
+    keep it conservative (no new thresholds).
+    """
+    fresh: list[CandidateItem] = []
+    by_url = 0
+    by_title = 0
+    for item in candidates:
+        if exclude_urls and _norm_url(item.url) in exclude_urls:
+            by_url += 1
+            continue
+        if exclude_titles and _is_duplicate_title(item.title, exclude_titles):
+            by_title += 1
+            continue
+        fresh.append(item)
+    return fresh, by_url, by_title
+
+
+def _filter_picks(
+    picks: list[TopicPick],
+    exclude_titles: list[str],
+    exclude_urls: set[str],
+    limit: int,
+    kept_so_far: list[TopicPick],
+) -> tuple[list[TopicPick], list[str]]:
+    """Keep picks that are neither in history nor repeats of each other."""
+    known = list(exclude_titles) + [p.title for p in kept_so_far]
+    kept: list[TopicPick] = []
+    dropped: list[str] = []
+    for pick in picks:
+        if exclude_urls and _norm_url(pick.source_url) in exclude_urls:
+            dropped.append(pick.title)
+            continue
+        if _is_duplicate_title(pick.title, known):
+            dropped.append(pick.title)
+            continue
+        known.append(pick.title)
+        kept.append(pick)
+        if len(kept) >= limit:
+            break
+    return kept, dropped
+
+
 class TopicSelector:
     name = "selector"
 
     def __init__(self, client: LLMClient):
         self._client = client
 
-    def select(
+    def _request(
         self,
-        candidates: list[CandidateItem],
-        count: int = 3,
-        exclude_titles: list[str] | None = None,
-    ) -> SelectionResult:
-        exclude_titles = (exclude_titles or [])[-MAX_EXCLUDE_TITLES:]
-        if not candidates:
-            logger.warning("selection_skipped no_candidates")
-            return SelectionResult(picks=[], requested_count=count)
-
-        system_prompt = SYSTEM_PROMPT_TEMPLATE.format(count=count)
-        pool = _balanced_pool(candidates)
+        pool: list[CandidateItem],
+        exclude_titles: list[str],
+        ask: int,
+        feedback: list[str] | None = None,
+    ) -> RawSelection:
+        system_prompt = SYSTEM_PROMPT_TEMPLATE.format(count=ask)
         user_prompt = (
             "Recently covered topics (do NOT repeat these themes):\n"
             + ("\n".join(f"- {t}" for t in exclude_titles) if exclude_titles else "(none yet)")
             + "\n\nCandidate pool:\n"
             + _format_pool(pool)
-            + f"\n\nSelect exactly {count} guide-worthy topics."
+            + f"\n\nSelect exactly {ask} guide-worthy topics."
         )
+        if feedback:
+            user_prompt += (
+                "\n\nIMPORTANT: you previously proposed these, but they were REJECTED "
+                "as already covered:\n"
+                + "\n".join(f"- {t}" for t in feedback)
+                + "\nPick DIFFERENT projects from the pool - not rewordings of the "
+                "rejected ones, and not any theme from the covered list above."
+            )
         logger.info(
-            "selection_prompt_sizes candidates=%d pool_shown=%d excludes=%d",
-            len(candidates), len(pool), len(exclude_titles),
+            "selection_prompt_sizes pool_shown=%d excludes=%d ask=%d feedback=%d",
+            len(pool), len(exclude_titles), ask, len(feedback or []),
         )
-        raw = self._client.chat_json(
+        return self._client.chat_json(
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
@@ -180,18 +244,66 @@ class TopicSelector:
             temperature=0.3,
         )
 
-        picked_titles: list[str] = []
-        kept: list[TopicPick] = []
-        dropped: list[str] = []
-        for pick in raw.picks:
-            known = exclude_titles + picked_titles
-            if _is_duplicate_title(pick.title, known):
-                dropped.append(pick.title)
-                continue
-            picked_titles.append(pick.title)
-            kept.append(pick)
-            if len(kept) >= count:
-                break
+    def select(
+        self,
+        candidates: list[CandidateItem],
+        count: int = 3,
+        exclude_titles: list[str] | None = None,
+        exclude_urls: list[str] | None = None,
+    ) -> SelectionResult:
+        exclude_titles = (exclude_titles or [])[-MAX_EXCLUDE_TITLES:]
+        exclude_url_set = {
+            normalized for normalized in (_norm_url(u) for u in (exclude_urls or [])) if normalized
+        }
+        if not candidates:
+            logger.warning("selection_skipped no_candidates")
+            return SelectionResult(picks=[], requested_count=count)
+
+        fresh, dropped_urls, dropped_titles = _prefilter(
+            candidates, exclude_titles, exclude_url_set
+        )
+        if not fresh:
+            # Everything matched history - show the full pool anyway and let
+            # pick-level dedupe sort it out (prefilter is an optimization,
+            # the dedupe below is the guarantee).
+            logger.warning(
+                "selection_prefilter_empty restoring_full_pool candidates=%d",
+                len(candidates),
+            )
+            fresh = candidates
+        elif dropped_urls or dropped_titles:
+            logger.info(
+                "selection_pool_prefiltered dropped_by_url=%d dropped_by_title=%d remaining=%d",
+                dropped_urls, dropped_titles, len(fresh),
+            )
+
+        pool = _balanced_pool(fresh)
+        ask = min(count + OVER_ASK, len(pool))
+
+        first = self._request(pool, exclude_titles, ask)
+        kept, dropped = _filter_picks(first.picks, exclude_titles, exclude_url_set, count, [])
+
+        if len(kept) < count and dropped:
+            # All (or too many) of the round-1 picks were already covered.
+            # One feedback round restates the rejections so the model stops
+            # re-proposing trending-but-stale topics. Best-effort: if it
+            # errors we keep whatever we have (today's behavior).
+            logger.warning(
+                "selection_starved kept=%d wanted=%d dropped=%d retrying_with_feedback",
+                len(kept), count, len(dropped),
+            )
+            blocked = (exclude_titles + dropped)[-MAX_EXCLUDE_TITLES:]
+            retry_ask = min(count - len(kept) + OVER_ASK, len(pool))
+            try:
+                second = self._request(pool, blocked, retry_ask, feedback=dropped)
+            except Exception as exc:
+                logger.warning("selection_feedback_retry_failed err=%s", str(exc)[:160])
+            else:
+                more_kept, more_dropped = _filter_picks(
+                    second.picks, blocked, exclude_url_set, count - len(kept), kept
+                )
+                kept.extend(more_kept)
+                dropped.extend(more_dropped)
 
         if dropped:
             logger.warning("selection_duplicates_dropped %s", dropped)

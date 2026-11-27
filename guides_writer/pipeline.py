@@ -22,6 +22,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 _LOCK_STALE_SECONDS = 6 * 3600
 
 
+def _summary_skeleton(date_str: str, status: str, settings, reason: str | None = None) -> dict:
+    """Failure summaries carry the same keys as successful ones so the CLI
+    run report and run-file consumers never see missing fields (``None``)."""
+    summary = {
+        "date": date_str,
+        "status": status,
+        "degraded_selection": False,
+        "duplicates_dropped": 0,
+        "failed_sources": [],
+        "dry_run": bool(getattr(settings, "dry_run", False)),
+        "guides": [],
+        "delivery_ids": [],
+        "delivery_errors": [],
+        "catalog_patched": 0,
+    }
+    if reason is not None:
+        summary["reason"] = reason
+    return summary
+
+
 def _run_lock_path() -> Path:
     lock_dir = BASE_DIR / "data"
     lock_dir.mkdir(parents=True, exist_ok=True)
@@ -122,19 +142,12 @@ def run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
             "run_blocked_other_pid pid=%s started=%s lock=%s",
             blocked_by.get("pid"), blocked_by.get("started"), _run_lock_path(),
         )
-        return {
-            "date": _local_date(getattr(settings, "tz_label", "Asia/Kolkata")),
-            "status": "blocked",
-            "degraded_selection": False,
-            "duplicates_dropped": 0,
-            "failed_sources": [],
-            "dry_run": getattr(settings, "dry_run", False),
-            "guides": [],
-            "delivery_ids": [],
-            "delivery_errors": [],
-            "catalog_patched": 0,
-            "reason": "another run already active (pid {})".format(blocked_by.get("pid")),
-        }
+        return _summary_skeleton(
+            _local_date(getattr(settings, "tz_label", "Asia/Kolkata")),
+            "blocked",
+            settings,
+            reason="another run already active (pid {})".format(blocked_by.get("pid")),
+        )
     _write_run_lock()
     try:
         return _run_pipeline(settings, adapters=adapters, llm_client=llm_client,
@@ -159,8 +172,8 @@ def _run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
     candidates, source_failures = fetch_pool(adapters)
     logger.info("pool_fetched candidates=%d failed_sources=%s", len(candidates), source_failures)
     if not candidates:
-        summary = {"date": date_str, "status": "no_candidates",
-                   "failed_sources": source_failures}
+        summary = _summary_skeleton(date_str, "no_candidates", settings)
+        summary["failed_sources"] = source_failures
         _write_run_summary(summary, runs_dir)
         return summary
 
@@ -183,14 +196,15 @@ def _run_pipeline(settings, adapters=None, llm_client: LLMClient | None = None,
         candidates=candidates,
         count=settings.guides_per_run,
         exclude_titles=history.recent_titles(days=settings.history_days),
+        exclude_urls=history.recent_source_urls(days=settings.history_days),
     )
     logger.info(
         "selection_done picks=%d degraded=%s dropped=%s",
         len(selection.picks), selection.degraded, selection.duplicates_dropped,
     )
     if not selection.picks:
-        summary = {"date": date_str, "status": "selection_failed",
-                   "failed_sources": source_failures}
+        summary = _summary_skeleton(date_str, "selection_failed", settings)
+        summary["failed_sources"] = source_failures
         _write_run_summary(summary, runs_dir)
         return summary
 

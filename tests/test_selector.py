@@ -20,9 +20,11 @@ class FakeChatClient:
     def __init__(self, scripted):
         self.scripted = list(scripted)
         self.calls = 0
+        self.prompts: list[str] = []
 
     def chat_json(self, messages, schema, **kwargs):
         self.calls += 1
+        self.prompts.append(messages[-1]["content"])
         item = self.scripted.pop(0)
         if isinstance(item, Exception):
             raise item
@@ -83,6 +85,111 @@ class TestTopicSelector:
         assert result.picks == []
         assert result.degraded
         assert client.calls == 0
+
+    def test_overasks_then_trims_to_count(self):
+        titles = [
+            "PostHog Self-Hosted Analytics",
+            "n8n Workflow Automation Platform",
+            "Coolify Heroku-Style PaaS",
+            "Miniflux Minimal RSS Reader",
+            "Stirling PDF Tool Suite",
+            "Memos Self-Hosted Note Box",
+        ]
+        client = FakeChatClient(
+            [{"picks": [_pick_dict(t, f"https://e/{i}") for i, t in enumerate(titles)]}]
+        )
+        result = TopicSelector(client).select([_cand(i) for i in range(10)], count=3)
+        # asks for count + OVER_ASK so dedupe drops still leave `count` fresh picks
+        assert "Select exactly 5" in client.prompts[0]
+        assert len(result.picks) == 3
+        assert not result.degraded
+        assert client.calls == 1
+
+    def test_prefilters_covered_urls_from_pool(self):
+        cands = [
+            _cand(1, title="Fresh Tool Alpha", url="https://github.com/org/alpha"),
+            _cand(2, title="Fresh Tool Beta", url="https://github.com/org/beta"),
+            _cand(3, title="Fresh Tool Gamma", url="https://github.com/org/gamma"),
+        ]
+        client = FakeChatClient([
+            {"picks": [
+                # the model invents the covered URL anyway -> pick-level check
+                _pick_dict("Fresh Tool Alpha", "https://github.com/org/alpha"),
+                _pick_dict("Fresh Tool Beta", "https://github.com/org/beta"),
+                _pick_dict("Fresh Tool Gamma", "https://github.com/org/gamma"),
+            ]},
+        ])
+        result = TopicSelector(client).select(
+            cands, count=2,
+            # trailing slash must still match the candidate URL
+            exclude_urls=["https://github.com/org/alpha/"],
+        )
+        # covered candidate never reaches the prompt
+        assert "https://github.com/org/alpha" not in client.prompts[0]
+        assert "Fresh Tool Alpha" not in client.prompts[0]
+        assert [p.title for p in result.picks] == ["Fresh Tool Beta", "Fresh Tool Gamma"]
+        assert result.duplicates_dropped == ["Fresh Tool Alpha"]
+        assert client.calls == 1
+
+    def test_url_starvation_feedback_retry_recovers(self):
+        covered = ["PostHog Self-Hosted Analytics", "n8n Workflow Platform", "Coolify PaaS"]
+        fresh = ["Local DNS Ad-Blocker", "Status Page Dashboard", "Bookmark Vault Manager"]
+        client = FakeChatClient([
+            {"picks": [_pick_dict(t, f"https://e/{i}") for i, t in enumerate(covered)]},
+            {"picks": [_pick_dict(t, f"https://f/{i}") for i, t in enumerate(fresh)]},
+        ])
+        result = TopicSelector(client).select(
+            [_cand(i) for i in range(10)], count=3,
+            exclude_urls=[f"https://e/{i}" for i in range(3)],
+        )
+        assert client.calls == 2
+        assert "REJECTED" in client.prompts[1]
+        assert [p.title for p in result.picks] == fresh
+        assert not result.degraded
+        assert set(result.duplicates_dropped) == set(covered)
+
+    def test_history_title_starvation_feedback_retry_recovers(self):
+        """The 2026-11-25/26 production failure: the LLM re-picked three
+        already-covered themes and dedupe dropped ALL of them, ending the run
+        with zero guides. The feedback round must replace the rejects."""
+        stale = [
+            "Build a CLI-Anything Wrapper: Turn Any Command into an AI-Friendly Tool",
+            "Build a Firecrawl-Powered Web-Scrape-and-Summarize Mini-App",
+            "Build a Simple Agentic Skill with the Superpowers Framework",
+        ]
+        fresh = [
+            "Build a Local DNS Ad-Blocker with Python",
+            "Build a Tiny Status Page with Flask",
+            "Build a Self-Hosted Bookmark Vault",
+        ]
+        client = FakeChatClient([
+            {"picks": [_pick_dict(t, f"https://e/{i}") for i, t in enumerate(stale)]},
+            {"picks": [_pick_dict(t, f"https://f/{i}") for i, t in enumerate(fresh)]},
+        ])
+        result = TopicSelector(client).select(
+            [_cand(i) for i in range(10)], count=3, exclude_titles=stale,
+        )
+        assert client.calls == 2
+        assert [p.title for p in result.picks] == fresh
+        assert not result.degraded
+        # the feedback round restates every rejected title
+        for title in stale:
+            assert title in client.prompts[1]
+
+    def test_feedback_retry_failure_keeps_first_round_result(self):
+        stale = ["Build a Covered Topic Alpha", "Build a Covered Topic Beta"]
+        client = FakeChatClient(
+            [{"picks": [_pick_dict(t, f"https://e/{i}") for i, t in enumerate(stale)]}]
+        )
+        result = TopicSelector(client).select(
+            [_cand(i) for i in range(5)], count=2, exclude_titles=stale,
+        )
+        # second scripted response missing -> the retry error is swallowed
+        # and the (degraded) first-round result stands, as before
+        assert client.calls == 2
+        assert result.picks == []
+        assert result.degraded
+        assert result.duplicates_dropped == stale
 
 
 class TestBalancedPool:
