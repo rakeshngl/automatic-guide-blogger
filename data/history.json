@@ -995,6 +995,24 @@
       "title": "Build a Basic CI/CD Reliability Tracker with opensre",
       "source_url": "https://github.com/Tracer-Cloud/opensre",
       "slug": "2026-11-27_build-a-minimal-ci-cd-reliability-tracker-clone.html"
+    },
+    {
+      "date": "2026-11-28T12:33:57+00:00",
+      "title": "Build a Mini Open‑Source Analytics Tracker with Dex Telemetry (Python + SQLite)",
+      "source_url": "https://www.producthunt.com/r/FPBVRLJH6IWLIP?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "slug": "2026-11-28_mini-open-source-analytics-tracker-with-dex-telemetry.html"
+    },
+    {
+      "date": "2026-11-28T12:37:07+00:00",
+      "title": "Build a Ghost‑Downloader‑3‑style File Downloader with Python",
+      "source_url": "https://github.com/XiaoYouChR/Ghost-Downloader-3",
+      "slug": "2026-11-28_ghost-downloader-3-style-file-downloader-python.html"
+    },
+    {
+      "date": "2026-11-28T12:41:34+00:00",
+      "title": "Build an App‑Store‑Compliance Checker CLI (Shell)",
+      "source_url": "https://github.com/mjmirza/app-store-compliance",
+      "slug": "2026-11-28_app-store-compliance-checker-cli-clone.html"
     }
   ]
 }

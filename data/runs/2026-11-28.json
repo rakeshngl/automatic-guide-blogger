@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-28",
+  "status": "ok",
+  "degraded_selection": false,
+  "duplicates_dropped": [],
+  "failed_sources": [],
+  "dry_run": false,
+  "guides": [
+    {
+      "title": "Build a Mini Open‑Source Analytics Tracker with Dex Telemetry (Python + SQLite)",
+      "source": "producthunt",
+      "url": "https://www.producthunt.com/r/FPBVRLJH6IWLIP?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+guides+%28ID%3A+296654%29",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-28_mini-open-source-analytics-tracker-with-dex-telemetry.html",
+      "tagline": "Open‑source Datadog‑style analytics in 45 minutes",
+      "navbar_badge": "Python + SQLite",
+      "est_minutes": 45,
+      "tags": [
+        "python",
+        "sqlite",
+        "analytics"
+      ]
+    },
+    {
+      "title": "Build a Ghost‑Downloader‑3‑style File Downloader with Python",
+      "source": "github_trending",
+      "url": "https://github.com/XiaoYouChR/Ghost-Downloader-3",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-28_ghost-downloader-3-style-file-downloader-python.html",
+      "tagline": "A minimal clone you can build in 45 minutes",
+      "navbar_badge": "Beginner Friendly",
+      "est_minutes": 40,
+      "tags": [
+        "python",
+        "http",
+        "multithreading"
+      ]
+    },
+    {
+      "title": "Build an App‑Store‑Compliance Checker CLI (Shell)",
+      "source": "github_trending",
+      "url": "https://github.com/mjmirza/app-store-compliance",
+      "status": "ok",
+      "file": "C:\\Users\\TKumar\\Downloads\\Automatic Guides Writer\\out\\html\\2026-11-28_app-store-compliance-checker-cli-clone.html",
+      "tagline": "A minimal command‑line tool to flag common iOS/Android submission issues",
+      "navbar_badge": "beta",
+      "est_minutes": 35,
+      "tags": [
+        "shell",
+        "cli",
+        "validation"
+      ]
+    }
+  ],
+  "delivery_ids": [
+    "1576216487180632155",
+    "1576216493366976612",
+    "1576216498232492265"
+  ],
+  "delivery_errors": [],
+  "catalog_patched": 3
+}
